@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFP_UI", "SFP_UI\SFP_UI.csproj", "{55EC0EB9-96FC-4CB5-B8AB-3F4A904AC97C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFP", "SFP\SFP.csproj", "{2801B18E-31FC-4B99-AAD7-7259CD197D8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{50AF4859-D9C1-465A-97E5-66B7B944FE7D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		SFP\NLog.config = SFP\NLog.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55EC0EB9-96FC-4CB5-B8AB-3F4A904AC97C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55EC0EB9-96FC-4CB5-B8AB-3F4A904AC97C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55EC0EB9-96FC-4CB5-B8AB-3F4A904AC97C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55EC0EB9-96FC-4CB5-B8AB-3F4A904AC97C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2801B18E-31FC-4B99-AAD7-7259CD197D8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2801B18E-31FC-4B99-AAD7-7259CD197D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2801B18E-31FC-4B99-AAD7-7259CD197D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2801B18E-31FC-4B99-AAD7-7259CD197D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6467C57A-09C8-44F5-88AC-95F87E14ED73}
+	EndGlobalSection
+EndGlobal

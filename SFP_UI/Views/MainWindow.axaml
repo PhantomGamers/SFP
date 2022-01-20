@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SFP_UI.ViewModels"
+        xmlns:pages="using:SFP_UI.Pages"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Avalonia.Notification.Controls;assembly=Notification.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="800" Height="450" MinWidth="800" MinHeight="450" WindowStartupLocation="CenterScreen"
+        x:Class="SFP_UI.Views.MainWindow"
+        Icon="/Assets/SFP-logo.ico"
+        Title="SFP">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+  <Grid>
+    <TabControl>
+      <TabItem Header="Main">
+        <pages:MainPage />
+      </TabItem>
+      <TabItem Header="Settings">
+        <pages:SettingsPage />
+      </TabItem>
+    </TabControl>
+  </Grid>
+
+</Window>

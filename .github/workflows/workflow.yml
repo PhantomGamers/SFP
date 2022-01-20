@@ -1,0 +1,48 @@
+name: Publish Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Version number
+        required: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Check Tag
+      id: check-tag
+      uses: actions-ecosystem/action-regex-match@v2
+      with:
+        text: ${{ github.event.inputs.version }}
+        regex: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+
+    - name: Fail if invalid
+      if: steps.check-tag.outputs.match == ''
+      uses: Actions/github-script@v3
+      with:
+        script: |
+          core.setFailed('Invalid tag')
+
+    - uses: actions/checkout@v2
+    - run: |
+        git tag ${{ github.event.inputs.version }}
+        git push origin ${{ github.event.inputs.version }}
+
+    - uses: actions/setup-dotnet@v1
+
+    - name: Build & Zip
+      shell: pwsh
+      run: .\createpublishedzip.ps1
+
+    - name: Publish to Github
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "Release/*.zip"
+        tag: ${{ github.event.inputs.version }}
+        commit: ${{ github.ref }}
+        artifactErrorsFailBuild: true
+        draft: true
+        allowUpdates: true

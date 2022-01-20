@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="SFP_UI.Pages.SettingsPage">
+
+  <DockPanel Margin="10">
+    <StackPanel Orientation="Horizontal" Spacing="4" DockPanel.Dock="Bottom">
+      <Button Command="{Binding OnSaveCommand}">Save</Button>
+      <Button Command="{Binding OnReloadCommand}">Reload</Button>
+    </StackPanel>
+    <ScrollViewer>
+      <StackPanel Orientation="Vertical" Spacing="4">
+        <Label Margin="8">Steam Settings</Label>
+        <StackPanel Orientation="Horizontal" Spacing="4">
+          <Label Margin="0,10">Steam Launch Args</Label>
+          <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="220" Text="{Binding SteamLaunchArgs}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
+          <Label Margin="0,10">Steam Directory</Label>
+          <TextBox Watermark="Steam Directory" Margin="20,0,0,0" Width="220" Text="{Binding SteamDirectory}"
+                   IsReadOnly="True"
+                   VerticalContentAlignment="Center"/>
+          <Button Margin="5,0,0,0" Command="{Binding OnBrowseSteamCommand}">Browse</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
+          <Label Margin="0,10">Cache Directory</Label>
+          <TextBox Watermark="Cache Directory" Margin="20,0,0,0" Width="220" Text="{Binding SteamDirectory}"
+                   IsReadOnly="True"
+                   VerticalContentAlignment="Center"/>
+          <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
+          <Label Margin="24,10">Library CSS</Label>
+          <TextBox Watermark="Library CSS" VerticalContentAlignment="Center" Width="220" Text="{Binding LibraryCss}"/>
+        </StackPanel>
+        <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam On Patch</CheckBox>
+        <Label Margin="8">Patcher Settings</Label>
+        <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch On App Startup</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldPatchFriends}">Patch Friends</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldPatchLibrary}">Patch Library</CheckBox>
+        <CheckBox IsChecked="{Binding ScanOnly}">Scan Only</CheckBox>
+        <Label Margin="8">Scanner Settings</Label>
+        <CheckBox IsChecked="{Binding ShouldScanOnStart}">Scan On App Startup</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldScanFriends}">Scan Friends</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan Library</CheckBox>
+        <Label Margin="8">General Settings</Label>
+        <CheckBox IsChecked="{Binding CheckForUpdates}">Check For Updates On Startup</CheckBox>
+        <CheckBox IsChecked="{Binding ShowTrayIcon}">Show Tray Icon</CheckBox>
+        <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize To Tray</CheckBox>
+        <CheckBox IsChecked="{Binding StartMinimized}">Start Minimized</CheckBox>
+        <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>
