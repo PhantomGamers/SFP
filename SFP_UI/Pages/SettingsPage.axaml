@@ -28,10 +28,6 @@
                    VerticalContentAlignment="Center"/>
           <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
-          <Label Margin="24,10">Library CSS</Label>
-          <TextBox Watermark="Library CSS" VerticalContentAlignment="Center" Width="220" Text="{Binding LibraryCss}"/>
-        </StackPanel>
         <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam On Patch</CheckBox>
         <Label Margin="8">Patcher Settings</Label>
         <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch On App Startup</CheckBox>

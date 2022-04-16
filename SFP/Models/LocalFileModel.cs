@@ -53,12 +53,29 @@
             {
                 File.Create(customFileName).Dispose();
             }
-            LogModel.Logger.Info($"Patched {file.Name}.\nPut your custom css in {customFileName}");
+            LogModel.Logger.Info($"Patched {file.Name}.");
             if (watcher != null)
             {
                 watcher.EnableRaisingEvents = state;
             }
             return true;
+        }
+
+        public static async Task PatchAll(DirectoryInfo directoryInfo, string? overrideName = null)
+        {
+            bool patchedLibraryFiles = false;
+            foreach (var file in directoryInfo.EnumerateFiles())
+            {
+                patchedLibraryFiles |= await Patch(file, overrideName);
+            }
+            if (patchedLibraryFiles)
+            {
+                LogModel.Logger.Info($"Put your custom css in {Path.Join(SteamModel.SteamUIDir, overrideName)}");
+            }
+            else
+            {
+                LogModel.Logger.Info($"Did not patch any files.");
+            }
         }
 
         public static async Task WatchLibrary(string directoryName)
@@ -71,7 +88,7 @@
             var file = new FileInfo(e.FullPath);
             if (file.Directory != null)
             {
-                await Patch(file.Directory.EnumerateFiles().OrderByDescending(f => f.Length).FirstOrDefault(), "libraryroot.custom.css");
+                await Task.Run(() => Patch(file, "libraryroot.custom.css"));
             }
         }
 

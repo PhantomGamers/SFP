@@ -109,17 +109,8 @@ namespace SFP_UI.ViewModels
 
             if (SFP.Properties.Settings.Default.ShouldPatchLibrary)
             {
-                var dir = new DirectoryInfo(Path.Join(SteamModel.SteamUIDir, "css"));
-                FileInfo file;
-                if (!string.IsNullOrWhiteSpace(SFP.Properties.Settings.Default.TargetLibraryCSS))
-                {
-                    file = new FileInfo(Path.Join(dir.FullName, SFP.Properties.Settings.Default.TargetLibraryCSS));
-                }
-                else
-                {
-                    file = dir.EnumerateFiles().OrderByDescending(f => f.Length).FirstOrDefault();
-                }
-                await Task.Run(() => LocalFileModel.Patch(file, "libraryroot.custom.css"));
+                var dir = new DirectoryInfo(SteamModel.SteamUICSSDir);
+                await Task.Run(() => LocalFileModel.PatchAll(dir, "libraryroot.custom.css"));
             }
 
             if (cacheFilesPatched && SFP.Properties.Settings.Default.RestartSteamOnPatch)

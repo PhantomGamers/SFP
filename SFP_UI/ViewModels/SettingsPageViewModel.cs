@@ -147,18 +147,6 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        private string libraryCss = SFP.Properties.Settings.Default.TargetLibraryCSS;
-
-        public string LibraryCss
-        {
-            get => libraryCss;
-            private set
-            {
-                this.RaiseAndSetIfChanged(ref libraryCss, value);
-                SFP.Properties.Settings.Default.TargetLibraryCSS = value;
-            }
-        }
-
         private bool checkForUpdates = SFP.Properties.Settings.Default.CheckForUpdates;
 
         public bool CheckForUpdates
@@ -240,7 +228,6 @@ namespace SFP_UI.ViewModels
             SteamDirectory = SFP.Properties.Settings.Default.SteamDirectory;
             SteamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
             CacheDirectory = SFP.Properties.Settings.Default.CacheDirectory;
-            LibraryCss = SFP.Properties.Settings.Default.TargetLibraryCSS;
         }
 
         public async void OnBrowseSteamCommand()
