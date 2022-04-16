@@ -32,7 +32,7 @@ namespace SFP_UI.Models
             LogModel.Logger.Info("Checking for updates...");
             var semver = await GetLatestVersionAsync();
 
-            if(semver > Version)
+            if (semver > Version)
             {
                 MainPageViewModel.Instance.Manager
                                  .CreateMessage()
@@ -42,7 +42,7 @@ namespace SFP_UI.Models
                                  .HasBadge("Info")
                                  .HasMessage(
                                      "There is an update available!")
-                                 .Dismiss().WithButton("Open download page", button => 
+                                 .Dismiss().WithButton("Open download page", button =>
                                  {
                                      OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
                                  })

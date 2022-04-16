@@ -14,16 +14,15 @@ namespace SFP_UI.Views
 
         public MainWindow()
         {
-            Instance = this; 
+            Instance = this;
             Opened += MainWindow_Opened;
 
-            if(SFP.Properties.Settings.Default.StartMinimized)
+            if (SFP.Properties.Settings.Default.StartMinimized)
             {
                 WindowState = WindowState.Minimized;
             }
 
             InitializeComponent();
-
 
             trayIcon = new()
             {
@@ -35,8 +34,8 @@ namespace SFP_UI.Views
 
         private void MainWindow_Opened(object? sender, EventArgs e)
         {
-            if(IsStarting 
-               && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.StartMinimized 
+            if (IsStarting
+               && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.StartMinimized
                && SFP.Properties.Settings.Default.ShowTrayIcon)
             {
                 IsStarting = false;
@@ -46,7 +45,7 @@ namespace SFP_UI.Views
 
         protected override void HandleWindowStateChanged(WindowState state)
         {
-            if(state == WindowState.Minimized && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.ShowTrayIcon)
+            if (state == WindowState.Minimized && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.ShowTrayIcon)
             {
                 Hide();
             }

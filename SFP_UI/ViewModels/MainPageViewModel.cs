@@ -8,8 +8,6 @@ using ReactiveUI;
 
 using SFP;
 
-using SFP_UI.Models;
-
 namespace SFP_UI.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
