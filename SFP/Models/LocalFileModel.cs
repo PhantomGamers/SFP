@@ -3,6 +3,7 @@
     public class LocalFileModel
     {
         public const string PATCHED_TEXT = "/*patched*/\n";
+        public const string ORIGINAL_TEXT = "/*original*/\n";
 
         public static async Task<bool> Patch(FileInfo? file, string? overrideName = null)
         {
@@ -11,7 +12,6 @@
                 LogModel.Logger.Error($"Library file does not exist. Start Steam and try again");
                 return false;
             }
-            LogModel.Logger.Info($"Patching file {file.Name}");
 
             var state = false;
             var watcher = FSWModel.GetFileSystemWatcher(Path.Join(file.DirectoryName, "*.css"));
@@ -23,12 +23,20 @@
 
             var contents = await File.ReadAllTextAsync(file.FullName);
 
+            if (contents.StartsWith(ORIGINAL_TEXT))
+            {
+                // We are looking at an original file!
+                return false;
+            }
+
             if (contents.StartsWith(PATCHED_TEXT))
             {
                 // File is already patched
                 LogModel.Logger.Info($"{file.Name} is already patched.");
                 return false;
             }
+
+            LogModel.Logger.Info($"Patching file {file.Name}");
 
             var originalFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.original{Path.GetExtension(file.FullName)}");
             FileInfo customFile;
@@ -41,7 +49,7 @@
                 customFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
             }
 
-            File.WriteAllText(originalFile.FullName, contents);
+            File.WriteAllText(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
 
             contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{originalFile.Directory.Name}/{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
             contents = string.Concat(contents, new string('\t', (int)(file.Length - contents.Length)));
