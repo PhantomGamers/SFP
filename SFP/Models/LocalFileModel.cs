@@ -82,7 +82,7 @@
             }
             else
             {
-                LogModel.Logger.Info($"Did not patch any files.");
+                LogModel.Logger.Info($"Did not patch any library files.");
             }
         }
 
