@@ -14,9 +14,16 @@
             (bytes, var patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name, file.Length);
             if (patched)
             {
-                await File.WriteAllBytesAsync(file.FullName, bytes);
-                LogModel.Logger.Info($"Patched {file.Name}.\nPut your custom css in {Path.Join(SteamModel.ClientUIDir, "friends.custom.css")}");
-                return true;
+                try
+                {
+                    await File.WriteAllBytesAsync(file.FullName, bytes);
+                    LogModel.Logger.Info($"Patched {file.Name}.\nPut your custom css in {Path.Join(SteamModel.ClientUIDir, "friends.custom.css")}");
+                    return true;
+                }
+                catch (IOException)
+                {
+                    return false;
+                }
             }
             else
             {
