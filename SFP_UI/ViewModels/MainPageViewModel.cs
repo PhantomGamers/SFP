@@ -85,7 +85,7 @@ namespace SFP_UI.ViewModels
             var cacheFilesPatched = false;
             if (SFP.Properties.Settings.Default.ShouldPatchFriends)
             {
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     var cacheFiles = await Task.Run(() => SFP.ChromeCache.BlockFile.Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
                     if (!SFP.Properties.Settings.Default.ScanOnly)
