@@ -39,7 +39,13 @@ namespace SFP
                     return UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
                 }
 
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
+                }
+
+                // OSX
+                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".Library", "Application Support", "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS");
             }
         }
 
@@ -57,7 +63,13 @@ namespace SFP
                     return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Steam", "htmlcache", "Cache");
                 }
 
-                return Path.Join(SteamDir, "config", "htmlcache", "Cache");
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    return Path.Join(SteamDir, "config", "htmlcache", "Cache");
+                }
+
+                // OSX
+                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".Library", "Application Support", "Steam", "config", "htmlcache", "Cache");
             }
         }
 

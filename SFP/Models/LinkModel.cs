@@ -1,4 +1,6 @@
-﻿namespace SFP
+﻿using System.Runtime.InteropServices;
+
+namespace SFP
 {
     public class LinkModel
     {
@@ -6,6 +8,11 @@
 
         public static FileInfo GetLink(FileInfo file)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return file;
+            }   
+            
             if (_hardLinks.ContainsKey(file.FullName))
             {
                 return new FileInfo(_hardLinks[file.FullName]);
