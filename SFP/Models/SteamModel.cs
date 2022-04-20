@@ -45,7 +45,7 @@ namespace SFP
                 }
 
                 // OSX
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".Library", "Application Support", "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS");
+                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Application Support", "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS");
             }
         }
 
@@ -69,7 +69,7 @@ namespace SFP
                 }
 
                 // OSX
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".Library", "Application Support", "Steam", "config", "htmlcache", "Cache");
+                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Application Support", "Steam", "config", "htmlcache", "Cache");
             }
         }
 
