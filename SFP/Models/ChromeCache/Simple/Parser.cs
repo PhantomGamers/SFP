@@ -21,7 +21,7 @@ namespace SFP.Models.ChromeCache.Simple
             using var fs = file.Open(fso);
             using var br = new BinaryReader(fs);
             var header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
-            string key = new string(br.ReadChars((int)header.key_length));
+            var key = new string(br.ReadChars((int)header.key_length));
             return key?.Contains(name) ?? false;
         }
 

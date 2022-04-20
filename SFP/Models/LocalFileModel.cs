@@ -71,7 +71,7 @@
 
         public static async Task PatchAll(DirectoryInfo directoryInfo, string? overrideName = null)
         {
-            bool patchedLibraryFiles = false;
+            var patchedLibraryFiles = false;
             foreach (var file in directoryInfo.EnumerateFiles())
             {
                 patchedLibraryFiles |= await Patch(file, overrideName);

@@ -11,8 +11,8 @@ namespace SFP
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return file;
-            }   
-            
+            }
+
             if (_hardLinks.ContainsKey(file.FullName))
             {
                 return new FileInfo(_hardLinks[file.FullName]);

@@ -55,7 +55,7 @@ namespace SFP_UI.Models
         {
             try
             {
-                string responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
+                var responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
                 var json = JObject.Parse(responseBody);
 
                 if (SemVersion.TryParse(json["tag_name"].ToString(), SemVersionStyles.Strict, out var semver))

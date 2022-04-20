@@ -98,7 +98,7 @@ namespace SFP_UI.ViewModels
                 }
                 else
                 {
-                    LogModel.Logger.Info("friends patching is not supported on Linux...");
+                    LogModel.Logger.Info($"Friends patching is not supported on {RuntimeInformation.RuntimeIdentifier}.");
                     //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
                 }
 

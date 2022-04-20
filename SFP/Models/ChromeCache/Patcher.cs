@@ -12,7 +12,7 @@ namespace SFP.Models.ChromeCache
             LogModel.Logger.Info($"size is {Marshal.SizeOf(typeof(SimpleFileHeader))}");
             var dirfiles = dir.GetFiles();
             LogModel.Logger.Info($"Found {dirfiles.Length} files");
-            foreach (FileInfo file in dirfiles)
+            foreach (var file in dirfiles)
             {
                 if (file.Name.EndsWith("_0"))
                 {
