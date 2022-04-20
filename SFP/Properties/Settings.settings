@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ShouldPatchOnStart" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ShouldPatchFriends" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ShouldScanOnStart" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="SteamLaunchArgs" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
