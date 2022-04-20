@@ -22,7 +22,7 @@ Once your files are patched follow the instructions in the program to install th
 # Known Issues
 * Currently breaks Big Picture Mode chat due to Big Picture not utilizing steamloopback.host
 * Patching the friends list is currently unsupported on Linux as it uses a different file format from Windows and OSX. Contributions welcome!
-* The program will crash on exit while the Show Tray Icon setting is enabled due to a bug with AvaloniaUI - https://github.com/AvaloniaUI/Avalonia/issues/7588
+* The program will crash on exit due to a bug with AvaloniaUI - https://github.com/AvaloniaUI/Avalonia/issues/7588
 
 # Dependencies
 * [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
