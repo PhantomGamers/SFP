@@ -10,6 +10,7 @@ namespace SFP
         {
             PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
             PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);
+            SFP.Properties.Settings.Default.Save();
         }
     }
 }
