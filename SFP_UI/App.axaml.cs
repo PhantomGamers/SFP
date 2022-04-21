@@ -44,6 +44,7 @@ namespace SFP_UI
             if (SettingsPageViewModel.Instance != null)
             {
                 await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
+                await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
             }
 
             if (SFP.Properties.Settings.Default.ShouldPatchOnStart)
