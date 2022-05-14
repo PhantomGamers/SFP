@@ -15,6 +15,8 @@ Once your files are patched follow the instructions in the program to install th
 
 **SFP does not include skins by itself, it simply patches the required files to allow the loading of skins made by others!**
 
+**If you have used the old patcher before make sure to use the Reset Steam option on this one on your first use!**
+
 # Todo
 * Improve automatic detection of correct library CSS file to patch.
 * Improve reliablility of the automatic scanner.
