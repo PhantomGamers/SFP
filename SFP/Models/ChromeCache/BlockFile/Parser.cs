@@ -8,11 +8,20 @@
             if (!cacheDir.Exists)
             {
                 LogModel.Logger.Error("Cache folder does not exist, start Steam and try again.");
-                return new List<FileInfo>();
+                return new();
             }
-            var index = new FileInfo(Path.Join(cacheDir.FullName, "index"));
+            FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
             index = LinkModel.GetLink(index);
-            var indexHeader = new IndexHeader(index);
+            IndexHeader indexHeader;
+            try
+            {
+                indexHeader  = new(index);
+            }
+            catch(IOException)
+            {
+                LogModel.Logger.Error($"Unable to open {index.FullName} as it is in use. Please shutdown Steam and try again.");
+                return new();
+            }
 
             List<FileInfo> files = new();
             using var fs = index.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
