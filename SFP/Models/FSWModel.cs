@@ -12,7 +12,12 @@
 
         public static bool AddFileSystemWatcher(string fileFullName, FileSystemEventHandler fileSystemEventHandler)
         {
-            return AddFileSystemWatcher(Path.GetDirectoryName(fileFullName), Path.GetFileName(fileFullName), fileSystemEventHandler);
+            var dirName = Path.GetDirectoryName(fileFullName);
+            if (dirName != null)
+            {
+                return AddFileSystemWatcher(dirName, Path.GetFileName(fileFullName), fileSystemEventHandler);
+            }
+            return false;
         }
 
         public static bool AddFileSystemWatcher(string directoryName, string filter, FileSystemEventHandler fileSystemEventHandler)

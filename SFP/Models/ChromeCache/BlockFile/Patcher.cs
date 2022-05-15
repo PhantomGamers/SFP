@@ -33,12 +33,22 @@
 
         public static void WatchFile(FileInfo file)
         {
-            FSWModel.AddFileSystemWatcher(file.DirectoryName, "data*", OnFileSystemEvent);
+            var dirname = file.DirectoryName;
+            if (dirname != null)
+            {
+                FSWModel.AddFileSystemWatcher(dirname, "data*", OnFileSystemEvent);
+            }
         }
 
         private static async void OnFileSystemEvent(object sender, FileSystemEventArgs e)
         {
-            var files = Parser.FindCacheFilesWithName(new DirectoryInfo(e.FullPath).Parent, "friends.css");
+            var dir = new DirectoryInfo(e.FullPath).Parent;
+            if (dir == null)
+            {
+                return;
+            }
+
+            var files = Parser.FindCacheFilesWithName(dir, "friends.css");
             var filesPatched = false;
             foreach (var file in files)
             {

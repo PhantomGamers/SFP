@@ -31,7 +31,7 @@ namespace SFP.ChromeCache.BlockFile
                 var raw = br.ReadUInt32();
                 try
                 {
-                    data_addrs.Add(new Addr(raw, addr.File.DirectoryName));
+                    data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
                 }
                 catch
                 {
