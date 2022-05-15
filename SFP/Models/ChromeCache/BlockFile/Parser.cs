@@ -11,15 +11,26 @@
                 return new();
             }
             FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
+            if(!index.Exists)
+            {
+                LogModel.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
+                return new();
+            }
+
             index = LinkModel.GetLink(index);
             IndexHeader indexHeader;
             try
             {
                 indexHeader = new(index);
             }
+            catch (FileNotFoundException)
+            {
+                LogModel.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
+                return new();
+            }
             catch (IOException)
             {
-                LogModel.Logger.Error($"Unable to open {index.FullName} as it is in use. Please shutdown Steam and try again.");
+                LogModel.Logger.Error($"Unable to open {index.FullName}. Please shutdown Steam and try again.");
                 return new();
             }
 
