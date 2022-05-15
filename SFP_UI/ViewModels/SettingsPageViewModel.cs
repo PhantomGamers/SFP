@@ -2,6 +2,8 @@
 
 using ReactiveUI;
 
+using SFP;
+
 using SFP_UI.Views;
 
 namespace SFP_UI.ViewModels
@@ -123,7 +125,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        private string steamDirectory = SFP.Properties.Settings.Default.SteamDirectory;
+        private string steamDirectory = SteamModel.SteamDir ?? string.Empty;
 
         public string SteamDirectory
         {
@@ -135,7 +137,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        private string cacheDirectory = SFP.Properties.Settings.Default.CacheDirectory;
+        private string cacheDirectory = SteamModel.CacheDir;
 
         public string CacheDirectory
         {
@@ -225,9 +227,9 @@ namespace SFP_UI.ViewModels
             ScanOnly = SFP.Properties.Settings.Default.ScanOnly;
             RestartSteamOnPatch = SFP.Properties.Settings.Default.RestartSteamOnPatch;
             ShouldScanOnStart = SFP.Properties.Settings.Default.ShouldScanOnStart;
-            SteamDirectory = SFP.Properties.Settings.Default.SteamDirectory;
+            SteamDirectory = SteamModel.SteamDir ?? string.Empty;
             SteamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
-            CacheDirectory = SFP.Properties.Settings.Default.CacheDirectory;
+            CacheDirectory = SteamModel.CacheDir;
         }
 
         public async void OnBrowseSteamCommand()
@@ -248,6 +250,18 @@ namespace SFP_UI.ViewModels
                 string? result = await dialog.ShowAsync(MainWindow.Instance);
                 CacheDirectory = result ?? CacheDirectory;
             }
+        }
+
+        public void OnResetSteamCommand()
+        {
+            SFP.Properties.Settings.Default.SteamDirectory = string.Empty;
+            SteamDirectory = SteamModel.SteamDir ?? string.Empty;
+        }
+
+        public void OnResetCacheCommand()
+        {
+            SFP.Properties.Settings.Default.CacheDirectory = string.Empty;
+            CacheDirectory = SteamModel.CacheDir;
         }
     }
 }

@@ -20,6 +20,7 @@
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
           <Button Margin="5,0,0,0" Command="{Binding OnBrowseSteamCommand}">Browse</Button>
+            <Button Margin="5,0,0,0" Command="{Binding OnResetSteamCommand}">Reset</Button>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
           <Label Margin="0,10">Cache Directory</Label>
@@ -27,6 +28,7 @@
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
           <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
+          <Button Margin="5,0,0,0" Command="{Binding OnResetCacheCommand}">Reset</Button>
         </StackPanel>
         <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam On Patch</CheckBox>
         <Label Margin="8">Patcher Settings</Label>
