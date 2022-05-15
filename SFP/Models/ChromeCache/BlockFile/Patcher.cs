@@ -11,7 +11,7 @@
             }
 
             var bytes = await File.ReadAllBytesAsync(file.FullName);
-            (bytes, var patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name, file.Length);
+            (bytes, var patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name);
             if (patched)
             {
                 try

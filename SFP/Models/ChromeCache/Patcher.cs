@@ -25,7 +25,7 @@ namespace SFP.Models.ChromeCache
             }
         }
 
-        public static async Task<(byte[], bool)> PatchFriendsCSS(byte[] data, string fileName, long targetsize)
+        public static async Task<(byte[], bool)> PatchFriendsCSS(byte[] data, string fileName)
         {
             if (!UtilsModel.IsGZipHeader(data))
             {
