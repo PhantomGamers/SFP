@@ -4,10 +4,10 @@ namespace SFP.Models.ChromeCache.Simple
 {
     public struct SimpleFileHeader
     {
-        private readonly ulong initial_magic_number;
-        private readonly uint version;
+        //private readonly ulong initial_magic_number;
+        //private readonly uint version;
         public readonly uint key_length;
-        private readonly uint key_hash;
+        //private readonly uint key_hash;
 
         public byte[] Serialize()
         {
@@ -23,7 +23,7 @@ namespace SFP.Models.ChromeCache.Simple
             FLAG_HAS_KEY_SHA256 = 1U << 1,  // Preceding the record if present.
         };
 
-        private readonly ulong final_magic_number;
+        //private readonly ulong final_magic_number;
         public readonly uint flags;
         public uint data_crc32;
 

@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System.Diagnostics.CodeAnalysis;
+using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
 using SFP_UI.ViewModels;
@@ -7,6 +8,7 @@ namespace SFP_UI
 {
     public class ViewLocator : IDataTemplate
     {
+        [RequiresUnreferencedCode()]
         public IControl Build(object data)
         {
             var name = data.GetType().FullName!.Replace("ViewModel", "View");

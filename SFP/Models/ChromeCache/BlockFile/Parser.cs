@@ -15,9 +15,9 @@
             IndexHeader indexHeader;
             try
             {
-                indexHeader  = new(index);
+                indexHeader = new(index);
             }
-            catch(IOException)
+            catch (IOException)
             {
                 LogModel.Logger.Error($"Unable to open {index.FullName} as it is in use. Please shutdown Steam and try again.");
                 return new();
