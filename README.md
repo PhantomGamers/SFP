@@ -2,7 +2,7 @@
 
 This utility is designed to allow you to apply themes to the modern Steam friends and library interfaces.  
 
-# Instructions
+## Instructions
 
 Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.  
   
@@ -17,19 +17,25 @@ Once your files are patched follow the instructions in the program to install th
 
 **If you have used the old patcher before make sure to use the Reset Steam option on this one on your first use!**
 
-# Todo
+**If any of the above is unclear I highly recommend reading this fantastic guide available on the Steam community: <https://steamcommunity.com/sharedfiles/filedetails/?id=1941650801>**
+
+## Todo
+
 * Improve automatic detection of correct library CSS file to patch.
 * Improve reliablility of the automatic scanner.
 
-# Known Issues
+## Known Issues
+
 * Currently breaks Big Picture Mode chat due to Big Picture not utilizing steamloopback.host
 * Patching the friends list is currently unsupported on Linux and OSX as it uses a different file format from Windows. Contributions welcome!
-* The program will crash on exit due to a bug with AvaloniaUI - https://github.com/AvaloniaUI/Avalonia/issues/7588
+* The program will crash on exit due to a bug with AvaloniaUI - <https://github.com/AvaloniaUI/Avalonia/issues/7588>
 
-# Dependencies
+## Dependencies
+
 * [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
 
-# Credits
+## Credits
+
 * Darth from the Steam community forums for the method.
 * [@henrikx for Steam directory detection code.](https://github.com/henrikx/metroskininstaller)
 * [Sam Allen of Dot Net Perls for GZIP compression, decompression, and detection code.](https://www.dotnetperls.com/decompress)
