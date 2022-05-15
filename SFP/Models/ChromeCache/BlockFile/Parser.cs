@@ -11,7 +11,7 @@
                 return new();
             }
             FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
-            if(!index.Exists)
+            if (!index.Exists)
             {
                 LogModel.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
                 return new();

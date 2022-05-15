@@ -52,7 +52,7 @@
             File.WriteAllText(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
 
             var dirName = originalFile.Directory?.Name;
-            if(dirName != null)
+            if (dirName != null)
             {
                 dirName += '/';
             }
@@ -113,7 +113,7 @@
         public static async Task WatchLocal(string fileFullPath)
         {
             var pathRoot = Path.GetPathRoot(fileFullPath);
-            if(pathRoot != null)
+            if (pathRoot != null)
             {
                 await Task.Run(() => FSWModel.AddFileSystemWatcher(pathRoot, Path.GetFileName(fileFullPath), OnLocalWatcherEvent));
             }
