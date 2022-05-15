@@ -27,7 +27,13 @@ jobs:
           core.setFailed('Invalid tag')
 
     - uses: actions/checkout@v2
-    - run: |
+
+    - name: Check code style
+      run: |
+        dotnet format --severity info --verify-no-changes
+
+    - name: Create tag
+      run: |
         git tag ${{ github.event.inputs.version }}
         git push origin ${{ github.event.inputs.version }}
 
