@@ -12,7 +12,7 @@
 
         public static bool AddFileSystemWatcher(string fileFullName, FileSystemEventHandler fileSystemEventHandler)
         {
-            var dirName = Path.GetDirectoryName(fileFullName);
+            string? dirName = Path.GetDirectoryName(fileFullName);
             if (dirName != null)
             {
                 return AddFileSystemWatcher(dirName, Path.GetFileName(fileFullName), fileSystemEventHandler);
@@ -22,7 +22,7 @@
 
         public static bool AddFileSystemWatcher(string directoryName, string filter, FileSystemEventHandler fileSystemEventHandler)
         {
-            var key = Path.Join(directoryName, filter);
+            string? key = Path.Join(directoryName, filter);
             if (fileSystemWatchers.ContainsKey(key))
             {
                 return false;
@@ -53,7 +53,7 @@
                 return false;
             }
 
-            var watcher = fileSystemWatchers[fileFullName];
+            FileSystemWatcher? watcher = fileSystemWatchers[fileFullName];
 
             watcher.EnableRaisingEvents = false;
             watcher.Dispose();
@@ -65,9 +65,9 @@
 
         public static bool RemoveAllWatchers()
         {
-            var result = true;
+            bool result = true;
 
-            foreach (var watcher in fileSystemWatchers.Keys)
+            foreach (string? watcher in fileSystemWatchers.Keys)
             {
                 result &= RemoveFileSystemWatcher(watcher);
             }
@@ -120,7 +120,7 @@
         {
             if (fileSystemWatchers.ContainsKey(fileFullName))
             {
-                var watcher = fileSystemWatchers[fileFullName];
+                FileSystemWatcher? watcher = fileSystemWatchers[fileFullName];
                 watcher.EnableRaisingEvents = state ?? !watcher.EnableRaisingEvents;
                 return true;
             }

@@ -82,7 +82,7 @@ namespace SFP_UI.ViewModels
                 return;
             }
 
-            var cacheFilesPatched = false;
+            bool cacheFilesPatched = false;
             if (SFP.Properties.Settings.Default.ShouldPatchFriends)
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -90,7 +90,7 @@ namespace SFP_UI.ViewModels
                     var cacheFiles = await Task.Run(() => SFP.ChromeCache.BlockFile.Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
                     if (!SFP.Properties.Settings.Default.ScanOnly)
                     {
-                        foreach (var cacheFile in cacheFiles)
+                        foreach (FileInfo? cacheFile in cacheFiles)
                         {
                             cacheFilesPatched |= await Task.Run(() => SFP.ChromeCache.BlockFile.Patcher.PatchFile(cacheFile));
                         }

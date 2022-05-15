@@ -235,7 +235,7 @@ namespace SFP_UI.ViewModels
             if (MainWindow.Instance != null)
             {
                 var dialog = new OpenFolderDialog();
-                var result = await dialog.ShowAsync(MainWindow.Instance);
+                string? result = await dialog.ShowAsync(MainWindow.Instance);
                 SteamDirectory = result ?? SteamDirectory;
             }
         }
@@ -245,7 +245,7 @@ namespace SFP_UI.ViewModels
             if (MainWindow.Instance != null)
             {
                 var dialog = new OpenFolderDialog();
-                var result = await dialog.ShowAsync(MainWindow.Instance);
+                string? result = await dialog.ShowAsync(MainWindow.Instance);
                 CacheDirectory = result ?? CacheDirectory;
             }
         }

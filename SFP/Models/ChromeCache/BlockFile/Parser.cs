@@ -35,12 +35,12 @@
             }
 
             List<FileInfo> files = new();
-            using var fs = index.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using FileStream? fs = index.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fs.Seek(92 * 4, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
-            for (var i = 0; i < indexHeader.Table_len; i++)
+            for (int i = 0; i < indexHeader.Table_len; i++)
             {
-                var raw = br.ReadUInt32();
+                uint raw = br.ReadUInt32();
                 if (raw != 0)
                 {
                     var entry = new EntryStore(new Addr(raw, cacheDir.FullName));
@@ -59,7 +59,7 @@
                         {
                             continue;
                         }
-                        for (var j = 0; j < entry.data_addrs.Count; j++)
+                        for (int j = 0; j < entry.data_addrs.Count; j++)
                         {
                             LogModel.Logger.Debug($"Entry's Address {j} points to {entry.data_addrs[j].File.Name}");
                         }
@@ -71,7 +71,7 @@
             fs.Close();
             LinkModel.RemoveAllHardLinks();
             LogModel.Logger.Info($"Found {files.Count} matches...");
-            foreach (var file in files)
+            foreach (FileInfo? file in files)
             {
                 LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
             }

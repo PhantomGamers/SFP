@@ -18,25 +18,25 @@ namespace SFP.Models.ChromeCache.Simple
 
         public static bool FileContainsName(FileInfo file, string name)
         {
-            using var fs = file.Open(fso);
+            using FileStream? fs = file.Open(fso);
             using var br = new BinaryReader(fs);
-            var header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
-            var key = new string(br.ReadChars((int)header.key_length));
+            SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
+            string? key = new(br.ReadChars((int)header.key_length));
             return key?.Contains(name) ?? false;
         }
 
         internal static SimpleFile GetSimpleFile(FileInfo file)
         {
-            using var fs = file.Open(fso);
+            using FileStream? fs = file.Open(fso);
             using var br = new BinaryReader(fs);
-            var header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
-            var key = new string(br.ReadChars((int)header.key_length));
+            SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
+            string? key = new(br.ReadChars((int)header.key_length));
 
             fs.Seek(-SimpleFileEOFSize, SeekOrigin.End);
-            var eof0 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
+            SimpleFileEOF eof0 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
             fs.Seek(-SimpleFileEOFSize, SeekOrigin.End);
 
-            var sha256 = Array.Empty<byte>();
+            byte[]? sha256 = Array.Empty<byte>();
             if (eof0.HasSHA256())
             {
                 fs.Seek(-32, SeekOrigin.Current);
@@ -45,15 +45,15 @@ namespace SFP.Models.ChromeCache.Simple
             }
 
             fs.Seek(-eof0.stream_size, SeekOrigin.Current);
-            var eof0_data = br.ReadBytes((int)eof0.stream_size);
+            byte[]? eof0_data = br.ReadBytes((int)eof0.stream_size);
             fs.Seek(-eof0.stream_size, SeekOrigin.Current);
 
             fs.Seek(-SimpleFileEOFSize, SeekOrigin.Current);
-            var eof1 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
+            SimpleFileEOF eof1 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
             fs.Seek(-SimpleFileEOFSize, SeekOrigin.Current);
 
             fs.Seek(-eof1.stream_size, SeekOrigin.Current);
-            var eof1_data = br.ReadBytes((int)eof1.stream_size);
+            byte[]? eof1_data = br.ReadBytes((int)eof1.stream_size);
 
             return new(header, key, eof0_data, eof1_data, eof0, eof1, sha256, file);
         }

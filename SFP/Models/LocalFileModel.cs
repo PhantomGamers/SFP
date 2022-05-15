@@ -13,15 +13,15 @@
                 return false;
             }
 
-            var state = false;
-            var watcher = FSWModel.GetFileSystemWatcher(Path.Join(file.DirectoryName, "*.css"));
+            bool state = false;
+            FileSystemWatcher? watcher = FSWModel.GetFileSystemWatcher(Path.Join(file.DirectoryName, "*.css"));
             if (watcher != null)
             {
                 state = watcher.EnableRaisingEvents;
                 watcher.EnableRaisingEvents = false;
             }
 
-            var contents = await File.ReadAllTextAsync(file.FullName);
+            string? contents = await File.ReadAllTextAsync(file.FullName);
 
             if (contents.StartsWith(ORIGINAL_TEXT))
             {
@@ -51,7 +51,7 @@
 
             File.WriteAllText(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
 
-            var dirName = originalFile.Directory?.Name;
+            string? dirName = originalFile.Directory?.Name;
             if (dirName != null)
             {
                 dirName += '/';
@@ -62,7 +62,7 @@
             }
 
             contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{dirName}{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
-            if(file.Length < contents.Length)
+            if (file.Length < contents.Length)
             {
                 LogModel.Logger.Warn($"{file.Name} is too small to patch");
                 return false;
@@ -71,7 +71,7 @@
 
             File.WriteAllText(file.FullName, contents);
 
-            var customFileName = Path.Join(uiDir ?? SteamModel.SteamUIDir, customFile.Name);
+            string? customFileName = Path.Join(uiDir ?? SteamModel.SteamUIDir, customFile.Name);
             if (!File.Exists(customFileName))
             {
                 File.Create(customFileName).Dispose();
@@ -86,8 +86,8 @@
 
         public static async Task PatchAll(DirectoryInfo directoryInfo, string? overrideName = null)
         {
-            var patchedLibraryFiles = false;
-            foreach (var file in directoryInfo.EnumerateFiles())
+            bool patchedLibraryFiles = false;
+            foreach (FileInfo? file in directoryInfo.EnumerateFiles())
             {
                 patchedLibraryFiles |= await Patch(file, overrideName);
             }
@@ -117,7 +117,7 @@
 
         public static async Task WatchLocal(string fileFullPath)
         {
-            var pathRoot = Path.GetPathRoot(fileFullPath);
+            string? pathRoot = Path.GetPathRoot(fileFullPath);
             if (pathRoot != null)
             {
                 await Task.Run(() => FSWModel.AddFileSystemWatcher(pathRoot, Path.GetFileName(fileFullPath), OnLocalWatcherEvent));

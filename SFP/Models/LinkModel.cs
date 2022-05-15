@@ -23,9 +23,9 @@ namespace SFP
 
         public static FileInfo CreateHardLink(FileInfo file)
         {
-            var linkPath = Path.Join(file.DirectoryName, "SFP");
+            string? linkPath = Path.Join(file.DirectoryName, "SFP");
             Directory.CreateDirectory(linkPath);
-            var linkName = Path.Join(linkPath, file.Name);
+            string? linkName = Path.Join(linkPath, file.Name);
 
             if (File.Exists(linkName))
             {
@@ -63,8 +63,8 @@ namespace SFP
 
         public static bool RemoveAllHardLinks()
         {
-            var result = true;
-            foreach (var file in _hardLinks.Keys)
+            bool result = true;
+            foreach (string? file in _hardLinks.Keys)
             {
                 result &= RemoveHardLink(file);
             }

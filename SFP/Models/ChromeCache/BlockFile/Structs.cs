@@ -13,22 +13,22 @@ namespace SFP.ChromeCache.BlockFile
 
         public EntryStore(Addr addr)
         {
-            var tmpFile = LinkModel.GetLink(addr.File);
+            FileInfo? tmpFile = LinkModel.GetLink(addr.File);
             if (!tmpFile.Exists)
             {
                 LogModel.Logger.Warn("Could not create tmp file. Clear cache and try again");
                 return;
             }
-            using var fs = tmpFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using FileStream? fs = tmpFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fs.Seek(8196 + addr.Num_Blocks * addr.BlockSize, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             next = br.ReadUInt32();
             fs.Seek(24, SeekOrigin.Current);
             keyLength = br.ReadUInt32();
             fs.Seek(20, SeekOrigin.Current);
-            for (var i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
-                var raw = br.ReadUInt32();
+                uint raw = br.ReadUInt32();
                 try
                 {
                     data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
@@ -51,7 +51,7 @@ namespace SFP.ChromeCache.BlockFile
 
         public IndexHeader(FileInfo file)
         {
-            using var fs = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using FileStream? fs = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             fs.Seek(28, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             Table_len = br.ReadUInt32();

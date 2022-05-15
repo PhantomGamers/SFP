@@ -30,7 +30,7 @@ namespace SFP_UI.Models
         public static async Task CheckForUpdates()
         {
             LogModel.Logger.Info("Checking for updates...");
-            var semver = await GetLatestVersionAsync();
+            SemVersion? semver = await GetLatestVersionAsync();
 
             if (semver > Version)
             {
@@ -55,10 +55,10 @@ namespace SFP_UI.Models
         {
             try
             {
-                var responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
+                string? responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
                 var json = JObject.Parse(responseBody);
 
-                if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict, out var semver))
+                if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict, out SemVersion? semver))
                 {
                     return semver;
                 }

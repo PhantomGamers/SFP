@@ -106,12 +106,12 @@ namespace SFP
 
             if (IsGameRunning)
             {
-                var gameName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RunningGameName != null ? RunningGameName : "Game";
+                string? gameName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RunningGameName != null ? RunningGameName : "Game";
                 LogModel.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
                 return;
             }
 
-            var steamState = IsSteamRunning;
+            bool steamState = IsSteamRunning;
             if (steamState)
             {
                 LogModel.Logger.Info($"Shutting down Steam");
@@ -122,7 +122,7 @@ namespace SFP
                 }
             }
 
-            var scannerState = FSWModel.WatchersActive;
+            bool scannerState = FSWModel.WatchersActive;
             FSWModel.RemoveAllWatchers();
 
             try
@@ -160,7 +160,7 @@ namespace SFP
         private static bool ShutDownSteam()
         {
             Process.Start(SteamExe, "-shutdown");
-            var proc = SteamProcess;
+            Process? proc = SteamProcess;
             if (proc != null && !proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
                 return false;

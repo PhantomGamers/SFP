@@ -40,9 +40,9 @@ namespace SFP
         [SupportedOSPlatform("windows")]
         public static object? GetRegistryData(string aKey, string aValueName)
         {
-            using var registryKey = Registry.CurrentUser.OpenSubKey(aKey);
+            using RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey(aKey);
             object? value = null;
-            var regValue = registryKey?.GetValue(aValueName);
+            object? regValue = registryKey?.GetValue(aValueName);
             if (regValue != null)
             {
                 value = regValue;
@@ -68,8 +68,8 @@ namespace SFP
         public static byte[] StructureToByteArray<T>(T structure) where T : struct
         {
             var handle = GCHandle.Alloc(structure, GCHandleType.Pinned);
-            var size = Marshal.SizeOf(typeof(T));
-            var array = new byte[size];
+            int size = Marshal.SizeOf(typeof(T));
+            byte[]? array = new byte[size];
             try
             {
                 Marshal.StructureToPtr(structure, handle.AddrOfPinnedObject(), true);

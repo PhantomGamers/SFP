@@ -10,8 +10,8 @@
                 return false;
             }
 
-            var bytes = await File.ReadAllBytesAsync(file.FullName);
-            (bytes, var patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name);
+            byte[]? bytes = await File.ReadAllBytesAsync(file.FullName);
+            (bytes, bool patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name);
             if (patched)
             {
                 try
@@ -33,7 +33,7 @@
 
         public static void WatchFile(FileInfo file)
         {
-            var dirname = file.DirectoryName;
+            string? dirname = file.DirectoryName;
             if (dirname != null)
             {
                 FSWModel.AddFileSystemWatcher(dirname, "data*", OnFileSystemEvent);
@@ -42,15 +42,15 @@
 
         private static async void OnFileSystemEvent(object sender, FileSystemEventArgs e)
         {
-            var dir = new DirectoryInfo(e.FullPath).Parent;
+            DirectoryInfo? dir = new DirectoryInfo(e.FullPath).Parent;
             if (dir == null)
             {
                 return;
             }
 
-            var files = Parser.FindCacheFilesWithName(dir, "friends.css");
-            var filesPatched = false;
-            foreach (var file in files)
+            List<FileInfo>? files = Parser.FindCacheFilesWithName(dir, "friends.css");
+            bool filesPatched = false;
+            foreach (FileInfo? file in files)
             {
                 filesPatched |= await PatchFile(file);
             }
