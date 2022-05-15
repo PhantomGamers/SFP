@@ -13,11 +13,11 @@ namespace SFP
         public static string ClientUIDir => Path.Join(SteamDir, "clientui");
 
         private static int RunningGameID => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                                          ? (int)UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "RunningAppID")
+                                          ? (int)(UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "RunningAppID") ?? -1)
                                           : -1;
 
         [SupportedOSPlatform("windows")]
-        private static string RunningGameName => UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam\Apps\" + RunningGameID, "Name").ToString();
+        private static string? RunningGameName => UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam\Apps\" + RunningGameID, "Name")?.ToString();
 
         private static bool IsGameRunning => RunningGameID > 0;
 
@@ -106,7 +106,7 @@ namespace SFP
 
             if (IsGameRunning)
             {
-                var gameName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? RunningGameName : "Game";
+                var gameName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RunningGameName != null ? RunningGameName : "Game";
                 LogModel.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
                 return;
             }

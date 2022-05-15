@@ -38,7 +38,7 @@ namespace SFP
         }
 
         [SupportedOSPlatform("windows")]
-        public static object GetRegistryData(string aKey, string aValueName)
+        public static object? GetRegistryData(string aKey, string aValueName)
         {
             using var registryKey = Registry.CurrentUser.OpenSubKey(aKey);
             object? value = null;

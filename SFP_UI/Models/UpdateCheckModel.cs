@@ -34,7 +34,7 @@ namespace SFP_UI.Models
 
             if (semver > Version)
             {
-                MainPageViewModel.Instance.Manager
+                MainPageViewModel.Instance!.Manager
                                  .CreateMessage()
                                  .Accent("#1751C3")
                                  .Animates(true)
@@ -58,7 +58,7 @@ namespace SFP_UI.Models
                 var responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
                 var json = JObject.Parse(responseBody);
 
-                if (SemVersion.TryParse(json["tag_name"].ToString(), SemVersionStyles.Strict, out var semver))
+                if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict, out var semver))
                 {
                     return semver;
                 }

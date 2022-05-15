@@ -51,7 +51,17 @@
 
             File.WriteAllText(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
 
-            contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{originalFile.Directory.Name}/{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
+            var dirName = originalFile.Directory?.Name;
+            if(dirName != null)
+            {
+                dirName += '/';
+            }
+            else
+            {
+                dirName = string.Empty;
+            }
+
+            contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{dirName}{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
             contents = string.Concat(contents, new string('\t', (int)(file.Length - contents.Length)));
 
             File.WriteAllText(file.FullName, contents);
@@ -102,7 +112,11 @@
 
         public static async Task WatchLocal(string fileFullPath)
         {
-            await Task.Run(() => FSWModel.AddFileSystemWatcher(Path.GetPathRoot(fileFullPath), Path.GetFileName(fileFullPath), OnLocalWatcherEvent));
+            var pathRoot = Path.GetPathRoot(fileFullPath);
+            if(pathRoot != null)
+            {
+                await Task.Run(() => FSWModel.AddFileSystemWatcher(pathRoot, Path.GetFileName(fileFullPath), OnLocalWatcherEvent));
+            }
         }
 
         private static async void OnLocalWatcherEvent(object sender, FileSystemEventArgs e)
