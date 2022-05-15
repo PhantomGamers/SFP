@@ -62,6 +62,11 @@
             }
 
             contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{dirName}{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
+            if(file.Length < contents.Length)
+            {
+                LogModel.Logger.Warn($"{file.Name} is too small to patch");
+                return false;
+            }
             contents = string.Concat(contents, new string('\t', (int)(file.Length - contents.Length)));
 
             File.WriteAllText(file.FullName, contents);
