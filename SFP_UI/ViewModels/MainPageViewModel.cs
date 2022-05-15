@@ -102,7 +102,7 @@ namespace SFP_UI.ViewModels
                     //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
                 }
 
-                await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css"))));
+                await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")), uiDir: SteamModel.ClientUIDir));
             }
 
             if (SFP.Properties.Settings.Default.ShouldPatchLibrary)

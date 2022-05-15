@@ -5,7 +5,7 @@
         public const string PATCHED_TEXT = "/*patched*/\n";
         public const string ORIGINAL_TEXT = "/*original*/\n";
 
-        public static async Task<bool> Patch(FileInfo? file, string? overrideName = null)
+        public static async Task<bool> Patch(FileInfo? file, string? overrideName = null, string? uiDir = null)
         {
             if (file is null)
             {
@@ -66,7 +66,7 @@
 
             File.WriteAllText(file.FullName, contents);
 
-            var customFileName = Path.Join(SteamModel.SteamUIDir, customFile.Name);
+            var customFileName = Path.Join(uiDir ?? SteamModel.SteamUIDir, customFile.Name);
             if (!File.Exists(customFileName))
             {
                 File.Create(customFileName).Dispose();
