@@ -8,7 +8,7 @@ namespace SFP_UI
 {
     public class ViewLocator : IDataTemplate
     {
-        [RequiresUnreferencedCode()]
+        [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "From template")]
         public IControl Build(object data)
         {
             var name = data.GetType().FullName!.Replace("ViewModel", "View");
