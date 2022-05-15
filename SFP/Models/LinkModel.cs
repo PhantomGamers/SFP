@@ -4,7 +4,7 @@ namespace SFP
 {
     public class LinkModel
     {
-        private static readonly Dictionary<string, string> _hardLinks = new();
+        private static readonly Dictionary<string, string> s_hardLinks = new();
 
         public static FileInfo GetLink(FileInfo file)
         {
@@ -13,9 +13,9 @@ namespace SFP
                 return file;
             }
 
-            if (_hardLinks.ContainsKey(file.FullName))
+            if (s_hardLinks.ContainsKey(file.FullName))
             {
-                return new FileInfo(_hardLinks[file.FullName]);
+                return new FileInfo(s_hardLinks[file.FullName]);
             }
 
             return CreateHardLink(file);
@@ -29,33 +29,33 @@ namespace SFP
 
             if (File.Exists(linkName))
             {
-                if (!_hardLinks.ContainsValue(linkName))
+                if (!s_hardLinks.ContainsValue(linkName))
                 {
-                    _hardLinks.Add(file.FullName, linkName);
+                    s_hardLinks.Add(file.FullName, linkName);
                     return new FileInfo(linkName);
                 }
             }
 
             NativeModel.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
-            _hardLinks.Add(file.FullName, linkName);
+            s_hardLinks.Add(file.FullName, linkName);
             return new FileInfo(linkName);
         }
 
         public static bool RemoveHardLink(string fileName)
         {
-            if (_hardLinks.ContainsKey(fileName))
+            if (s_hardLinks.ContainsKey(fileName))
             {
                 try
                 {
-                    File.Delete(_hardLinks[fileName]);
+                    File.Delete(s_hardLinks[fileName]);
                 }
                 catch
                 {
-                    LogModel.Logger.Warn($"Could not delete {_hardLinks[fileName]} which links to {fileName}");
+                    LogModel.Logger.Warn($"Could not delete {s_hardLinks[fileName]} which links to {fileName}");
                     return false;
                 }
 
-                _hardLinks.Remove(fileName);
+                s_hardLinks.Remove(fileName);
                 return true;
             }
             return false;
@@ -64,7 +64,7 @@ namespace SFP
         public static bool RemoveAllHardLinks()
         {
             bool result = true;
-            foreach (string? file in _hardLinks.Keys)
+            foreach (string? file in s_hardLinks.Keys)
             {
                 result &= RemoveHardLink(file);
             }

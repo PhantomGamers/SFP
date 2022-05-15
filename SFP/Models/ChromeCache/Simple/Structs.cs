@@ -48,40 +48,40 @@ namespace SFP.Models.ChromeCache.Simple
 
     public struct SimpleFile
     {
-        private readonly SimpleFileHeader header;
-        private readonly string key;
-        private readonly byte[] eof0_data;
+        private readonly SimpleFileHeader _header;
+        private readonly string _key;
+        private readonly byte[] _eof0_data;
         public byte[] eof1_data;
-        private readonly SimpleFileEOF eof0;
+        private readonly SimpleFileEOF _eof0;
         public SimpleFileEOF eof1;
-        private readonly byte[] sha256;
+        private readonly byte[] _sha256;
         public readonly FileInfo file;
 
         public SimpleFile(SimpleFileHeader header, string key, byte[] eof0_data, byte[] eof1_data, SimpleFileEOF eof0, SimpleFileEOF eof1, byte[] sha256, FileInfo file)
         {
-            this.header = header;
-            this.key = key;
-            this.eof0_data = eof0_data;
+            _header = header;
+            _key = key;
+            _eof0_data = eof0_data;
             this.eof1_data = eof1_data;
-            this.eof0 = eof0;
+            _eof0 = eof0;
             this.eof1 = eof1;
-            this.sha256 = sha256;
+            _sha256 = sha256;
             this.file = file;
         }
 
         public byte[] Serialize()
         {
             var bytes = new List<byte>();
-            bytes.AddRange(header.Serialize());
-            bytes.AddRange(Encoding.UTF8.GetBytes(key));
+            bytes.AddRange(_header.Serialize());
+            bytes.AddRange(Encoding.UTF8.GetBytes(_key));
             bytes.AddRange(eof1_data);
             bytes.AddRange(eof1.Serialize());
-            bytes.AddRange(eof0_data);
-            if (eof0.HasSHA256())
+            bytes.AddRange(_eof0_data);
+            if (_eof0.HasSHA256())
             {
-                bytes.AddRange(sha256);
+                bytes.AddRange(_sha256);
             }
-            bytes.AddRange(eof0.Serialize());
+            bytes.AddRange(_eof0.Serialize());
             return bytes.ToArray();
         }
     }

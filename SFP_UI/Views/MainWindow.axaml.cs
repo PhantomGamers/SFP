@@ -10,7 +10,7 @@ namespace SFP_UI.Views
 
         public readonly TrayIcon trayIcon;
 
-        private bool IsStarting = true;
+        private bool _isStarting = true;
 
         public MainWindow()
         {
@@ -34,11 +34,11 @@ namespace SFP_UI.Views
 
         private void MainWindow_Opened(object? sender, EventArgs e)
         {
-            if (IsStarting
+            if (_isStarting
                && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.StartMinimized
                && SFP.Properties.Settings.Default.ShowTrayIcon)
             {
-                IsStarting = false;
+                _isStarting = false;
                 Hide();
             }
         }

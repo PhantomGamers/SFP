@@ -7,7 +7,7 @@ namespace SFP.Models.ChromeCache.Simple
         public static readonly int SimpleFileHeaderSize = Marshal.SizeOf(typeof(SimpleFileHeader));
         public static readonly int SimpleFileEOFSize = Marshal.SizeOf(typeof(SimpleFileEOF));
 
-        private static readonly FileStreamOptions fso = new()
+        private static readonly FileStreamOptions s_fso = new()
         {
             Access = FileAccess.Read,
             BufferSize = 1024,
@@ -18,7 +18,7 @@ namespace SFP.Models.ChromeCache.Simple
 
         public static bool FileContainsName(FileInfo file, string name)
         {
-            using FileStream? fs = file.Open(fso);
+            using FileStream? fs = file.Open(s_fso);
             using var br = new BinaryReader(fs);
             SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
             string? key = new(br.ReadChars((int)header.key_length));
@@ -27,7 +27,7 @@ namespace SFP.Models.ChromeCache.Simple
 
         internal static SimpleFile GetSimpleFile(FileInfo file)
         {
-            using FileStream? fs = file.Open(fso);
+            using FileStream? fs = file.Open(s_fso);
             using var br = new BinaryReader(fs);
             SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
             string? key = new(br.ReadChars((int)header.key_length));

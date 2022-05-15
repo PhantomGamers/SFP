@@ -2,9 +2,9 @@
 {
     public class FSWModel
     {
-        private static readonly Dictionary<string, FileSystemWatcher> fileSystemWatchers = new();
+        private static readonly Dictionary<string, FileSystemWatcher> s_fileSystemWatchers = new();
 
-        public static bool WatchersActive => fileSystemWatchers.Count > 0;
+        public static bool WatchersActive => s_fileSystemWatchers.Count > 0;
 
         public static bool ScanFriends { get; private set; } = true;
 
@@ -23,7 +23,7 @@
         public static bool AddFileSystemWatcher(string directoryName, string filter, FileSystemEventHandler fileSystemEventHandler)
         {
             string? key = Path.Join(directoryName, filter);
-            if (fileSystemWatchers.ContainsKey(key))
+            if (s_fileSystemWatchers.ContainsKey(key))
             {
                 return false;
             }
@@ -41,24 +41,24 @@
             watcher.Created += fileSystemEventHandler;
             watcher.EnableRaisingEvents = true;
 
-            fileSystemWatchers.Add(key, watcher);
+            s_fileSystemWatchers.Add(key, watcher);
 
             return true;
         }
 
         internal static bool RemoveFileSystemWatcher(string fileFullName)
         {
-            if (!fileSystemWatchers.ContainsKey(fileFullName))
+            if (!s_fileSystemWatchers.ContainsKey(fileFullName))
             {
                 return false;
             }
 
-            FileSystemWatcher? watcher = fileSystemWatchers[fileFullName];
+            FileSystemWatcher? watcher = s_fileSystemWatchers[fileFullName];
 
             watcher.EnableRaisingEvents = false;
             watcher.Dispose();
 
-            fileSystemWatchers.Remove(fileFullName);
+            s_fileSystemWatchers.Remove(fileFullName);
 
             return true;
         }
@@ -67,7 +67,7 @@
         {
             bool result = true;
 
-            foreach (string? watcher in fileSystemWatchers.Keys)
+            foreach (string? watcher in s_fileSystemWatchers.Keys)
             {
                 result &= RemoveFileSystemWatcher(watcher);
             }
@@ -118,9 +118,9 @@
 
         public static bool ToggleFileSystemWatcher(string fileFullName, bool? state = null)
         {
-            if (fileSystemWatchers.ContainsKey(fileFullName))
+            if (s_fileSystemWatchers.ContainsKey(fileFullName))
             {
-                FileSystemWatcher? watcher = fileSystemWatchers[fileFullName];
+                FileSystemWatcher? watcher = s_fileSystemWatchers[fileFullName];
                 watcher.EnableRaisingEvents = state ?? !watcher.EnableRaisingEvents;
                 return true;
             }
@@ -130,9 +130,9 @@
 
         public static FileSystemWatcher? GetFileSystemWatcher(string fileFullName)
         {
-            if (fileSystemWatchers.ContainsKey(fileFullName))
+            if (s_fileSystemWatchers.ContainsKey(fileFullName))
             {
-                return fileSystemWatchers[fileFullName];
+                return s_fileSystemWatchers[fileFullName];
             }
 
             return null;

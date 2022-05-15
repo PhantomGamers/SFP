@@ -6,7 +6,7 @@ namespace SFP.ChromeCache.BlockFile
     {
         // Converted partially from https://github.com/chromium/chromium/blob/main/net/disk_cache/blockfile/disk_format.h
 
-        private readonly uint keyLength = 0;  // Next entry with the same hash or bucket.
+        private readonly uint _keyLength = 0;  // Next entry with the same hash or bucket.
         public readonly string Key = string.Empty;
         public readonly uint next = 0;
         public readonly List<Addr> data_addrs = new();
@@ -24,7 +24,7 @@ namespace SFP.ChromeCache.BlockFile
             using var br = new BinaryReader(fs);
             next = br.ReadUInt32();
             fs.Seek(24, SeekOrigin.Current);
-            keyLength = br.ReadUInt32();
+            _keyLength = br.ReadUInt32();
             fs.Seek(20, SeekOrigin.Current);
             for (int i = 0; i < 4; i++)
             {
@@ -39,7 +39,7 @@ namespace SFP.ChromeCache.BlockFile
                 }
             }
             fs.Seek(24, SeekOrigin.Current);
-            Key = Encoding.UTF8.GetString(br.ReadBytes((int)keyLength));
+            Key = Encoding.UTF8.GetString(br.ReadBytes((int)_keyLength));
             br.Close();
             fs.Close();
         }

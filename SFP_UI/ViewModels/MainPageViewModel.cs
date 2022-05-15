@@ -22,36 +22,36 @@ namespace SFP_UI.ViewModels
             Targets.OutputControlTarget.MainPageViewModel = this;
         }
 
-        private bool scannerActive = false;
+        private bool _scannerActive = false;
 
         public bool ScannerActive
         {
-            get => scannerActive;
-            private set => this.RaiseAndSetIfChanged(ref scannerActive, value);
+            get => _scannerActive;
+            private set => this.RaiseAndSetIfChanged(ref _scannerActive, value);
         }
 
-        private string output = string.Empty;
+        private string _output = string.Empty;
 
         public string Output
         {
-            get => output;
-            private set => this.RaiseAndSetIfChanged(ref output, value);
+            get => _output;
+            private set => this.RaiseAndSetIfChanged(ref _output, value);
         }
 
-        private int caretIndex;
+        private int _caretIndex;
 
         public int CaretIndex
         {
-            get => caretIndex;
-            private set => this.RaiseAndSetIfChanged(ref caretIndex, value);
+            get => _caretIndex;
+            private set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
         }
 
-        private bool buttonsEnabled = true;
+        private bool _buttonsEnabled = true;
 
         public bool ButtonsEnabled
         {
-            get => buttonsEnabled;
-            set => this.RaiseAndSetIfChanged(ref buttonsEnabled, value);
+            get => _buttonsEnabled;
+            set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
         }
 
         public void PrintLine(LogLevel level, string message)

@@ -16,7 +16,7 @@ namespace SFP_UI.Models
 {
     internal class UpdateCheckModel
     {
-        private static readonly HttpClient client = new();
+        private static readonly HttpClient s_client = new();
 
         public static readonly SemVersion Version = SemVersion.Parse(Assembly.GetEntryAssembly()!
                                                               .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
@@ -24,7 +24,7 @@ namespace SFP_UI.Models
 
         static UpdateCheckModel()
         {
-            client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
+            s_client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
         }
 
         public static async Task CheckForUpdates()
@@ -55,7 +55,7 @@ namespace SFP_UI.Models
         {
             try
             {
-                string? responseBody = await client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
+                string? responseBody = await s_client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
                 var json = JObject.Parse(responseBody);
 
                 if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict, out SemVersion? semver))

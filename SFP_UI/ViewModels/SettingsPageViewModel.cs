@@ -17,182 +17,182 @@ namespace SFP_UI.ViewModels
             Instance = this;
         }
 
-        private bool shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
+        private bool _shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
 
         public bool ShouldPatchOnStart
         {
-            get => shouldPatchOnStart;
+            get => _shouldPatchOnStart;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldPatchOnStart, value);
+                this.RaiseAndSetIfChanged(ref _shouldPatchOnStart, value);
                 SFP.Properties.Settings.Default.ShouldPatchOnStart = value;
             }
         }
 
-        private bool shouldPatchFriends = SFP.Properties.Settings.Default.ShouldPatchFriends;
+        private bool _shouldPatchFriends = SFP.Properties.Settings.Default.ShouldPatchFriends;
 
         public bool ShouldPatchFriends
         {
-            get => shouldPatchFriends;
+            get => _shouldPatchFriends;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldPatchFriends, value);
+                this.RaiseAndSetIfChanged(ref _shouldPatchFriends, value);
                 SFP.Properties.Settings.Default.ShouldPatchFriends = value;
             }
         }
 
-        private bool shouldPatchLibrary = SFP.Properties.Settings.Default.ShouldPatchLibrary;
+        private bool _shouldPatchLibrary = SFP.Properties.Settings.Default.ShouldPatchLibrary;
 
         public bool ShouldPatchLibrary
         {
-            get => shouldPatchLibrary;
+            get => _shouldPatchLibrary;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldPatchLibrary, value);
+                this.RaiseAndSetIfChanged(ref _shouldPatchLibrary, value);
                 SFP.Properties.Settings.Default.ShouldPatchLibrary = value;
             }
         }
 
-        private bool shouldScanFriends = SFP.Properties.Settings.Default.ShouldScanFriends;
+        private bool _shouldScanFriends = SFP.Properties.Settings.Default.ShouldScanFriends;
 
         public bool ShouldScanFriends
         {
-            get => shouldScanFriends;
+            get => _shouldScanFriends;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldScanFriends, value);
+                this.RaiseAndSetIfChanged(ref _shouldScanFriends, value);
                 SFP.Properties.Settings.Default.ShouldScanFriends = value;
             }
         }
 
-        private bool shouldScanLibrary = SFP.Properties.Settings.Default.ShouldScanLibrary;
+        private bool _shouldScanLibrary = SFP.Properties.Settings.Default.ShouldScanLibrary;
 
         public bool ShouldScanLibrary
         {
-            get => shouldScanLibrary;
+            get => _shouldScanLibrary;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldScanLibrary, value);
+                this.RaiseAndSetIfChanged(ref _shouldScanLibrary, value);
                 SFP.Properties.Settings.Default.ShouldScanLibrary = value;
             }
         }
 
-        private bool scanOnly = SFP.Properties.Settings.Default.ScanOnly;
+        private bool _scanOnly = SFP.Properties.Settings.Default.ScanOnly;
 
         public bool ScanOnly
         {
-            get => scanOnly;
+            get => _scanOnly;
             private set
             {
-                this.RaiseAndSetIfChanged(ref scanOnly, value);
+                this.RaiseAndSetIfChanged(ref _scanOnly, value);
                 SFP.Properties.Settings.Default.ScanOnly = value;
             }
         }
 
-        private bool restartSteamOnPatch = SFP.Properties.Settings.Default.RestartSteamOnPatch;
+        private bool _restartSteamOnPatch = SFP.Properties.Settings.Default.RestartSteamOnPatch;
 
         public bool RestartSteamOnPatch
         {
-            get => restartSteamOnPatch;
+            get => _restartSteamOnPatch;
             private set
             {
-                this.RaiseAndSetIfChanged(ref restartSteamOnPatch, value);
+                this.RaiseAndSetIfChanged(ref _restartSteamOnPatch, value);
                 SFP.Properties.Settings.Default.RestartSteamOnPatch = value;
             }
         }
 
-        private bool shouldScanOnStart = SFP.Properties.Settings.Default.ShouldScanOnStart;
+        private bool _shouldScanOnStart = SFP.Properties.Settings.Default.ShouldScanOnStart;
 
         public bool ShouldScanOnStart
         {
-            get => shouldScanOnStart;
+            get => _shouldScanOnStart;
             private set
             {
-                this.RaiseAndSetIfChanged(ref shouldScanOnStart, value);
+                this.RaiseAndSetIfChanged(ref _shouldScanOnStart, value);
                 SFP.Properties.Settings.Default.ShouldScanOnStart = value;
             }
         }
 
-        private string steamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
+        private string _steamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
 
         public string SteamLaunchArgs
         {
-            get => steamLaunchArgs;
+            get => _steamLaunchArgs;
             private set
             {
-                this.RaiseAndSetIfChanged(ref steamLaunchArgs, value);
+                this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
                 SFP.Properties.Settings.Default.SteamLaunchArgs = value;
             }
         }
 
-        private string steamDirectory = SteamModel.SteamDir ?? string.Empty;
+        private string _steamDirectory = SteamModel.SteamDir ?? string.Empty;
 
         public string SteamDirectory
         {
-            get => steamDirectory;
+            get => _steamDirectory;
             private set
             {
-                this.RaiseAndSetIfChanged(ref steamDirectory, value);
+                this.RaiseAndSetIfChanged(ref _steamDirectory, value);
                 SFP.Properties.Settings.Default.SteamDirectory = value;
             }
         }
 
-        private string cacheDirectory = SteamModel.CacheDir;
+        private string _cacheDirectory = SteamModel.CacheDir;
 
         public string CacheDirectory
         {
-            get => cacheDirectory;
+            get => _cacheDirectory;
             private set
             {
-                this.RaiseAndSetIfChanged(ref cacheDirectory, value);
+                this.RaiseAndSetIfChanged(ref _cacheDirectory, value);
                 SFP.Properties.Settings.Default.CacheDirectory = value;
             }
         }
 
-        private bool checkForUpdates = SFP.Properties.Settings.Default.CheckForUpdates;
+        private bool _checkForUpdates = SFP.Properties.Settings.Default.CheckForUpdates;
 
         public bool CheckForUpdates
         {
-            get => checkForUpdates;
+            get => _checkForUpdates;
             private set
             {
-                this.RaiseAndSetIfChanged(ref checkForUpdates, value);
+                this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
                 SFP.Properties.Settings.Default.CheckForUpdates = value;
             }
         }
 
-        private bool showTrayIcon = SFP.Properties.Settings.Default.ShowTrayIcon;
+        private bool _showTrayIcon = SFP.Properties.Settings.Default.ShowTrayIcon;
 
         public bool ShowTrayIcon
         {
-            get => showTrayIcon;
+            get => _showTrayIcon;
             private set
             {
-                this.RaiseAndSetIfChanged(ref showTrayIcon, value);
+                this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
                 SFP.Properties.Settings.Default.ShowTrayIcon = value;
             }
         }
 
-        private bool minimizeToTray = SFP.Properties.Settings.Default.MinimizeToTray;
+        private bool _minimizeToTray = SFP.Properties.Settings.Default.MinimizeToTray;
 
         public bool MinimizeToTray
         {
-            get => minimizeToTray;
+            get => _minimizeToTray;
             private set
             {
-                this.RaiseAndSetIfChanged(ref minimizeToTray, value);
+                this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
                 SFP.Properties.Settings.Default.MinimizeToTray = value;
             }
         }
 
-        private bool startMinimized = SFP.Properties.Settings.Default.StartMinimized;
+        private bool _startMinimized = SFP.Properties.Settings.Default.StartMinimized;
 
         public bool StartMinimized
         {
-            get => startMinimized;
+            get => _startMinimized;
             private set
             {
-                this.RaiseAndSetIfChanged(ref startMinimized, value);
+                this.RaiseAndSetIfChanged(ref _startMinimized, value);
                 SFP.Properties.Settings.Default.StartMinimized = value;
             }
         }
