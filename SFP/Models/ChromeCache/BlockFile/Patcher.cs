@@ -10,7 +10,17 @@
                 return false;
             }
 
-            byte[]? bytes = await File.ReadAllBytesAsync(file.FullName);
+            byte[] bytes;
+            try
+            {
+                bytes = await File.ReadAllBytesAsync(file.FullName);
+            }
+            catch (IOException)
+            {
+                LogModel.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
+                return false;
+            }
+
             (bytes, bool patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name);
             if (patched)
             {
