@@ -49,6 +49,10 @@ namespace SFP_UI.Models
                                  .Dismiss().WithButton("Dismiss", button => { })
                                  .Queue();
             }
+            else 
+            {
+                LogModel.Logger.Info("You are running the latest version.");
+            }
         }
 
         private static async Task<SemVersion> GetLatestVersionAsync()
