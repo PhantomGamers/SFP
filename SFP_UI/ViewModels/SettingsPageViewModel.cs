@@ -242,6 +242,7 @@ namespace SFP_UI.ViewModels
             SteamDirectory = SteamModel.SteamDir ?? string.Empty;
             SteamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
             CacheDirectory = SteamModel.CacheDir;
+            ScannerDelay = SFP.Properties.Settings.Default.ScannerDelay;
         }
 
         public async void OnBrowseSteamCommand()
