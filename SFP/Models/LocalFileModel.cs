@@ -178,7 +178,7 @@ namespace SFP
 
         public static async Task WatchLocal(string fileFullPath)
         {
-            string? pathRoot = Path.GetPathRoot(fileFullPath);
+            string? pathRoot = Path.GetDirectoryName(fileFullPath);
             if (pathRoot != null)
             {
                 await Task.Run(() => FSWModel.AddFileSystemWatcher(pathRoot, Path.GetFileName(fileFullPath), OnLocalWatcherEvent));
@@ -209,7 +209,7 @@ namespace SFP
                 var file = new FileInfo(fileSystemEventArgs.FullPath);
                 if (file.Directory != null)
                 {
-                    await Patch(file);
+                    await Patch(file, uiDir: SteamModel.ClientUIDir);
                 }
             }
         }

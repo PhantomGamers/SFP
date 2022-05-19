@@ -12,6 +12,8 @@ namespace SFP
 
         public static string ClientUIDir => Path.Join(SteamDir, "clientui");
 
+        public static string ClientUICSSDir => Path.Join(ClientUIDir, "css");
+
         private static int RunningGameID => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
                                           ? (int)(UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "RunningAppID") ?? -1)
                                           : -1;
@@ -94,12 +96,17 @@ namespace SFP
                 LogModel.Logger.Warn($"Missing directory {SteamUICSSDir}");
             }
 
+            if (!Directory.Exists(ClientUICSSDir))
+            {
+                LogModel.Logger.Warn($"Missing directory {ClientUICSSDir}");
+            }
+
             if (!Directory.Exists(CacheDir))
             {
                 LogModel.Logger.Warn($"Missing directory {CacheDir}");
             }
 
-            if (!Directory.Exists(SteamUICSSDir) && !Directory.Exists(CacheDir))
+            if (!Directory.Exists(SteamUICSSDir) && !Directory.Exists(ClientUICSSDir) && !Directory.Exists(CacheDir))
             {
                 return;
             }
@@ -131,6 +138,12 @@ namespace SFP
                 {
                     LogModel.Logger.Info($"Deleting {SteamUICSSDir}");
                     Directory.Delete(SteamUICSSDir, true);
+                }
+
+                if (Directory.Exists(ClientUICSSDir))
+                {
+                    LogModel.Logger.Info($"Deleting {ClientUICSSDir}");
+                    Directory.Delete(ClientUICSSDir, true);
                 }
 
                 if (Directory.Exists(CacheDir))

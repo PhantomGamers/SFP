@@ -99,7 +99,7 @@
             if (SteamModel.SteamDir != null)
             {
                 await Task.Run(() => ChromeCache.BlockFile.Patcher.WatchFile(new FileInfo(Path.Join(SteamModel.CacheDir, "index"))));
-                await Task.Run(() => LocalFileModel.WatchLocal(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")));
+                await Task.Run(() => LocalFileModel.WatchLocal(Path.Join(SteamModel.ClientUICSSDir, "friends.css")));
             }
             else
             {
