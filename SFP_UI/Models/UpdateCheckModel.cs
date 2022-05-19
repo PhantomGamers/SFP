@@ -32,7 +32,7 @@ namespace SFP_UI.Models
             LogModel.Logger.Info("Checking for updates...");
             SemVersion? semver = await GetLatestVersionAsync();
 
-            if (semver > Version)
+            if (SemVersion.ComparePrecedence(Version, semver) <= 0)
             {
                 MainPageViewModel.Instance!.Manager
                                  .CreateMessage()
