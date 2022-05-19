@@ -197,6 +197,18 @@ namespace SFP_UI.ViewModels
             }
         }
 
+        private int _scannerDelay = SFP.Properties.Settings.Default.ScannerDelay;
+
+        public int ScannerDelay
+        {
+            get => _scannerDelay;
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _scannerDelay, value);
+                SFP.Properties.Settings.Default.ScannerDelay = value;
+            }
+        }
+
         /*
         private bool startWithOS = SFP.Properties.Settings.Default.StartWithOS;
 

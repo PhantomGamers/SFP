@@ -49,7 +49,7 @@ namespace SFP_UI.Models
                                  .Dismiss().WithButton("Dismiss", button => { })
                                  .Queue();
             }
-            else 
+            else
             {
                 LogModel.Logger.Info("You are running the latest version.");
             }

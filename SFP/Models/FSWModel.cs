@@ -72,6 +72,9 @@
                 result &= RemoveFileSystemWatcher(watcher);
             }
 
+            LocalFileModel.ClearMemCache();
+            ChromeCache.BlockFile.Patcher.ClearMemCache();
+
             return result;
         }
 

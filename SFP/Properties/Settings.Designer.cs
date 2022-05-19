@@ -217,5 +217,18 @@ namespace SFP.Properties {
                 this["StartMinimized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int ScannerDelay {
+            get {
+                return ((int)(this["ScannerDelay"]));
+            }
+            set {
+                this["ScannerDelay"] = value;
+            }
+        }
     }
 }

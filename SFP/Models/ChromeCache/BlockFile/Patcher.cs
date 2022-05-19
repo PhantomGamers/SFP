@@ -1,7 +1,24 @@
-﻿namespace SFP.ChromeCache.BlockFile
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
+
+namespace SFP.ChromeCache.BlockFile
 {
     public class Patcher
     {
+        private static MemoryCache s_memCache;
+        private static readonly TimeSpan s_cacheTimeSpan = TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
+
+        static Patcher()
+        {
+            s_memCache = new(new MemoryCacheOptions());
+        }
+
+        public static void ClearMemCache()
+        {
+            s_memCache.Dispose();
+            s_memCache = new(new MemoryCacheOptions());
+        }
+
         public static async Task<bool> PatchFile(FileInfo file)
         {
             if (!file.Exists)
@@ -46,11 +63,11 @@
             string? dirname = file.DirectoryName;
             if (dirname != null)
             {
-                FSWModel.AddFileSystemWatcher(dirname, "data*", OnFileSystemEvent);
+                FSWModel.AddFileSystemWatcher(dirname, "f_*", OnFileSystemEvent);
             }
         }
 
-        private static async void OnFileSystemEvent(object sender, FileSystemEventArgs e)
+        private static void OnFileSystemEvent(object sender, FileSystemEventArgs e)
         {
             DirectoryInfo? dir = new DirectoryInfo(e.FullPath).Parent;
             if (dir == null)
@@ -58,16 +75,36 @@
                 return;
             }
 
-            List<FileInfo>? files = Parser.FindCacheFilesWithName(dir, "friends.css");
-            bool filesPatched = false;
-            foreach (FileInfo? file in files)
+            MemoryCacheEntryOptions options = new()
             {
-                filesPatched |= await PatchFile(file);
+                Priority = CacheItemPriority.NeverRemove,
+                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
+            };
+            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
+            _ = options.RegisterPostEvictionCallback(OnRemovedFromCache);
+            s_memCache.Set(dir.Name, dir, options);
+        }
+
+        private static async void OnRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        {
+            if (reason != EvictionReason.TokenExpired)
+            {
+                return;
             }
 
-            if (filesPatched && Properties.Settings.Default.RestartSteamOnPatch)
+            if (value is DirectoryInfo dir)
             {
-                SteamModel.RestartSteam();
+                List<FileInfo>? files = Parser.FindCacheFilesWithName(dir, "friends.css");
+                bool filesPatched = false;
+                foreach (FileInfo? file in files)
+                {
+                    filesPatched |= await PatchFile(file);
+                }
+
+                if (filesPatched && Properties.Settings.Default.RestartSteamOnPatch)
+                {
+                    SteamModel.RestartSteam();
+                }
             }
         }
     }

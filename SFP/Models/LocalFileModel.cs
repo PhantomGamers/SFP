@@ -1,9 +1,33 @@
-﻿namespace SFP
+﻿using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
+
+namespace SFP
 {
     public class LocalFileModel
     {
         public const string PATCHED_TEXT = "/*patched*/\n";
         public const string ORIGINAL_TEXT = "/*original*/\n";
+
+        private static MemoryCache s_localMemCache;
+
+        private static MemoryCache s_libraryMemCache;
+
+        private static readonly TimeSpan s_cacheTimeSpan = TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
+
+        static LocalFileModel()
+        {
+            s_localMemCache = new(new MemoryCacheOptions());
+            s_libraryMemCache = new(new MemoryCacheOptions());
+        }
+
+        public static void ClearMemCache()
+        {
+            s_localMemCache.Dispose();
+            s_localMemCache = new(new MemoryCacheOptions());
+
+            s_libraryMemCache.Dispose();
+            s_libraryMemCache = new(new MemoryCacheOptions());
+        }
 
         public static async Task<bool> Patch(FileInfo? file, string? overrideName = null, string? uiDir = null)
         {
@@ -21,7 +45,16 @@
                 watcher.EnableRaisingEvents = false;
             }
 
-            string? contents = await File.ReadAllTextAsync(file.FullName);
+            string contents;
+            try
+            {
+                contents = await File.ReadAllTextAsync(file.FullName);
+            }
+            catch (IOException)
+            {
+                LogModel.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
+                return false;
+            }
 
             if (contents.StartsWith(ORIGINAL_TEXT))
             {
@@ -49,7 +82,15 @@
                 customFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
             }
 
-            File.WriteAllText(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
+            try
+            {
+                await File.WriteAllTextAsync(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
+            }
+            catch (IOException)
+            {
+                LogModel.Logger.Warn($"Unable to write file {originalFile.FullName}. Please shutdown Steam and try again.");
+                return false;
+            }
 
             string? dirName = originalFile.Directory?.Name;
             if (dirName != null)
@@ -106,12 +147,32 @@
             await Task.Run(() => FSWModel.AddFileSystemWatcher(directoryName, "*.css", OnLibraryWatcherEvent));
         }
 
-        private static async void OnLibraryWatcherEvent(object sender, FileSystemEventArgs e)
+        private static void OnLibraryWatcherEvent(object sender, FileSystemEventArgs e)
         {
-            var file = new FileInfo(e.FullPath);
-            if (file.Directory != null)
+            MemoryCacheEntryOptions options = new()
             {
-                await Task.Run(() => Patch(file, "libraryroot.custom.css"));
+                Priority = CacheItemPriority.NeverRemove,
+                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
+            };
+            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
+            _ = options.RegisterPostEvictionCallback(OnLibraryRemovedFromCache);
+            s_libraryMemCache.Set(e.Name, e, options);
+        }
+
+        private static async void OnLibraryRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        {
+            if (reason != EvictionReason.TokenExpired)
+            {
+                return;
+            }
+
+            if (value is FileSystemEventArgs fileSystemEventArgs)
+            {
+                var file = new FileInfo(fileSystemEventArgs.FullPath);
+                if (file.Directory != null)
+                {
+                    await Task.Run(() => Patch(file, "libraryroot.custom.css"));
+                }
             }
         }
 
@@ -124,12 +185,32 @@
             }
         }
 
-        private static async void OnLocalWatcherEvent(object sender, FileSystemEventArgs e)
+        private static void OnLocalWatcherEvent(object sender, FileSystemEventArgs e)
         {
-            var file = new FileInfo(e.FullPath);
-            if (file.Directory != null)
+            MemoryCacheEntryOptions options = new()
             {
-                await Patch(file);
+                Priority = CacheItemPriority.NeverRemove,
+                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
+            };
+            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
+            _ = options.RegisterPostEvictionCallback(OnLocalRemovedFromCache);
+            s_localMemCache.Set(e.Name, e, options);
+        }
+
+        private static async void OnLocalRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        {
+            if (reason != EvictionReason.TokenExpired)
+            {
+                return;
+            }
+
+            if (value is FileSystemEventArgs fileSystemEventArgs)
+            {
+                var file = new FileInfo(fileSystemEventArgs.FullPath);
+                if (file.Directory != null)
+                {
+                    await Patch(file);
+                }
             }
         }
     }
