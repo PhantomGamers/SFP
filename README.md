@@ -22,13 +22,11 @@ Once your files are patched follow the instructions in the program to install th
 ## Todo
 
 * Improve automatic detection of correct library CSS file to patch.
-* Improve reliablility of the automatic scanner.
 
 ## Known Issues
 
 * Currently breaks Big Picture Mode chat due to Big Picture not utilizing steamloopback.host
 * Patching the friends list is currently unsupported on Linux and OSX as it uses a different file format from Windows. Contributions welcome!
-* The program will crash on exit due to a bug with AvaloniaUI - <https://github.com/AvaloniaUI/Avalonia/issues/7588>
 
 ## Dependencies
 
