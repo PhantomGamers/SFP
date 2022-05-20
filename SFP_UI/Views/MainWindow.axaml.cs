@@ -29,6 +29,14 @@ namespace SFP_UI.Views
                 Icon = Icon,
                 ToolTipText = "Steam Friends Patcher"
             };
+
+            // Workaround for https://github.com/AvaloniaUI/Avalonia/issues/7588
+            var icons = new TrayIcons
+            {
+                trayIcon
+            };
+            TrayIcon.SetIcons(Application.Current!, icons);
+
             InitializeTrayIcon();
         }
 
