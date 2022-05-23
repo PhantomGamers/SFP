@@ -121,10 +121,8 @@ namespace SFP
             bool steamState = IsSteamRunning;
             if (steamState)
             {
-                LogModel.Logger.Info($"Shutting down Steam");
                 if (!ShutDownSteam())
                 {
-                    LogModel.Logger.Warn("Could not shut down Steam. Manually shut down Steam and try again.");
                     return;
                 }
             }
@@ -165,17 +163,18 @@ namespace SFP
 
             if (steamState)
             {
-                LogModel.Logger.Info("Starting Steam");
                 StartSteam();
             }
         }
 
         private static bool ShutDownSteam()
         {
+            LogModel.Logger.Info("Shutting down Steam");
             Process.Start(SteamExe, "-shutdown");
             Process? proc = SteamProcess;
             if (proc != null && !proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
+                LogModel.Logger.Warn("Could not shut down Steam. Manually shut down Steam and try again.");
                 return false;
             }
             return true;
@@ -183,15 +182,16 @@ namespace SFP
 
         private static void StartSteam()
         {
+            LogModel.Logger.Info("Starting Steam");
             Process.Start(SteamExe, Properties.Settings.Default.SteamLaunchArgs);
         }
 
         public static void RestartSteam()
         {
-            LogModel.Logger.Info("Shutting down Steam");
-            ShutDownSteam();
-            LogModel.Logger.Info("Starting Steam");
-            StartSteam();
+            if (ShutDownSteam())
+            {
+                StartSteam();
+            }
         }
     }
 }
