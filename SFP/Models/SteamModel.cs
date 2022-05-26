@@ -25,7 +25,7 @@ namespace SFP
 
         private static bool IsSteamRunning => SteamProcess is not null;
 
-        private static Process? SteamProcess => Process.GetProcessesByName("Steam").FirstOrDefault();
+        private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
 
         public static string? SteamDir
         {
