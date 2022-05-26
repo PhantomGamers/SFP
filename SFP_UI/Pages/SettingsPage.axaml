@@ -44,7 +44,7 @@
         <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan Library</CheckBox>
         <StackPanel Orientation="Horizontal" Margin="0,5" Spacing="4">
             <Label Margin="0,10">Scanner Delay (Seconds)</Label>
-            <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110" Height="20"/>
+            <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110" Height="20" HorizontalContentAlignment="Center"/>
         </StackPanel>
         <Label Margin="8">General Settings</Label>
         <CheckBox IsChecked="{Binding CheckForUpdates}">Check For Updates On Startup</CheckBox>

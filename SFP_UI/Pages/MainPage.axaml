@@ -24,7 +24,6 @@
         <ScrollViewer Margin="10">
           <TextBox Name="Output"
                    CaretIndex="{Binding CaretIndex}"
-                   Background="Transparent"
                    BorderThickness="0"
                    Focusable="False"
                    IsReadOnly="True"
