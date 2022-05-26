@@ -9,7 +9,7 @@
         <Button IsEnabled="{Binding ButtonsEnabled}" Command="{Binding OnPatchCommand}">Patch</Button>
         <Button IsEnabled="{Binding ButtonsEnabled}" IsVisible="{Binding !ScannerActive}" Command="{Binding OnScanCommand}">Start Scanner</Button>
         <Button IsEnabled="{Binding ButtonsEnabled}" IsVisible="{Binding ScannerActive}" Command="{Binding OnStopScanCommand}">Stop Scanner</Button>
-        <Button IsEnabled="{Binding ButtonsEnabled}" Command="{Binding OnResetSteamCommand}">Reset Steam</Button>
+        <Button IsEnabled="{Binding ButtonsEnabled}" Command="{Binding OnResetSteamCommand}" ToolTip.Tip="Resets Steam to stock, removing all patches">Reset Steam</Button>
       </StackPanel>
       <Border BorderThickness="2">
         <ScrollViewer Margin="10">
