@@ -28,13 +28,14 @@ namespace SFP_UI
                 {
                     DataContext = new MainWindowViewModel(),
                 };
-            }
 
-            try
-            {
-                LogModel.Logger.Info($"Version is {UpdateCheckModel.Version}");
+                try
+                {
+                    LogModel.Logger.Info($"Version is {UpdateCheckModel.Version}");
+                    desktop.MainWindow.Title += $" v{UpdateCheckModel.Version}";
+                }
+                catch { };
             }
-            catch { };
 
             if (SFP.Properties.Settings.Default.CheckForUpdates)
             {
