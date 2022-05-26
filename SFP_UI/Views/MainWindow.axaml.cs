@@ -2,9 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 
+using FluentAvalonia.UI.Controls;
+
 namespace SFP_UI.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : CoreWindow
     {
         public static MainWindow? Instance { get; private set; }
 
