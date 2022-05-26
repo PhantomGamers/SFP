@@ -4,8 +4,10 @@
 
   <DockPanel Margin="10">
     <StackPanel Orientation="Horizontal" Spacing="4" DockPanel.Dock="Bottom">
-      <Button Command="{Binding OnSaveCommand}">Save</Button>
-      <Button Command="{Binding OnReloadCommand}">Reload</Button>
+      <Button Command="{Binding OnSaveCommand}"
+              ToolTip.Tip="Saves your settings to config">Save</Button>
+      <Button Command="{Binding OnReloadCommand}"
+              ToolTip.Tip="Reloads settings from config">Reload</Button>
     </StackPanel>
     <ScrollViewer>
       <StackPanel Orientation="Vertical" Spacing="4">
