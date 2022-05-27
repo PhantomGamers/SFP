@@ -148,13 +148,15 @@ namespace SFP
                 Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
             };
-            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
-            _ = options.RegisterPostEvictionCallback(OnLibraryRemovedFromCache);
+            CancellationTokenSource source = new(s_cacheTimeSpan);
+            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
+            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLibraryRemovedFromCache(v, r, source));
             s_libraryMemCache.Set(e.Name, e, options);
         }
 
-        private static async void OnLibraryRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        private static async void OnLibraryRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
         {
+            source.Dispose();
             if (reason != EvictionReason.TokenExpired)
             {
                 return;
@@ -186,13 +188,15 @@ namespace SFP
                 Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
             };
-            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
-            _ = options.RegisterPostEvictionCallback(OnLocalRemovedFromCache);
+            CancellationTokenSource source = new(s_cacheTimeSpan);
+            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
+            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLocalRemovedFromCache(v, r, source));
             s_localMemCache.Set(e.Name, e, options);
         }
 
-        private static async void OnLocalRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        private static async void OnLocalRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
         {
+            source.Dispose();
             if (reason != EvictionReason.TokenExpired)
             {
                 return;
