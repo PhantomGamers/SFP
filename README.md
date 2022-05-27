@@ -1,15 +1,15 @@
 # SFP (Formerly [SteamFriendsPatcher](https://github.com/PhantomGamers/SteamFriendsPatcher))
 
-This utility is designed to allow you to apply themes to the modern Steam friends and library interfaces.  
+This utility is designed to allow you to apply themes to the modern Steam friends and library interfaces.
 
 ## Instructions
 
-Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.  
-  
-To use manually, simply click "Patch," by default this will run when you start the program.  
-You will be required to do this everytime Valve pushes a new version of the friends.css file used by Steam or they update the library.  
-To avoid this, use the "Start Scanner" option and leave the program running.  
-With the scanner running, whenever a new version of the friends.css or library css is pushed it will automatically be patched.  
+Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.
+
+To use manually, simply click "Patch," by default this will run when you start the program.
+You will be required to do this everytime Valve pushes a new version of the friends.css file used by Steam or they update the library.
+To avoid this, use the "Start Scanner" option and leave the program running.
+With the scanner running, whenever a new version of the friends.css or library css is pushed it will automatically be patched.
 
 Once your files are patched follow the instructions in the program to install the skins of your choosing!
 

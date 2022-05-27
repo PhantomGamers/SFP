@@ -1,4 +1,4 @@
-﻿using Avalonia.Notification;
+using Avalonia.Notification;
 
 namespace SFP_UI.ViewModels
 {

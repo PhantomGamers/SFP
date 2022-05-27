@@ -1,4 +1,4 @@
-﻿using Force.Crc32;
+using Force.Crc32;
 
 namespace SFP.Models.ChromeCache.Simple
 {

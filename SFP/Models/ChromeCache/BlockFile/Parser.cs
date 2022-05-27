@@ -1,4 +1,4 @@
-﻿namespace SFP.ChromeCache.BlockFile
+namespace SFP.ChromeCache.BlockFile
 {
     public class Parser
     {

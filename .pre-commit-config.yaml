@@ -1,0 +1,25 @@
+repos:
+  -   repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.2.0
+      hooks:
+      -   id: check-added-large-files
+      -   id: check-json
+      -   id: check-merge-conflict
+      -   id: check-toml
+      -   id: check-yaml
+      -   id: end-of-file-fixer
+      -   id: mixed-line-ending
+          args: [--fix=lf]
+      -   id: trailing-whitespace
+      -   id: check-xml
+      -   id: detect-private-key
+      -   id: fix-byte-order-marker
+
+  -   repo: local
+      hooks:
+      #Use dotnet format already installed on your machine
+      -   id: dotnet-format
+          name: dotnet-format
+          language: system
+          entry: dotnet format --severity info --include
+          types_or: ["c#", "vb"]
