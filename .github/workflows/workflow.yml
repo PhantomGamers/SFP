@@ -21,7 +21,7 @@ jobs:
 
     - name: Fail if invalid
       if: steps.check-tag.outputs.match == ''
-      uses: Actions/github-script@v3
+      uses: Actions/github-script@v6
       with:
         script: |
           core.setFailed('Invalid tag')
