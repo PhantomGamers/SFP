@@ -13,9 +13,9 @@ namespace SFP
                 return file;
             }
 
-            if (s_hardLinks.ContainsKey(file.FullName))
+            if (s_hardLinks.TryGetValue(file.FullName, out string? linkPath))
             {
-                return new FileInfo(s_hardLinks[file.FullName]);
+                return new FileInfo(linkPath);
             }
 
             return CreateHardLink(file);
@@ -23,17 +23,14 @@ namespace SFP
 
         public static FileInfo CreateHardLink(FileInfo file)
         {
-            string? linkPath = Path.Join(file.DirectoryName, "SFP");
+            string linkPath = Path.Join(file.DirectoryName, "SFP");
             Directory.CreateDirectory(linkPath);
-            string? linkName = Path.Join(linkPath, file.Name);
+            string linkName = Path.Join(linkPath, file.Name);
 
-            if (File.Exists(linkName))
+            if (File.Exists(linkName) && !s_hardLinks.ContainsValue(linkName))
             {
-                if (!s_hardLinks.ContainsValue(linkName))
-                {
-                    s_hardLinks.Add(file.FullName, linkName);
-                    return new FileInfo(linkName);
-                }
+                s_hardLinks.Add(file.FullName, linkName);
+                return new FileInfo(linkName);
             }
 
             NativeModel.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
@@ -41,21 +38,21 @@ namespace SFP
             return new FileInfo(linkName);
         }
 
-        public static bool RemoveHardLink(string fileName)
+        public static bool RemoveHardLink(string filePath)
         {
-            if (s_hardLinks.ContainsKey(fileName))
+            if (s_hardLinks.TryGetValue(filePath, out string? linkPath))
             {
                 try
                 {
-                    File.Delete(s_hardLinks[fileName]);
+                    File.Delete(linkPath);
                 }
                 catch
                 {
-                    LogModel.Logger.Warn($"Could not delete {s_hardLinks[fileName]} which links to {fileName}");
+                    LogModel.Logger.Warn($"Could not delete {linkPath} which links to {filePath}");
                     return false;
                 }
 
-                s_hardLinks.Remove(fileName);
+                s_hardLinks.Remove(filePath);
                 return true;
             }
             return false;
@@ -64,7 +61,7 @@ namespace SFP
         public static bool RemoveAllHardLinks()
         {
             bool result = true;
-            foreach (string? file in s_hardLinks.Keys)
+            foreach (string file in s_hardLinks.Keys)
             {
                 result &= RemoveHardLink(file);
             }

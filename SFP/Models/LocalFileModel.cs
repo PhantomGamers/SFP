@@ -72,16 +72,10 @@ namespace SFP
             LogModel.Logger.Info($"Patching file {file.Name}");
 
             var originalFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.original{Path.GetExtension(file.FullName)}");
-            FileInfo customFile;
-            if (overrideName != null)
-            {
-                customFile = new FileInfo(Path.Join(file.DirectoryName, overrideName));
-            }
-            else
-            {
-                customFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
-            }
 
+            FileInfo customFile = overrideName != null
+                                ? new(Path.Join(file.DirectoryName, overrideName))
+                                : new($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
             try
             {
                 await File.WriteAllTextAsync(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
