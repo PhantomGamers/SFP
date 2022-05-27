@@ -37,7 +37,7 @@ jobs:
         git tag ${{ github.event.inputs.version }}
         git push origin ${{ github.event.inputs.version }}
 
-    - uses: actions/setup-dotnet@v1
+    - uses: actions/setup-dotnet@v2
 
     - name: Build & Zip
       shell: pwsh
