@@ -34,7 +34,10 @@ namespace SFP_UI
                     LogModel.Logger.Info($"Version is {UpdateCheckModel.Version}");
                     desktop.MainWindow.Title += $" v{UpdateCheckModel.Version}";
                 }
-                catch { };
+                catch (Exception e)
+                {
+                    LogModel.Logger.Error(e);
+                };
             }
 
             if (SFP.Properties.Settings.Default.CheckForUpdates)

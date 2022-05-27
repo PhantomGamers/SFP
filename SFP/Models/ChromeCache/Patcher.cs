@@ -20,7 +20,7 @@ namespace SFP.Models.ChromeCache
             foreach (FileInfo file in dirFiles.Where(f => f.Name.EndsWith("_0") && Parser.FileContainsName(f, name)))
             {
                 LogModel.Logger.Info($"Found {name} in {file.Name}");
-                Task.Run(() => Simple.Patcher.PatchSimpleFile(Parser.GetSimpleFile(file)));
+                _ = Task.Run(() => Simple.Patcher.PatchSimpleFile(Parser.GetSimpleFile(file)));
             }
         }
 

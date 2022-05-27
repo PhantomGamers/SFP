@@ -49,9 +49,10 @@ namespace SFP
                 {
                     File.Delete(linkPath);
                 }
-                catch
+                catch (Exception e)
                 {
                     LogModel.Logger.Warn($"Could not delete {linkPath} which links to {filePath}");
+                    LogModel.Logger.Error(e);
                     return false;
                 }
 

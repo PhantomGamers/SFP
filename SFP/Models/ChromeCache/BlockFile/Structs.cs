@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SFP.ChromeCache.BlockFile
 {
-    internal struct EntryStore
+    internal readonly struct EntryStore
     {
         // Converted partially from https://github.com/chromium/chromium/blob/main/net/disk_cache/blockfile/disk_format.h
 
@@ -45,7 +45,7 @@ namespace SFP.ChromeCache.BlockFile
         }
     }
 
-    internal struct IndexHeader
+    internal readonly struct IndexHeader
     {
         public readonly uint Table_len; // Actual size of the table (0 == kIndexTablesize).
 
@@ -72,7 +72,7 @@ namespace SFP.ChromeCache.BlockFile
         BLOCK_EVICTED = 7
     };
 
-    internal struct Addr
+    internal readonly struct Addr
     {
         public readonly string BinaryString;
         public readonly FileType FileType;
