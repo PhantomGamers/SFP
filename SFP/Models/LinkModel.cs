@@ -34,7 +34,10 @@ namespace SFP
             }
 
             NativeModel.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
-            s_hardLinks.Add(file.FullName, linkName);
+            // If this function runs in parallel for the same file, another instance of this method might add the link first.
+            // This would cause an exception, but we can ignore it because the file will exist
+            // TODO: Actually make this method threadsafe
+            _ = s_hardLinks.TryAdd(file.FullName, linkName);
             return new FileInfo(linkName);
         }
 
