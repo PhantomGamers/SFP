@@ -33,8 +33,9 @@ namespace SFP.ChromeCache.BlockFile
                 {
                     data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
                 }
-                catch
+                catch (Exception e)
                 {
+                    LogModel.Logger.Debug(e);
                     continue;
                 }
             }
