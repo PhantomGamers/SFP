@@ -10,6 +10,8 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
 
+using SFP_UI.ViewModels;
+
 namespace SFP_UI.Views
 {
     public partial class MainWindow : CoreWindow
@@ -30,6 +32,7 @@ namespace SFP_UI.Views
             }
 
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
 
             trayIcon = new()
             {
@@ -160,11 +163,6 @@ namespace SFP_UI.Views
             };
 
             trayIcon.IsVisible = SFP.Properties.Settings.Default.ShowTrayIcon;
-        }
-
-        private void TrayIcon_Clicked(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void ShowWindow()

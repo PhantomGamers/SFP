@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="SFP_UI.Pages.SettingsPage">
 
-  <DockPanel Margin="10">
-    <StackPanel Orientation="Horizontal" Spacing="4" DockPanel.Dock="Bottom">
+  <DockPanel Margin="15">
+    <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
       <Button Command="{Binding OnSaveCommand}"
               ToolTip.Tip="Saves your settings to config">Save</Button>
       <Button Command="{Binding OnReloadCommand}"
