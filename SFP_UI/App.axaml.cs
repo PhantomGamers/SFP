@@ -68,11 +68,6 @@ namespace SFP_UI
         {
             LinkModel.RemoveAllHardLinks();
             FSWModel.RemoveAllWatchers();
-            if (MainWindow.Instance != null)
-            {
-                MainWindow.Instance.trayIcon.IsVisible = false;
-                MainWindow.Instance.trayIcon.Dispose();
-            }
         }
     }
 }
