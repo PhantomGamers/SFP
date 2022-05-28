@@ -9,7 +9,7 @@
 
     <UserControl.Styles>
         <Style Selector="ui|NavigationView.SFPAppNav">
-            <Setter Property="OpenPaneLength" Value="128" />
+            <Setter Property="OpenPaneLength" Value="240" />
         </Style>
         <Style Selector="ui|NavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
             <Setter Property="Margin" Value="0 5 0 0" />
