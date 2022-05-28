@@ -13,6 +13,10 @@
         Icon="/Assets/SFP-logo.ico"
         Title="SFP">
 
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
     <Panel>
         <views:MainView />
     </Panel>

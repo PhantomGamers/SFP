@@ -32,7 +32,6 @@ namespace SFP_UI.Views
             }
 
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
 
             trayIcon = new()
             {
