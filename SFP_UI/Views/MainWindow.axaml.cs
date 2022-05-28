@@ -78,6 +78,10 @@ namespace SFP_UI.Views
                         TryEnableMicaEffect(thm);
                     }
                 }
+                else
+                {
+                    thm.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                }
 
                 thm.ForceWin32WindowToTheme(this);
             }
