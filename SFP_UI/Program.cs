@@ -17,18 +17,14 @@ namespace SFP_UI
             NLog.Targets.Target.Register("OutputControl", typeof(Targets.OutputControlTarget));
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
             _ = new SettingsModel();
-            BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp()
-        {
-            return AppBuilder.Configure<App>()
-                           .UsePlatformDetect()
-                           .LogToTrace()
-                           .UseReactiveUI();
-        }
+        public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
+                                                                 .UsePlatformDetect()
+                                                                 .LogToTrace()
+                                                                 .UseReactiveUI();
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

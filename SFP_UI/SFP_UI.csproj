@@ -10,9 +10,7 @@
     <ApplicationIcon>Assets\SFP-logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Pages\" />
     <AvaloniaResource Include="Assets\**" />
-    <None Remove=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.

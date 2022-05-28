@@ -19,7 +19,6 @@ namespace SFP_UI.ViewModels
         public MainPageViewModel()
         {
             Instance = this;
-            Targets.OutputControlTarget.MainPageViewModel = this;
         }
 
         private bool _scannerActive = false;
