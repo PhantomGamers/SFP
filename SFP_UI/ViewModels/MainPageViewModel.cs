@@ -29,12 +29,12 @@ namespace SFP_UI.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _scannerActive, value);
         }
 
-        private string _output = string.Empty;
+        private static string s_output = string.Empty;
 
         public string Output
         {
-            get => _output;
-            private set => this.RaiseAndSetIfChanged(ref _output, value);
+            get => s_output;
+            private set => this.RaiseAndSetIfChanged(ref s_output, value);
         }
 
         private int _caretIndex;
