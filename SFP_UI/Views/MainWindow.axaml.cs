@@ -20,6 +20,8 @@ namespace SFP_UI.Views
 
         public readonly TrayIcon trayIcon;
 
+        public FluentAvaloniaTheme? Theme;
+
         private bool _isStarting = true;
 
         public MainWindow()
@@ -53,37 +55,43 @@ namespace SFP_UI.Views
         {
             base.OnOpened(e);
 
-            if (_isStarting
-               && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.StartMinimized
-               && SFP.Properties.Settings.Default.ShowTrayIcon)
+            if (_isStarting)
             {
                 _isStarting = false;
-                Hide();
-            }
 
-            FluentAvaloniaTheme? thm = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
-            if (thm != null)
-            {
-                thm.RequestedThemeChanged += OnRequestedThemeChanged;
-
-                // Enable Mica on Windows 11
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (SFP.Properties.Settings.Default.MinimizeToTray
+                    && SFP.Properties.Settings.Default.StartMinimized
+                    && SFP.Properties.Settings.Default.ShowTrayIcon)
                 {
-                    // TODO: add Windows version to CoreWindow
-                    if (IsWindows11 && thm.RequestedTheme != FluentAvaloniaTheme.HighContrastModeString)
+                    Hide();
+                }
+
+                Theme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+                if (Theme != null)
+                {
+                    Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
+                    Theme.RequestedThemeChanged += OnRequestedThemeChanged;
+
+                    // Enable Mica on Windows 11
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
-                        TransparencyBackgroundFallback = Brushes.Transparent;
-                        TransparencyLevelHint = WindowTransparencyLevel.Mica;
+                        // TODO: add Windows version to CoreWindow
+                        if (IsWindows11 && Theme.RequestedTheme != FluentAvaloniaTheme.HighContrastModeString)
+                        {
+                            TransparencyBackgroundFallback = Brushes.Transparent;
+                            TransparencyLevelHint = WindowTransparencyLevel.Mica;
 
-                        TryEnableMicaEffect(thm);
+                            TryEnableMicaEffect(Theme);
+                        }
+                        Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) => Theme.InvalidateThemingFromSystemThemeChanged();
                     }
-                }
-                else
-                {
-                    thm.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
-                }
+                    else
+                    {
+                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                    }
 
-                thm.ForceWin32WindowToTheme(this);
+                    Theme.ForceWin32WindowToTheme(this);
+                }
             }
         }
 
