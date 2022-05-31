@@ -195,12 +195,32 @@ namespace SFP_UI.ViewModels
 
         public static void OnOpenFriendsCustomCssCommand()
         {
-            UtilsModel.OpenUrl(Path.Join(SteamModel.ClientUIDir, "friends.custom.css"));
+            string file = Path.Join(SteamModel.ClientUIDir, "friends.custom.css");
+            try
+            {
+                File.Create(file).Dispose();
+                UtilsModel.OpenUrl(file);
+            }
+            catch (Exception e)
+            {
+                LogModel.Logger.Warn($"Could not open friends.custom.css");
+                LogModel.Logger.Error(e);
+            }
         }
 
         public static void OnOpenLibraryrootCustomCssCommand()
         {
-            UtilsModel.OpenUrl(Path.Join(SteamModel.SteamUIDir, "libraryroot.custom.css"));
+            string file = Path.Join(SteamModel.SteamUIDir, "libraryroot.custom.css");
+            try
+            {
+                File.Create(file).Dispose();
+                UtilsModel.OpenUrl(file);
+            }
+            catch (Exception e)
+            {
+                LogModel.Logger.Warn($"Could not open libraryroot.custom.css");
+                LogModel.Logger.Error(e);
+            }
         }
     }
 }
