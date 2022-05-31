@@ -86,9 +86,17 @@ namespace SFP_UI.Views
                         }
                         Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
                         {
-                            Theme.InvalidateThemingFromSystemThemeChanged();
-                            MainView.SetAppTitleColor();
-                            UpdateCheckModel.UpdateNotificationManagerColors();
+                            try
+                            {
+                                Theme.InvalidateThemingFromSystemThemeChanged();
+                                MainView.SetAppTitleColor();
+                                UpdateCheckModel.UpdateNotificationManagerColors();
+                            }
+                            catch (Exception err)
+                            {
+                                SFP.LogModel.Logger.Warn("Unable to detect system theme");
+                                SFP.LogModel.Logger.Error(err);
+                            }
                         };
                     }
                     else
