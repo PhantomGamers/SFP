@@ -22,10 +22,10 @@
 
           <Button IsEnabled="True"
                   Command="{Binding OnOpenFriendsCustomCssCommand}"
-                  ToolTip.Tip="Open the friends.custom.css file, which is where your custom friends skin goes">Open friends.custom.css</Button>
+                  ToolTip.Tip="Opens the friends.custom.css file, which is where your custom friends skin goes">Open friends.custom.css</Button>
           <Button IsEnabled="True"
                   Command="{Binding OnOpenLibraryrootCustomCssCommand}"
-                  ToolTip.Tip="Open the libraryroot.custom.css file, which is where your custom library skin goes">Open libraryroot.custom.css</Button>
+                  ToolTip.Tip="Opens the libraryroot.custom.css file, which is where your custom library skin goes">Open libraryroot.custom.css</Button>
       </StackPanel>
       <Border BorderThickness="2">
         <ScrollViewer Margin="10">
