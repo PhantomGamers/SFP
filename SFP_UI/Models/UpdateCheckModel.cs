@@ -2,7 +2,10 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
+using Avalonia.Media;
 using Avalonia.Notification;
+
+using FluentAvalonia.Styling;
 
 using Newtonsoft.Json.Linq;
 
@@ -16,11 +19,13 @@ namespace SFP_UI.Models
 {
     internal class UpdateCheckModel
     {
-        private static readonly HttpClient s_client = new();
 
         public static readonly SemVersion Version = SemVersion.Parse(Assembly.GetEntryAssembly()!
                                                               .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
                                                               .InformationalVersion, SemVersionStyles.Strict);
+
+        private static NotificationMessageBuilder? s_builder;
+        private static readonly HttpClient s_client = new();
 
         static UpdateCheckModel()
         {
@@ -32,26 +37,50 @@ namespace SFP_UI.Models
             LogModel.Logger.Info("Checking for updates...");
             SemVersion? semver = await GetLatestVersionAsync();
 
-            if (SemVersion.ComparePrecedence(Version, semver) < 0)
+            if (SemVersion.ComparePrecedence(Version, semver) < 0
+                && MainPageViewModel.Instance?.Manager is INotificationMessageManager manager)
             {
-                MainPageViewModel.Instance!.Manager
-                                 .CreateMessage()
-                                 .Accent("#1751C3")
-                                 .Animates(true)
-                                 .Background("#333")
-                                 .HasBadge("Info")
-                                 .HasMessage(
-                                     "There is an update available!")
-                                 .Dismiss().WithButton("Open download page", button =>
-                                 {
-                                     UtilsModel.OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
-                                 })
-                                 .Dismiss().WithButton("Dismiss", button => { })
-                                 .Queue();
+                LogModel.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
+                s_builder = manager.CreateMessage()
+                                   .Animates(true)
+                                   .HasBadge("Info")
+                                   .HasMessage("There is an update available!")
+                                   .Dismiss().WithButton("Open download page", button =>
+                                   {
+                                       UtilsModel.OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
+                                   })
+                                   .Dismiss().WithButton("Dismiss", button => { });
+                UpdateNotificationManagerColors();
+                s_builder.Queue();
             }
             else
             {
                 LogModel.Logger.Info("You are running the latest version.");
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "Unsupported on certain OSes")]
+        public static void UpdateNotificationManagerColors()
+        {
+            if (Views.MainWindow.Instance?.Theme is FluentAvaloniaTheme theme
+                && s_builder is NotificationMessageBuilder builder)
+            {
+                try
+                {
+                    Color? accentColor = theme.TryGetResource("SystemAccentColor", out object? acc) ? (Color)acc : null;
+                    builder.Message.AccentBrush = Brush.Parse(accentColor.ToString());
+
+                    Color? backgroundColor = theme.TryGetResource("SolidBackgroundFillColorBase", out object? bg) ? (Color)bg : null;
+                    builder.Message.Background = Brush.Parse(backgroundColor.ToString());
+
+                    Color? foregroundColor = theme.TryGetResource("TextFillColorPrimary", out object? fg) ? (Color)fg : null;
+                    builder.Message.Foreground = Brush.Parse(foregroundColor.ToString());
+                }
+                catch
+                {
+                    builder.Message.AccentBrush = Brush.Parse("#1751C3");
+                    builder.Message.Background = Brush.Parse("#333");
+                }
             }
         }
 

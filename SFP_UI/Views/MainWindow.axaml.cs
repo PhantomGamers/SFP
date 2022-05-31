@@ -10,6 +10,7 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
 
+using SFP_UI.Models;
 using SFP_UI.ViewModels;
 
 namespace SFP_UI.Views
@@ -83,7 +84,11 @@ namespace SFP_UI.Views
 
                             TryEnableMicaEffect(Theme);
                         }
-                        Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) => Theme.InvalidateThemingFromSystemThemeChanged();
+                        Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
+                        {
+                            Theme.InvalidateThemingFromSystemThemeChanged();
+                            UpdateCheckModel.UpdateNotificationManagerColors();
+                        };
                     }
                     else
                     {
