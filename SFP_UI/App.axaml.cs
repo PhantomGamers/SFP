@@ -34,7 +34,7 @@ namespace SFP_UI
                     desktop.MainWindow.Title += $" v{UpdateCheckModel.Version}";
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        LogModel.Logger.Info($"Version is {UpdateCheckModel.Version}");
+                        LogModel.Logger.Info($"Initializing SFP version {UpdateCheckModel.Version}");
                     });
                 }
                 catch (Exception e)
