@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 
 using FluentAvalonia.Core;
 using FluentAvalonia.Core.ApplicationModel;
@@ -13,11 +14,14 @@ namespace SFP_UI.Views
 {
     public partial class MainView : UserControl
     {
+        private static bool _isActive;
+        private static MainView? s_instance;
         private Frame? _frameView;
         private NavigationView? _navView;
 
         public MainView()
         {
+            s_instance = this;
             InitializeComponent();
         }
 
@@ -33,6 +37,8 @@ namespace SFP_UI.Views
             if (e.Root is Window b)
             {
                 b.Opened += OnParentWindowOpened;
+                b.Activated += (s, e) => SetAppTitleColor(true);
+                b.Deactivated += (s, e) => SetAppTitleColor(false);
             }
             _frameView = this.FindControl<Frame>("FrameView");
             _frameView.Navigated += OnFrameViewNavigated;
@@ -44,6 +50,23 @@ namespace SFP_UI.Views
             _navView.IsPaneOpen = false;
 
             _frameView.Navigate(typeof(MainPage));
+        }
+
+        public static void SetAppTitleColor(bool? isActive = null)
+        {
+            _isActive = isActive ?? _isActive;
+
+            if (s_instance?.FindControl<TextBlock>("AppTitle") is TextBlock t)
+            {
+                if (!_isActive && s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled))
+                {
+                    t.Foreground = (IBrush)disabled!;
+                }
+                else if (_isActive && s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary))
+                {
+                    t.Foreground = (IBrush)primary!;
+                }
+            }
         }
 
         private void OnFrameViewNavigated(object sender, NavigationEventArgs e)

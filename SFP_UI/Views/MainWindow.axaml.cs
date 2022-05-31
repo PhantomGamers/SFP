@@ -87,6 +87,7 @@ namespace SFP_UI.Views
                         Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
                         {
                             Theme.InvalidateThemingFromSystemThemeChanged();
+                            MainView.SetAppTitleColor();
                             UpdateCheckModel.UpdateNotificationManagerColors();
                         };
                     }

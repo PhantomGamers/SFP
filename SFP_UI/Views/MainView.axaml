@@ -25,7 +25,8 @@
                    DockPanel.Dock="Left"
                    Name="WindowIcon"/>
 
-            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
+            <TextBlock Name="AppTitle"
+                       Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                        FontSize="12"
                        IsHitTestVisible="False"
                        VerticalAlignment="Center"
