@@ -25,7 +25,9 @@
                   Command="{Binding OnResetSteamCommand}"
                   ToolTip.Tip="Resets Steam to stock, removing all patches">Reset Steam</Button>
 
-          <ui:DropDownButton Content="Open file" HorizontalAlignment="Right">
+          <ui:DropDownButton Content="Open file"
+                             HorizontalAlignment="Right"
+                             Margin="0 0 12 0">
               <ui:DropDownButton.Flyout>
                   <MenuFlyout Placement="Top">
                       <MenuItem Header="friends.custom.css"
