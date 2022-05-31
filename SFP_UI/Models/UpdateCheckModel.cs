@@ -44,7 +44,7 @@ namespace SFP_UI.Models
                                      "There is an update available!")
                                  .Dismiss().WithButton("Open download page", button =>
                                  {
-                                     OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
+                                     UtilsModel.OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
                                  })
                                  .Dismiss().WithButton("Dismiss", button => { })
                                  .Queue();
@@ -74,36 +74,6 @@ namespace SFP_UI.Models
             }
 
             return new(-1);
-        }
-
-        private static void OpenUrl(string url)
-        {
-            try
-            {
-                Process.Start(url);
-            }
-            catch (Exception e)
-            {
-                // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    Process.Start("xdg-open", url);
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start("open", url);
-                }
-                else
-                {
-                    LogModel.Logger.Error(e);
-                    throw;
-                }
-            }
         }
     }
 }

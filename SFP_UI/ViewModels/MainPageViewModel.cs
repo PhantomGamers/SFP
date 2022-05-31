@@ -8,6 +8,8 @@ using ReactiveUI;
 
 using SFP;
 
+using SFP_UI.Models;
+
 namespace SFP_UI.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
@@ -189,6 +191,16 @@ namespace SFP_UI.ViewModels
             {
                 Instance.ButtonsEnabled = true;
             }
+        }
+
+        public static void OnOpenFriendsCustomCssCommand()
+        {
+            UtilsModel.OpenUrl(Path.Join(SteamModel.ClientUIDir, "friends.custom.css"));
+        }
+
+        public static void OnOpenLibraryrootCustomCssCommand()
+        {
+            UtilsModel.OpenUrl(Path.Join(SteamModel.SteamUIDir, "libraryroot.custom.css"));
         }
     }
 }
