@@ -59,27 +59,35 @@ namespace SFP_UI.Models
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "Unsupported on certain OSes")]
         public static void UpdateNotificationManagerColors()
         {
             if (Views.MainWindow.Instance?.Theme is FluentAvaloniaTheme theme
                 && s_builder is NotificationMessageBuilder builder)
             {
-                try
+                if (theme.TryGetResource("AccentFillColorSelectedTextBackgroundBrush", out object? accentColor))
                 {
-                    Color? accentColor = theme.TryGetResource("SystemAccentColor", out object? acc) ? (Color)acc : null;
-                    builder.Message.AccentBrush = Brush.Parse(accentColor.ToString());
-
-                    Color? backgroundColor = theme.TryGetResource("SolidBackgroundFillColorBase", out object? bg) ? (Color)bg : null;
-                    builder.Message.Background = Brush.Parse(backgroundColor.ToString());
-
-                    Color? foregroundColor = theme.TryGetResource("TextFillColorPrimary", out object? fg) ? (Color)fg : null;
-                    builder.Message.Foreground = Brush.Parse(foregroundColor.ToString());
+                    LogModel.Logger.Info("accentColor");
+                    builder.Message.AccentBrush = (IBrush)accentColor;
                 }
-                catch
+                else
                 {
                     builder.Message.AccentBrush = Brush.Parse("#1751C3");
+                }
+
+                if (theme.TryGetResource("SolidBackgroundFillColorBaseBrush", out object? backgroundColor))
+                {
+                    LogModel.Logger.Info("backgroundColor");
+                    builder.Message.Background = (IBrush)backgroundColor;
+                }
+                else
+                {
                     builder.Message.Background = Brush.Parse("#333");
+                }
+
+                if (theme.TryGetResource("DefaultTextForegroundThemeBrush", out object? foregroundColor))
+                {
+                    LogModel.Logger.Info("foregroundColor");
+                    builder.Message.Foreground = (IBrush)foregroundColor;
                 }
             }
         }
