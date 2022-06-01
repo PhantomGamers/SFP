@@ -26,7 +26,9 @@ jobs:
         script: |
           core.setFailed('Invalid tag')
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - name: Check code style
       run: |
