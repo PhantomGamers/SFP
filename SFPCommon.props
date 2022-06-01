@@ -6,7 +6,7 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <PublishSingleFile>True</PublishSingleFile>
     <PublishTrimmed>True</PublishTrimmed>
-    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishReadyToRun>True</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NLog" Version="5.0.0" />
