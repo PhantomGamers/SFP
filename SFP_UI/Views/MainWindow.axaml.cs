@@ -116,6 +116,9 @@ namespace SFP_UI.Views
                 // TODO: add Windows version to CoreWindow
                 if (IsWindows11 && args.NewTheme != FluentAvaloniaTheme.HighContrastModeString)
                 {
+                    TransparencyBackgroundFallback = Brushes.Transparent;
+                    TransparencyLevelHint = WindowTransparencyLevel.Mica;
+
                     TryEnableMicaEffect(sender);
                 }
                 else if (args.NewTheme == FluentAvaloniaTheme.HighContrastModeString)
