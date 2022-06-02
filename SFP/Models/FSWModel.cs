@@ -48,19 +48,16 @@ namespace SFP
 
         internal static bool RemoveFileSystemWatcher(string fileFullName)
         {
-            if (!s_fileSystemWatchers.ContainsKey(fileFullName))
+            if (s_fileSystemWatchers.TryGetValue(fileFullName, out FileSystemWatcher? watcher))
             {
-                return false;
+                watcher.EnableRaisingEvents = false;
+                watcher.Dispose();
+
+                s_fileSystemWatchers.Remove(fileFullName);
+
+                return true;
             }
-
-            FileSystemWatcher? watcher = s_fileSystemWatchers[fileFullName];
-
-            watcher.EnableRaisingEvents = false;
-            watcher.Dispose();
-
-            s_fileSystemWatchers.Remove(fileFullName);
-
-            return true;
+            return false;
         }
 
         public static bool RemoveAllWatchers()
@@ -121,9 +118,8 @@ namespace SFP
 
         public static bool ToggleFileSystemWatcher(string fileFullName, bool? state = null)
         {
-            if (s_fileSystemWatchers.ContainsKey(fileFullName))
+            if (s_fileSystemWatchers.TryGetValue(fileFullName, out FileSystemWatcher? watcher))
             {
-                FileSystemWatcher? watcher = s_fileSystemWatchers[fileFullName];
                 watcher.EnableRaisingEvents = state ?? !watcher.EnableRaisingEvents;
                 return true;
             }
@@ -133,9 +129,9 @@ namespace SFP
 
         public static FileSystemWatcher? GetFileSystemWatcher(string fileFullName)
         {
-            if (s_fileSystemWatchers.ContainsKey(fileFullName))
+            if (s_fileSystemWatchers.TryGetValue(fileFullName, out FileSystemWatcher? watcher))
             {
-                return s_fileSystemWatchers[fileFullName];
+                return watcher;
             }
 
             return null;

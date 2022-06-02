@@ -31,10 +31,16 @@ namespace SFP_UI
 
                 try
                 {
-                    LogModel.Logger.Info($"Version is {UpdateCheckModel.Version}");
                     desktop.MainWindow.Title += $" v{UpdateCheckModel.Version}";
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        LogModel.Logger.Info($"Initializing SFP version {UpdateCheckModel.Version}");
+                    });
                 }
-                catch { };
+                catch (Exception e)
+                {
+                    LogModel.Logger.Error(e);
+                };
             }
 
             if (SFP.Properties.Settings.Default.CheckForUpdates)
@@ -65,11 +71,6 @@ namespace SFP_UI
         {
             LinkModel.RemoveAllHardLinks();
             FSWModel.RemoveAllWatchers();
-            if (MainWindow.Instance != null)
-            {
-                MainWindow.Instance.trayIcon.IsVisible = false;
-                MainWindow.Instance.trayIcon.Dispose();
-            }
         }
     }
 }

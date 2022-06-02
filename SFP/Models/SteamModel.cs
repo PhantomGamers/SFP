@@ -119,12 +119,9 @@ namespace SFP
             }
 
             bool steamState = IsSteamRunning;
-            if (steamState)
+            if (steamState && !ShutDownSteam())
             {
-                if (!ShutDownSteam())
-                {
-                    return;
-                }
+                return;
             }
 
             bool scannerState = FSWModel.WatchersActive;

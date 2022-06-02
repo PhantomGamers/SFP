@@ -8,6 +8,8 @@ using ReactiveUI;
 
 using SFP;
 
+using SFP_UI.Models;
+
 namespace SFP_UI.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
@@ -19,7 +21,6 @@ namespace SFP_UI.ViewModels
         public MainPageViewModel()
         {
             Instance = this;
-            Targets.OutputControlTarget.MainPageViewModel = this;
         }
 
         private bool _scannerActive = false;
@@ -30,12 +31,12 @@ namespace SFP_UI.ViewModels
             private set => this.RaiseAndSetIfChanged(ref _scannerActive, value);
         }
 
-        private string _output = string.Empty;
+        private static string s_output = string.Empty;
 
         public string Output
         {
-            get => _output;
-            private set => this.RaiseAndSetIfChanged(ref _output, value);
+            get => s_output;
+            private set => this.RaiseAndSetIfChanged(ref s_output, value);
         }
 
         private int _caretIndex;
@@ -189,6 +190,36 @@ namespace SFP_UI.ViewModels
             if (Instance != null)
             {
                 Instance.ButtonsEnabled = true;
+            }
+        }
+
+        public static void OnOpenFriendsCustomCssCommand()
+        {
+            string file = Path.Join(SteamModel.ClientUIDir, "friends.custom.css");
+            try
+            {
+                File.Create(file).Dispose();
+                UtilsModel.OpenUrl(file);
+            }
+            catch (Exception e)
+            {
+                LogModel.Logger.Warn($"Could not open friends.custom.css");
+                LogModel.Logger.Error(e);
+            }
+        }
+
+        public static void OnOpenLibraryrootCustomCssCommand()
+        {
+            string file = Path.Join(SteamModel.SteamUIDir, "libraryroot.custom.css");
+            try
+            {
+                File.Create(file).Dispose();
+                UtilsModel.OpenUrl(file);
+            }
+            catch (Exception e)
+            {
+                LogModel.Logger.Warn($"Could not open libraryroot.custom.css");
+                LogModel.Logger.Error(e);
             }
         }
     }

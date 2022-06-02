@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SFP.Models.ChromeCache.Simple
 {
-    public struct SimpleFileHeader
+    public readonly struct SimpleFileHeader
     {
         //private readonly ulong initial_magic_number;
         //private readonly uint version;

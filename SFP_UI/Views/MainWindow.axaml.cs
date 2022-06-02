@@ -1,21 +1,33 @@
+using System.Runtime.InteropServices;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
+
+using FluentAvalonia.Styling;
+using FluentAvalonia.UI.Controls;
+using FluentAvalonia.UI.Media;
+
+using SFP_UI.Models;
+using SFP_UI.ViewModels;
 
 namespace SFP_UI.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : CoreWindow
     {
         public static MainWindow? Instance { get; private set; }
 
         public readonly TrayIcon trayIcon;
+
+        public FluentAvaloniaTheme? Theme;
 
         private bool _isStarting = true;
 
         public MainWindow()
         {
             Instance = this;
-            Opened += MainWindow_Opened;
 
             if (SFP.Properties.Settings.Default.StartMinimized)
             {
@@ -40,14 +52,109 @@ namespace SFP_UI.Views
             InitializeTrayIcon();
         }
 
-        private void MainWindow_Opened(object? sender, EventArgs e)
+        protected override void OnOpened(EventArgs e)
         {
-            if (_isStarting
-               && SFP.Properties.Settings.Default.MinimizeToTray && SFP.Properties.Settings.Default.StartMinimized
-               && SFP.Properties.Settings.Default.ShowTrayIcon)
+            base.OnOpened(e);
+
+            if (_isStarting)
             {
                 _isStarting = false;
-                Hide();
+
+                if (SFP.Properties.Settings.Default.MinimizeToTray
+                    && SFP.Properties.Settings.Default.StartMinimized
+                    && SFP.Properties.Settings.Default.ShowTrayIcon)
+                {
+                    Hide();
+                }
+
+                Theme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+                if (Theme != null)
+                {
+                    Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
+                    Theme.RequestedThemeChanged += OnRequestedThemeChanged;
+
+                    // Enable Mica on Windows 11
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        // TODO: add Windows version to CoreWindow
+                        if (IsWindows11 && Theme.RequestedTheme != FluentAvaloniaTheme.HighContrastModeString)
+                        {
+                            TransparencyBackgroundFallback = Brushes.Transparent;
+                            TransparencyLevelHint = WindowTransparencyLevel.Mica;
+
+                            TryEnableMicaEffect(Theme);
+                        }
+                        Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
+                        {
+                            try
+                            {
+                                Theme.InvalidateThemingFromSystemThemeChanged();
+                                MainView.SetAppTitleColor();
+                                UpdateCheckModel.UpdateNotificationManagerColors();
+                            }
+                            catch (Exception err)
+                            {
+                                SFP.LogModel.Logger.Warn("Unable to detect system theme");
+                                SFP.LogModel.Logger.Error(err);
+                            }
+                        };
+                    }
+                    else
+                    {
+                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                    }
+
+                    Theme.ForceWin32WindowToTheme(this);
+                }
+            }
+        }
+
+        private void OnRequestedThemeChanged(FluentAvaloniaTheme sender, RequestedThemeChangedEventArgs args)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // TODO: add Windows version to CoreWindow
+                if (IsWindows11 && args.NewTheme != FluentAvaloniaTheme.HighContrastModeString)
+                {
+                    TransparencyBackgroundFallback = Brushes.Transparent;
+                    TransparencyLevelHint = WindowTransparencyLevel.Mica;
+
+                    TryEnableMicaEffect(sender);
+                }
+                else if (args.NewTheme == FluentAvaloniaTheme.HighContrastModeString)
+                {
+                    // Clear the local value here, and let the normal styles take over for HighContrast theme
+                    SetValue(BackgroundProperty, AvaloniaProperty.UnsetValue);
+                }
+            }
+        }
+
+        private void TryEnableMicaEffect(FluentAvaloniaTheme thm)
+        {
+
+            // The background colors for the Mica brush are still based around SolidBackgroundFillColorBase resource
+            // BUT since we can't control the actual Mica brush color, we have to use the window background to create
+            // the same effect. However, we can't use SolidBackgroundFillColorBase directly since its opaque, and if
+            // we set the opacity the color become lighter than we want. So we take the normal color, darken it and
+            // apply the opacity until we get the roughly the correct color
+            // NOTE that the effect still doesn't look right, but it suffices. Ideally we need access to the Mica
+            // CompositionBrush to properly change the color but I don't know if we can do that or not
+            if (thm.RequestedTheme == FluentAvaloniaTheme.DarkModeString)
+            {
+                Color2 color = this.TryFindResource("SolidBackgroundFillColorBase", out object? value) ? (Color2)(Color)value! : new Color2(32, 32, 32);
+
+                color = color.LightenPercent(-0.8f);
+
+                Background = new ImmutableSolidColorBrush(color, 0.78);
+            }
+            else if (thm.RequestedTheme == FluentAvaloniaTheme.LightModeString)
+            {
+                // Similar effect here
+                Color2 color = this.TryFindResource("SolidBackgroundFillColorBase", out object? value) ? (Color2)(Color)value! : new Color2(243, 243, 243);
+
+                color = color.LightenPercent(0.5f);
+
+                Background = new ImmutableSolidColorBrush(color, 0.9);
             }
         }
 
@@ -84,11 +191,6 @@ namespace SFP_UI.Views
             };
 
             trayIcon.IsVisible = SFP.Properties.Settings.Default.ShowTrayIcon;
-        }
-
-        private void TrayIcon_Clicked(object? sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private void ShowWindow()

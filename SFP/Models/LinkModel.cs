@@ -13,9 +13,9 @@ namespace SFP
                 return file;
             }
 
-            if (s_hardLinks.ContainsKey(file.FullName))
+            if (s_hardLinks.TryGetValue(file.FullName, out string? linkPath))
             {
-                return new FileInfo(s_hardLinks[file.FullName]);
+                return new FileInfo(linkPath);
             }
 
             return CreateHardLink(file);
@@ -23,39 +23,40 @@ namespace SFP
 
         public static FileInfo CreateHardLink(FileInfo file)
         {
-            string? linkPath = Path.Join(file.DirectoryName, "SFP");
+            string linkPath = Path.Join(file.DirectoryName, "SFP");
             Directory.CreateDirectory(linkPath);
-            string? linkName = Path.Join(linkPath, file.Name);
+            string linkName = Path.Join(linkPath, file.Name);
 
-            if (File.Exists(linkName))
+            if (File.Exists(linkName) && !s_hardLinks.ContainsValue(linkName))
             {
-                if (!s_hardLinks.ContainsValue(linkName))
-                {
-                    s_hardLinks.Add(file.FullName, linkName);
-                    return new FileInfo(linkName);
-                }
+                s_hardLinks.Add(file.FullName, linkName);
+                return new FileInfo(linkName);
             }
 
             NativeModel.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
-            s_hardLinks.Add(file.FullName, linkName);
+            // If this function runs in parallel for the same file, another instance of this method might add the link first.
+            // This would cause an exception, but we can ignore it because the file will exist
+            // TODO: Actually make this method threadsafe
+            _ = s_hardLinks.TryAdd(file.FullName, linkName);
             return new FileInfo(linkName);
         }
 
-        public static bool RemoveHardLink(string fileName)
+        public static bool RemoveHardLink(string filePath)
         {
-            if (s_hardLinks.ContainsKey(fileName))
+            if (s_hardLinks.TryGetValue(filePath, out string? linkPath))
             {
                 try
                 {
-                    File.Delete(s_hardLinks[fileName]);
+                    File.Delete(linkPath);
                 }
-                catch
+                catch (Exception e)
                 {
-                    LogModel.Logger.Warn($"Could not delete {s_hardLinks[fileName]} which links to {fileName}");
+                    LogModel.Logger.Warn($"Could not delete {linkPath} which links to {filePath}");
+                    LogModel.Logger.Error(e);
                     return false;
                 }
 
-                s_hardLinks.Remove(fileName);
+                s_hardLinks.Remove(filePath);
                 return true;
             }
             return false;
@@ -64,7 +65,7 @@ namespace SFP
         public static bool RemoveAllHardLinks()
         {
             bool result = true;
-            foreach (string? file in s_hardLinks.Keys)
+            foreach (string file in s_hardLinks.Keys)
             {
                 result &= RemoveHardLink(file);
             }

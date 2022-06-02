@@ -39,3 +39,4 @@ Once your files are patched follow the instructions in the program to install th
 * [Sam Allen of Dot Net Perls for GZIP compression, decompression, and detection code.](https://www.dotnetperls.com/decompress)
 * [@maxhauser for semver](https://github.com/maxhauser/semver)
 * [The Avalonia team for the AvaloniaUI framework](https://github.com/AvaloniaUI/Avalonia)
+* [@amwx for the FluentAvalonia theme](https://github.com/amwx/FluentAvalonia)

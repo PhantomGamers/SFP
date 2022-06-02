@@ -72,16 +72,10 @@ namespace SFP
             LogModel.Logger.Info($"Patching file {file.Name}");
 
             var originalFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.original{Path.GetExtension(file.FullName)}");
-            FileInfo customFile;
-            if (overrideName != null)
-            {
-                customFile = new FileInfo(Path.Join(file.DirectoryName, overrideName));
-            }
-            else
-            {
-                customFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
-            }
 
+            FileInfo customFile = overrideName != null
+                                ? new(Path.Join(file.DirectoryName, overrideName))
+                                : new($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.custom{Path.GetExtension(file.FullName)}");
             try
             {
                 await File.WriteAllTextAsync(originalFile.FullName, string.Concat(ORIGINAL_TEXT, contents));
@@ -154,13 +148,15 @@ namespace SFP
                 Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
             };
-            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
-            _ = options.RegisterPostEvictionCallback(OnLibraryRemovedFromCache);
+            CancellationTokenSource source = new(s_cacheTimeSpan);
+            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
+            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLibraryRemovedFromCache(v, r, source));
             s_libraryMemCache.Set(e.Name, e, options);
         }
 
-        private static async void OnLibraryRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        private static async void OnLibraryRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
         {
+            source.Dispose();
             if (reason != EvictionReason.TokenExpired)
             {
                 return;
@@ -192,13 +188,15 @@ namespace SFP
                 Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
             };
-            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
-            _ = options.RegisterPostEvictionCallback(OnLocalRemovedFromCache);
+            CancellationTokenSource source = new(s_cacheTimeSpan);
+            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
+            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLocalRemovedFromCache(v, r, source));
             s_localMemCache.Set(e.Name, e, options);
         }
 
-        private static async void OnLocalRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        private static async void OnLocalRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
         {
+            source.Dispose();
             if (reason != EvictionReason.TokenExpired)
             {
                 return;

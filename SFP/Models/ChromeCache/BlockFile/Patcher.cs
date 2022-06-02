@@ -80,13 +80,15 @@ namespace SFP.ChromeCache.BlockFile
                 Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
             };
-            _ = options.AddExpirationToken(new CancellationChangeToken(new CancellationTokenSource(s_cacheTimeSpan).Token));
-            _ = options.RegisterPostEvictionCallback(OnRemovedFromCache);
+            CancellationTokenSource source = new(s_cacheTimeSpan);
+            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
+            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnRemovedFromCache(v, r, source));
             s_memCache.Set(dir.Name, dir, options);
         }
 
-        private static async void OnRemovedFromCache(object key, object value, EvictionReason reason, object state)
+        private static async void OnRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
         {
+            source.Dispose();
             if (reason != EvictionReason.TokenExpired)
             {
                 return;
