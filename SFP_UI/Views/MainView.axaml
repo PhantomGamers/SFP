@@ -23,7 +23,8 @@
                    Source="/Assets/SFP-logo.ico"
                    Width="18" Height="18"
                    DockPanel.Dock="Left"
-                   Name="WindowIcon"/>
+                   Name="WindowIcon"
+                   IsHitTestVisible="False"/>
 
             <TextBlock Name="AppTitle"
                        Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
