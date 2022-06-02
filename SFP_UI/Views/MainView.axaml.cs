@@ -14,7 +14,7 @@ namespace SFP_UI.Views
 {
     public partial class MainView : UserControl
     {
-        private static bool _isActive;
+        private static bool s_isActive;
         private static MainView? s_instance;
         private Frame? _frameView;
         private NavigationView? _navView;
@@ -54,15 +54,15 @@ namespace SFP_UI.Views
 
         public static void SetAppTitleColor(bool? isActive = null)
         {
-            _isActive = isActive ?? _isActive;
+            s_isActive = isActive ?? s_isActive;
 
             if (s_instance?.FindControl<TextBlock>("AppTitle") is TextBlock t)
             {
-                if (!_isActive && s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled))
+                if (!s_isActive && s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled))
                 {
                     t.Foreground = (IBrush)disabled!;
                 }
-                else if (_isActive && s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary))
+                else if (s_isActive && s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary))
                 {
                     t.Foreground = (IBrush)primary!;
                 }
