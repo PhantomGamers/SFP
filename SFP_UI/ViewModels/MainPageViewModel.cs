@@ -198,7 +198,10 @@ namespace SFP_UI.ViewModels
             string file = Path.Join(SteamModel.ClientUIDir, "friends.custom.css");
             try
             {
-                File.Create(file).Dispose();
+                if (!File.Exists(file))
+                {
+                    File.Create(file).Dispose();
+                }
                 UtilsModel.OpenUrl(file);
             }
             catch (Exception e)
@@ -213,7 +216,10 @@ namespace SFP_UI.ViewModels
             string file = Path.Join(SteamModel.SteamUIDir, "libraryroot.custom.css");
             try
             {
-                File.Create(file).Dispose();
+                if (!File.Exists(file))
+                {
+                    File.Create(file).Dispose();
+                }
                 UtilsModel.OpenUrl(file);
             }
             catch (Exception e)
