@@ -12,14 +12,14 @@
             <Setter Property="OpenPaneLength" Value="240" />
         </Style>
         <Style Selector="ui|NavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
-            <Setter Property="Margin" Value="0 5 0 0" />
+            <Setter Property="Margin" Value="0 10 0 0" />
         </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto, *">
 
         <Grid Name="TitleBarHost" ColumnDefinitions="Auto,Auto,*" Background="Transparent">
-            <Image Margin="51 15 8 12"
+            <Image Margin="50 15 10 12"
                    Source="/Assets/SFP-logo.ico"
                    Width="18" Height="18"
                    DockPanel.Dock="Left"
