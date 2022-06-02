@@ -32,7 +32,7 @@ jobs:
 
     - name: Check code style
       run: |
-        dotnet format --severity info --verify-no-changes
+        dotnet format --severity info --verify-no-changes --exclude 'external/'
 
     - name: Create tag
       run: |
