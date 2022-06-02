@@ -1,5 +1,5 @@
 param(
-    [String]$os="win;linux;osx",
+    [String]$os="win10;linux;osx",
     [String]$arch="x64",
     [String]$configuration="Release"
     )
