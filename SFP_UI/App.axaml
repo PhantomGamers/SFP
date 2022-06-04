@@ -7,10 +7,6 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
 
-    <Application.Resources>
-        <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
-    </Application.Resources>
-
     <Application.Styles>
         <sty:FluentAvaloniaTheme />
         <StyleInclude Source="avares://Notification.Avalonia/Themes/Generic.xaml" />
