@@ -10,6 +10,10 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: [win10, linux, osx]
+      fail-fast: true
     runs-on: windows-latest
     steps:
     - name: Check Tag
@@ -45,7 +49,7 @@ jobs:
 
     - name: Build & Zip
       shell: pwsh
-      run: .\createpublishedzip.ps1
+      run: .\createpublishedzip.ps1 -os ${{ matrix.os }}
 
     - name: Publish to Github
       uses: ncipollo/release-action@v1
@@ -56,3 +60,4 @@ jobs:
         artifactErrorsFailBuild: true
         draft: true
         allowUpdates: true
+        token: ${{ secrets.GITHUB_TOKEN }}
