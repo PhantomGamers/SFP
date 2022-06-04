@@ -66,7 +66,6 @@ namespace SFP_UI.Models
             {
                 if (theme.TryGetResource("AccentFillColorSelectedTextBackgroundBrush", out object? accentColor))
                 {
-                    LogModel.Logger.Info("accentColor");
                     builder.Message.AccentBrush = (IBrush)accentColor;
                 }
                 else
@@ -76,7 +75,6 @@ namespace SFP_UI.Models
 
                 if (theme.TryGetResource("SolidBackgroundFillColorBaseBrush", out object? backgroundColor))
                 {
-                    LogModel.Logger.Info("backgroundColor");
                     builder.Message.Background = (IBrush)backgroundColor;
                 }
                 else
@@ -86,7 +84,6 @@ namespace SFP_UI.Models
 
                 if (theme.TryGetResource("DefaultTextForegroundThemeBrush", out object? foregroundColor))
                 {
-                    LogModel.Logger.Info("foregroundColor");
                     builder.Message.Foreground = (IBrush)foregroundColor;
                 }
             }
