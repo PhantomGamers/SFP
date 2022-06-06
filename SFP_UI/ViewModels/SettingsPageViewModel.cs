@@ -247,7 +247,7 @@ namespace SFP_UI.ViewModels
                 SFP.Properties.Settings.Default.AppTheme = value;
                 if (value == "System Default")
                 {
-                    MainWindow.Instance!.Theme!.InvalidateThemingFromSystemThemeChanged();
+                    MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
                 }
                 else
                 {
