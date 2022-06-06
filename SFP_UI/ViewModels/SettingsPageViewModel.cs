@@ -286,6 +286,10 @@ namespace SFP_UI.ViewModels
             CacheDirectory = SteamModel.CacheDir;
             ScannerDelay = SFP.Properties.Settings.Default.ScannerDelay;
             AppTheme = SFP.Properties.Settings.Default.AppTheme;
+            StartMinimized = SFP.Properties.Settings.Default.StartMinimized;
+            MinimizeToTray = SFP.Properties.Settings.Default.MinimizeToTray;
+            CheckForUpdates = SFP.Properties.Settings.Default.CheckForUpdates;
+            ShowTrayIcon = SFP.Properties.Settings.Default.ShowTrayIcon;
         }
 
         public async void OnBrowseSteamCommand()
