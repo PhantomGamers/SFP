@@ -46,7 +46,8 @@ namespace SFP.ChromeCache.BlockFile
                     var entry = new EntryStore(new Addr(raw, cacheDir.FullName));
                     while (entry.next != 0)
                     {
-                        if (entry.Key.Contains(fileName))
+                        // TODO: Investigate to see whether this should be >= 2 or if we should just add the last entry in the array
+                        if (entry.Key.Contains(fileName) && entry.data_addrs.Count >= 2)
                         {
                             files.Add(entry.data_addrs[1].File);
                         }
