@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="SFP_UI.Pages.SettingsPage">
 
-  <DockPanel Margin="15">
+  <DockPanel Margin="16">
     <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
       <Button Command="{Binding OnSaveCommand}"
               ToolTip.Tip="Saves your settings to config">Save</Button>
@@ -10,8 +10,9 @@
               ToolTip.Tip="Reloads settings from config">Reload</Button>
     </StackPanel>
     <ScrollViewer>
-      <StackPanel Orientation="Vertical" Spacing="4">
-        <Label Margin="8">Steam Settings</Label>
+      <StackPanel Orientation="Vertical">
+
+        <TextBlock Text="Steam" Classes="BodyStrongTextBlockStyle"/>
         <StackPanel Orientation="Horizontal" Spacing="4">
           <Label Margin="0,10">Steam Launch Args</Label>
           <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="220" Text="{Binding SteamLaunchArgs}"/>
@@ -33,25 +34,29 @@
           <Button Margin="5,0,0,0" Command="{Binding OnResetCacheCommand}">Reset</Button>
         </StackPanel>
         <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam On Patch</CheckBox>
-        <Label Margin="8">Patcher Settings</Label>
+
+        <TextBlock Text="Patcher" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
         <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch On App Startup</CheckBox>
         <CheckBox IsChecked="{Binding ShouldPatchFriends}">Patch Friends</CheckBox>
         <CheckBox IsChecked="{Binding ShouldPatchLibrary}">Patch Library</CheckBox>
         <CheckBox IsChecked="{Binding ScanOnly}">Scan Only</CheckBox>
-        <Label Margin="8">Scanner Settings</Label>
+
+        <TextBlock Text="Scanner" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
         <CheckBox IsChecked="{Binding ShouldScanOnStart}">Scan On App Startup</CheckBox>
         <CheckBox IsChecked="{Binding ShouldScanFriends}">Scan Friends</CheckBox>
         <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan Library</CheckBox>
         <StackPanel Orientation="Horizontal" Margin="0,5" Spacing="4">
-            <Label Margin="0,10">Scanner Delay (Seconds)</Label>
+            <Label>Scanner Delay (Seconds)</Label>
             <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110" Height="20" HorizontalContentAlignment="Center"/>
         </StackPanel>
-        <Label Margin="8">General Settings</Label>
+
+        <TextBlock Text="General" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
         <CheckBox IsChecked="{Binding CheckForUpdates}">Check For Updates On Startup</CheckBox>
         <CheckBox IsChecked="{Binding ShowTrayIcon}">Show Tray Icon</CheckBox>
         <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize To Tray</CheckBox>
         <CheckBox IsChecked="{Binding StartMinimized}">Start Minimized</CheckBox>
         <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
+
       </StackPanel>
     </ScrollViewer>
   </DockPanel>
