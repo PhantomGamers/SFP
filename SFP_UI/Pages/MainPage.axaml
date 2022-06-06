@@ -14,7 +14,7 @@
                   IsEnabled="{Binding ButtonsEnabled}"
                   IsVisible="{Binding !ScannerActive}"
                   Command="{Binding OnScanCommand}"
-                  ToolTip.Tip="Starts scanning for changes to Steam, repatching as needed based on your settings">Start Scanner</Button>
+                  ToolTip.Tip="Starts scanning for changes to Steam, repatching as needed based on your settings">Start scanner</Button>
           <Button Margin="0 0 10 0"
                   IsEnabled="{Binding ButtonsEnabled}"
                   IsVisible="{Binding ScannerActive}"
