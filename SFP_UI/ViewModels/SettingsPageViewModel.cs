@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 using Avalonia.Controls;
 
 using ReactiveUI;
@@ -247,7 +249,14 @@ namespace SFP_UI.ViewModels
                 SFP.Properties.Settings.Default.AppTheme = value;
                 if (value == "System Default")
                 {
-                    MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
+                    }
+                    else
+                    {
+                        MainWindow.Instance!.Theme!.RequestedTheme = FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString;
+                    }
                 }
                 else
                 {
