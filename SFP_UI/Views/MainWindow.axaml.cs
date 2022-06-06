@@ -73,8 +73,7 @@ namespace SFP_UI.Views
                     Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
                     Theme.RequestedThemeChanged += OnRequestedThemeChanged;
 
-                    if (SFP.Properties.Settings.Default.AppTheme == FluentAvaloniaTheme.LightModeString
-                        || SFP.Properties.Settings.Default.AppTheme == FluentAvaloniaTheme.DarkModeString)
+                    if (IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
                     {
                         Theme.RequestedTheme = SFP.Properties.Settings.Default.AppTheme;
                     }
@@ -110,7 +109,10 @@ namespace SFP_UI.Views
                     }
                     else
                     {
-                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                        if (!IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
+                        {
+                            Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                        }
                     }
 
                     Theme.ForceWin32WindowToTheme(this);
@@ -210,6 +212,18 @@ namespace SFP_UI.Views
             Show();
             WindowState = WindowState.Normal;
             Activate();
+        }
+
+        public static bool IsValidRequestedTheme(string thm)
+        {
+            if (FluentAvaloniaTheme.LightModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
+                FluentAvaloniaTheme.DarkModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
+                FluentAvaloniaTheme.HighContrastModeString.Equals(thm, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
