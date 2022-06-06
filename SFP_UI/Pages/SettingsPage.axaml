@@ -15,11 +15,11 @@
         <TextBlock Text="Steam" Classes="BodyStrongTextBlockStyle"/>
         <StackPanel Orientation="Horizontal" Spacing="4">
           <Label Margin="0,10">Steam Launch Args</Label>
-          <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="220" Text="{Binding SteamLaunchArgs}"/>
+          <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240" Text="{Binding SteamLaunchArgs}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
           <Label Margin="0,10">Steam Directory</Label>
-          <TextBox Watermark="Steam Directory" Margin="20,0,0,0" Width="220" Text="{Binding SteamDirectory}"
+          <TextBox Watermark="Steam Directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
           <Button Margin="5,0,0,0" Command="{Binding OnBrowseSteamCommand}">Browse</Button>
@@ -27,7 +27,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
           <Label Margin="0,10">Cache Directory</Label>
-          <TextBox Watermark="Cache Directory" Margin="20,0,0,0" Width="220" Text="{Binding CacheDirectory}"
+          <TextBox Watermark="Cache Directory" Margin="20,0,0,0" Width="240" Text="{Binding CacheDirectory}"
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
           <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
@@ -57,7 +57,7 @@
         <CheckBox IsChecked="{Binding StartMinimized}">Start Minimized</CheckBox>
         <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
         <Label>App Theme</Label>
-        <ComboBox Name="AppThemeComboBox" Width="141" SelectedIndex="2">
+        <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
             <ComboBoxItem>Dark</ComboBoxItem>
             <ComboBoxItem>Light</ComboBoxItem>
             <ComboBoxItem>System Default</ComboBoxItem>
