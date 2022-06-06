@@ -56,6 +56,12 @@
         <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize To Tray</CheckBox>
         <CheckBox IsChecked="{Binding StartMinimized}">Start Minimized</CheckBox>
         <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
+        <Label>App Theme</Label>
+        <ComboBox Name="AppThemeComboBox" Width="141" SelectedIndex="2">
+            <ComboBoxItem>Dark</ComboBoxItem>
+            <ComboBoxItem>Light</ComboBoxItem>
+            <ComboBoxItem>System Default</ComboBoxItem>
+        </ComboBox>
 
       </StackPanel>
     </ScrollViewer>

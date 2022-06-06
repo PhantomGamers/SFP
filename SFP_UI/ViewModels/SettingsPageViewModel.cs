@@ -12,9 +12,22 @@ namespace SFP_UI.ViewModels
     {
         public static SettingsPageViewModel? Instance { get; private set; }
 
-        public SettingsPageViewModel()
+        public SettingsPageViewModel(ComboBox appThemeComboBox)
         {
             Instance = this;
+            appThemeComboBox.SelectionChanged += OnAppThemeSelectedChanged;
+            if (SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString)
+            {
+                appThemeComboBox.SelectedIndex = 0;
+            }
+            else if (SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString)
+            {
+                appThemeComboBox.SelectedIndex = 1;
+            }
+            else
+            {
+                appThemeComboBox.SelectedIndex = 2;
+            }
         }
 
         private bool _shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
@@ -223,6 +236,26 @@ namespace SFP_UI.ViewModels
         }
         */
 
+        private string _appTheme = SFP.Properties.Settings.Default.AppTheme;
+
+        public string AppTheme
+        {
+            get => _appTheme;
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _appTheme, value);
+                SFP.Properties.Settings.Default.AppTheme = value;
+                if (value == "System Default")
+                {
+                    MainWindow.Instance!.Theme!.InvalidateThemingFromSystemThemeChanged();
+                }
+                else
+                {
+                    MainWindow.Instance!.Theme!.RequestedTheme = value;
+                }
+            }
+        }
+
         public static void OnSaveCommand()
         {
             SFP.Properties.Settings.Default.Save();
@@ -243,6 +276,7 @@ namespace SFP_UI.ViewModels
             SteamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
             CacheDirectory = SteamModel.CacheDir;
             ScannerDelay = SFP.Properties.Settings.Default.ScannerDelay;
+            AppTheme = SFP.Properties.Settings.Default.AppTheme;
         }
 
         public async void OnBrowseSteamCommand()
@@ -275,6 +309,17 @@ namespace SFP_UI.ViewModels
         {
             SFP.Properties.Settings.Default.CacheDirectory = string.Empty;
             CacheDirectory = SteamModel.CacheDir;
+        }
+
+        public void OnAppThemeSelectedChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ComboBox cb)
+            {
+                if (cb.SelectedItem is ComboBoxItem cbi)
+                {
+                    AppTheme = (string)cbi.Content;
+                }
+            }
         }
     }
 }

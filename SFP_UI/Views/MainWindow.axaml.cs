@@ -73,6 +73,12 @@ namespace SFP_UI.Views
                     Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
                     Theme.RequestedThemeChanged += OnRequestedThemeChanged;
 
+                    if (SFP.Properties.Settings.Default.AppTheme == FluentAvaloniaTheme.LightModeString
+                        || SFP.Properties.Settings.Default.AppTheme == FluentAvaloniaTheme.DarkModeString)
+                    {
+                        Theme.RequestedTheme = SFP.Properties.Settings.Default.AppTheme;
+                    }
+
                     // Enable Mica on Windows 11
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -86,11 +92,14 @@ namespace SFP_UI.Views
                         }
                         Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
                         {
+                            if (SFP.Properties.Settings.Default.AppTheme != "System Default")
+                            {
+                                return;
+                            }
+
                             try
                             {
                                 Theme.InvalidateThemingFromSystemThemeChanged();
-                                MainView.SetAppTitleColor();
-                                UpdateCheckModel.UpdateNotificationManagerColors();
                             }
                             catch (Exception err)
                             {
@@ -127,6 +136,9 @@ namespace SFP_UI.Views
                     SetValue(BackgroundProperty, AvaloniaProperty.UnsetValue);
                 }
             }
+
+            MainView.SetAppTitleColor();
+            UpdateCheckModel.UpdateNotificationManagerColors();
         }
 
         private void TryEnableMicaEffect(FluentAvaloniaTheme thm)

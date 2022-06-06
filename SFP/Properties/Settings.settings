@@ -50,5 +50,8 @@
     <Setting Name="ScannerDelay" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="AppTheme" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">System Default</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
