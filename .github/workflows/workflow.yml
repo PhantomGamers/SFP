@@ -40,6 +40,8 @@ jobs:
         git push origin ${{ github.event.inputs.version }}
 
     - uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '6.0.x'
 
     - name: Build & Zip
       shell: pwsh
