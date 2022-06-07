@@ -1,4 +1,0 @@
-[submodule "external/FluentAvalonia"]
-	path = external/FluentAvalonia
-	url = https://github.com/PhantomGamers/FluentAvalonia
-    branch = patch-3
