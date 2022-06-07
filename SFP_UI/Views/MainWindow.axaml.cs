@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using Avalonia;
@@ -73,6 +74,16 @@ namespace SFP_UI.Views
                     Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
                     Theme.RequestedThemeChanged += OnRequestedThemeChanged;
 
+                    Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString; // Default to dark mode
+                    if (IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
+                    {
+                        Theme.RequestedTheme = SFP.Properties.Settings.Default.AppTheme;
+                    }
+                    else
+                    {
+                        Theme.InvalidateThemingFromSystemThemeChanged();
+                    }
+
                     // Enable Mica on Windows 11
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -86,11 +97,14 @@ namespace SFP_UI.Views
                         }
                         Microsoft.Win32.SystemEvents.UserPreferenceChanged += (s, e) =>
                         {
+                            if (SFP.Properties.Settings.Default.AppTheme != "System Default")
+                            {
+                                return;
+                            }
+
                             try
                             {
                                 Theme.InvalidateThemingFromSystemThemeChanged();
-                                MainView.SetAppTitleColor();
-                                UpdateCheckModel.UpdateNotificationManagerColors();
                             }
                             catch (Exception err)
                             {
@@ -99,14 +113,28 @@ namespace SFP_UI.Views
                             }
                         };
                     }
-                    else
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                     {
-                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                        Models.ThemeChangeDetection.Linux.WatchForChanges();
                     }
 
                     Theme.ForceWin32WindowToTheme(this);
                 }
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!SFP.Properties.Settings.Default.CloseToTray || !SFP.Properties.Settings.Default.ShowTrayIcon)
+            {
+                base.OnClosing(e);
+                return;
+            }
+
+            SFP.LogModel.Logger.Debug("Closing to tray");
+            Hide();
+            e.Cancel = true;
         }
 
         private void OnRequestedThemeChanged(FluentAvaloniaTheme sender, RequestedThemeChangedEventArgs args)
@@ -127,6 +155,9 @@ namespace SFP_UI.Views
                     SetValue(BackgroundProperty, AvaloniaProperty.UnsetValue);
                 }
             }
+
+            MainView.SetAppTitleColor();
+            UpdateCheckModel.UpdateNotificationManagerColors();
         }
 
         private void TryEnableMicaEffect(FluentAvaloniaTheme thm)
@@ -198,6 +229,18 @@ namespace SFP_UI.Views
             Show();
             WindowState = WindowState.Normal;
             Activate();
+        }
+
+        public static bool IsValidRequestedTheme(string thm)
+        {
+            if (FluentAvaloniaTheme.LightModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
+                FluentAvaloniaTheme.DarkModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
+                FluentAvaloniaTheme.HighContrastModeString.Equals(thm, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

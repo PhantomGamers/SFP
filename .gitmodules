@@ -1,4 +1,4 @@
 [submodule "external/FluentAvalonia"]
 	path = external/FluentAvalonia
-	url = https://github.com/PhantomGamers/FluentAvalonia
-    branch = patch-3
+	url = https://github.com/PhantomGamers/FluentAvalonia.git
+	branch = improve-theme-detection

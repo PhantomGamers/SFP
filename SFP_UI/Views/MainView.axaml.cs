@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -128,6 +130,23 @@ namespace SFP_UI.Views
             if (sender is Window w)
             {
                 w.Opened -= OnParentWindowOpened;
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    if (this.FindControl<Grid>("TitleBarHost") is Grid g)
+                    {
+                        g.IsVisible = false;
+                    }
+
+                    string key = "NavigationViewContentMargin";
+                    if (Resources.ContainsKey(key))
+                    {
+                        var newThickness = new Thickness(0, 0, 0, 0);
+                        Resources[key] = newThickness;
+                    }
+
+                    return;
+                }
 
                 if (sender is CoreWindow cw)
                 {

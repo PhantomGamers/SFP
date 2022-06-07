@@ -71,6 +71,7 @@ namespace SFP_UI
         {
             LinkModel.RemoveAllHardLinks();
             FSWModel.RemoveAllWatchers();
+            Models.ThemeChangeDetection.Linux.MonitorProcess?.Kill();
         }
     }
 }

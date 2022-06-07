@@ -10,7 +10,7 @@ namespace SFP_UI.Pages
         public SettingsPage()
         {
             InitializeComponent();
-            DataContext = new SettingsPageViewModel();
+            DataContext = new SettingsPageViewModel(this.FindControl<ComboBox>("AppThemeComboBox"));
         }
 
         private void InitializeComponent()

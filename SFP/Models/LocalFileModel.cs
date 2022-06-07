@@ -12,7 +12,7 @@ namespace SFP
 
         private static MemoryCache s_libraryMemCache;
 
-        private static readonly TimeSpan s_cacheTimeSpan = TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
+        private static TimeSpan s_cacheTimeSpan => TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
 
         static LocalFileModel()
         {

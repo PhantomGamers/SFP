@@ -11,6 +11,7 @@ namespace SFP.ChromeCache.BlockFile
         public readonly uint next = 0;
         public readonly List<Addr> data_addrs = new();
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "Can error with corrupted cache")]
         public EntryStore(Addr addr)
         {
             FileInfo? tmpFile = LinkModel.GetLink(addr.File);
@@ -33,9 +34,8 @@ namespace SFP.ChromeCache.BlockFile
                 {
                     data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
                 }
-                catch (Exception e)
+                catch
                 {
-                    LogModel.Logger.Debug(e);
                     continue;
                 }
             }
