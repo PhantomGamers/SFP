@@ -14,6 +14,8 @@ namespace SFP_UI.ViewModels
     {
         public static SettingsPageViewModel? Instance { get; private set; }
 
+        private static bool s_isWindows { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
         public SettingsPageViewModel(ComboBox appThemeComboBox)
         {
             Instance = this;
@@ -261,7 +263,7 @@ namespace SFP_UI.ViewModels
                 SFP.Properties.Settings.Default.AppTheme = value;
                 if (value == "System Default")
                 {
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    if (s_isWindows)
                     {
                         MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
                     }
