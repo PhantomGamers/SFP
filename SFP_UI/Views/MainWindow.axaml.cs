@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using Avalonia;
@@ -118,6 +119,19 @@ namespace SFP_UI.Views
                     Theme.ForceWin32WindowToTheme(this);
                 }
             }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (!SFP.Properties.Settings.Default.CloseToTray || !SFP.Properties.Settings.Default.ShowTrayIcon)
+            {
+                base.OnClosing(e);
+                return;
+            }
+
+            SFP.LogModel.Logger.Debug("Closing to tray");
+            Hide();
+            e.Cancel = true;
         }
 
         private void OnRequestedThemeChanged(FluentAvaloniaTheme sender, RequestedThemeChangedEventArgs args)

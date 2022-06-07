@@ -53,5 +53,8 @@
     <Setting Name="AppTheme" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">System Default</Value>
     </Setting>
+    <Setting Name="CloseToTray" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

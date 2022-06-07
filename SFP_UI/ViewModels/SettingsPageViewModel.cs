@@ -200,6 +200,18 @@ namespace SFP_UI.ViewModels
             }
         }
 
+        private bool _closeToTray = SFP.Properties.Settings.Default.CloseToTray;
+
+        public bool CloseToTray
+        {
+            get => _closeToTray;
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _closeToTray, value);
+                SFP.Properties.Settings.Default.CloseToTray = value;
+            }
+        }
+
         private bool _startMinimized = SFP.Properties.Settings.Default.StartMinimized;
 
         public bool StartMinimized
@@ -288,6 +300,7 @@ namespace SFP_UI.ViewModels
             AppTheme = SFP.Properties.Settings.Default.AppTheme;
             StartMinimized = SFP.Properties.Settings.Default.StartMinimized;
             MinimizeToTray = SFP.Properties.Settings.Default.MinimizeToTray;
+            CloseToTray = SFP.Properties.Settings.Default.CloseToTray;
             CheckForUpdates = SFP.Properties.Settings.Default.CheckForUpdates;
             ShowTrayIcon = SFP.Properties.Settings.Default.ShowTrayIcon;
         }

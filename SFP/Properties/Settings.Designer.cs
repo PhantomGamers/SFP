@@ -243,5 +243,18 @@ namespace SFP.Properties {
                 this["AppTheme"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CloseToTray {
+            get {
+                return ((bool)(this["CloseToTray"]));
+            }
+            set {
+                this["CloseToTray"] = value;
+            }
+        }
     }
 }

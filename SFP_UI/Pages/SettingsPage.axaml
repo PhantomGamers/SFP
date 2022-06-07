@@ -55,6 +55,7 @@
         <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
         <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
         <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
+        <CheckBox IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
         <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
         <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
         <Label>App theme</Label>
