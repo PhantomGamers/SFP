@@ -74,9 +74,14 @@ namespace SFP_UI.Views
                     Theme.RequestedThemeChanged -= OnRequestedThemeChanged;
                     Theme.RequestedThemeChanged += OnRequestedThemeChanged;
 
+                    Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString; // Default to dark mode
                     if (IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
                     {
                         Theme.RequestedTheme = SFP.Properties.Settings.Default.AppTheme;
+                    }
+                    else
+                    {
+                        Theme.InvalidateThemingFromSystemThemeChanged();
                     }
 
                     // Enable Mica on Windows 11
@@ -107,11 +112,6 @@ namespace SFP_UI.Views
                                 SFP.LogModel.Logger.Error(err);
                             }
                         };
-                    }
-
-                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
-                    {
-                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
                     }
 
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

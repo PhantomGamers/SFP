@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Avalonia.Threading;
+
 using FluentAvalonia.Core;
 using FluentAvalonia.Styling;
 
@@ -37,11 +39,15 @@ namespace SFP_UI.Models.ThemeChangeDetection
                                                                  {
                                                                      if (!MainWindow.IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
                                                                      {
-                                                                         MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
+                                                                         _ = Dispatcher.UIThread.InvokeAsync(() =>
+                                                                         {
+                                                                             MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
+                                                                         });
                                                                      }
                                                                  };
                                                                  MonitorProcess = process;
                                                                  process.Start();
+                                                                 process.BeginOutputReadLine();
                                                              }
                                                              catch
                                                              {
