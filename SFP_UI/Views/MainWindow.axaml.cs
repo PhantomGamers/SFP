@@ -108,12 +108,15 @@ namespace SFP_UI.Views
                             }
                         };
                     }
-                    else
+
+                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
                     {
-                        if (!IsValidRequestedTheme(SFP.Properties.Settings.Default.AppTheme))
-                        {
-                            Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
-                        }
+                        Theme.RequestedTheme = FluentAvaloniaTheme.DarkModeString;
+                    }
+
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    {
+                        Models.ThemeChangeDetection.Linux.WatchForChanges();
                     }
 
                     Theme.ForceWin32WindowToTheme(this);
