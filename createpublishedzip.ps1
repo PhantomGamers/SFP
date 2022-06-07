@@ -2,7 +2,7 @@ param(
     [String]$os="win10;linux;osx",
     [String]$arch="x64",
     [String]$configuration="Release",
-    [bool]$createzip="$True"
+    [bool]$createzip=$True
     )
 
 function Build-SFP {
