@@ -6,7 +6,7 @@ namespace SFP.ChromeCache.BlockFile
     public class Patcher
     {
         private static MemoryCache s_memCache;
-        private static readonly TimeSpan s_cacheTimeSpan = TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
+        private static TimeSpan s_cacheTimeSpan => TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
 
         static Patcher()
         {
