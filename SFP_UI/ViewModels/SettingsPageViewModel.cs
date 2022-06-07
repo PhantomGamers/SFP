@@ -341,12 +341,9 @@ namespace SFP_UI.ViewModels
 
         public void OnAppThemeSelectedChanged(object? sender, SelectionChangedEventArgs e)
         {
-            if (sender is ComboBox cb)
+            if (sender is ComboBox cb && cb.SelectedItem is ComboBoxItem cbi)
             {
-                if (cb.SelectedItem is ComboBoxItem cbi)
-                {
-                    AppTheme = (string)cbi.Content;
-                }
+                AppTheme = (string)cbi.Content;
             }
         }
     }
