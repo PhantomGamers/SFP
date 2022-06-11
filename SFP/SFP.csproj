@@ -12,6 +12,7 @@
     <PackageReference Include="PortableJsonSettingsProvider" Version="0.2.1" />
     <PackageReference Include="LazyCache" Version="2.4.0" />
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+    <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -124,6 +124,8 @@ namespace SFP_UI.ViewModels
                 Instance.ButtonsEnabled = false;
             }
 
+            LogModel.Logger.Info(SteamModel.SkinDir);
+
             if (SteamModel.SteamDir == null)
             {
                 LogModel.Logger.Warn("Steam Directory unknown. Please set it and try again.");
