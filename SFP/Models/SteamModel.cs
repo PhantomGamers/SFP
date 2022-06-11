@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
+using SFP.Models.FileSystemWatchers;
+
 namespace SFP
 {
     public class SteamModel
@@ -125,7 +127,7 @@ namespace SFP
             }
 
             bool scannerState = FSWModel.WatchersActive;
-            FSWModel.RemoveAllWatchers();
+            await FSWModel.StopFileWatchers();
 
             try
             {

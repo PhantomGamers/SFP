@@ -2,12 +2,15 @@ namespace SFP.ChromeCache.BlockFile
 {
     public class Parser
     {
-        public static List<FileInfo> FindCacheFilesWithName(DirectoryInfo cacheDir, string fileName)
+        public static List<FileInfo> FindCacheFilesWithName(DirectoryInfo cacheDir, string fileName, bool silent = false)
         {
-            LogModel.Logger.Info("Parsing cache...");
+            if (!silent)
+            {
+                LogModel.Logger.Info("Parsing cache...");
+            }
             if (!cacheDir.Exists)
             {
-                LogModel.Logger.Error("Cache folder does not exist, start Steam and try again.");
+                LogModel.Logger.Error($"Cache folder does not exist, start Steam and try again.");
                 return new();
             }
             FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
@@ -71,10 +74,13 @@ namespace SFP.ChromeCache.BlockFile
             br.Close();
             fs.Close();
             LinkModel.RemoveAllHardLinks();
-            LogModel.Logger.Info($"Found {files.Count} matches...");
-            foreach (FileInfo? file in files)
+            if (!silent)
             {
-                LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
+                LogModel.Logger.Info($"Found {files.Count} matches...");
+                foreach (FileInfo? file in files)
+                {
+                    LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
+                }
             }
             return files;
         }

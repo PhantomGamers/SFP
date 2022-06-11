@@ -9,8 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Crc32.NET" Version="1.2.0" />
     <PackageReference Include="Ionic.Zlib.Core" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="PortableJsonSettingsProvider" Version="0.2.1" />
+    <PackageReference Include="LazyCache" Version="2.4.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\external\FileWatcherEx\Source\FileWatcherEx\FileWatcherEx.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,9 @@
+using FileWatcherEx;
+
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+
+using SFP.Models.FileSystemWatchers;
 
 namespace SFP
 {
@@ -8,41 +12,15 @@ namespace SFP
         public const string PATCHED_TEXT = "/*patched*/\n";
         public const string ORIGINAL_TEXT = "/*original*/\n";
 
-        private static MemoryCache s_localMemCache;
+        private static readonly DelayedWatcher s_localWatcher = new(SteamModel.ClientUICSSDir, OnLocalPostEviction, GetKey, new string[] { "friends.css" });
+        private static readonly DelayedWatcher s_libraryWatcher = new(SteamModel.SteamUICSSDir, OnLibraryPostEviction, GetKey, new string[] { "*.css" });
 
-        private static MemoryCache s_libraryMemCache;
-
-        private static TimeSpan s_cacheTimeSpan => TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
-
-        static LocalFileModel()
-        {
-            s_localMemCache = new(new MemoryCacheOptions());
-            s_libraryMemCache = new(new MemoryCacheOptions());
-        }
-
-        public static void ClearMemCache()
-        {
-            s_localMemCache.Dispose();
-            s_localMemCache = new(new MemoryCacheOptions());
-
-            s_libraryMemCache.Dispose();
-            s_libraryMemCache = new(new MemoryCacheOptions());
-        }
-
-        public static async Task<bool> Patch(FileInfo? file, string? overrideName = null, string? uiDir = null)
+        public static async Task<bool> Patch(FileInfo? file, string? overrideName = null, string? uiDir = null, bool alertOnPatched = false)
         {
             if (file is null)
             {
                 LogModel.Logger.Error($"Library file does not exist. Start Steam and try again");
                 return false;
-            }
-
-            bool state = false;
-            FileSystemWatcher? watcher = FSWModel.GetFileSystemWatcher(Path.Join(file.DirectoryName, "*.css"));
-            if (watcher != null)
-            {
-                state = watcher.EnableRaisingEvents;
-                watcher.EnableRaisingEvents = false;
             }
 
             string contents;
@@ -65,11 +43,17 @@ namespace SFP
             if (contents.StartsWith(PATCHED_TEXT))
             {
                 // File is already patched
-                LogModel.Logger.Info($"{file.Name} is already patched.");
+                if (!alertOnPatched)
+                {
+                    LogModel.Logger.Info($"{file.Name} is already patched.");
+                }
                 return false;
             }
 
-            LogModel.Logger.Info($"Patching file {file.Name}");
+            if (!alertOnPatched)
+            {
+                LogModel.Logger.Info($"Patching file {file.Name}");
+            }
 
             var originalFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.original{Path.GetExtension(file.FullName)}");
 
@@ -112,10 +96,6 @@ namespace SFP
                 File.Create(customFileName).Dispose();
             }
             LogModel.Logger.Info($"Patched {file.Name}.");
-            if (watcher != null)
-            {
-                watcher.EnableRaisingEvents = state;
-            }
             return true;
         }
 
@@ -136,79 +116,34 @@ namespace SFP
             }
         }
 
-        public static async Task WatchLibrary(string directoryName)
+        public static void WatchLocal() => s_localWatcher.Start();
+        public static void StopWatchingLocal() => s_localWatcher.Stop();
+        public static bool IsLocalActive => s_localWatcher.IsActive;
+
+        public static void WatchLibrary() => s_libraryWatcher.Start();
+        public static void StopWatchingLibrary() => s_libraryWatcher.Stop();
+        public static bool IsLibraryActive => s_libraryWatcher.IsActive;
+
+        private static (bool, string?) GetKey(FileChangedEvent e)
         {
-            await Task.Run(() => FSWModel.AddFileSystemWatcher(directoryName, "*.css", OnLibraryWatcherEvent));
+            return e.FullPath.EndsWith(".original.css") ? (false, null) : (true, Path.GetFileName(e.FullPath));
         }
 
-        private static void OnLibraryWatcherEvent(object sender, FileSystemEventArgs e)
+        private static async void OnLibraryPostEviction(FileChangedEvent e)
         {
-            MemoryCacheEntryOptions options = new()
+            FileInfo file = new(e.FullPath);
+            if (file.Directory != null)
             {
-                Priority = CacheItemPriority.NeverRemove,
-                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
-            };
-            CancellationTokenSource source = new(s_cacheTimeSpan);
-            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
-            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLibraryRemovedFromCache(v, r, source));
-            s_libraryMemCache.Set(e.Name, e, options);
-        }
-
-        private static async void OnLibraryRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
-        {
-            source.Dispose();
-            if (reason != EvictionReason.TokenExpired)
-            {
-                return;
-            }
-
-            if (value is FileSystemEventArgs fileSystemEventArgs)
-            {
-                var file = new FileInfo(fileSystemEventArgs.FullPath);
-                if (file.Directory != null)
-                {
-                    await Task.Run(() => Patch(file, "libraryroot.custom.css"));
-                }
+                await Patch(file, "libraryroot.custom.css", alertOnPatched: true);
             }
         }
 
-        public static async Task WatchLocal(string fileFullPath)
+        private static async void OnLocalPostEviction(FileChangedEvent e)
         {
-            string? pathRoot = Path.GetDirectoryName(fileFullPath);
-            if (pathRoot != null)
+            FileInfo file = new(e.FullPath);
+            if (file.Directory != null)
             {
-                await Task.Run(() => FSWModel.AddFileSystemWatcher(pathRoot, Path.GetFileName(fileFullPath), OnLocalWatcherEvent));
-            }
-        }
-
-        private static void OnLocalWatcherEvent(object sender, FileSystemEventArgs e)
-        {
-            MemoryCacheEntryOptions options = new()
-            {
-                Priority = CacheItemPriority.NeverRemove,
-                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
-            };
-            CancellationTokenSource source = new(s_cacheTimeSpan);
-            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
-            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnLocalRemovedFromCache(v, r, source));
-            s_localMemCache.Set(e.Name, e, options);
-        }
-
-        private static async void OnLocalRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
-        {
-            source.Dispose();
-            if (reason != EvictionReason.TokenExpired)
-            {
-                return;
-            }
-
-            if (value is FileSystemEventArgs fileSystemEventArgs)
-            {
-                var file = new FileInfo(fileSystemEventArgs.FullPath);
-                if (file.Directory != null)
-                {
-                    await Patch(file, uiDir: SteamModel.ClientUIDir);
-                }
+                await Patch(file, uiDir: SteamModel.ClientUIDir, alertOnPatched: true);
             }
         }
     }

@@ -1,25 +1,17 @@
+using FileWatcherEx;
+
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+
+using SFP.Models.FileSystemWatchers;
 
 namespace SFP.ChromeCache.BlockFile
 {
     public class Patcher
     {
-        private static MemoryCache s_memCache;
-        private static TimeSpan s_cacheTimeSpan => TimeSpan.FromSeconds(Properties.Settings.Default.ScannerDelay);
+        private static readonly DelayedWatcher s_watcher = new(SteamModel.CacheDir, OnPostEviction, GetKey, new string[] { "f_*" });
 
-        static Patcher()
-        {
-            s_memCache = new(new MemoryCacheOptions());
-        }
-
-        public static void ClearMemCache()
-        {
-            s_memCache.Dispose();
-            s_memCache = new(new MemoryCacheOptions());
-        }
-
-        public static async Task<bool> PatchFile(FileInfo file)
+        public static async Task<bool> PatchFile(FileInfo file, bool alertOnPatched = false)
         {
             if (!file.Exists)
             {
@@ -38,7 +30,7 @@ namespace SFP.ChromeCache.BlockFile
                 return false;
             }
 
-            (bytes, bool patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name);
+            (bytes, bool patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name, alertOnPatched);
             if (patched)
             {
                 try
@@ -58,55 +50,35 @@ namespace SFP.ChromeCache.BlockFile
             }
         }
 
-        public static void WatchFile(FileInfo file)
-        {
-            string? dirname = file.DirectoryName;
-            if (dirname != null)
-            {
-                FSWModel.AddFileSystemWatcher(dirname, "f_*", OnFileSystemEvent);
-            }
-        }
+        public static void Watch() => s_watcher.Start();
+        public static void StopWatching() => s_watcher.Stop();
+        public static bool IsActive => s_watcher.IsActive;
 
-        private static void OnFileSystemEvent(object sender, FileSystemEventArgs e)
+        private static (bool, string?) GetKey(FileChangedEvent e)
         {
             DirectoryInfo? dir = new DirectoryInfo(e.FullPath).Parent;
             if (dir == null)
             {
-                return;
+                return (false, null);
             }
-
-            MemoryCacheEntryOptions options = new()
-            {
-                Priority = CacheItemPriority.NeverRemove,
-                AbsoluteExpirationRelativeToNow = s_cacheTimeSpan
-            };
-            CancellationTokenSource source = new(s_cacheTimeSpan);
-            _ = options.AddExpirationToken(new CancellationChangeToken(source.Token));
-            _ = options.RegisterPostEvictionCallback((k, v, r, s) => OnRemovedFromCache(v, r, source));
-            s_memCache.Set(dir.Name, dir, options);
+            return (true, dir.Name);
         }
 
-        private static async void OnRemovedFromCache(object value, EvictionReason reason, CancellationTokenSource source)
+        private static async void OnPostEviction(FileChangedEvent e)
         {
-            source.Dispose();
-            if (reason != EvictionReason.TokenExpired)
+            DirectoryInfo? dir = new FileInfo(e.FullPath).Directory;
+
+            List<FileInfo>? files = Parser.FindCacheFilesWithName(dir!, "friends.css", true);
+            bool filesPatched = false;
+
+            foreach (FileInfo? file in files)
             {
-                return;
+                filesPatched |= await PatchFile(file, true);
             }
 
-            if (value is DirectoryInfo dir)
+            if (filesPatched && Properties.Settings.Default.RestartSteamOnPatch)
             {
-                List<FileInfo>? files = Parser.FindCacheFilesWithName(dir, "friends.css");
-                bool filesPatched = false;
-                foreach (FileInfo? file in files)
-                {
-                    filesPatched |= await PatchFile(file);
-                }
-
-                if (filesPatched && Properties.Settings.Default.RestartSteamOnPatch)
-                {
-                    SteamModel.RestartSteam();
-                }
+                SteamModel.RestartSteam();
             }
         }
     }

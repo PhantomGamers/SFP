@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 
 using SFP;
+using SFP.Models.FileSystemWatchers;
 
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -67,10 +68,10 @@ namespace SFP_UI
             base.OnFrameworkInitializationCompleted();
         }
 
-        private void OnProcessExit(object? sender, EventArgs e)
+        private async void OnProcessExit(object? sender, EventArgs e)
         {
             LinkModel.RemoveAllHardLinks();
-            FSWModel.RemoveAllWatchers();
+            await FSWModel.StopFileWatchers();
             Models.ThemeChangeDetection.Linux.MonitorProcess?.Kill();
         }
     }

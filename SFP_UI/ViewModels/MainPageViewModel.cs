@@ -7,6 +7,7 @@ using NLog;
 using ReactiveUI;
 
 using SFP;
+using SFP.Models.FileSystemWatchers;
 
 using SFP_UI.Models;
 
@@ -150,7 +151,7 @@ namespace SFP_UI.ViewModels
                 return;
             }
 
-            await FSWModel.StartFileWatchers(SFP.Properties.Settings.Default.ShouldScanFriends && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux), SFP.Properties.Settings.Default.ShouldScanLibrary);
+            await FSWModel.StartFileWatchers();
 
             LogModel.Logger.Info(FSWModel.WatchersActive ? "Scanner started" : "Scanner could not be started");
             if (Instance != null)
@@ -167,7 +168,7 @@ namespace SFP_UI.ViewModels
                 Instance.ButtonsEnabled = false;
             }
 
-            await Task.Run(() => FSWModel.RemoveAllWatchers());
+            await Task.Run(() => FSWModel.StopFileWatchers());
 
             LogModel.Logger.Info(!FSWModel.WatchersActive ? "Scanner stopped" : "Scanner could not be stopped");
 
