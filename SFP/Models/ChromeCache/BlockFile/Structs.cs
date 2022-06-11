@@ -30,6 +30,11 @@ namespace SFP.ChromeCache.BlockFile
             for (int i = 0; i < 4; i++)
             {
                 uint raw = br.ReadUInt32();
+                // TODO: Investigate why this is sometimes 0
+                if (raw == 0)
+                {
+                    continue;
+                }
                 try
                 {
                     data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
