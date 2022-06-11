@@ -2,7 +2,7 @@ using System.Configuration;
 
 using Bluegrams.Application;
 
-namespace SFP
+namespace SFP.Models
 {
     public class SettingsModel : ApplicationSettingsBase
     {

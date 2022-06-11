@@ -1,4 +1,4 @@
-namespace SFP
+namespace SFP.Models
 {
     public class LogModel
     {

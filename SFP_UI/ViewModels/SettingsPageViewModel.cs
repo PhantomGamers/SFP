@@ -1,10 +1,8 @@
-using System.Runtime.InteropServices;
-
 using Avalonia.Controls;
 
 using ReactiveUI;
 
-using SFP;
+using SFP.Models;
 
 using SFP_UI.Views;
 
@@ -18,18 +16,9 @@ namespace SFP_UI.ViewModels
         {
             Instance = this;
             appThemeComboBox.SelectionChanged += OnAppThemeSelectedChanged;
-            if (SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString)
-            {
-                appThemeComboBox.SelectedIndex = 0;
-            }
-            else if (SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString)
-            {
-                appThemeComboBox.SelectedIndex = 1;
-            }
-            else
-            {
-                appThemeComboBox.SelectedIndex = 2;
-            }
+            appThemeComboBox.SelectedIndex = SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString
+                ? 0
+                : SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString ? 1 : 2;
         }
 
         private bool _shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
@@ -39,7 +28,7 @@ namespace SFP_UI.ViewModels
             get => _shouldPatchOnStart;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldPatchOnStart, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldPatchOnStart, value);
                 SFP.Properties.Settings.Default.ShouldPatchOnStart = value;
             }
         }
@@ -51,7 +40,7 @@ namespace SFP_UI.ViewModels
             get => _shouldPatchFriends;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldPatchFriends, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldPatchFriends, value);
                 SFP.Properties.Settings.Default.ShouldPatchFriends = value;
             }
         }
@@ -63,7 +52,7 @@ namespace SFP_UI.ViewModels
             get => _shouldPatchLibrary;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldPatchLibrary, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldPatchLibrary, value);
                 SFP.Properties.Settings.Default.ShouldPatchLibrary = value;
             }
         }
@@ -75,7 +64,7 @@ namespace SFP_UI.ViewModels
             get => _shouldScanFriends;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldScanFriends, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldScanFriends, value);
                 SFP.Properties.Settings.Default.ShouldScanFriends = value;
             }
         }
@@ -87,7 +76,7 @@ namespace SFP_UI.ViewModels
             get => _shouldScanLibrary;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldScanLibrary, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldScanLibrary, value);
                 SFP.Properties.Settings.Default.ShouldScanLibrary = value;
             }
         }
@@ -99,7 +88,7 @@ namespace SFP_UI.ViewModels
             get => _scanOnly;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _scanOnly, value);
+                _ = this.RaiseAndSetIfChanged(ref _scanOnly, value);
                 SFP.Properties.Settings.Default.ScanOnly = value;
             }
         }
@@ -111,7 +100,7 @@ namespace SFP_UI.ViewModels
             get => _restartSteamOnPatch;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _restartSteamOnPatch, value);
+                _ = this.RaiseAndSetIfChanged(ref _restartSteamOnPatch, value);
                 SFP.Properties.Settings.Default.RestartSteamOnPatch = value;
             }
         }
@@ -123,7 +112,7 @@ namespace SFP_UI.ViewModels
             get => _shouldScanOnStart;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _shouldScanOnStart, value);
+                _ = this.RaiseAndSetIfChanged(ref _shouldScanOnStart, value);
                 SFP.Properties.Settings.Default.ShouldScanOnStart = value;
             }
         }
@@ -135,7 +124,7 @@ namespace SFP_UI.ViewModels
             get => _steamLaunchArgs;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
+                _ = this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
                 SFP.Properties.Settings.Default.SteamLaunchArgs = value;
             }
         }
@@ -147,7 +136,7 @@ namespace SFP_UI.ViewModels
             get => _steamDirectory;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _steamDirectory, value);
+                _ = this.RaiseAndSetIfChanged(ref _steamDirectory, value);
                 SFP.Properties.Settings.Default.SteamDirectory = value;
             }
         }
@@ -159,7 +148,7 @@ namespace SFP_UI.ViewModels
             get => _cacheDirectory;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _cacheDirectory, value);
+                _ = this.RaiseAndSetIfChanged(ref _cacheDirectory, value);
                 SFP.Properties.Settings.Default.CacheDirectory = value;
             }
         }
@@ -171,7 +160,7 @@ namespace SFP_UI.ViewModels
             get => _checkForUpdates;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
+                _ = this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
                 SFP.Properties.Settings.Default.CheckForUpdates = value;
             }
         }
@@ -183,7 +172,7 @@ namespace SFP_UI.ViewModels
             get => _showTrayIcon;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
+                _ = this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
                 SFP.Properties.Settings.Default.ShowTrayIcon = value;
             }
         }
@@ -195,7 +184,7 @@ namespace SFP_UI.ViewModels
             get => _minimizeToTray;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
+                _ = this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
                 SFP.Properties.Settings.Default.MinimizeToTray = value;
             }
         }
@@ -207,7 +196,7 @@ namespace SFP_UI.ViewModels
             get => _closeToTray;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _closeToTray, value);
+                _ = this.RaiseAndSetIfChanged(ref _closeToTray, value);
                 SFP.Properties.Settings.Default.CloseToTray = value;
             }
         }
@@ -219,7 +208,7 @@ namespace SFP_UI.ViewModels
             get => _startMinimized;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _startMinimized, value);
+                _ = this.RaiseAndSetIfChanged(ref _startMinimized, value);
                 SFP.Properties.Settings.Default.StartMinimized = value;
             }
         }
@@ -231,7 +220,7 @@ namespace SFP_UI.ViewModels
             get => _scannerDelay;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _scannerDelay, value);
+                _ = this.RaiseAndSetIfChanged(ref _scannerDelay, value);
                 SFP.Properties.Settings.Default.ScannerDelay = value;
             }
         }
@@ -257,7 +246,7 @@ namespace SFP_UI.ViewModels
             get => _appTheme;
             private set
             {
-                this.RaiseAndSetIfChanged(ref _appTheme, value);
+                _ = this.RaiseAndSetIfChanged(ref _appTheme, value);
                 SFP.Properties.Settings.Default.AppTheme = value;
                 if (value == "System Default")
                 {
@@ -270,10 +259,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static void OnSaveCommand()
-        {
-            SFP.Properties.Settings.Default.Save();
-        }
+        public static void OnSaveCommand() => SFP.Properties.Settings.Default.Save();
 
         public void OnReloadCommand()
         {

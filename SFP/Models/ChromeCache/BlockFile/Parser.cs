@@ -1,4 +1,4 @@
-namespace SFP.ChromeCache.BlockFile
+namespace SFP.Models.ChromeCache.BlockFile
 {
     public class Parser
     {
@@ -10,7 +10,7 @@ namespace SFP.ChromeCache.BlockFile
             }
             if (!cacheDir.Exists)
             {
-                LogModel.Logger.Error($"Cache folder does not exist, start Steam and try again.");
+                LogModel.Logger.Error("Cache folder does not exist, start Steam and try again.");
                 return new();
             }
             FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
@@ -39,7 +39,7 @@ namespace SFP.ChromeCache.BlockFile
 
             List<FileInfo> files = new();
             using FileStream? fs = index.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            fs.Seek(92 * 4, SeekOrigin.Begin);
+            _ = fs.Seek(92 * 4, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             for (int i = 0; i < indexHeader.Table_len; i++)
             {
@@ -73,7 +73,7 @@ namespace SFP.ChromeCache.BlockFile
             }
             br.Close();
             fs.Close();
-            LinkModel.RemoveAllHardLinks();
+            _ = LinkModel.RemoveAllHardLinks();
             if (!silent)
             {
                 LogModel.Logger.Info($"Found {files.Count} matches...");

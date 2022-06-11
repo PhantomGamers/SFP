@@ -1,8 +1,8 @@
 using System.Diagnostics;
+
 using Avalonia.Threading;
 
-using FluentAvalonia.Core;
-using FluentAvalonia.Styling;
+using SFP.Models;
 
 using SFP_UI.Views;
 
@@ -40,12 +40,12 @@ namespace SFP_UI.Models.ThemeChangeDetection
                                                                      }
                                                                  };
                                                                  MonitorProcess = process;
-                                                                 process.Start();
+                                                                 _ = process.Start();
                                                                  process.BeginOutputReadLine();
                                                              }
                                                              catch
                                                              {
-                                                                 SFP.LogModel.Logger.Warn("Unable to detect system theme changes on this platform.");
+                                                                 LogModel.Logger.Warn("Unable to detect system theme changes on this platform.");
                                                              }
                                                          });
     }

@@ -43,7 +43,7 @@ namespace SFP.Models.FileSystemWatchers
 
         public void Start()
         {
-            Directory.CreateDirectory(_fw.FolderPath);
+            _ = Directory.CreateDirectory(_fw.FolderPath);
             _fw.Start();
             IsActive = true;
         }
@@ -84,7 +84,7 @@ namespace SFP.Models.FileSystemWatchers
 
                 ActiveFiles.Add(key);
                 _postEvictionAction(e);
-                ActiveFiles.Remove(key);
+                _ = ActiveFiles.Remove(key);
             });
             _ = _appCache.GetOrAdd(key, () => e, options);
         }

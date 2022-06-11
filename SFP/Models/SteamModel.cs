@@ -4,7 +4,7 @@ using System.Runtime.Versioning;
 
 using SFP.Models.FileSystemWatchers;
 
-namespace SFP
+namespace SFP.Models
 {
     public class SteamModel
     {
@@ -77,18 +77,7 @@ namespace SFP
             }
         }
 
-        public static string SteamExe
-        {
-            get
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    return Path.Join(SteamDir, "Steam.exe");
-                }
-
-                return "steam";
-            }
-        }
+        public static string SteamExe => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? Path.Join(SteamDir, "Steam.exe") : "steam";
 
         public static async Task ResetSteam()
         {
@@ -152,7 +141,7 @@ namespace SFP
             catch (Exception ex)
             {
                 LogModel.Logger.Debug(ex);
-                LogModel.Logger.Warn($"Could not delete files because they were in use. Manually shut down Steam and try again.");
+                LogModel.Logger.Warn("Could not delete files because they were in use. Manually shut down Steam and try again.");
             }
 
             if (scannerState)
@@ -169,7 +158,7 @@ namespace SFP
         private static bool ShutDownSteam()
         {
             LogModel.Logger.Info("Shutting down Steam");
-            Process.Start(SteamExe, "-shutdown");
+            _ = Process.Start(SteamExe, "-shutdown");
             Process? proc = SteamProcess;
             if (proc != null && !proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
@@ -182,7 +171,7 @@ namespace SFP
         private static void StartSteam()
         {
             LogModel.Logger.Info("Starting Steam");
-            Process.Start(SteamExe, Properties.Settings.Default.SteamLaunchArgs);
+            _ = Process.Start(SteamExe, Properties.Settings.Default.SteamLaunchArgs);
         }
 
         public static void RestartSteam()

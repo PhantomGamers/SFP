@@ -1,11 +1,8 @@
 using FileWatcherEx;
 
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-
 using SFP.Models.FileSystemWatchers;
 
-namespace SFP.ChromeCache.BlockFile
+namespace SFP.Models.ChromeCache.BlockFile
 {
     public class Patcher
     {
@@ -30,7 +27,7 @@ namespace SFP.ChromeCache.BlockFile
                 return false;
             }
 
-            (bytes, bool patched) = await Models.ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name, alertOnPatched);
+            (bytes, bool patched) = await ChromeCache.Patcher.PatchFriendsCSS(bytes, file.Name, alertOnPatched);
             if (patched)
             {
                 try
@@ -57,11 +54,7 @@ namespace SFP.ChromeCache.BlockFile
         private static (bool, string?) GetKey(FileChangedEvent e)
         {
             DirectoryInfo? dir = new DirectoryInfo(e.FullPath).Parent;
-            if (dir == null)
-            {
-                return (false, null);
-            }
-            return (true, dir.Name);
+            return dir == null ? (false, null) : ((bool, string?))(true, dir.Name);
         }
 
         private static async void OnPostEviction(FileChangedEvent e)

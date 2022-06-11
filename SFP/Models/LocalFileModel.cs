@@ -1,11 +1,8 @@
 using FileWatcherEx;
 
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-
 using SFP.Models.FileSystemWatchers;
 
-namespace SFP
+namespace SFP.Models
 {
     public class LocalFileModel
     {
@@ -124,17 +121,14 @@ namespace SFP
         public static void StopWatchingLibrary() => s_libraryWatcher.Stop();
         public static bool IsLibraryActive => s_libraryWatcher.IsActive;
 
-        private static (bool, string?) GetKey(FileChangedEvent e)
-        {
-            return e.FullPath.EndsWith(".original.css") ? (false, null) : (true, Path.GetFileName(e.FullPath));
-        }
+        private static (bool, string?) GetKey(FileChangedEvent e) => e.FullPath.EndsWith(".original.css") ? (false, null) : (true, Path.GetFileName(e.FullPath));
 
         private static async void OnLibraryPostEviction(FileChangedEvent e)
         {
             FileInfo file = new(e.FullPath);
             if (file.Directory != null)
             {
-                await Patch(file, "libraryroot.custom.css", alertOnPatched: true);
+                _ = await Patch(file, "libraryroot.custom.css", alertOnPatched: true);
             }
         }
 
@@ -143,7 +137,7 @@ namespace SFP
             FileInfo file = new(e.FullPath);
             if (file.Directory != null)
             {
-                await Patch(file, uiDir: SteamModel.ClientUIDir, alertOnPatched: true);
+                _ = await Patch(file, uiDir: SteamModel.ClientUIDir, alertOnPatched: true);
             }
         }
     }

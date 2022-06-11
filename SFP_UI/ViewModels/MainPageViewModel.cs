@@ -6,10 +6,9 @@ using NLog;
 
 using ReactiveUI;
 
-using SFP;
+using SFP.Models;
+using SFP.Models.ChromeCache.BlockFile;
 using SFP.Models.FileSystemWatchers;
-
-using SFP_UI.Models;
 
 namespace SFP_UI.ViewModels
 {
@@ -19,10 +18,7 @@ namespace SFP_UI.ViewModels
 
         public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
 
-        public MainPageViewModel()
-        {
-            Instance = this;
-        }
+        public MainPageViewModel() => Instance = this;
 
         private bool _scannerActive = false;
 
@@ -56,10 +52,7 @@ namespace SFP_UI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
         }
 
-        public void PrintLine(LogLevel level, string message)
-        {
-            Print(level, $"{message}\n");
-        }
+        public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
 
         public void Print(LogLevel level, string message)
         {
@@ -89,12 +82,12 @@ namespace SFP_UI.ViewModels
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    var cacheFiles = await Task.Run(() => SFP.ChromeCache.BlockFile.Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
+                    var cacheFiles = await Task.Run(() => Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
                     if (!SFP.Properties.Settings.Default.ScanOnly)
                     {
                         foreach (FileInfo? cacheFile in cacheFiles)
                         {
-                            cacheFilesPatched |= await Task.Run(() => SFP.ChromeCache.BlockFile.Patcher.PatchFile(cacheFile));
+                            cacheFilesPatched |= await Task.Run(() => Patcher.PatchFile(cacheFile));
                         }
                     }
                 }
@@ -104,7 +97,7 @@ namespace SFP_UI.ViewModels
                     //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
                 }
 
-                await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")), uiDir: SteamModel.ClientUIDir));
+                _ = await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")), uiDir: SteamModel.ClientUIDir));
             }
 
             if (SFP.Properties.Settings.Default.ShouldPatchLibrary)

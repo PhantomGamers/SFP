@@ -11,8 +11,9 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
 
+using SFP.Models;
+
 using SFP_UI.Models;
-using SFP_UI.ViewModels;
 
 namespace SFP_UI.Views
 {
@@ -108,8 +109,8 @@ namespace SFP_UI.Views
                             }
                             catch (Exception err)
                             {
-                                SFP.LogModel.Logger.Warn("Unable to detect system theme");
-                                SFP.LogModel.Logger.Error(err);
+                                LogModel.Logger.Warn("Unable to detect system theme");
+                                LogModel.Logger.Error(err);
                             }
                         };
                     }
@@ -132,7 +133,7 @@ namespace SFP_UI.Views
                 return;
             }
 
-            SFP.LogModel.Logger.Debug("Closing to tray");
+            LogModel.Logger.Debug("Closing to tray");
             Hide();
             e.Cancel = true;
         }
@@ -231,16 +232,8 @@ namespace SFP_UI.Views
             Activate();
         }
 
-        public static bool IsValidRequestedTheme(string thm)
-        {
-            if (FluentAvaloniaTheme.LightModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
+        public static bool IsValidRequestedTheme(string thm) => FluentAvaloniaTheme.LightModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
                 FluentAvaloniaTheme.DarkModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
-                FluentAvaloniaTheme.HighContrastModeString.Equals(thm, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            return false;
-        }
+                FluentAvaloniaTheme.HighContrastModeString.Equals(thm, StringComparison.OrdinalIgnoreCase);
     }
 }

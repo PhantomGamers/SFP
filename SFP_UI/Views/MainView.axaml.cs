@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
-using FluentAvalonia.Core;
 using FluentAvalonia.Core.ApplicationModel;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
@@ -27,10 +26,7 @@ namespace SFP_UI.Views
             InitializeComponent();
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
@@ -51,7 +47,7 @@ namespace SFP_UI.Views
             _navView.ItemInvoked += OnNavigationViewItemInvoked;
             _navView.IsPaneOpen = false;
 
-            _frameView.Navigate(typeof(MainPage));
+            _ = _frameView.Navigate(typeof(MainPage));
         }
 
         public static void SetAppTitleColor(bool? isActive = null)
@@ -83,10 +79,8 @@ namespace SFP_UI.Views
             }
         }
 
-        private static List<NavigationViewItem> GetNavigationViewItems()
+        private static List<NavigationViewItem> GetNavigationViewItems() => new()
         {
-            return new List<NavigationViewItem>
-            {
                 new NavigationViewItem
                 {
                     Content = "Home",
@@ -98,12 +92,9 @@ namespace SFP_UI.Views
                     }
                 },
             };
-        }
 
-        private static List<NavigationViewItem> GetFooterNavigationViewItems()
+        private static List<NavigationViewItem> GetFooterNavigationViewItems() => new()
         {
-            return new List<NavigationViewItem>
-            {
                 new NavigationViewItem
                 {
                     Content = "Settings",
@@ -115,13 +106,12 @@ namespace SFP_UI.Views
                     }
                 }
             };
-        }
 
         private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
         {
             if (e.InvokedItemContainer is NavigationViewItem nvi && nvi.Tag is Type typ)
             {
-                _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
+                _ = _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
             }
         }
 

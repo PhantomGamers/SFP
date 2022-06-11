@@ -1,14 +1,10 @@
+using SFP.Models.ChromeCache.BlockFile;
+
 namespace SFP.Models.FileSystemWatchers
 {
     public class FSWModel
     {
-        public static bool WatchersActive
-        {
-            get
-            {
-                return SFP.ChromeCache.BlockFile.Patcher.IsActive || LocalFileModel.IsLocalActive || LocalFileModel.IsLibraryActive;
-            }
-        }
+        public static bool WatchersActive => Patcher.IsActive || LocalFileModel.IsLocalActive || LocalFileModel.IsLibraryActive;
 
         public static bool ScanFriends => OperatingSystem.IsWindows() && Properties.Settings.Default.ShouldScanFriends;
         public static bool ScanLibrary => Properties.Settings.Default.ShouldScanLibrary;
@@ -30,7 +26,7 @@ namespace SFP.Models.FileSystemWatchers
         {
             if (SteamModel.SteamDir != null)
             {
-                await Task.Run(() => SFP.ChromeCache.BlockFile.Patcher.Watch());
+                await Task.Run(() => Patcher.Watch());
                 await Task.Run(() => LocalFileModel.WatchLocal());
             }
             else
@@ -59,13 +55,10 @@ namespace SFP.Models.FileSystemWatchers
 
         public static async Task StopFriendsWatcher()
         {
-            await Task.Run(() => SFP.ChromeCache.BlockFile.Patcher.StopWatching());
+            await Task.Run(() => Patcher.StopWatching());
             await Task.Run(() => LocalFileModel.StopWatchingLocal());
         }
 
-        public static async Task StopLibraryWatcher()
-        {
-            await Task.Run(() => LocalFileModel.StopWatchingLibrary());
-        }
+        public static async Task StopLibraryWatcher() => await Task.Run(() => LocalFileModel.StopWatchingLibrary());
     }
 }
