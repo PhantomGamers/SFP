@@ -197,7 +197,7 @@ namespace SFP.Models
 
             if (steamState)
             {
-                StartSteam();
+                StartSteam(Properties.Settings.Default.SteamLaunchArgs.Replace("-noverifyfiles", string.Empty));
             }
         }
 
@@ -214,10 +214,11 @@ namespace SFP.Models
             return true;
         }
 
-        private static void StartSteam()
+        private static void StartSteam(string? args = null)
         {
+            args ??= Properties.Settings.Default.SteamLaunchArgs;
             LogModel.Logger.Info("Starting Steam");
-            _ = Process.Start(SteamExe, Properties.Settings.Default.SteamLaunchArgs);
+            _ = Process.Start(SteamExe, args);
         }
 
         public static void RestartSteam()
