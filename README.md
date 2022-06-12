@@ -56,3 +56,5 @@ With this active it is recommended to launch Steam with the `-noverifyfiles` arg
 * [@maxhauser for semver](https://github.com/maxhauser/semver)
 * [The Avalonia team for the AvaloniaUI framework](https://github.com/AvaloniaUI/Avalonia)
 * [@amwx for the FluentAvalonia theme](https://github.com/amwx/FluentAvalonia)
+* [@d2phap for FileWatcherEx](https://github.com/d2phap/FileWatcherEx)
+* [@alastairtree for LazyCache](https://github.com/alastairtree/LazyCache)
