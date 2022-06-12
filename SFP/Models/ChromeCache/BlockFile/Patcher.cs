@@ -58,7 +58,7 @@ namespace SFP.Models.ChromeCache.BlockFile
         private static (bool, string?) GetKey(FileChangedEvent e)
         {
             DirectoryInfo? dir = new DirectoryInfo(e.FullPath).Parent;
-            return dir == null ? (false, null) : ((bool, string?))(true, dir.Name);
+            return dir == null ? (false, null) : (true, dir.Name);
         }
 
         private static async void OnPostEviction(FileChangedEvent e)

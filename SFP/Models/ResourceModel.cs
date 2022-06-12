@@ -56,7 +56,7 @@ namespace SFP.Models
                 LogModel.Logger.Info($"Patched {oldFile}");
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 LogModel.Logger.Info($"Could not patch file {oldFile}");
             }

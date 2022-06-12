@@ -86,12 +86,9 @@ namespace SFP.Models.FileSystemWatchers
         private void FW_OnChanged(FileChangedEvent e)
         {
             (bool, string?) key = _getKeyFunc(e);
-            if (key.Item1)
+            if (key.Item1 && !ActiveFiles.Contains(key.Item2!))
             {
-                if (!ActiveFiles.Contains(key.Item2!))
-                {
-                    AddToCache(key.Item2!, e);
-                }
+                AddToCache(key.Item2!, e);
             }
         }
 
