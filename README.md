@@ -19,6 +19,20 @@ Once your files are patched follow the instructions in the program to install th
 
 **If any of the above is unclear I highly recommend reading this fantastic guide available on the Steam community: <https://steamcommunity.com/sharedfiles/filedetails/?id=1941650801>**
 
+## Features
+
+### Friends Skinning
+
+When the big [Steam Chat update](https://steamcommunity.com/updates/chatupdate) released, the Chat window no longer followed the theme for the Steam client. With SFP, you can theme the Chat window by putting your custom css in `clientui/friends.custom.css`
+
+### Library Skinning
+
+Similar to the Steam Chat update, when Steam released the [new Steam Library update](https://store.steampowered.com/libraryupdate), the library stopped following the Steam client theme. With SFP, you can customize the appearance of the library by putting your custom css in `steamui/libraryroot.custom.css`
+
+### Resource Patching
+
+While the Steam client has theme support built in, you are limited to theming the element classes that are built-in. SFP allows client theme authors to include an `override` folder in their theme directory. This folder should match the directory layout of the Steam `resource` folder, and it should contain files that the author wishes to replace the built-in resource files. This allows more customization in your skin!
+
 ## Todo
 
 * Improve automatic detection of correct library CSS file to patch.
