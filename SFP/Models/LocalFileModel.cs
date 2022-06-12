@@ -9,8 +9,17 @@ namespace SFP.Models
         public const string PATCHED_TEXT = "/*patched*/\n";
         public const string ORIGINAL_TEXT = "/*original*/\n";
 
-        private static readonly DelayedWatcher s_localWatcher = new(SteamModel.ClientUICSSDir, OnLocalPostEviction, GetKey, new string[] { "friends.css" });
-        private static readonly DelayedWatcher s_libraryWatcher = new(SteamModel.SteamUICSSDir, OnLibraryPostEviction, GetKey, new string[] { "*.css" });
+        private static string s_localFolderPath => SteamModel.ClientUICSSDir;
+        private static readonly DelayedWatcher s_localWatcher = new(s_localFolderPath, OnLocalPostEviction, GetKey)
+        {
+            Filter = "friends.css"
+        };
+
+        private static string s_libraryFolderPath => SteamModel.SteamUICSSDir;
+        private static readonly DelayedWatcher s_libraryWatcher = new(s_libraryFolderPath, OnLibraryPostEviction, GetKey)
+        {
+            Filter = "*.css"
+        };
 
         public static async Task<bool> Patch(FileInfo? file, string? overrideName = null, string? uiDir = null, bool alertOnPatched = false)
         {
@@ -113,11 +122,11 @@ namespace SFP.Models
             }
         }
 
-        public static void WatchLocal() => s_localWatcher.Start();
+        public static void WatchLocal() => s_localWatcher.Start(s_localFolderPath);
         public static void StopWatchingLocal() => s_localWatcher.Stop();
         public static bool IsLocalActive => s_localWatcher.IsActive;
 
-        public static void WatchLibrary() => s_libraryWatcher.Start();
+        public static void WatchLibrary() => s_libraryWatcher.Start(s_libraryFolderPath);
         public static void StopWatchingLibrary() => s_libraryWatcher.Stop();
         public static bool IsLibraryActive => s_libraryWatcher.IsActive;
 

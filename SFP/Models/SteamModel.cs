@@ -18,6 +18,8 @@ namespace SFP.Models
 
         public static string SkinDir => Path.Join(SteamDir, "skins", SkinName);
 
+        public static string ResourceDir => Path.Join(SteamDir, "resource");
+
         private static string? SkinName => GetRegistryData(@"Software\Valve\Steam", "SkinV5")?.ToString();
 
         private static int RunningGameID => (int)(GetRegistryData(@"Software\Valve\Steam", "RunningAppID") ?? -1);

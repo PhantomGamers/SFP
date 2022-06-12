@@ -106,6 +106,11 @@ namespace SFP_UI.ViewModels
                 await Task.Run(() => LocalFileModel.PatchAll(dir, "libraryroot.custom.css"));
             }
 
+            if (SFP.Properties.Settings.Default.ShouldPatchResources)
+            {
+                await Task.Run(() => ResourceModel.ReplaceAllFiles());
+            }
+
             if (cacheFilesPatched && SFP.Properties.Settings.Default.RestartSteamOnPatch)
             {
                 await Task.Run(() => SteamModel.RestartSteam());
@@ -123,8 +128,6 @@ namespace SFP_UI.ViewModels
             {
                 Instance.ButtonsEnabled = false;
             }
-
-            LogModel.Logger.Info(SteamModel.SkinDir);
 
             if (SteamModel.SteamDir == null)
             {

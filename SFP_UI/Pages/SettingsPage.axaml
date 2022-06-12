@@ -40,12 +40,14 @@
         <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch on app startup</CheckBox>
         <CheckBox IsChecked="{Binding ShouldPatchFriends}">Patch friends</CheckBox>
         <CheckBox IsChecked="{Binding ShouldPatchLibrary}">Patch library</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldPatchResources}">Patch resources</CheckBox>
         <CheckBox IsChecked="{Binding ScanOnly}">Scan only</CheckBox>
 
         <TextBlock Text="Scanner" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
         <CheckBox IsChecked="{Binding ShouldScanOnStart}">Scan on app startup</CheckBox>
         <CheckBox IsChecked="{Binding ShouldScanFriends}">Scan friends</CheckBox>
         <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan library</CheckBox>
+        <CheckBox IsChecked="{Binding ShouldScanResources}">Scan resources</CheckBox>
         <StackPanel Orientation="Horizontal" Margin="0,5" Spacing="4">
             <Label>Scanner delay (seconds)</Label>
             <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110" Height="20" HorizontalContentAlignment="Center"/>

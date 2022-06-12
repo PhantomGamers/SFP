@@ -20,7 +20,7 @@ namespace SFP.Models.FileSystemWatchers
 
         public static readonly SynchronizedCollection<string> ActiveFiles = new();
 
-        public DelayedWatcher(string pathToWatch, Action<FileChangedEvent> postEvictionAction, Func<FileChangedEvent, (bool, string?)> getKeyFunc, IEnumerable<string>? filters = null)
+        public DelayedWatcher(string pathToWatch, Action<FileChangedEvent> postEvictionAction, Func<FileChangedEvent, (bool, string?)> getKeyFunc)
         {
             _postEvictionAction = postEvictionAction;
             _getKeyFunc = getKeyFunc;
@@ -30,14 +30,58 @@ namespace SFP.Models.FileSystemWatchers
             _fw.OnCreated += (_, e) => FW_OnChanged(e);
             _fw.OnChanged += (_, e) => FW_OnChanged(e);
 
-            _fw.SynchronizingObject = (System.ComponentModel.ISynchronizeInvoke)SynchronizationContext.Current!;
+            //_fw.SynchronizingObject = (System.ComponentModel.ISynchronizeInvoke)SynchronizationContext.Current!;
+        }
 
-            if (filters != null)
+        public IEnumerable<string> Filters
+        {
+            get
             {
-                foreach (string filter in filters)
+                return _fw.Filters;
+            }
+            set
+            {
+                _fw.Filters.Clear();
+                foreach (string filter in value)
                 {
                     _fw.Filters.Add(filter);
                 }
+            }
+        }
+
+        public string Filter
+        {
+            get
+            {
+                return _fw.Filter;
+            }
+            set
+            {
+                _fw.Filter = value;
+            }
+        }
+
+        public string FolderPath
+        {
+            get
+            {
+                return _fw.FolderPath;
+            }
+            set
+            {
+                _fw.FolderPath = value;
+            }
+        }
+
+        public bool IncludeSubdirectories
+        {
+            get
+            {
+                return _fw.IncludeSubdirectories;
+            }
+            set
+            {
+                _fw.IncludeSubdirectories = value;
             }
         }
 
@@ -46,6 +90,12 @@ namespace SFP.Models.FileSystemWatchers
             _ = Directory.CreateDirectory(_fw.FolderPath);
             _fw.Start();
             IsActive = true;
+        }
+
+        public void Start(string pathToWatch)
+        {
+            _fw.FolderPath = pathToWatch;
+            Start();
         }
 
         public void Stop()

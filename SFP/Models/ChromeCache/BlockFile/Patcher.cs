@@ -6,7 +6,11 @@ namespace SFP.Models.ChromeCache.BlockFile
 {
     public class Patcher
     {
-        private static readonly DelayedWatcher s_watcher = new(SteamModel.CacheDir, OnPostEviction, GetKey, new string[] { "f_*" });
+        private static string s_folderPath => SteamModel.CacheDir;
+        private static readonly DelayedWatcher s_watcher = new(s_folderPath, OnPostEviction, GetKey)
+        {
+            Filter = "f_*"
+        };
 
         public static async Task<bool> PatchFile(FileInfo file, bool alertOnPatched = false)
         {
@@ -47,7 +51,7 @@ namespace SFP.Models.ChromeCache.BlockFile
             }
         }
 
-        public static void Watch() => s_watcher.Start();
+        public static void Watch() => s_watcher.Start(s_folderPath);
         public static void StopWatching() => s_watcher.Stop();
         public static bool IsActive => s_watcher.IsActive;
 

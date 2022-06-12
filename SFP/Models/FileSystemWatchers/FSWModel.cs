@@ -8,6 +8,7 @@ namespace SFP.Models.FileSystemWatchers
 
         public static bool ScanFriends => OperatingSystem.IsWindows() && Properties.Settings.Default.ShouldScanFriends;
         public static bool ScanLibrary => Properties.Settings.Default.ShouldScanLibrary;
+        public static bool ScanResources => Properties.Settings.Default.ShouldScanResources;
 
         public static async Task StartFileWatchers()
         {
@@ -19,6 +20,11 @@ namespace SFP.Models.FileSystemWatchers
             if (ScanLibrary)
             {
                 await StartLibraryWatcher();
+            }
+
+            if (ScanResources)
+            {
+                ResourceModel.Watch();
             }
         }
 

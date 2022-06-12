@@ -57,6 +57,18 @@ namespace SFP_UI.ViewModels
             }
         }
 
+        private bool _shouldPatchResources = SFP.Properties.Settings.Default.ShouldPatchResources;
+
+        public bool ShouldPatchResources
+        {
+            get => _shouldPatchResources;
+            private set
+            {
+                _ = this.RaiseAndSetIfChanged(ref _shouldPatchResources, value);
+                SFP.Properties.Settings.Default.ShouldPatchResources = value;
+            }
+        }
+
         private bool _shouldScanFriends = SFP.Properties.Settings.Default.ShouldScanFriends;
 
         public bool ShouldScanFriends
@@ -78,6 +90,18 @@ namespace SFP_UI.ViewModels
             {
                 _ = this.RaiseAndSetIfChanged(ref _shouldScanLibrary, value);
                 SFP.Properties.Settings.Default.ShouldScanLibrary = value;
+            }
+        }
+
+        private bool _shouldScanResources = SFP.Properties.Settings.Default.ShouldScanResources;
+
+        public bool ShouldScanResources
+        {
+            get => _shouldScanResources;
+            private set
+            {
+                _ = this.RaiseAndSetIfChanged(ref _shouldScanResources, value);
+                SFP.Properties.Settings.Default.ShouldScanResources = value;
             }
         }
 
