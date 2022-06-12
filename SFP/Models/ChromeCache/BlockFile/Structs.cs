@@ -14,10 +14,10 @@ namespace SFP.Models.ChromeCache.BlockFile
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "Can error with corrupted cache")]
         public EntryStore(Addr addr)
         {
-            FileInfo? tmpFile = LinkModel.GetLink(addr.File);
+            FileInfo? tmpFile = HardLink.GetLink(addr.File);
             if (!tmpFile.Exists)
             {
-                LogModel.Logger.Warn("Could not create tmp file. Clear cache and try again");
+                Log.Logger.Warn("Could not create tmp file. Clear cache and try again");
                 return;
             }
             using FileStream? fs = tmpFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

@@ -6,21 +6,21 @@ namespace SFP.Models.ChromeCache.BlockFile
         {
             if (!silent)
             {
-                LogModel.Logger.Info("Parsing cache...");
+                Log.Logger.Info("Parsing cache...");
             }
             if (!cacheDir.Exists)
             {
-                LogModel.Logger.Error("Cache folder does not exist, start Steam and try again.");
+                Log.Logger.Error("Cache folder does not exist, start Steam and try again.");
                 return new();
             }
             FileInfo index = new(Path.Join(cacheDir.FullName, "index"));
             if (!index.Exists)
             {
-                LogModel.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
+                Log.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
                 return new();
             }
 
-            index = LinkModel.GetLink(index);
+            index = HardLink.GetLink(index);
             IndexHeader indexHeader;
             try
             {
@@ -28,12 +28,12 @@ namespace SFP.Models.ChromeCache.BlockFile
             }
             catch (FileNotFoundException)
             {
-                LogModel.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
+                Log.Logger.Error($"{index.FullName} does not exist. Please restart Steam and try again.");
                 return new();
             }
             catch (IOException)
             {
-                LogModel.Logger.Error($"Unable to open {index.FullName}. Please shutdown Steam and try again.");
+                Log.Logger.Error($"Unable to open {index.FullName}. Please shutdown Steam and try again.");
                 return new();
             }
 
@@ -58,22 +58,22 @@ namespace SFP.Models.ChromeCache.BlockFile
                             }
                             else
                             {
-                                LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
+                                Log.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
                             }
                         }
                         entry = new EntryStore(new Addr(entry.next, cacheDir.FullName));
                     }
                     if (entry.Key.Contains(fileName))
                     {
-                        LogModel.Logger.Debug($"Found a entry {entry.Key} with {entry.data_addrs.Count} addresses");
+                        Log.Logger.Debug($"Found a entry {entry.Key} with {entry.data_addrs.Count} addresses");
                         if (entry.data_addrs.Count < 2)
                         {
-                            LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
+                            Log.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
                             continue;
                         }
                         for (int j = 0; j < entry.data_addrs.Count; j++)
                         {
-                            LogModel.Logger.Debug($"Entry's Address {j} points to {entry.data_addrs[j].File.Name}");
+                            Log.Logger.Debug($"Entry's Address {j} points to {entry.data_addrs[j].File.Name}");
                         }
                         files.Add(entry.data_addrs[1].File);
                     }
@@ -81,13 +81,13 @@ namespace SFP.Models.ChromeCache.BlockFile
             }
             br.Close();
             fs.Close();
-            _ = LinkModel.RemoveAllHardLinks();
+            _ = HardLink.RemoveAllHardLinks();
             if (!silent)
             {
-                LogModel.Logger.Info($"Found {files.Count} matches...");
+                Log.Logger.Info($"Found {files.Count} matches...");
                 foreach (FileInfo? file in files)
                 {
-                    LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
+                    Log.Logger.Info($"Found {fileName} in {file.FullName}");
                 }
             }
             return files;

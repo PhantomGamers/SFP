@@ -4,19 +4,19 @@ using SFP.Models.FileSystemWatchers;
 
 namespace SFP.Models
 {
-    public class ResourceModel
+    public class Resource
     {
         private const string PatchedText = "// PATCHED\n";
 
-        private static readonly DelayedWatcher s_watcher = new(SteamModel.ResourceDir, OnPostEviction, GetKey)
+        private static readonly DelayedWatcher s_watcher = new(Steam.ResourceDir, OnPostEviction, GetKey)
         {
             IncludeSubdirectories = true
         };
 
-        private static string s_overrideDir => Path.Join(SteamModel.SkinDir, "override");
-        private static (bool, string?) GetKey(FileChangedEvent e) => (true, Path.GetRelativePath(SteamModel.ResourceDir!, e.FullPath));
+        private static string s_overrideDir => Path.Join(Steam.SkinDir, "override");
+        private static (bool, string?) GetKey(FileChangedEvent e) => (true, Path.GetRelativePath(Steam.ResourceDir!, e.FullPath));
         private static async void OnPostEviction(FileChangedEvent e) => await ReplaceFile(e.FullPath, GetCustomPath(e.FullPath), true);
-        private static string GetCustomPath(string filePath) => Path.Combine(s_overrideDir, Path.GetRelativePath(SteamModel.ResourceDir!, filePath));
+        private static string GetCustomPath(string filePath) => Path.Combine(s_overrideDir, Path.GetRelativePath(Steam.ResourceDir!, filePath));
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "exception handled")]
         private static async Task<bool> ReplaceFile(string oldFile, string replacementFile, bool alertOnPatched = false)
@@ -25,7 +25,7 @@ namespace SFP.Models
             {
                 if (!alertOnPatched)
                 {
-                    LogModel.Logger.Warn($"{oldFile} does not exist");
+                    Log.Logger.Warn($"{oldFile} does not exist");
                 }
                 return false;
             }
@@ -34,7 +34,7 @@ namespace SFP.Models
             {
                 if (!alertOnPatched)
                 {
-                    LogModel.Logger.Warn($"{replacementFile} does not exist");
+                    Log.Logger.Warn($"{replacementFile} does not exist");
                 }
                 return false;
             }
@@ -46,19 +46,19 @@ namespace SFP.Models
                 {
                     if (!alertOnPatched)
                     {
-                        LogModel.Logger.Info($"{oldFile} is already patched.");
+                        Log.Logger.Info($"{oldFile} is already patched.");
                     }
                     return false;
                 }
                 file = await File.ReadAllTextAsync(replacementFile);
                 file = PatchedText + file;
                 await File.WriteAllTextAsync(oldFile, file);
-                LogModel.Logger.Info($"Patched {oldFile}");
+                Log.Logger.Info($"Patched {oldFile}");
                 return true;
             }
             catch
             {
-                LogModel.Logger.Info($"Could not patch file {oldFile}");
+                Log.Logger.Info($"Could not patch file {oldFile}");
             }
             return false;
         }
@@ -75,18 +75,18 @@ namespace SFP.Models
         {
             if (!silent)
             {
-                LogModel.Logger.Info("Patching resource files...");
+                Log.Logger.Info("Patching resource files...");
             }
             List<Task> tasks = new();
             foreach (string? file in customFiles)
             {
                 string? relativeFile = Path.GetRelativePath(customPath, file);
-                string? steamFile = Path.Join(SteamModel.ResourceDir, relativeFile);
+                string? steamFile = Path.Join(Steam.ResourceDir, relativeFile);
                 if (!File.Exists(steamFile))
                 {
                     if (!silent)
                     {
-                        LogModel.Logger.Info($"{steamFile} does not exist, skipping...");
+                        Log.Logger.Info($"{steamFile} does not exist, skipping...");
                     }
                     continue;
                 }
@@ -95,7 +95,7 @@ namespace SFP.Models
             await Task.WhenAll(tasks);
         }
 
-        public static void Watch() => s_watcher.Start(SteamModel.ResourceDir);
+        public static void Watch() => s_watcher.Start(Steam.ResourceDir);
         public static void StopWatching() => s_watcher.Stop();
     }
 }

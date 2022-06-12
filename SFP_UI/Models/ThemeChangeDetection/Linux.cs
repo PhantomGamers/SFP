@@ -45,7 +45,7 @@ namespace SFP_UI.Models.ThemeChangeDetection
                                                              }
                                                              catch
                                                              {
-                                                                 LogModel.Logger.Warn("Unable to detect system theme changes on this platform.");
+                                                                 Log.Logger.Warn("Unable to detect system theme changes on this platform.");
                                                              }
                                                          });
     }

@@ -1,6 +1,6 @@
 namespace SFP.Models
 {
-    public class LinkModel
+    public class HardLink
     {
         private static readonly Dictionary<string, string> s_hardLinks = new();
 
@@ -20,7 +20,7 @@ namespace SFP.Models
                 return new FileInfo(linkName);
             }
 
-            _ = NativeModel.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
+            _ = Native.CreateHardLink(linkName, file.FullName, IntPtr.Zero);
             // If this function runs in parallel for the same file, another instance of this method might add the link first.
             // This would cause an exception, but we can ignore it because the file will exist
             // TODO: Actually make this method threadsafe
@@ -38,8 +38,8 @@ namespace SFP.Models
                 }
                 catch (Exception e)
                 {
-                    LogModel.Logger.Warn($"Could not delete {linkPath} which links to {filePath}");
-                    LogModel.Logger.Error(e);
+                    Log.Logger.Warn($"Could not delete {linkPath} which links to {filePath}");
+                    Log.Logger.Error(e);
                     return false;
                 }
 

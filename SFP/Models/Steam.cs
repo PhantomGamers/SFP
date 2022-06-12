@@ -4,7 +4,7 @@ using SFP.Models.FileSystemWatchers;
 
 namespace SFP.Models
 {
-    public class SteamModel
+    public class Steam
     {
         public static string SteamUIDir => Path.Join(SteamDir, "steamui");
 
@@ -35,7 +35,7 @@ namespace SFP.Models
         {
             if (OperatingSystem.IsWindows())
             {
-                return UtilsModel.GetRegistryData(key, valueName);
+                return Utils.GetRegistryData(key, valueName);
             }
 
             try
@@ -127,20 +127,20 @@ namespace SFP.Models
 
         public static async Task ResetSteam()
         {
-            LogModel.Logger.Info("Resetting Steam");
+            Log.Logger.Info("Resetting Steam");
             if (!Directory.Exists(SteamUICSSDir))
             {
-                LogModel.Logger.Warn($"Missing directory {SteamUICSSDir}");
+                Log.Logger.Warn($"Missing directory {SteamUICSSDir}");
             }
 
             if (!Directory.Exists(ClientUICSSDir))
             {
-                LogModel.Logger.Warn($"Missing directory {ClientUICSSDir}");
+                Log.Logger.Warn($"Missing directory {ClientUICSSDir}");
             }
 
             if (!Directory.Exists(CacheDir))
             {
-                LogModel.Logger.Warn($"Missing directory {CacheDir}");
+                Log.Logger.Warn($"Missing directory {CacheDir}");
             }
 
             if (!Directory.Exists(SteamUICSSDir) && !Directory.Exists(ClientUICSSDir) && !Directory.Exists(CacheDir))
@@ -151,7 +151,7 @@ namespace SFP.Models
             if (IsGameRunning)
             {
                 string? gameName = RunningGameName ?? "Game";
-                LogModel.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
+                Log.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
                 return;
             }
 
@@ -161,38 +161,38 @@ namespace SFP.Models
                 return;
             }
 
-            bool scannerState = FSWModel.WatchersActive;
-            await FSWModel.StopFileWatchers();
+            bool scannerState = FileSystemWatchers.FileSystemWatcher.WatchersActive;
+            await FileSystemWatchers.FileSystemWatcher.StopFileWatchers();
 
             try
             {
                 if (Directory.Exists(SteamUICSSDir))
                 {
-                    LogModel.Logger.Info($"Deleting {SteamUICSSDir}");
+                    Log.Logger.Info($"Deleting {SteamUICSSDir}");
                     Directory.Delete(SteamUICSSDir, true);
                 }
 
                 if (Directory.Exists(ClientUICSSDir))
                 {
-                    LogModel.Logger.Info($"Deleting {ClientUICSSDir}");
+                    Log.Logger.Info($"Deleting {ClientUICSSDir}");
                     Directory.Delete(ClientUICSSDir, true);
                 }
 
                 if (Directory.Exists(CacheDir))
                 {
-                    LogModel.Logger.Info($"Deleting {CacheDir}");
+                    Log.Logger.Info($"Deleting {CacheDir}");
                     Directory.Delete(CacheDir, true);
                 }
             }
             catch (Exception ex)
             {
-                LogModel.Logger.Debug(ex);
-                LogModel.Logger.Warn("Could not delete files because they were in use. Manually shut down Steam and try again.");
+                Log.Logger.Debug(ex);
+                Log.Logger.Warn("Could not delete files because they were in use. Manually shut down Steam and try again.");
             }
 
             if (scannerState)
             {
-                await FSWModel.StartFileWatchers();
+                await FileSystemWatchers.FileSystemWatcher.StartFileWatchers();
             }
 
             if (steamState)
@@ -203,12 +203,12 @@ namespace SFP.Models
 
         private static bool ShutDownSteam()
         {
-            LogModel.Logger.Info("Shutting down Steam");
+            Log.Logger.Info("Shutting down Steam");
             _ = Process.Start(SteamExe, "-shutdown");
             Process? proc = SteamProcess;
             if (proc != null && !proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
-                LogModel.Logger.Warn("Could not shut down Steam. Manually shut down Steam and try again.");
+                Log.Logger.Warn("Could not shut down Steam. Manually shut down Steam and try again.");
                 return false;
             }
             return true;
@@ -217,7 +217,7 @@ namespace SFP.Models
         private static void StartSteam(string? args = null)
         {
             args ??= Properties.Settings.Default.SteamLaunchArgs;
-            LogModel.Logger.Info("Starting Steam");
+            Log.Logger.Info("Starting Steam");
             _ = Process.Start(SteamExe, args);
         }
 

@@ -2,9 +2,9 @@ using SFP.Models.ChromeCache.BlockFile;
 
 namespace SFP.Models.FileSystemWatchers
 {
-    public class FSWModel
+    public class FileSystemWatcher
     {
-        public static bool WatchersActive => Patcher.IsActive || LocalFileModel.IsLocalActive || LocalFileModel.IsLibraryActive;
+        public static bool WatchersActive => Patcher.IsActive || LocalFile.IsLocalActive || LocalFile.IsLibraryActive;
 
         public static bool ScanFriends => OperatingSystem.IsWindows() && Properties.Settings.Default.ShouldScanFriends;
         public static bool ScanLibrary => Properties.Settings.Default.ShouldScanLibrary;
@@ -24,32 +24,32 @@ namespace SFP.Models.FileSystemWatchers
 
             if (ScanResources)
             {
-                ResourceModel.Watch();
+                Resource.Watch();
             }
         }
 
         public static async Task StartFriendsWatcher()
         {
-            if (SteamModel.SteamDir != null)
+            if (Steam.SteamDir != null)
             {
                 await Task.Run(() => Patcher.Watch());
-                await Task.Run(() => LocalFileModel.WatchLocal());
+                await Task.Run(() => LocalFile.WatchLocal());
             }
             else
             {
-                LogModel.Logger.Warn("Steam Directory unknown. Please set it and try again.");
+                Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
             }
         }
 
         public static async Task StartLibraryWatcher()
         {
-            if (SteamModel.SteamDir != null)
+            if (Steam.SteamDir != null)
             {
-                await Task.Run(() => LocalFileModel.WatchLibrary());
+                await Task.Run(() => LocalFile.WatchLibrary());
             }
             else
             {
-                LogModel.Logger.Warn("Steam Directory unknown. Please set it and try again.");
+                Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
             }
         }
 
@@ -62,9 +62,9 @@ namespace SFP.Models.FileSystemWatchers
         public static async Task StopFriendsWatcher()
         {
             await Task.Run(() => Patcher.StopWatching());
-            await Task.Run(() => LocalFileModel.StopWatchingLocal());
+            await Task.Run(() => LocalFile.StopWatchingLocal());
         }
 
-        public static async Task StopLibraryWatcher() => await Task.Run(() => LocalFileModel.StopWatchingLibrary());
+        public static async Task StopLibraryWatcher() => await Task.Run(() => LocalFile.StopWatchingLibrary());
     }
 }

@@ -4,18 +4,18 @@ using SFP.Models.FileSystemWatchers;
 
 namespace SFP.Models
 {
-    public class LocalFileModel
+    public class LocalFile
     {
         public const string PATCHED_TEXT = "/*patched*/\n";
         public const string ORIGINAL_TEXT = "/*original*/\n";
 
-        private static string s_localFolderPath => SteamModel.ClientUICSSDir;
+        private static string s_localFolderPath => Steam.ClientUICSSDir;
         private static readonly DelayedWatcher s_localWatcher = new(s_localFolderPath, OnLocalPostEviction, GetKey)
         {
             Filter = "friends.css"
         };
 
-        private static string s_libraryFolderPath => SteamModel.SteamUICSSDir;
+        private static string s_libraryFolderPath => Steam.SteamUICSSDir;
         private static readonly DelayedWatcher s_libraryWatcher = new(s_libraryFolderPath, OnLibraryPostEviction, GetKey)
         {
             Filter = "*.css"
@@ -25,7 +25,7 @@ namespace SFP.Models
         {
             if (file is null)
             {
-                LogModel.Logger.Error($"Library file does not exist. Start Steam and try again");
+                Log.Logger.Error($"Library file does not exist. Start Steam and try again");
                 return false;
             }
 
@@ -36,7 +36,7 @@ namespace SFP.Models
             }
             catch (IOException)
             {
-                LogModel.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
+                Log.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
                 return false;
             }
 
@@ -51,14 +51,14 @@ namespace SFP.Models
                 // File is already patched
                 if (!alertOnPatched)
                 {
-                    LogModel.Logger.Info($"{file.Name} is already patched.");
+                    Log.Logger.Info($"{file.Name} is already patched.");
                 }
                 return false;
             }
 
             if (!alertOnPatched)
             {
-                LogModel.Logger.Info($"Patching file {file.Name}");
+                Log.Logger.Info($"Patching file {file.Name}");
             }
 
             var originalFile = new FileInfo($"{Path.Join(file.DirectoryName, Path.GetFileNameWithoutExtension(file.FullName))}.original{Path.GetExtension(file.FullName)}");
@@ -72,7 +72,7 @@ namespace SFP.Models
             }
             catch (IOException)
             {
-                LogModel.Logger.Warn($"Unable to write file {originalFile.FullName}. Please shutdown Steam and try again.");
+                Log.Logger.Warn($"Unable to write file {originalFile.FullName}. Please shutdown Steam and try again.");
                 return false;
             }
 
@@ -89,19 +89,19 @@ namespace SFP.Models
             contents = $"{PATCHED_TEXT}@import url(\"https://steamloopback.host/{dirName}{originalFile.Name}\");\n@import url(\"https://steamloopback.host/{customFile.Name}\");\n";
             if (file.Length < contents.Length)
             {
-                LogModel.Logger.Warn($"{file.Name} is too small to patch");
+                Log.Logger.Warn($"{file.Name} is too small to patch");
                 return false;
             }
             contents = string.Concat(contents, new string('\t', (int)(file.Length - contents.Length)));
 
             File.WriteAllText(file.FullName, contents);
 
-            string? customFileName = Path.Join(uiDir ?? SteamModel.SteamUIDir, customFile.Name);
+            string? customFileName = Path.Join(uiDir ?? Steam.SteamUIDir, customFile.Name);
             if (!File.Exists(customFileName))
             {
                 File.Create(customFileName).Dispose();
             }
-            LogModel.Logger.Info($"Patched {file.Name}.");
+            Log.Logger.Info($"Patched {file.Name}.");
             return true;
         }
 
@@ -114,11 +114,11 @@ namespace SFP.Models
             }
             if (patchedLibraryFiles)
             {
-                LogModel.Logger.Info($"Put your custom css in {Path.Join(SteamModel.SteamUIDir, overrideName)}");
+                Log.Logger.Info($"Put your custom css in {Path.Join(Steam.SteamUIDir, overrideName)}");
             }
             else
             {
-                LogModel.Logger.Info($"Did not patch any library files.");
+                Log.Logger.Info($"Did not patch any library files.");
             }
         }
 
@@ -146,7 +146,7 @@ namespace SFP.Models
             FileInfo file = new(e.FullPath);
             if (file.Directory != null)
             {
-                _ = await Patch(file, uiDir: SteamModel.ClientUIDir, alertOnPatched: true);
+                _ = await Patch(file, uiDir: Steam.ClientUIDir, alertOnPatched: true);
             }
         }
     }

@@ -20,7 +20,7 @@ namespace SFP.Models.ChromeCache.Simple
         {
             using FileStream? fs = file.Open(s_fso);
             using var br = new BinaryReader(fs);
-            SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
+            SimpleFileHeader header = Utils.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
             string? key = new(br.ReadChars((int)header.key_length));
             return key?.Contains(name) ?? false;
         }
@@ -29,11 +29,11 @@ namespace SFP.Models.ChromeCache.Simple
         {
             using FileStream? fs = file.Open(s_fso);
             using var br = new BinaryReader(fs);
-            SimpleFileHeader header = UtilsModel.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
+            SimpleFileHeader header = Utils.ByteArrayToStructure<SimpleFileHeader>(br.ReadBytes(SimpleFileHeaderSize));
             string? key = new(br.ReadChars((int)header.key_length));
 
             _ = fs.Seek(-SimpleFileEOFSize, SeekOrigin.End);
-            SimpleFileEOF eof0 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
+            SimpleFileEOF eof0 = Utils.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
             _ = fs.Seek(-SimpleFileEOFSize, SeekOrigin.End);
 
             byte[]? sha256 = Array.Empty<byte>();
@@ -49,7 +49,7 @@ namespace SFP.Models.ChromeCache.Simple
             _ = fs.Seek(-eof0.stream_size, SeekOrigin.Current);
 
             _ = fs.Seek(-SimpleFileEOFSize, SeekOrigin.Current);
-            SimpleFileEOF eof1 = UtilsModel.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
+            SimpleFileEOF eof1 = Utils.ByteArrayToStructure<SimpleFileEOF>(br.ReadBytes(SimpleFileEOFSize));
             _ = fs.Seek(-SimpleFileEOFSize, SeekOrigin.Current);
 
             _ = fs.Seek(-eof1.stream_size, SeekOrigin.Current);
