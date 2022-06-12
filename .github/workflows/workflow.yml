@@ -47,6 +47,10 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: Clean environment
+      shell: pwsh
+      run: Remove-Item ./external/FileWatcherEx/nuget.config -ErrorAction Ignore
+
     - name: Build & Zip
       shell: pwsh
       run: .\createpublishedzip.ps1 -os ${{ matrix.os }}
