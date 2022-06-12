@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -121,7 +119,7 @@ namespace SFP_UI.Views
             {
                 w.Opened -= OnParentWindowOpened;
 
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (!OperatingSystem.IsWindows())
                 {
                     if (this.FindControl<Grid>("TitleBarHost") is Grid g)
                     {

@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -86,7 +85,7 @@ namespace SFP_UI.Views
                     }
 
                     // Enable Mica on Windows 11
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    if (OperatingSystem.IsWindows())
                     {
                         // TODO: add Windows version to CoreWindow
                         if (IsWindows11 && Theme.RequestedTheme != FluentAvaloniaTheme.HighContrastModeString)
@@ -115,7 +114,7 @@ namespace SFP_UI.Views
                         };
                     }
 
-                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                    if (OperatingSystem.IsLinux())
                     {
                         Models.ThemeChangeDetection.Linux.WatchForChanges();
                     }
@@ -140,7 +139,7 @@ namespace SFP_UI.Views
 
         private void OnRequestedThemeChanged(FluentAvaloniaTheme sender, RequestedThemeChangedEventArgs args)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (OperatingSystem.IsWindows())
             {
                 // TODO: add Windows version to CoreWindow
                 if (IsWindows11 && args.NewTheme != FluentAvaloniaTheme.HighContrastModeString)

@@ -35,10 +35,7 @@ namespace SFP.Models.FileSystemWatchers
 
         public IEnumerable<string> Filters
         {
-            get
-            {
-                return _fw.Filters;
-            }
+            get => _fw.Filters;
             set
             {
                 _fw.Filters.Clear();
@@ -51,38 +48,20 @@ namespace SFP.Models.FileSystemWatchers
 
         public string Filter
         {
-            get
-            {
-                return _fw.Filter;
-            }
-            set
-            {
-                _fw.Filter = value;
-            }
+            get => _fw.Filter;
+            set => _fw.Filter = value;
         }
 
         public string FolderPath
         {
-            get
-            {
-                return _fw.FolderPath;
-            }
-            set
-            {
-                _fw.FolderPath = value;
-            }
+            get => _fw.FolderPath;
+            set => _fw.FolderPath = value;
         }
 
         public bool IncludeSubdirectories
         {
-            get
-            {
-                return _fw.IncludeSubdirectories;
-            }
-            set
-            {
-                _fw.IncludeSubdirectories = value;
-            }
+            get => _fw.IncludeSubdirectories;
+            set => _fw.IncludeSubdirectories = value;
         }
 
         public void Start()

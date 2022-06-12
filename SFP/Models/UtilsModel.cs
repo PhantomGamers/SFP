@@ -89,16 +89,16 @@ namespace SFP.Models
             catch (Exception e)
             {
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
                     url = url.Replace("&", "^&");
                     _ = Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (OperatingSystem.IsLinux())
                 {
                     _ = Process.Start("xdg-open", url);
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
                     _ = Process.Start("open", url);
                 }

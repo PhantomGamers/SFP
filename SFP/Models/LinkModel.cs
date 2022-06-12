@@ -1,12 +1,10 @@
-using System.Runtime.InteropServices;
-
 namespace SFP.Models
 {
     public class LinkModel
     {
         private static readonly Dictionary<string, string> s_hardLinks = new();
 
-        public static FileInfo GetLink(FileInfo file) => !RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        public static FileInfo GetLink(FileInfo file) => !OperatingSystem.IsWindows()
                 ? file
                 : s_hardLinks.TryGetValue(file.FullName, out string? linkPath) ? new FileInfo(linkPath) : CreateHardLink(file);
 
