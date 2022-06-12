@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 using Avalonia.Media;
 using Avalonia.Notification;
@@ -11,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 using Semver;
 
-using SFP;
+using SFP.Models;
 
 using SFP_UI.ViewModels;
 
@@ -27,10 +25,7 @@ namespace SFP_UI.Models
         private static NotificationMessageBuilder? s_builder;
         private static readonly HttpClient s_client = new();
 
-        static UpdateCheckModel()
-        {
-            s_client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
-        }
+        static UpdateCheckModel() => s_client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
 
         public static async Task CheckForUpdates()
         {
@@ -51,7 +46,7 @@ namespace SFP_UI.Models
                                    })
                                    .Dismiss().WithButton("Dismiss", button => { });
                 UpdateNotificationManagerColors();
-                s_builder.Queue();
+                _ = s_builder.Queue();
             }
             else
             {
@@ -64,23 +59,13 @@ namespace SFP_UI.Models
             if (Views.MainWindow.Instance?.Theme is FluentAvaloniaTheme theme
                 && s_builder is NotificationMessageBuilder builder)
             {
-                if (theme.TryGetResource("AccentFillColorSelectedTextBackgroundBrush", out object? accentColor))
-                {
-                    builder.Message.AccentBrush = (IBrush)accentColor;
-                }
-                else
-                {
-                    builder.Message.AccentBrush = Brush.Parse("#1751C3");
-                }
+                builder.Message.AccentBrush = theme.TryGetResource("AccentFillColorSelectedTextBackgroundBrush", out object? accentColor)
+                    ? (IBrush)accentColor
+                    : Brush.Parse("#1751C3");
 
-                if (theme.TryGetResource("SolidBackgroundFillColorBaseBrush", out object? backgroundColor))
-                {
-                    builder.Message.Background = (IBrush)backgroundColor;
-                }
-                else
-                {
-                    builder.Message.Background = Brush.Parse("#333");
-                }
+                builder.Message.Background = theme.TryGetResource("SolidBackgroundFillColorBaseBrush", out object? backgroundColor)
+                    ? (IBrush)backgroundColor
+                    : Brush.Parse("#333");
 
                 if (theme.TryGetResource("DefaultTextForegroundThemeBrush", out object? foregroundColor))
                 {

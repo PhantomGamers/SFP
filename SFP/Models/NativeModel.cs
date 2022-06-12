@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace SFP
+namespace SFP.Models
 {
     internal class NativeModel
     {

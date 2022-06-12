@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
-namespace SFP
+using SFP.Models.FileSystemWatchers;
+
+namespace SFP.Models
 {
     public class SteamModel
     {
@@ -14,18 +14,66 @@ namespace SFP
 
         public static string ClientUICSSDir => Path.Join(ClientUIDir, "css");
 
-        private static int RunningGameID => RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                                          ? (int)(UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "RunningAppID") ?? -1)
-                                          : -1;
+        public static string SkinDir => Path.Join(SteamDir, "skins", SkinName);
 
-        [SupportedOSPlatform("windows")]
-        private static string? RunningGameName => UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam\Apps\" + RunningGameID, "Name")?.ToString();
+        public static string ResourceDir => Path.Join(SteamDir, "resource");
+
+        private static string? SkinName => GetRegistryData(@"Software\Valve\Steam", "SkinV5")?.ToString();
+
+        private static int RunningGameID => (int)(GetRegistryData(@"Software\Valve\Steam", "RunningAppID") ?? -1);
+
+        private static string? RunningGameName => GetRegistryData(@"Software\Valve\Steam\Apps\" + RunningGameID, "Name")?.ToString();
 
         private static bool IsGameRunning => RunningGameID > 0;
 
         private static bool IsSteamRunning => SteamProcess is not null;
 
         private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler", Justification = "ok if null")]
+        private static object? GetRegistryData(string key, string valueName)
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return UtilsModel.GetRegistryData(key, valueName);
+            }
+
+            try
+            {
+                dynamic reg = Gameloop.Vdf.VdfConvert.Deserialize(File.ReadAllText(Path.Join(SteamRootDir, "registry.vdf")));
+                string kn = @$"HKCU/{key.Replace('\\', '/')}/{valueName}";
+                dynamic currentVal = reg.Value;
+                foreach (string keyPart in kn.Split('/'))
+                {
+                    currentVal = currentVal[keyPart];
+                }
+                return currentVal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static string? SteamRootDir
+        {
+            get
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    return SteamDir;
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
+                }
+                else if (OperatingSystem.IsMacOS())
+                {
+                    return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Application Support", "Steam");
+                }
+                return null;
+            }
+        }
 
         public static string? SteamDir
         {
@@ -36,18 +84,18 @@ namespace SFP
                     return Properties.Settings.Default.SteamDirectory;
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
-                    return UtilsModel.GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
+                    return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
-                    return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam", "steam");
+                    return Path.Join(SteamRootDir, "steam");
                 }
 
                 // OSX
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Application Support", "Steam", "Steam.AppBundle", "Steam", "Contents", "MacOS");
+                return Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
             }
         }
 
@@ -60,12 +108,12 @@ namespace SFP
                     return Properties.Settings.Default.CacheDirectory;
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
                     return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Steam", "htmlcache", "Cache");
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                if (OperatingSystem.IsLinux())
                 {
                     return Path.Join(SteamDir, "config", "htmlcache", "Cache");
                 }
@@ -75,18 +123,7 @@ namespace SFP
             }
         }
 
-        public static string SteamExe
-        {
-            get
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    return Path.Join(SteamDir, "Steam.exe");
-                }
-
-                return "steam";
-            }
-        }
+        public static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
 
         public static async Task ResetSteam()
         {
@@ -113,7 +150,7 @@ namespace SFP
 
             if (IsGameRunning)
             {
-                string? gameName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && RunningGameName != null ? RunningGameName : "Game";
+                string? gameName = RunningGameName ?? "Game";
                 LogModel.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
                 return;
             }
@@ -125,7 +162,7 @@ namespace SFP
             }
 
             bool scannerState = FSWModel.WatchersActive;
-            FSWModel.RemoveAllWatchers();
+            await FSWModel.StopFileWatchers();
 
             try
             {
@@ -150,7 +187,7 @@ namespace SFP
             catch (Exception ex)
             {
                 LogModel.Logger.Debug(ex);
-                LogModel.Logger.Warn($"Could not delete files because they were in use. Manually shut down Steam and try again.");
+                LogModel.Logger.Warn("Could not delete files because they were in use. Manually shut down Steam and try again.");
             }
 
             if (scannerState)
@@ -160,14 +197,14 @@ namespace SFP
 
             if (steamState)
             {
-                StartSteam();
+                StartSteam(Properties.Settings.Default.SteamLaunchArgs.Replace("-noverifyfiles", string.Empty));
             }
         }
 
         private static bool ShutDownSteam()
         {
             LogModel.Logger.Info("Shutting down Steam");
-            Process.Start(SteamExe, "-shutdown");
+            _ = Process.Start(SteamExe, "-shutdown");
             Process? proc = SteamProcess;
             if (proc != null && !proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
@@ -177,10 +214,11 @@ namespace SFP
             return true;
         }
 
-        private static void StartSteam()
+        private static void StartSteam(string? args = null)
         {
+            args ??= Properties.Settings.Default.SteamLaunchArgs;
             LogModel.Logger.Info("Starting Steam");
-            Process.Start(SteamExe, Properties.Settings.Default.SteamLaunchArgs);
+            _ = Process.Start(SteamExe, args);
         }
 
         public static void RestartSteam()

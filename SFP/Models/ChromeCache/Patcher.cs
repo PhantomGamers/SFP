@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Text;
 
 using SFP.Models.ChromeCache.Simple;
@@ -24,7 +23,7 @@ namespace SFP.Models.ChromeCache
             }
         }
 
-        public static async Task<(byte[], bool)> PatchFriendsCSS(byte[] data, string fileName)
+        public static async Task<(byte[], bool)> PatchFriendsCSS(byte[] data, string fileName, bool alertOnPatched = false)
         {
             if (!UtilsModel.IsGZipHeader(data))
             {
@@ -36,7 +35,10 @@ namespace SFP.Models.ChromeCache
             byte[] patchedTextBytes = Encoding.UTF8.GetBytes(LocalFileModel.PATCHED_TEXT);
             if (bytes.Length > patchedTextBytes.Length && Encoding.UTF8.GetString(bytes[0..patchedTextBytes.Length]) == LocalFileModel.PATCHED_TEXT)
             {
-                LogModel.Logger.Info($"{fileName} is already patched.");
+                if (!alertOnPatched)
+                {
+                    LogModel.Logger.Info($"{fileName} is already patched.");
+                }
                 return (data, false);
             }
             File.WriteAllBytes(Path.Join(SteamModel.ClientUIDir, "friends.original.css"), bytes);

@@ -1,10 +1,13 @@
-namespace SFP.ChromeCache.BlockFile
+namespace SFP.Models.ChromeCache.BlockFile
 {
     public class Parser
     {
-        public static List<FileInfo> FindCacheFilesWithName(DirectoryInfo cacheDir, string fileName)
+        public static List<FileInfo> FindCacheFilesWithName(DirectoryInfo cacheDir, string fileName, bool silent = false)
         {
-            LogModel.Logger.Info("Parsing cache...");
+            if (!silent)
+            {
+                LogModel.Logger.Info("Parsing cache...");
+            }
             if (!cacheDir.Exists)
             {
                 LogModel.Logger.Error("Cache folder does not exist, start Steam and try again.");
@@ -36,7 +39,7 @@ namespace SFP.ChromeCache.BlockFile
 
             List<FileInfo> files = new();
             using FileStream? fs = index.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            fs.Seek(92 * 4, SeekOrigin.Begin);
+            _ = fs.Seek(92 * 4, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             for (int i = 0; i < indexHeader.Table_len; i++)
             {
@@ -47,9 +50,16 @@ namespace SFP.ChromeCache.BlockFile
                     while (entry.next != 0)
                     {
                         // TODO: Investigate to see whether this should be >= 2 or if we should just add the last entry in the array
-                        if (entry.Key.Contains(fileName) && entry.data_addrs.Count >= 2)
+                        if (entry.Key.Contains(fileName))
                         {
-                            files.Add(entry.data_addrs[1].File);
+                            if (entry.data_addrs.Count >= 2)
+                            {
+                                files.Add(entry.data_addrs[1].File);
+                            }
+                            else
+                            {
+                                LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
+                            }
                         }
                         entry = new EntryStore(new Addr(entry.next, cacheDir.FullName));
                     }
@@ -58,6 +68,7 @@ namespace SFP.ChromeCache.BlockFile
                         LogModel.Logger.Debug($"Found a entry {entry.Key} with {entry.data_addrs.Count} addresses");
                         if (entry.data_addrs.Count < 2)
                         {
+                            LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
                             continue;
                         }
                         for (int j = 0; j < entry.data_addrs.Count; j++)
@@ -70,11 +81,14 @@ namespace SFP.ChromeCache.BlockFile
             }
             br.Close();
             fs.Close();
-            LinkModel.RemoveAllHardLinks();
-            LogModel.Logger.Info($"Found {files.Count} matches...");
-            foreach (FileInfo? file in files)
+            _ = LinkModel.RemoveAllHardLinks();
+            if (!silent)
             {
-                LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
+                LogModel.Logger.Info($"Found {files.Count} matches...");
+                foreach (FileInfo? file in files)
+                {
+                    LogModel.Logger.Info($"Found {fileName} in {file.FullName}");
+                }
             }
             return files;
         }

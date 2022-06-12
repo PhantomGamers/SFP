@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace SFP.ChromeCache.BlockFile
+namespace SFP.Models.ChromeCache.BlockFile
 {
     internal readonly struct EntryStore
     {
@@ -21,15 +21,20 @@ namespace SFP.ChromeCache.BlockFile
                 return;
             }
             using FileStream? fs = tmpFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            fs.Seek(8196 + addr.Num_Blocks * addr.BlockSize, SeekOrigin.Begin);
+            _ = fs.Seek(8196 + (addr.Num_Blocks * addr.BlockSize), SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             next = br.ReadUInt32();
-            fs.Seek(24, SeekOrigin.Current);
+            _ = fs.Seek(24, SeekOrigin.Current);
             _keyLength = br.ReadUInt32();
-            fs.Seek(20, SeekOrigin.Current);
+            _ = fs.Seek(20, SeekOrigin.Current);
             for (int i = 0; i < 4; i++)
             {
                 uint raw = br.ReadUInt32();
+                // TODO: Investigate why this is sometimes 0
+                if (raw == 0)
+                {
+                    continue;
+                }
                 try
                 {
                     data_addrs.Add(new Addr(raw, addr.File.DirectoryName!));
@@ -39,7 +44,7 @@ namespace SFP.ChromeCache.BlockFile
                     continue;
                 }
             }
-            fs.Seek(24, SeekOrigin.Current);
+            _ = fs.Seek(24, SeekOrigin.Current);
             Key = Encoding.UTF8.GetString(br.ReadBytes((int)_keyLength));
             br.Close();
             fs.Close();
@@ -53,7 +58,7 @@ namespace SFP.ChromeCache.BlockFile
         public IndexHeader(FileInfo file)
         {
             using FileStream? fs = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            fs.Seek(28, SeekOrigin.Begin);
+            _ = fs.Seek(28, SeekOrigin.Begin);
             using var br = new BinaryReader(fs);
             Table_len = br.ReadUInt32();
             br.Close();
@@ -102,20 +107,17 @@ namespace SFP.ChromeCache.BlockFile
             File = new FileInfo(Path.Join(directory, fileName));
         }
 
-        private static int BlockSizeForFileType(FileType file_type)
+        private static int BlockSizeForFileType(FileType file_type) => file_type switch
         {
-            return file_type switch
-            {
-                FileType.RANKINGS => 36,
-                FileType.BLOCK_256 => 256,
-                FileType.BLOCK_1K => 1024,
-                FileType.BLOCK_4K => 4096,
-                FileType.BLOCK_FILES => 8,
-                FileType.BLOCK_ENTRIES => 104,
-                FileType.BLOCK_EVICTED => 48,
-                FileType.EXTERNAL => 0,
-                _ => 0,
-            };
-        }
+            FileType.RANKINGS => 36,
+            FileType.BLOCK_256 => 256,
+            FileType.BLOCK_1K => 1024,
+            FileType.BLOCK_4K => 4096,
+            FileType.BLOCK_FILES => 8,
+            FileType.BLOCK_ENTRIES => 104,
+            FileType.BLOCK_EVICTED => 48,
+            FileType.EXTERNAL => 0,
+            _ => 0,
+        };
     }
 }

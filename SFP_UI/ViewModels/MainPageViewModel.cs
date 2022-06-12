@@ -6,9 +6,9 @@ using NLog;
 
 using ReactiveUI;
 
-using SFP;
-
-using SFP_UI.Models;
+using SFP.Models;
+using SFP.Models.ChromeCache.BlockFile;
+using SFP.Models.FileSystemWatchers;
 
 namespace SFP_UI.ViewModels
 {
@@ -18,10 +18,7 @@ namespace SFP_UI.ViewModels
 
         public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
 
-        public MainPageViewModel()
-        {
-            Instance = this;
-        }
+        public MainPageViewModel() => Instance = this;
 
         private bool _scannerActive = false;
 
@@ -55,10 +52,7 @@ namespace SFP_UI.ViewModels
             set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
         }
 
-        public void PrintLine(LogLevel level, string message)
-        {
-            Print(level, $"{message}\n");
-        }
+        public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
 
         public void Print(LogLevel level, string message)
         {
@@ -86,14 +80,14 @@ namespace SFP_UI.ViewModels
             bool cacheFilesPatched = false;
             if (SFP.Properties.Settings.Default.ShouldPatchFriends)
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
-                    var cacheFiles = await Task.Run(() => SFP.ChromeCache.BlockFile.Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
+                    var cacheFiles = await Task.Run(() => Parser.FindCacheFilesWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css"));
                     if (!SFP.Properties.Settings.Default.ScanOnly)
                     {
                         foreach (FileInfo? cacheFile in cacheFiles)
                         {
-                            cacheFilesPatched |= await Task.Run(() => SFP.ChromeCache.BlockFile.Patcher.PatchFile(cacheFile));
+                            cacheFilesPatched |= await Task.Run(() => Patcher.PatchFile(cacheFile));
                         }
                     }
                 }
@@ -103,13 +97,18 @@ namespace SFP_UI.ViewModels
                     //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
                 }
 
-                await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")), uiDir: SteamModel.ClientUIDir));
+                _ = await Task.Run(() => LocalFileModel.Patch(new FileInfo(Path.Join(SteamModel.ClientUIDir, "css", "friends.css")), uiDir: SteamModel.ClientUIDir));
             }
 
             if (SFP.Properties.Settings.Default.ShouldPatchLibrary)
             {
                 var dir = new DirectoryInfo(SteamModel.SteamUICSSDir);
                 await Task.Run(() => LocalFileModel.PatchAll(dir, "libraryroot.custom.css"));
+            }
+
+            if (SFP.Properties.Settings.Default.ShouldPatchResources)
+            {
+                await Task.Run(() => ResourceModel.ReplaceAllFiles());
             }
 
             if (cacheFilesPatched && SFP.Properties.Settings.Default.RestartSteamOnPatch)
@@ -150,7 +149,7 @@ namespace SFP_UI.ViewModels
                 return;
             }
 
-            await FSWModel.StartFileWatchers(SFP.Properties.Settings.Default.ShouldScanFriends && !RuntimeInformation.IsOSPlatform(OSPlatform.Linux), SFP.Properties.Settings.Default.ShouldScanLibrary);
+            await FSWModel.StartFileWatchers();
 
             LogModel.Logger.Info(FSWModel.WatchersActive ? "Scanner started" : "Scanner could not be started");
             if (Instance != null)
@@ -167,7 +166,7 @@ namespace SFP_UI.ViewModels
                 Instance.ButtonsEnabled = false;
             }
 
-            await Task.Run(() => FSWModel.RemoveAllWatchers());
+            await Task.Run(() => FSWModel.StopFileWatchers());
 
             LogModel.Logger.Info(!FSWModel.WatchersActive ? "Scanner stopped" : "Scanner could not be stopped");
 

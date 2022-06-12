@@ -256,5 +256,31 @@ namespace SFP.Properties {
                 this["CloseToTray"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool ShouldPatchResources {
+            get {
+                return ((bool)(this["ShouldPatchResources"]));
+            }
+            set {
+                this["ShouldPatchResources"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool ShouldScanResources {
+            get {
+                return ((bool)(this["ShouldScanResources"]));
+            }
+            set {
+                this["ShouldScanResources"] = value;
+            }
+        }
     }
 }

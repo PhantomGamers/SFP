@@ -5,16 +5,13 @@ using System.Runtime.Versioning;
 
 using Microsoft.Win32;
 
-namespace SFP
+namespace SFP.Models
 {
     public class UtilsModel
     {
-        public static bool IsGZipHeader(IReadOnlyList<byte> arr)
-        {
-            return arr.Count >= 2 &&
+        public static bool IsGZipHeader(IReadOnlyList<byte> arr) => arr.Count >= 2 &&
                    arr[0] == 31 &&
                    arr[1] == 139;
-        }
 
         public static async Task<byte[]> CompressBytes(IReadOnlyList<byte> bytes)
         {
@@ -87,23 +84,23 @@ namespace SFP
         {
             try
             {
-                Process.Start(url);
+                _ = Process.Start(url);
             }
             catch (Exception e)
             {
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (OperatingSystem.IsWindows())
                 {
                     url = url.Replace("&", "^&");
-                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                    _ = Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                else if (OperatingSystem.IsLinux())
                 {
-                    Process.Start("xdg-open", url);
+                    _ = Process.Start("xdg-open", url);
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                else if (OperatingSystem.IsMacOS())
                 {
-                    Process.Start("open", url);
+                    _ = Process.Start("open", url);
                 }
                 else
                 {

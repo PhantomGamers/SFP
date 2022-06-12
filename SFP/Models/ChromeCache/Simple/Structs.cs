@@ -9,10 +9,7 @@ namespace SFP.Models.ChromeCache.Simple
         public readonly uint key_length;
         //private readonly uint key_hash;
 
-        public byte[] Serialize()
-        {
-            return UtilsModel.StructureToByteArray(this);
-        }
+        public byte[] Serialize() => UtilsModel.StructureToByteArray(this);
     };
 
     public struct SimpleFileEOF
@@ -30,20 +27,11 @@ namespace SFP.Models.ChromeCache.Simple
         // |stream_size| is only used in the EOF record for stream 0.
         public uint stream_size;
 
-        public byte[] Serialize()
-        {
-            return UtilsModel.StructureToByteArray(this);
-        }
+        public byte[] Serialize() => UtilsModel.StructureToByteArray(this);
 
-        public bool HasSHA256()
-        {
-            return (flags & (uint)Flags.FLAG_HAS_KEY_SHA256) == (uint)Flags.FLAG_HAS_KEY_SHA256;
-        }
+        public bool HasSHA256() => (flags & (uint)Flags.FLAG_HAS_KEY_SHA256) == (uint)Flags.FLAG_HAS_KEY_SHA256;
 
-        public bool HasCRC32()
-        {
-            return (flags & (uint)Flags.FLAG_HAS_CRC32) == (uint)Flags.FLAG_HAS_CRC32;
-        }
+        public bool HasCRC32() => (flags & (uint)Flags.FLAG_HAS_CRC32) == (uint)Flags.FLAG_HAS_CRC32;
     };
 
     public struct SimpleFile

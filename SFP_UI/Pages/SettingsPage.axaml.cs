@@ -13,9 +13,6 @@ namespace SFP_UI.Pages
             DataContext = new SettingsPageViewModel(this.FindControl<ComboBox>("AppThemeComboBox"));
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

@@ -3,7 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 
-using SFP;
+using SFP.Models;
+using SFP.Models.FileSystemWatchers;
 
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -13,10 +14,7 @@ namespace SFP_UI
 {
     public partial class App : Application
     {
-        public override void Initialize()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
         public override async void OnFrameworkInitializationCompleted()
         {
@@ -67,10 +65,10 @@ namespace SFP_UI
             base.OnFrameworkInitializationCompleted();
         }
 
-        private void OnProcessExit(object? sender, EventArgs e)
+        private async void OnProcessExit(object? sender, EventArgs e)
         {
-            LinkModel.RemoveAllHardLinks();
-            FSWModel.RemoveAllWatchers();
+            _ = LinkModel.RemoveAllHardLinks();
+            await FSWModel.StopFileWatchers();
             Models.ThemeChangeDetection.Linux.MonitorProcess?.Kill();
         }
     }

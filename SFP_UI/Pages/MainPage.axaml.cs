@@ -11,9 +11,6 @@ namespace SFP_UI.Pages
             DataContext = new ViewModels.MainPageViewModel();
         }
 
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
+        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
     }
 }

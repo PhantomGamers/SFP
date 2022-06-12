@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 
-using SFP;
+using SFP.Models;
 
 namespace SFP_UI
 {
@@ -17,7 +17,7 @@ namespace SFP_UI
             NLog.Targets.Target.Register("OutputControl", typeof(Targets.OutputControlTarget));
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
             _ = new SettingsModel();
-            BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+            _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
@@ -26,9 +26,6 @@ namespace SFP_UI
                                                                  .LogToTrace()
                                                                  .UseReactiveUI();
 
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            LogModel.Logger.Error(e.ExceptionObject);
-        }
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) => LogModel.Logger.Error(e.ExceptionObject);
     }
 }
