@@ -33,6 +33,8 @@ Similar to the Steam Chat update, when Steam released the [new Steam Library upd
 
 While the Steam client has theme support built in, you are limited to theming the element classes that are built-in. SFP allows client theme authors to include an `override` folder in their theme directory. This folder should match the directory layout of the Steam `resource` folder, and it should contain files that the author wishes to replace the built-in resource files. This allows more customization in your skin!
 
+With this active it is recommended to launch Steam with the `-noverifyfiles` argument, otherwise Steam will attempt to repair the modified files on each launch.
+
 ## Todo
 
 * Improve automatic detection of correct library CSS file to patch.
