@@ -50,9 +50,16 @@ namespace SFP.Models.ChromeCache.BlockFile
                     while (entry.next != 0)
                     {
                         // TODO: Investigate to see whether this should be >= 2 or if we should just add the last entry in the array
-                        if (entry.Key.Contains(fileName) && entry.data_addrs.Count >= 2)
+                        if (entry.Key.Contains(fileName))
                         {
-                            files.Add(entry.data_addrs[1].File);
+                            if (entry.data_addrs.Count >= 2)
+                            {
+                                files.Add(entry.data_addrs[1].File);
+                            }
+                            else
+                            {
+                                LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
+                            }
                         }
                         entry = new EntryStore(new Addr(entry.next, cacheDir.FullName));
                     }
@@ -61,6 +68,7 @@ namespace SFP.Models.ChromeCache.BlockFile
                         LogModel.Logger.Debug($"Found a entry {entry.Key} with {entry.data_addrs.Count} addresses");
                         if (entry.data_addrs.Count < 2)
                         {
+                            LogModel.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
                             continue;
                         }
                         for (int j = 0; j < entry.data_addrs.Count; j++)
