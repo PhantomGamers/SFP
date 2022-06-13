@@ -49,26 +49,19 @@ namespace SFP.Models.ChromeCache.BlockFile
                     var entry = new EntryStore(new Addr(raw, cacheDir.FullName));
                     while (entry.next != 0)
                     {
-                        // TODO: Investigate to see whether this should be >= 2 or if we should just add the last entry in the array
-                        if (entry.Key.Contains(fileName))
+                        // Even if the key points to friends.css, it could be an evicted entry that has no addresses
+                        if (entry.Key.Contains(fileName) && entry.data_addrs.Count >= 2)
                         {
-                            if (entry.data_addrs.Count >= 2)
-                            {
-                                files.Add(entry.data_addrs[1].File);
-                            }
-                            else
-                            {
-                                Log.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
-                            }
+                            files.Add(entry.data_addrs[1].File);
                         }
                         entry = new EntryStore(new Addr(entry.next, cacheDir.FullName));
                     }
                     if (entry.Key.Contains(fileName))
                     {
                         Log.Logger.Debug($"Found a entry {entry.Key} with {entry.data_addrs.Count} addresses");
+                        // Even if the key points to friends.css, it could be an evicted entry that has no addresses
                         if (entry.data_addrs.Count < 2)
                         {
-                            Log.Logger.Error($"Entry only has one address with file {entry.data_addrs[0].File.Name}. Please report to developer.");
                             continue;
                         }
                         for (int j = 0; j < entry.data_addrs.Count; j++)
