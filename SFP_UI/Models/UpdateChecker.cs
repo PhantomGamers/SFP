@@ -15,7 +15,7 @@ using SFP_UI.ViewModels;
 
 namespace SFP_UI.Models
 {
-    internal class UpdateCheckModel
+    internal class UpdateChecker
     {
 
         public static readonly SemVersion Version = SemVersion.Parse(Assembly.GetEntryAssembly()!
@@ -25,24 +25,24 @@ namespace SFP_UI.Models
         private static NotificationMessageBuilder? s_builder;
         private static readonly HttpClient s_client = new();
 
-        static UpdateCheckModel() => s_client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
+        static UpdateChecker() => s_client.DefaultRequestHeaders.UserAgent.Add(new("SFP", Version.ToString()));
 
         public static async Task CheckForUpdates()
         {
-            LogModel.Logger.Info("Checking for updates...");
+            Log.Logger.Info("Checking for updates...");
             SemVersion? semver = await GetLatestVersionAsync();
 
             if (SemVersion.ComparePrecedence(Version, semver) < 0
                 && MainPageViewModel.Instance?.Manager is INotificationMessageManager manager)
             {
-                LogModel.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
+                Log.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
                 s_builder = manager.CreateMessage()
                                    .Animates(true)
                                    .HasBadge("Info")
                                    .HasMessage("There is an update available!")
                                    .Dismiss().WithButton("Open download page", button =>
                                    {
-                                       UtilsModel.OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
+                                       Utils.OpenUrl("https://github.com/phantomgamers/sfp/releases/latest");
                                    })
                                    .Dismiss().WithButton("Dismiss", button => { });
                 UpdateNotificationManagerColors();
@@ -50,7 +50,7 @@ namespace SFP_UI.Models
             }
             else
             {
-                LogModel.Logger.Info("You are running the latest version.");
+                Log.Logger.Info("You are running the latest version.");
             }
         }
 
@@ -88,8 +88,8 @@ namespace SFP_UI.Models
             }
             catch (HttpRequestException e)
             {
-                LogModel.Logger.Error("Could not fetch latest version!");
-                LogModel.Logger.Error("Exception: {0}", e.Message);
+                Log.Logger.Error("Could not fetch latest version!");
+                Log.Logger.Error("Exception: {0}", e.Message);
             }
 
             return new(-1);

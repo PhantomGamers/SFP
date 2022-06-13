@@ -6,7 +6,7 @@ namespace SFP.Models.ChromeCache.BlockFile
 {
     public class Patcher
     {
-        private static string s_folderPath => SteamModel.CacheDir;
+        private static string s_folderPath => Steam.CacheDir;
         private static readonly DelayedWatcher s_watcher = new(s_folderPath, OnPostEviction, GetKey)
         {
             Filter = "f_*"
@@ -16,7 +16,7 @@ namespace SFP.Models.ChromeCache.BlockFile
         {
             if (!file.Exists)
             {
-                LogModel.Logger.Warn($"{file.FullName} does not exist");
+                Log.Logger.Warn($"{file.FullName} does not exist");
                 return false;
             }
 
@@ -27,7 +27,7 @@ namespace SFP.Models.ChromeCache.BlockFile
             }
             catch (IOException)
             {
-                LogModel.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
+                Log.Logger.Warn($"Unable to read file {file.FullName}. Please shutdown Steam and try again.");
                 return false;
             }
 
@@ -37,7 +37,7 @@ namespace SFP.Models.ChromeCache.BlockFile
                 try
                 {
                     await File.WriteAllBytesAsync(file.FullName, bytes);
-                    LogModel.Logger.Info($"Patched {file.Name}.\nPut your custom css in {Path.Join(SteamModel.ClientUIDir, "friends.custom.css")}");
+                    Log.Logger.Info($"Patched {file.Name}.\nPut your custom css in {Path.Join(Steam.ClientUIDir, "friends.custom.css")}");
                     return true;
                 }
                 catch (IOException)
@@ -75,7 +75,7 @@ namespace SFP.Models.ChromeCache.BlockFile
 
             if (filesPatched && Properties.Settings.Default.RestartSteamOnPatch)
             {
-                SteamModel.RestartSteam();
+                Steam.RestartSteam();
             }
         }
     }

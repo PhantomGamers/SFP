@@ -4,9 +4,9 @@ using Bluegrams.Application;
 
 namespace SFP.Models
 {
-    public class SettingsModel : ApplicationSettingsBase
+    public class Settings : ApplicationSettingsBase
     {
-        public SettingsModel()
+        public Settings()
         {
             PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
             PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);

@@ -16,7 +16,7 @@ namespace SFP_UI
             NLog.LogManager.AutoShutdown = true;
             NLog.Targets.Target.Register("OutputControl", typeof(Targets.OutputControlTarget));
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnUnhandledException);
-            _ = new SettingsModel();
+            _ = new Settings();
             _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
 
@@ -26,6 +26,6 @@ namespace SFP_UI
                                                                  .LogToTrace()
                                                                  .UseReactiveUI();
 
-        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) => LogModel.Logger.Error(e.ExceptionObject);
+        private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) => Log.Logger.Error(e.ExceptionObject);
     }
 }

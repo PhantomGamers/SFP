@@ -108,8 +108,8 @@ namespace SFP_UI.Views
                             }
                             catch (Exception err)
                             {
-                                LogModel.Logger.Warn("Unable to detect system theme");
-                                LogModel.Logger.Error(err);
+                                Log.Logger.Warn("Unable to detect system theme");
+                                Log.Logger.Error(err);
                             }
                         };
                     }
@@ -132,7 +132,7 @@ namespace SFP_UI.Views
                 return;
             }
 
-            LogModel.Logger.Debug("Closing to tray");
+            Log.Logger.Debug("Closing to tray");
             Hide();
             e.Cancel = true;
         }
@@ -157,7 +157,7 @@ namespace SFP_UI.Views
             }
 
             MainView.SetAppTitleColor();
-            UpdateCheckModel.UpdateNotificationManagerColors();
+            UpdateChecker.UpdateNotificationManagerColors();
         }
 
         private void TryEnableMicaEffect(FluentAvaloniaTheme thm)

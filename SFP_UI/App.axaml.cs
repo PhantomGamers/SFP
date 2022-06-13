@@ -29,21 +29,21 @@ namespace SFP_UI
 
                 try
                 {
-                    desktop.MainWindow.Title += $" v{UpdateCheckModel.Version}";
+                    desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
                     await Dispatcher.UIThread.InvokeAsync(() =>
                     {
-                        LogModel.Logger.Info($"Initializing SFP version {UpdateCheckModel.Version}");
+                        Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version}");
                     });
                 }
                 catch (Exception e)
                 {
-                    LogModel.Logger.Error(e);
+                    Log.Logger.Error(e);
                 };
             }
 
             if (SFP.Properties.Settings.Default.CheckForUpdates)
             {
-                await Dispatcher.UIThread.InvokeAsync(UpdateCheckModel.CheckForUpdates);
+                await Dispatcher.UIThread.InvokeAsync(UpdateChecker.CheckForUpdates);
             }
 
             if (SettingsPageViewModel.Instance != null)
@@ -67,8 +67,8 @@ namespace SFP_UI
 
         private async void OnProcessExit(object? sender, EventArgs e)
         {
-            _ = LinkModel.RemoveAllHardLinks();
-            await FSWModel.StopFileWatchers();
+            _ = HardLink.RemoveAllHardLinks();
+            await SFP.Models.FileSystemWatchers.FileSystemWatcher.StopFileWatchers();
             Models.ThemeChangeDetection.Linux.MonitorProcess?.Kill();
         }
     }

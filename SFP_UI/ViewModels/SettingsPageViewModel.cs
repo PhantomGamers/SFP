@@ -153,7 +153,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        private string _steamDirectory = SteamModel.SteamDir ?? string.Empty;
+        private string _steamDirectory = Steam.SteamDir ?? string.Empty;
 
         public string SteamDirectory
         {
@@ -165,7 +165,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        private string _cacheDirectory = SteamModel.CacheDir;
+        private string _cacheDirectory = Steam.CacheDir;
 
         public string CacheDirectory
         {
@@ -296,9 +296,9 @@ namespace SFP_UI.ViewModels
             ScanOnly = SFP.Properties.Settings.Default.ScanOnly;
             RestartSteamOnPatch = SFP.Properties.Settings.Default.RestartSteamOnPatch;
             ShouldScanOnStart = SFP.Properties.Settings.Default.ShouldScanOnStart;
-            SteamDirectory = SteamModel.SteamDir ?? string.Empty;
+            SteamDirectory = Steam.SteamDir ?? string.Empty;
             SteamLaunchArgs = SFP.Properties.Settings.Default.SteamLaunchArgs;
-            CacheDirectory = SteamModel.CacheDir;
+            CacheDirectory = Steam.CacheDir;
             ScannerDelay = SFP.Properties.Settings.Default.ScannerDelay;
             AppTheme = SFP.Properties.Settings.Default.AppTheme;
             StartMinimized = SFP.Properties.Settings.Default.StartMinimized;
@@ -331,13 +331,13 @@ namespace SFP_UI.ViewModels
         public void OnResetSteamCommand()
         {
             SFP.Properties.Settings.Default.SteamDirectory = string.Empty;
-            SteamDirectory = SteamModel.SteamDir ?? string.Empty;
+            SteamDirectory = Steam.SteamDir ?? string.Empty;
         }
 
         public void OnResetCacheCommand()
         {
             SFP.Properties.Settings.Default.CacheDirectory = string.Empty;
-            CacheDirectory = SteamModel.CacheDir;
+            CacheDirectory = Steam.CacheDir;
         }
 
         public void OnAppThemeSelectedChanged(object? sender, SelectionChangedEventArgs e)

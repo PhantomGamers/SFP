@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace SFP.Models
 {
-    public class UtilsModel
+    public class Utils
     {
         public static bool IsGZipHeader(IReadOnlyList<byte> arr) => arr.Count >= 2 &&
                    arr[0] == 31 &&
@@ -104,7 +104,7 @@ namespace SFP.Models
                 }
                 else
                 {
-                    LogModel.Logger.Error(e);
+                    Log.Logger.Error(e);
                     throw;
                 }
             }
