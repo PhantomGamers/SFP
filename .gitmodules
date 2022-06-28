@@ -1,7 +1,0 @@
-[submodule "external/FluentAvalonia"]
-	path = external/FluentAvalonia
-	url = https://github.com/PhantomGamers/FluentAvalonia.git
-	branch = improve-theme-detection
-[submodule "external/FileWatcherEx"]
-	path = external/FileWatcherEx
-	url = https://github.com/d2phap/FileWatcherEx.git
