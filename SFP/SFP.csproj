@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Crc32.NET" Version="1.2.0" />
-    <PackageReference Include="Ionic.Zlib.Core" Version="1.0.0" />
-    <PackageReference Include="PortableJsonSettingsProvider" Version="0.2.1" />
-    <PackageReference Include="LazyCache" Version="2.4.0" />
-    <PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0" />
-    <PackageReference Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageReference Include="FileWatcherEx" Version="2.1.1" />
+    <PackageReference Include="Crc32.NET" />
+    <PackageReference Include="Ionic.Zlib.Core" />
+    <PackageReference Include="PortableJsonSettingsProvider" />
+    <PackageReference Include="LazyCache" />
+    <PackageReference Include="System.ServiceModel.Primitives" />
+    <PackageReference Include="Gameloop.Vdf" />
+    <PackageReference Include="FileWatcherEx" />
   </ItemGroup>
 
   <ItemGroup>

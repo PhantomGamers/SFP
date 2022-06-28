@@ -9,16 +9,16 @@
     <PublishReadyToRun>True</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.0.1" />
-    <PackageReference Include="MinVer" Version="4.0.0">
+    <PackageReference Include="NLog" />
+    <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ErrorProne.NET.CoreAnalyzers" Version="0.1.2">
+    <PackageReference Include="ErrorProne.NET.CoreAnalyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ErrorProne.NET.Structs" Version="0.1.2">
+    <PackageReference Include="ErrorProne.NET.Structs">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
