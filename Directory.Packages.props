@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NoWarn>NU1507</NoWarn>
-    <AvaloniaVersion>0.10.15</AvaloniaVersion>
+    <AvaloniaVersion>0.10.16</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
