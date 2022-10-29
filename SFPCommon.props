@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <PublishSingleFile>True</PublishSingleFile>
-    <PublishTrimmed>True</PublishTrimmed>
+    <PublishTrimmed>False</PublishTrimmed>
     <PublishReadyToRun>True</PublishReadyToRun>
   </PropertyGroup>
   <ItemGroup>
