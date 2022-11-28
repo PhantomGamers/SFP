@@ -20,7 +20,7 @@
     <PackageVersion Include="LazyCache" Version="2.4.0" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="4.10.0" />
     <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageVersion Include="NLog" Version="5.0.5" />
+    <PackageVersion Include="NLog" Version="5.1.0" />
     <PackageVersion Include="MinVer" Version="4.2.0" />
     <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.1.2" />
     <PackageVersion Include="ErrorProne.NET.Structs" Version="0.1.2" />
