@@ -12,13 +12,16 @@ namespace SFP_UI.ViewModels
     {
         public static SettingsPageViewModel? Instance { get; private set; }
 
-        public SettingsPageViewModel(ComboBox appThemeComboBox)
+        public SettingsPageViewModel(ComboBox? appThemeComboBox)
         {
             Instance = this;
             appThemeComboBox.SelectionChanged += OnAppThemeSelectedChanged;
-            appThemeComboBox.SelectedIndex = SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString
-                ? 0
-                : SFP.Properties.Settings.Default.AppTheme == FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString ? 1 : 2;
+            appThemeComboBox.SelectedIndex = SFP.Properties.Settings.Default.AppTheme switch
+            {
+                FluentAvalonia.Styling.FluentAvaloniaTheme.DarkModeString => 0,
+                FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString => 1,
+                _ => 2
+            };
         }
 
         private bool _shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
@@ -272,14 +275,6 @@ namespace SFP_UI.ViewModels
             {
                 _ = this.RaiseAndSetIfChanged(ref _appTheme, value);
                 SFP.Properties.Settings.Default.AppTheme = value;
-                if (value == "System Default")
-                {
-                    MainWindow.Instance?.Theme?.InvalidateThemingFromSystemThemeChanged();
-                }
-                else
-                {
-                    MainWindow.Instance!.Theme!.RequestedTheme = value;
-                }
             }
         }
 

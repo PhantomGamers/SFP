@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-using Avalonia.Notification;
+//using Avalonia.Notification;
 
 using NLog;
 
@@ -15,8 +15,6 @@ namespace SFP_UI.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         public static MainPageViewModel? Instance { get; private set; }
-
-        public INotificationMessageManager Manager { get; } = new NotificationMessageManager();
 
         public MainPageViewModel() => Instance = this;
 

@@ -69,7 +69,6 @@ namespace SFP_UI
         {
             _ = HardLink.RemoveAllHardLinks();
             await SFP.Models.FileSystemWatchers.FileSystemWatcher.StopFileWatchers();
-            Models.ThemeChangeDetection.Linux.MonitorProcess?.Kill();
         }
     }
 }

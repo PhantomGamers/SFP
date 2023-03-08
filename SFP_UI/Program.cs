@@ -1,6 +1,6 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
-
+using FluentAvalonia.UI.Windowing;
 using SFP.Models;
 
 namespace SFP_UI
@@ -21,10 +21,11 @@ namespace SFP_UI
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
-        public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
+        private static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
                                                                  .UsePlatformDetect()
                                                                  .LogToTrace()
-                                                                 .UseReactiveUI();
+                                                                 .UseReactiveUI()
+                                                                 .UseFAWindowing();
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) => Log.Logger.Error(e.ExceptionObject);
     }

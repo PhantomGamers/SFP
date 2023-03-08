@@ -1,15 +1,22 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:SFP_UI"
-             xmlns:notification="clr-namespace:Avalonia.Notification;assembly=Notification.Avalonia"
              x:Class="SFP_UI.App"
-             xmlns:sty="using:FluentAvalonia.Styling">
-    <Application.DataTemplates>
-        <local:ViewLocator/>
-    </Application.DataTemplates>
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:sty="using:FluentAvalonia.Styling"
+             RequestedThemeVariant="Dark">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ui:SymbolIconSource Symbol="Home" x:Key="HomeIcon" />
+            <ui:SymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
+            <ui:SymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
+            <ui:SymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
+        </ResourceDictionary>
+    </Application.Resources>
 
     <Application.Styles>
-        <sty:FluentAvaloniaTheme />
-        <notification:NotificationStyle />
+        <sty:FluentAvaloniaTheme PreferUserAccentColor="True" PreferSystemTheme="True" />
+        <StyleInclude Source="avares://FluentAvalonia.UI.Windowing/Styles/FAWindowingStyles.axaml" />
     </Application.Styles>
 </Application>

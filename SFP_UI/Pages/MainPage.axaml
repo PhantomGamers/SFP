@@ -1,8 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:Avalonia.Notification.Controls;assembly=Notification.Avalonia"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             x:Class="SFP_UI.Pages.MainPage">
+             xmlns:vm="using:SFP_UI.ViewModels"
+             x:Class="SFP_UI.Pages.MainPage"
+             x:DataType="vm:MainPageViewModel">
   <Grid>
     <DockPanel Margin="16">
       <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
@@ -25,10 +26,10 @@
                   Command="{Binding OnResetSteamCommand}"
                   ToolTip.Tip="Resets Steam to stock, removing all patches">Reset Steam</Button>
 
-          <ui:DropDownButton Content="Open file"
+          <DropDownButton Content="Open file"
                              HorizontalAlignment="Right"
                              Margin="0 0 15 0">
-              <ui:DropDownButton.Flyout>
+              <DropDownButton.Flyout>
                   <MenuFlyout Placement="Top">
                       <MenuItem Header="friends.custom.css"
                                 Command="{Binding OnOpenFriendsCustomCssCommand}"
@@ -37,8 +38,8 @@
                                 Command="{Binding OnOpenLibraryrootCustomCssCommand}"
                                 ToolTip.Tip="Opens the libraryroot.custom.css file where your custom skin for the library goes"/>
                   </MenuFlyout>
-              </ui:DropDownButton.Flyout>
-          </ui:DropDownButton>
+              </DropDownButton.Flyout>
+          </DropDownButton>
       </DockPanel>
       <Border BorderThickness="5">
         <ScrollViewer Margin="10">
@@ -54,7 +55,6 @@
       </Border>
     </DockPanel>
     <Border Grid.Column="1">
-      <controls:NotificationMessageContainer Manager="{Binding Manager}" />
     </Border>
   </Grid>
 </UserControl>

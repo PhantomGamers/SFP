@@ -1,7 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             x:Class="SFP_UI.Pages.SettingsPage">
+             xmlns:vm="using:SFP_UI.ViewModels"
+             x:Class="SFP_UI.Pages.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel">
 
   <DockPanel Margin="16">
     <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
@@ -66,7 +68,7 @@
             <ComboBoxItem>Light</ComboBoxItem>
             <ComboBoxItem>System Default</ComboBoxItem>
         </ComboBox>
-        <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="{Binding s_isWindows}"/>
+        <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="True"/>
 
       </StackPanel>
     </ScrollViewer>

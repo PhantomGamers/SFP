@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 
-using FluentAvalonia.Core.ApplicationModel;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 
@@ -36,6 +35,7 @@ namespace SFP_UI.Views
                 b.Activated += (s, e) => SetAppTitleColor(true);
                 b.Deactivated += (s, e) => SetAppTitleColor(false);
             }
+
             _frameView = this.FindControl<Frame>("FrameView");
             _frameView.Navigated += OnFrameViewNavigated;
 
@@ -48,62 +48,60 @@ namespace SFP_UI.Views
             _ = _frameView.Navigate(typeof(MainPage));
         }
 
-        public static void SetAppTitleColor(bool? isActive = null)
+        private static void SetAppTitleColor(bool? isActive = null)
         {
             s_isActive = isActive ?? s_isActive;
 
-            if (s_instance?.FindControl<TextBlock>("AppTitle") is TextBlock t)
+            if (s_instance?.FindControl<TextBlock>("AppTitle") is not TextBlock t)
             {
-                if (!s_isActive && s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled))
-                {
-                    t.Foreground = (IBrush)disabled!;
-                }
-                else if (s_isActive && s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary))
-                {
-                    t.Foreground = (IBrush)primary!;
-                }
+                return;
             }
+
+            t.Foreground = s_isActive switch
+            {
+                false when s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled) =>
+                    (IBrush)disabled!,
+                true when s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary) =>
+                    (IBrush)primary!,
+                _ => t.Foreground
+            };
         }
 
         private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
         {
             foreach (NavigationViewItem nvi in _navView!.MenuItems)
             {
-                if (nvi.Tag is Type tag && tag == e.SourcePageType)
+                if (nvi.Tag is not Type tag || tag != e.SourcePageType)
                 {
-                    _navView.SelectedItem = nvi;
-                    break;
+                    continue;
                 }
+
+                _navView.SelectedItem = nvi;
+                break;
             }
         }
 
-        private static List<NavigationViewItem> GetNavigationViewItems() => new()
+        private List<NavigationViewItem> GetNavigationViewItems() => new()
         {
-                new NavigationViewItem
-                {
-                    Content = "Home",
-                    Tag = typeof(MainPage),
-                    Icon = new SymbolIcon { Symbol = Symbol.Home },
-                    Classes =
-                    {
-                        "SFPAppNav"
-                    }
-                },
-            };
+            new NavigationViewItem
+            {
+                Content = "Home",
+                Tag = typeof(MainPage),
+                IconSource = (IconSource)this.FindResource("HomeIcon"),
+                Classes = { "SFPAppNav" }
+            },
+        };
 
-        private static List<NavigationViewItem> GetFooterNavigationViewItems() => new()
+        private List<NavigationViewItem> GetFooterNavigationViewItems() => new()
         {
-                new NavigationViewItem
-                {
-                    Content = "Settings",
-                    Tag = typeof(SettingsPage),
-                    Icon = new SymbolIcon { Symbol = Symbol.Settings },
-                    Classes =
-                    {
-                        "SFPAppNav"
-                    }
-                }
-            };
+            new NavigationViewItem
+            {
+                Content = "Settings",
+                Tag = typeof(SettingsPage),
+                IconSource = (IconSource)this.FindResource("SettingsIcon"),
+                Classes = { "SFPAppNav" }
+            }
+        };
 
         private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
         {
@@ -115,52 +113,31 @@ namespace SFP_UI.Views
 
         private void OnParentWindowOpened(object? sender, EventArgs e)
         {
-            if (sender is Window w)
+            if (sender is not Window w)
             {
-                w.Opened -= OnParentWindowOpened;
-
-                if (!OperatingSystem.IsWindows())
-                {
-                    if (this.FindControl<Grid>("TitleBarHost") is Grid g)
-                    {
-                        g.IsVisible = false;
-                    }
-
-                    string key = "NavigationViewContentMargin";
-                    if (Resources.ContainsKey(key))
-                    {
-                        var newThickness = new Thickness(0, 0, 0, 0);
-                        Resources[key] = newThickness;
-                    }
-
-                    return;
-                }
-
-                if (sender is CoreWindow cw)
-                {
-                    CoreApplicationViewTitleBar? titleBar = cw.TitleBar;
-                    if (titleBar != null)
-                    {
-                        titleBar.ExtendViewIntoTitleBar = true;
-
-                        titleBar.LayoutMetricsChanged += OnApplicationTitleBarLayoutMetricsChanged;
-
-                        if (this.FindControl<Grid>("TitleBarHost") is Grid g)
-                        {
-                            cw.SetTitleBar(g);
-                            g.Margin = new Thickness(0, 0, titleBar.SystemOverlayRightInset, 0);
-                        }
-                    }
-                }
+                return;
             }
-        }
 
-        private void OnApplicationTitleBarLayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
+            w.Opened -= OnParentWindowOpened;
+
+            if (OperatingSystem.IsWindows())
+            {
+                return;
+            }
+
             if (this.FindControl<Grid>("TitleBarHost") is Grid g)
             {
-                g.Margin = new Thickness(0, 0, sender.SystemOverlayRightInset, 0);
+                g.IsVisible = false;
             }
+
+            const string key = "NavigationViewContentMargin";
+            if (!Resources.ContainsKey(key))
+            {
+                return;
+            }
+
+            var newThickness = new Thickness(0, 0, 0, 0);
+            Resources[key] = newThickness;
         }
     }
 }
