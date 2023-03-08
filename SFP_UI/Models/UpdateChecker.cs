@@ -1,17 +1,11 @@
 using System.Net.Http.Headers;
 using System.Reflection;
 
-using Avalonia.Media;
-//
-using FluentAvalonia.Styling;
-
 using Newtonsoft.Json.Linq;
 
 using Semver;
 
 using SFP.Models;
-
-using SFP_UI.ViewModels;
 
 namespace SFP_UI.Models
 {
@@ -29,7 +23,11 @@ namespace SFP_UI.Models
         public static async Task CheckForUpdates()
         {
             Log.Logger.Info("Checking for updates...");
+#if DEBUG
+            SemVersion? semver = new(0);
+#else
             SemVersion? semver = await GetLatestVersionAsync();
+#endif
 
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
@@ -39,27 +37,6 @@ namespace SFP_UI.Models
             {
                 Log.Logger.Info("You are running the latest version.");
             }
-        }
-
-        private static async Task<SemVersion> GetLatestVersionAsync()
-        {
-            try
-            {
-                string? responseBody = await s_client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
-                var json = JObject.Parse(responseBody);
-
-                if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict, out SemVersion? semver))
-                {
-                    return semver;
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                Log.Logger.Error("Could not fetch latest version!");
-                Log.Logger.Error("Exception: {0}", e.Message);
-            }
-
-            return new SemVersion(-1);
         }
     }
 }

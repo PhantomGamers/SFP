@@ -6,6 +6,10 @@
              xmlns:sty="using:FluentAvalonia.Styling"
              RequestedThemeVariant="Dark">
 
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
     <Application.Resources>
         <ResourceDictionary>
             <ui:SymbolIconSource Symbol="Home" x:Key="HomeIcon" />

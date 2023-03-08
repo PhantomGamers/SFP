@@ -122,7 +122,7 @@ namespace SFP_UI.ViewModels
 
         public static async void OnScanCommand()
         {
-            if (Instance != null)
+            /*if (Instance != null)
             {
                 Instance.ButtonsEnabled = false;
             }
@@ -154,7 +154,7 @@ namespace SFP_UI.ViewModels
             {
                 Instance.ScannerActive = SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive;
                 Instance.ButtonsEnabled = true;
-            }
+            }*/
         }
 
         public static async void OnStopScanCommand()

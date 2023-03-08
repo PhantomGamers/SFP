@@ -128,10 +128,5 @@ namespace SFP_UI.Views
         public static bool IsValidRequestedTheme(string thm) => FluentAvaloniaTheme.LightModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
                 FluentAvaloniaTheme.DarkModeString.Equals(thm, StringComparison.OrdinalIgnoreCase) ||
                 FluentAvaloniaTheme.HighContrastModeString.Equals(thm, StringComparison.OrdinalIgnoreCase);
-
-        private void InitializeComponent()
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
     }
 }

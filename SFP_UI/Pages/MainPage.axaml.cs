@@ -1,16 +1,18 @@
+#region
+
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using SFP_UI.ViewModels;
 
-namespace SFP_UI.Pages
+#endregion
+
+namespace SFP_UI.Pages;
+
+public partial class MainPage : UserControl
 {
-    public partial class MainPage : UserControl
+    public MainPage()
     {
-        public MainPage()
-        {
-            InitializeComponent();
-            DataContext = new ViewModels.MainPageViewModel();
-        }
-
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+        InitializeComponent();
+        DataContext = new MainPageViewModel();
     }
 }
