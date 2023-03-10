@@ -7,9 +7,9 @@
 
   <DockPanel Margin="16">
     <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
-      <Button Command="{Binding OnSaveCommand}"
+      <Button Command="{Binding SaveCommand}"
               ToolTip.Tip="Saves your settings to config">Save</Button>
-      <Button Command="{Binding OnReloadCommand}"
+      <Button Command="{Binding ReloadCommand}"
               ToolTip.Tip="Reloads settings from config">Reload</Button>
     </StackPanel>
     <ScrollViewer>
@@ -25,16 +25,16 @@
           <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
-          <Button Margin="5,0,0,0" Command="{Binding OnBrowseSteamCommand}">Browse</Button>
-          <Button Margin="5,0,0,0" Command="{Binding OnResetSteamCommand}">Reset</Button>
+          <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
+          <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
           <Label Margin="0,10">Cache directory</Label>
-          <TextBox Watermark="dache Directory" Margin="20,0,0,0" Width="240" Text="{Binding CacheDirectory}"
+          <TextBox Watermark="Cache Directory" Margin="20,0,0,0" Width="240" Text="{Binding CacheDirectory}"
                    IsReadOnly="True"
                    VerticalContentAlignment="Center"/>
-          <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
-          <Button Margin="5,0,0,0" Command="{Binding OnResetCacheCommand}">Reset</Button>
+          <Button Margin="5,0,0,0" Command="{Binding BrowseCacheCommand}">Browse</Button>
+          <Button Margin="5,0,0,0" Command="{Binding ResetCacheCommand}">Reset</Button>
         </StackPanel>
         <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam on patch</CheckBox>
 

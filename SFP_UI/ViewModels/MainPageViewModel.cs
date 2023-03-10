@@ -1,3 +1,4 @@
+using System.Reactive;
 using System.Runtime.InteropServices;
 
 //using Avalonia.Notification;
@@ -17,6 +18,13 @@ namespace SFP_UI.ViewModels
         public static MainPageViewModel? Instance { get; private set; }
 
         public MainPageViewModel() => Instance = this;
+
+        public ReactiveCommand<Unit, Unit> PatchCommand { get; } = ReactiveCommand.CreateFromTask(OnPatchCommand);
+        public ReactiveCommand<Unit, Unit> StartScanCommand { get; } = ReactiveCommand.CreateFromTask(OnScanCommand);
+        public ReactiveCommand<Unit, Unit> StopScanCommand { get; } = ReactiveCommand.CreateFromTask(OnStopScanCommand);
+        public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; } = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
+        public ReactiveCommand<Unit, Unit> OpenFriendsCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenFriendsCustomCssCommand);
+        public ReactiveCommand<Unit, Unit> OpenLibraryrootCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenLibraryrootCustomCssCommand);
 
         private bool _scannerActive = false;
 
@@ -58,7 +66,7 @@ namespace SFP_UI.ViewModels
             CaretIndex = Output.Length;
         }
 
-        public static async void OnPatchCommand()
+        public static async Task OnPatchCommand()
         {
             if (Instance != null)
             {
@@ -120,9 +128,9 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static async void OnScanCommand()
+        public static async Task OnScanCommand()
         {
-            /*if (Instance != null)
+            if (Instance != null)
             {
                 Instance.ButtonsEnabled = false;
             }
@@ -154,10 +162,10 @@ namespace SFP_UI.ViewModels
             {
                 Instance.ScannerActive = SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive;
                 Instance.ButtonsEnabled = true;
-            }*/
+            }
         }
 
-        public static async void OnStopScanCommand()
+        public static async Task OnStopScanCommand()
         {
             if (Instance != null)
             {
@@ -175,7 +183,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static async void OnResetSteamCommand()
+        public static async Task OnResetSteamCommand()
         {
             if (Instance != null)
             {
@@ -190,14 +198,14 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static void OnOpenFriendsCustomCssCommand()
+        public static async Task OnOpenFriendsCustomCssCommand()
         {
             string file = Path.Join(Steam.ClientUIDir, "friends.custom.css");
             try
             {
                 if (!File.Exists(file))
                 {
-                    File.Create(file).Dispose();
+                    await File.Create(file).DisposeAsync();
                 }
                 Utils.OpenUrl(file);
             }
@@ -208,14 +216,14 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static void OnOpenLibraryrootCustomCssCommand()
+        public static async Task OnOpenLibraryrootCustomCssCommand()
         {
             string file = Path.Join(Steam.SteamUIDir, "libraryroot.custom.css");
             try
             {
                 if (!File.Exists(file))
                 {
-                    File.Create(file).Dispose();
+                    await File.Create(file).DisposeAsync();
                 }
                 Utils.OpenUrl(file);
             }

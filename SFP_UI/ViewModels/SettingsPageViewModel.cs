@@ -1,3 +1,4 @@
+using System.Reactive;
 using Avalonia.Controls;
 
 using ReactiveUI;
@@ -12,6 +13,13 @@ namespace SFP_UI.ViewModels
     {
         public static SettingsPageViewModel? Instance { get; private set; }
 
+        public ReactiveCommand<Unit, Unit> SaveCommand { get; } = ReactiveCommand.CreateFromTask(OnSaveCommand);
+        public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
+        public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
+        public ReactiveCommand<Unit, Unit> BrowseCacheCommand { get; }
+        public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
+        public ReactiveCommand<Unit, Unit> ResetCacheCommand { get; }
+
         public SettingsPageViewModel(ComboBox? appThemeComboBox)
         {
             Instance = this;
@@ -22,6 +30,11 @@ namespace SFP_UI.ViewModels
                 FluentAvalonia.Styling.FluentAvaloniaTheme.LightModeString => 1,
                 _ => 2
             };
+            BrowseCacheCommand = ReactiveCommand.CreateFromTask(OnBrowseCacheCommand);
+            ReloadCommand = ReactiveCommand.CreateFromTask(OnReloadCommand);
+            BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
+            ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
+            ResetCacheCommand = ReactiveCommand.CreateFromTask(OnResetCacheCommand);
         }
 
         private bool _shouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
@@ -278,9 +291,9 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public static void OnSaveCommand() => SFP.Properties.Settings.Default.Save();
+        public static async Task OnSaveCommand() => SFP.Properties.Settings.Default.Save();
 
-        public void OnReloadCommand()
+        public async Task OnReloadCommand()
         {
             SFP.Properties.Settings.Default.Reload();
             ShouldPatchOnStart = SFP.Properties.Settings.Default.ShouldPatchOnStart;
@@ -303,7 +316,7 @@ namespace SFP_UI.ViewModels
             ShowTrayIcon = SFP.Properties.Settings.Default.ShowTrayIcon;
         }
 
-        public async void OnBrowseSteamCommand()
+        public async Task OnBrowseSteamCommand()
         {
             if (MainWindow.Instance != null)
             {
@@ -313,7 +326,7 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public async void OnBrowseCacheCommand()
+        public async Task OnBrowseCacheCommand()
         {
             if (MainWindow.Instance != null)
             {
@@ -323,13 +336,13 @@ namespace SFP_UI.ViewModels
             }
         }
 
-        public void OnResetSteamCommand()
+        public async Task OnResetSteamCommand()
         {
             SFP.Properties.Settings.Default.SteamDirectory = string.Empty;
             SteamDirectory = Steam.SteamDir ?? string.Empty;
         }
 
-        public void OnResetCacheCommand()
+        public async Task OnResetCacheCommand()
         {
             SFP.Properties.Settings.Default.CacheDirectory = string.Empty;
             CacheDirectory = Steam.CacheDir;
