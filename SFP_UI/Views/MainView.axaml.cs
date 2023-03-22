@@ -40,8 +40,8 @@ namespace SFP_UI.Views
             _frameView.Navigated += OnFrameViewNavigated;
 
             _navView = this.FindControl<NavigationView>("NavView");
-            _navView.MenuItems = GetNavigationViewItems();
-            _navView.FooterMenuItems = GetFooterNavigationViewItems();
+            _navView.MenuItemsSource = GetNavigationViewItems();
+            _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
             _navView.ItemInvoked += OnNavigationViewItemInvoked;
             _navView.IsPaneOpen = false;
 
@@ -69,7 +69,7 @@ namespace SFP_UI.Views
 
         private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
         {
-            foreach (NavigationViewItem nvi in _navView!.MenuItems)
+            foreach (NavigationViewItem nvi in _navView!.MenuItemsSource)
             {
                 if (nvi.Tag is not Type tag || tag != e.SourcePageType)
                 {

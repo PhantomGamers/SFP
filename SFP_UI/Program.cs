@@ -24,8 +24,7 @@ namespace SFP_UI
         private static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
                                                                  .UsePlatformDetect()
                                                                  .LogToTrace()
-                                                                 .UseReactiveUI()
-                                                                 .UseFAWindowing();
+                                                                 .UseReactiveUI();
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) => Log.Logger.Error(e.ExceptionObject);
     }

@@ -2,14 +2,13 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NoWarn>NU1507</NoWarn>
-    <AvaloniaVersion>11.0.0-preview5</AvaloniaVersion>
+    <AvaloniaVersion>11.0.0-preview6</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="XamlNameReferenceGenerator" Version="1.6.1" />
     <PackageVersion Include="Semver" Version="2.3.0" />
     <PackageVersion Include="Crc32.NET" Version="1.2.0" />
     <PackageVersion Include="Ionic.Zlib.Core" Version="1.0.0" />
@@ -31,7 +30,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.3.0" />
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview5" />
-    <PackageVersion Include="FluentAvalonia.UI.Windowing" Version="2.0.0-preview5" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview6" />
   </ItemGroup>
 </Project>
