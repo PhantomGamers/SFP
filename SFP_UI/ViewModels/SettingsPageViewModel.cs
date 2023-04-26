@@ -3,6 +3,7 @@
 using System.Reactive;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.Platform.Storage;
 using FluentAvalonia.Styling;
 using ReactiveUI;
 using SFP.Models;
@@ -333,9 +334,12 @@ public class SettingsPageViewModel : ViewModelBase
     {
         if (MainWindow.Instance != null)
         {
-            OpenFolderDialog dialog = new();
-            string? result = await dialog.ShowAsync(MainWindow.Instance);
-            SteamDirectory = result ?? SteamDirectory;
+            IReadOnlyList<IStorageFolder> result =
+                await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
+            if (result.Count > 0)
+            {
+                SteamDirectory = result[0].Path.LocalPath;
+            }
         }
     }
 
@@ -343,9 +347,12 @@ public class SettingsPageViewModel : ViewModelBase
     {
         if (MainWindow.Instance != null)
         {
-            OpenFolderDialog dialog = new();
-            string? result = await dialog.ShowAsync(MainWindow.Instance);
-            CacheDirectory = result ?? CacheDirectory;
+            IReadOnlyList<IStorageFolder> result =
+                await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
+            if (result.Count > 0)
+            {
+                CacheDirectory = result[0].Path.LocalPath;
+            }
         }
     }
 
