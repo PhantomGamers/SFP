@@ -1,11 +1,9 @@
 using System.Net.Http.Headers;
 using System.Reflection;
-
 using Newtonsoft.Json.Linq;
-
 using Semver;
-
 using SFP.Models;
+using SFP_UI.ViewModels;
 
 namespace SFP_UI.Models
 {
@@ -29,9 +27,16 @@ namespace SFP_UI.Models
             SemVersion? semver = await GetLatestVersionAsync();
 #endif
 
+#if !DEBUG
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
+#else
+            if (true)
+#endif
             {
                 Log.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
+                MainPageViewModel.Instance.UpdateNotificationContent =
+                    $"Your version: {Version}{Environment.NewLine}Latest version: {semver}";
+                MainPageViewModel.Instance.UpdateNotificationIsOpen = true;
             }
             else
             {

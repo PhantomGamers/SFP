@@ -5,15 +5,18 @@
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              x:DataType="vm:MainPageViewModel">
     <Panel>
-        <!--<ui:TeachingTip IsLightDismissEnabled="False"
+        <ui:TeachingTip IsLightDismissEnabled="False"
                         Title="An update is available!"
                         ActionButtonContent="View Update"
                         CloseButtonContent="Dismiss"
                         PreferredPlacement="Center"
                         Name="UpdateNotification"
-                        IsOpen="False">
+                        ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
+                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases/latest"
+                        Content="{Binding UpdateNotificationContent}"
+                        IsOpen="{Binding UpdateNotificationIsOpen}">
 
-        </ui:TeachingTip>-->
+        </ui:TeachingTip>
         <Grid>
             <DockPanel Margin="16">
                 <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">

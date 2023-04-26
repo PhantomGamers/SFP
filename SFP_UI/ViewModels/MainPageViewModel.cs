@@ -26,6 +26,22 @@ namespace SFP_UI.ViewModels
         public ReactiveCommand<Unit, Unit> OpenFriendsCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenFriendsCustomCssCommand);
         public ReactiveCommand<Unit, Unit> OpenLibraryrootCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenLibraryrootCustomCssCommand);
 
+        public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
+            ReactiveCommand.Create<string>(Utils.OpenUrl);
+        private bool _updateNotificationIsOpen = false;
+        public bool UpdateNotificationIsOpen
+        {
+            get => _updateNotificationIsOpen;
+            set => this.RaiseAndSetIfChanged(ref _updateNotificationIsOpen, value);
+        }
+
+        private string _updateNotificationContent = string.Empty;
+        public string UpdateNotificationContent
+        {
+            get => _updateNotificationContent;
+            set => this.RaiseAndSetIfChanged(ref _updateNotificationContent, value);
+        }
+
         private bool _scannerActive = false;
 
         public bool ScannerActive
