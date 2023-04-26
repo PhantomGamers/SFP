@@ -2,6 +2,9 @@
 
 using System.Net.Http.Headers;
 using System.Reflection;
+#if !DEBUG
+using Newtonsoft.Json.Linq;
+#endif
 using Semver;
 using SFP.Models;
 using SFP_UI.ViewModels;
