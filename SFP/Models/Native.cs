@@ -1,14 +1,19 @@
+#region
+
 using System.Runtime.InteropServices;
 
-namespace SFP.Models
+#endregion
+
+namespace SFP.Models;
+
+internal static partial class Native
 {
-    internal class Native
-    {
-        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
-        public static extern bool CreateHardLink(
-          string lpFileName,
-          string lpExistingFileName,
-          IntPtr lpSecurityAttributes
-         );
-    }
+    [LibraryImport("Kernel32.dll",
+        StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CreateHardLinkW(
+        string lpFileName,
+        string lpExistingFileName,
+        IntPtr lpSecurityAttributes
+    );
 }

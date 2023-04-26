@@ -1,8 +1,11 @@
+#region
+
 using ReactiveUI;
 
-namespace SFP_UI.ViewModels
+#endregion
+
+namespace SFP_UI.ViewModels;
+
+public class ViewModelBase : ReactiveObject
 {
-    public class ViewModelBase : ReactiveObject
-    {
-    }
 }

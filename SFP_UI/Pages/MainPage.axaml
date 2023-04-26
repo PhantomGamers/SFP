@@ -14,9 +14,7 @@
                         ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
                         ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases/latest"
                         Content="{Binding UpdateNotificationContent}"
-                        IsOpen="{Binding UpdateNotificationIsOpen}">
-
-        </ui:TeachingTip>
+                        IsOpen="{Binding UpdateNotificationIsOpen}" />
         <Grid>
             <DockPanel Margin="16">
                 <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
@@ -56,7 +54,7 @@
                                           Command="{Binding OpenFriendsCustomCssCommand}"
                                           ToolTip.Tip="Opens the friends.custom.css file where your custom skin for the friends list goes" />
                                 <MenuItem Header="libraryroot.custom.css"
-                                          Command="{Binding OpenLibraryrootCustomCssCommand}"
+                                          Command="{Binding OpenLibraryRootCustomCssCommand}"
                                           ToolTip.Tip="Opens the libraryroot.custom.css file where your custom skin for the library goes" />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
@@ -75,7 +73,7 @@
                     </ScrollViewer>
                 </Border>
             </DockPanel>
-            <Border Grid.Column="1" />
+            <Border />
         </Grid>
     </Panel>
 </UserControl>

@@ -1,143 +1,144 @@
+#region
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
-
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
-
 using SFP_UI.Pages;
 
-namespace SFP_UI.Views
+#endregion
+
+namespace SFP_UI.Views;
+
+public partial class MainView : UserControl
 {
-    public partial class MainView : UserControl
+    private static bool s_isActive;
+    private static MainView? s_instance;
+    private Frame? _frameView;
+    private NavigationView? _navView;
+
+    public MainView()
     {
-        private static bool s_isActive;
-        private static MainView? s_instance;
-        private Frame? _frameView;
-        private NavigationView? _navView;
+        s_instance = this;
+        InitializeComponent();
+    }
 
-        public MainView()
+    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        if (e.Root is Window b)
         {
-            s_instance = this;
-            InitializeComponent();
+            b.Opened += OnParentWindowOpened;
+            b.Activated += (_, _) => SetAppTitleColor(true);
+            b.Deactivated += (_, _) => SetAppTitleColor(false);
         }
 
-        private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+        _frameView = this.FindControl<Frame>("FrameView");
+        _frameView.Navigated += OnFrameViewNavigated;
 
-        protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+        _navView = this.FindControl<NavigationView>("NavView");
+        _navView.MenuItemsSource = GetNavigationViewItems();
+        _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
+        _navView.ItemInvoked += OnNavigationViewItemInvoked;
+        _navView.IsPaneOpen = false;
+
+        _ = _frameView.Navigate(typeof(MainPage));
+    }
+
+    private static void SetAppTitleColor(bool? isActive = null)
+    {
+        s_isActive = isActive ?? s_isActive;
+
+        if (s_instance?.FindControl<TextBlock>("AppTitle") is not { } t)
         {
-            base.OnAttachedToVisualTree(e);
-
-            if (e.Root is Window b)
-            {
-                b.Opened += OnParentWindowOpened;
-                b.Activated += (s, e) => SetAppTitleColor(true);
-                b.Deactivated += (s, e) => SetAppTitleColor(false);
-            }
-
-            _frameView = this.FindControl<Frame>("FrameView");
-            _frameView.Navigated += OnFrameViewNavigated;
-
-            _navView = this.FindControl<NavigationView>("NavView");
-            _navView.MenuItemsSource = GetNavigationViewItems();
-            _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
-            _navView.ItemInvoked += OnNavigationViewItemInvoked;
-            _navView.IsPaneOpen = false;
-
-            _ = _frameView.Navigate(typeof(MainPage));
+            return;
         }
 
-        private static void SetAppTitleColor(bool? isActive = null)
+        t.Foreground = s_isActive switch
         {
-            s_isActive = isActive ?? s_isActive;
-
-            if (s_instance?.FindControl<TextBlock>("AppTitle") is not TextBlock t)
-            {
-                return;
-            }
-
-            t.Foreground = s_isActive switch
-            {
-                false when s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled) =>
-                    (IBrush)disabled!,
-                true when s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary) =>
-                    (IBrush)primary!,
-                _ => t.Foreground
-            };
-        }
-
-        private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
-        {
-            foreach (NavigationViewItem nvi in _navView!.MenuItemsSource)
-            {
-                if (nvi.Tag is not Type tag || tag != e.SourcePageType)
-                {
-                    continue;
-                }
-
-                _navView.SelectedItem = nvi;
-                break;
-            }
-        }
-
-        private List<NavigationViewItem> GetNavigationViewItems() => new()
-        {
-            new NavigationViewItem
-            {
-                Content = "Home",
-                Tag = typeof(MainPage),
-                IconSource = (IconSource)this.FindResource("HomeIcon"),
-                Classes = { "SFPAppNav" }
-            },
+            false when s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled) =>
+                (IBrush)disabled!,
+            true when s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary) =>
+                (IBrush)primary!,
+            _ => t.Foreground
         };
+    }
 
-        private List<NavigationViewItem> GetFooterNavigationViewItems() => new()
+    private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
+    {
+        foreach (NavigationViewItem nvi in _navView!.MenuItemsSource)
         {
-            new NavigationViewItem
+            if (nvi.Tag is not Type tag || tag != e.SourcePageType)
             {
-                Content = "Settings",
-                Tag = typeof(SettingsPage),
-                IconSource = (IconSource)this.FindResource("SettingsIcon"),
-                Classes = { "SFPAppNav" }
+                continue;
             }
-        };
 
-        private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+            _navView.SelectedItem = nvi;
+            break;
+        }
+    }
+
+    private IEnumerable<NavigationViewItem> GetNavigationViewItems() => new List<NavigationViewItem>
+    {
+        new()
         {
-            if (e.InvokedItemContainer is NavigationViewItem nvi && nvi.Tag is Type typ)
-            {
-                _ = _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
-            }
+            Content = "Home",
+            Tag = typeof(MainPage),
+            IconSource = (IconSource)this.FindResource("HomeIcon"),
+            Classes = { "SFPAppNav" }
+        }
+    };
+
+    private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems() => new List<NavigationViewItem>
+    {
+        new()
+        {
+            Content = "Settings",
+            Tag = typeof(SettingsPage),
+            IconSource = (IconSource)this.FindResource("SettingsIcon"),
+            Classes = { "SFPAppNav" }
+        }
+    };
+
+    private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    {
+        if (e.InvokedItemContainer is NavigationViewItem { Tag: Type typ })
+        {
+            _ = _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
+        }
+    }
+
+    private void OnParentWindowOpened(object? sender, EventArgs e)
+    {
+        if (sender is not Window w)
+        {
+            return;
         }
 
-        private void OnParentWindowOpened(object? sender, EventArgs e)
+        w.Opened -= OnParentWindowOpened;
+
+        if (OperatingSystem.IsWindows())
         {
-            if (sender is not Window w)
-            {
-                return;
-            }
-
-            w.Opened -= OnParentWindowOpened;
-
-            if (OperatingSystem.IsWindows())
-            {
-                return;
-            }
-
-            if (this.FindControl<Grid>("TitleBarHost") is Grid g)
-            {
-                g.IsVisible = false;
-            }
-
-            const string key = "NavigationViewContentMargin";
-            if (!Resources.ContainsKey(key))
-            {
-                return;
-            }
-
-            var newThickness = new Thickness(0, 0, 0, 0);
-            Resources[key] = newThickness;
+            return;
         }
+
+        if (this.FindControl<Grid>("TitleBarHost") is { } g)
+        {
+            g.IsVisible = false;
+        }
+
+        const string key = "NavigationViewContentMargin";
+        if (!Resources.ContainsKey(key))
+        {
+            return;
+        }
+
+        Thickness newThickness = new(0, 0, 0, 0);
+        Resources[key] = newThickness;
     }
 }

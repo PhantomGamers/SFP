@@ -1,253 +1,264 @@
+#region
+
 using System.Reactive;
 using System.Runtime.InteropServices;
-
-//using Avalonia.Notification;
-
 using NLog;
-
 using ReactiveUI;
-
 using SFP.Models;
 using SFP.Models.ChromeCache.BlockFile;
-using SFP.Models.FileSystemWatchers;
+using FileSystemWatcher = SFP.Models.FileSystemWatchers.FileSystemWatcher;
+using Settings = SFP.Properties.Settings;
 
-namespace SFP_UI.ViewModels
+#endregion
+
+namespace SFP_UI.ViewModels;
+
+public class MainPageViewModel : ViewModelBase
 {
-    public class MainPageViewModel : ViewModelBase
+    private static string s_output = string.Empty;
+
+    private bool _buttonsEnabled = true;
+
+    private int _caretIndex;
+
+    private bool _scannerActive;
+
+    private string _updateNotificationContent = string.Empty;
+    private bool _updateNotificationIsOpen;
+
+    public MainPageViewModel() => Instance = this;
+    public static MainPageViewModel? Instance { get; private set; }
+
+    public ReactiveCommand<Unit, Unit> PatchCommand { get; } = ReactiveCommand.CreateFromTask(OnPatchCommand);
+    public ReactiveCommand<Unit, Unit> StartScanCommand { get; } = ReactiveCommand.CreateFromTask(OnScanCommand);
+    public ReactiveCommand<Unit, Unit> StopScanCommand { get; } = ReactiveCommand.CreateFromTask(OnStopScanCommand);
+    public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; } = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
+
+    public ReactiveCommand<Unit, Unit> OpenFriendsCustomCssCommand { get; } =
+        ReactiveCommand.CreateFromTask(OnOpenFriendsCustomCssCommand);
+
+    public ReactiveCommand<Unit, Unit> OpenLibraryRootCustomCssCommand { get; } =
+        ReactiveCommand.CreateFromTask(OnOpenLibraryRootCustomCssCommand);
+
+    public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
+        ReactiveCommand.Create<string>(Utils.OpenUrl);
+
+    public bool UpdateNotificationIsOpen
     {
-        public static MainPageViewModel? Instance { get; private set; }
+        get => _updateNotificationIsOpen;
+        set => this.RaiseAndSetIfChanged(ref _updateNotificationIsOpen, value);
+    }
 
-        public MainPageViewModel() => Instance = this;
+    public string UpdateNotificationContent
+    {
+        get => _updateNotificationContent;
+        set => this.RaiseAndSetIfChanged(ref _updateNotificationContent, value);
+    }
 
-        public ReactiveCommand<Unit, Unit> PatchCommand { get; } = ReactiveCommand.CreateFromTask(OnPatchCommand);
-        public ReactiveCommand<Unit, Unit> StartScanCommand { get; } = ReactiveCommand.CreateFromTask(OnScanCommand);
-        public ReactiveCommand<Unit, Unit> StopScanCommand { get; } = ReactiveCommand.CreateFromTask(OnStopScanCommand);
-        public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; } = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
-        public ReactiveCommand<Unit, Unit> OpenFriendsCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenFriendsCustomCssCommand);
-        public ReactiveCommand<Unit, Unit> OpenLibraryrootCustomCssCommand { get; } = ReactiveCommand.CreateFromTask(OnOpenLibraryrootCustomCssCommand);
+    public bool ScannerActive
+    {
+        get => _scannerActive;
+        private set => this.RaiseAndSetIfChanged(ref _scannerActive, value);
+    }
 
-        public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
-            ReactiveCommand.Create<string>(Utils.OpenUrl);
-        private bool _updateNotificationIsOpen = false;
-        public bool UpdateNotificationIsOpen
+    public string Output
+    {
+        get => s_output;
+        private set => this.RaiseAndSetIfChanged(ref s_output, value);
+    }
+
+    public int CaretIndex
+    {
+        get => _caretIndex;
+        private set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
+    }
+
+    public bool ButtonsEnabled
+    {
+        get => _buttonsEnabled;
+        set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
+    }
+
+    public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
+
+    private void Print(LogLevel level, string message)
+    {
+        Output = string.Concat(Output, $"[{DateTime.Now}][{level}] {message}");
+        CaretIndex = Output.Length;
+    }
+
+    public static async Task OnPatchCommand()
+    {
+        if (Instance != null)
         {
-            get => _updateNotificationIsOpen;
-            set => this.RaiseAndSetIfChanged(ref _updateNotificationIsOpen, value);
+            Instance.ButtonsEnabled = false;
         }
 
-        private string _updateNotificationContent = string.Empty;
-        public string UpdateNotificationContent
+        if (Steam.SteamDir == null)
         {
-            get => _updateNotificationContent;
-            set => this.RaiseAndSetIfChanged(ref _updateNotificationContent, value);
-        }
-
-        private bool _scannerActive = false;
-
-        public bool ScannerActive
-        {
-            get => _scannerActive;
-            private set => this.RaiseAndSetIfChanged(ref _scannerActive, value);
-        }
-
-        private static string s_output = string.Empty;
-
-        public string Output
-        {
-            get => s_output;
-            private set => this.RaiseAndSetIfChanged(ref s_output, value);
-        }
-
-        private int _caretIndex;
-
-        public int CaretIndex
-        {
-            get => _caretIndex;
-            private set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
-        }
-
-        private bool _buttonsEnabled = true;
-
-        public bool ButtonsEnabled
-        {
-            get => _buttonsEnabled;
-            set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
-        }
-
-        public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
-
-        public void Print(LogLevel level, string message)
-        {
-            Output = string.Concat(Output, $"[{DateTime.Now}][{level}] {message}");
-            CaretIndex = Output.Length;
-        }
-
-        public static async Task OnPatchCommand()
-        {
+            Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
             if (Instance != null)
             {
-                Instance.ButtonsEnabled = false;
+                Instance.ButtonsEnabled = true;
             }
 
-            if (Steam.SteamDir == null)
-            {
-                Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
-                if (Instance != null)
-                {
-                    Instance.ButtonsEnabled = true;
-                }
-                return;
-            }
+            return;
+        }
 
-            bool cacheFilesPatched = false;
-            if (SFP.Properties.Settings.Default.ShouldPatchFriends)
+        bool cacheFilesPatched = false;
+        if (Settings.Default.ShouldPatchFriends)
+        {
+            if (OperatingSystem.IsWindows())
             {
-                if (OperatingSystem.IsWindows())
+                List<FileInfo> cacheFiles = await Task.Run(() =>
+                    Parser.FindCacheFilesWithName(new DirectoryInfo(Steam.CacheDir), "friends.css"));
+                if (!Settings.Default.ScanOnly)
                 {
-                    var cacheFiles = await Task.Run(() => Parser.FindCacheFilesWithName(new DirectoryInfo(Steam.CacheDir), "friends.css"));
-                    if (!SFP.Properties.Settings.Default.ScanOnly)
+                    foreach (FileInfo? cacheFile in cacheFiles)
                     {
-                        foreach (FileInfo? cacheFile in cacheFiles)
-                        {
-                            cacheFilesPatched |= await Task.Run(() => Patcher.PatchFile(cacheFile));
-                        }
+                        cacheFilesPatched |= await Task.Run(() => Patcher.PatchFile(cacheFile));
                     }
                 }
-                else
-                {
-                    Log.Logger.Info($"Friends patching is not supported on {RuntimeInformation.RuntimeIdentifier}.");
-                    //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
-                }
-
-                _ = await Task.Run(() => LocalFile.Patch(new FileInfo(Path.Join(Steam.ClientUIDir, "css", "friends.css")), uiDir: Steam.ClientUIDir));
             }
-
-            if (SFP.Properties.Settings.Default.ShouldPatchLibrary)
+            else
             {
-                var dir = new DirectoryInfo(Steam.SteamUICSSDir);
-                await Task.Run(() => LocalFile.PatchAll(dir, "libraryroot.custom.css"));
+                Log.Logger.Info($"Friends patching is not supported on {RuntimeInformation.RuntimeIdentifier}.");
+                //SFP.Models.ChromeCache.Patcher.PatchFilesInDirWithName(new DirectoryInfo(SteamModel.CacheDir), "friends.css");
             }
 
-            if (SFP.Properties.Settings.Default.ShouldPatchResources)
-            {
-                await Task.Run(() => Resource.ReplaceAllFiles());
-            }
+            _ = await Task.Run(() => LocalFile.Patch(new FileInfo(Path.Join(Steam.ClientUiDir, "css", "friends.css")),
+                uiDir: Steam.ClientUiDir));
+        }
 
-            if (cacheFilesPatched && SFP.Properties.Settings.Default.RestartSteamOnPatch)
-            {
-                await Task.Run(() => Steam.RestartSteam());
-            }
+        if (Settings.Default.ShouldPatchLibrary)
+        {
+            DirectoryInfo dir = new(Steam.SteamUiCssDir);
+            await Task.Run(() => LocalFile.PatchAll(dir, @"libraryroot.custom.css"));
+        }
 
+        if (Settings.Default.ShouldPatchResources)
+        {
+            await Task.Run(Resource.ReplaceAllFiles);
+        }
+
+        if (cacheFilesPatched && Settings.Default.RestartSteamOnPatch)
+        {
+            await Task.Run(Steam.RestartSteam);
+        }
+
+        if (Instance != null)
+        {
+            Instance.ButtonsEnabled = true;
+        }
+    }
+
+    public static async Task OnScanCommand()
+    {
+        if (Instance != null)
+        {
+            Instance.ButtonsEnabled = false;
+        }
+
+        if (Steam.SteamDir == null)
+        {
+            Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
             if (Instance != null)
             {
                 Instance.ButtonsEnabled = true;
             }
+
+            return;
         }
 
-        public static async Task OnScanCommand()
+        if (!Settings.Default.ShouldScanFriends && !Settings.Default.ShouldScanLibrary)
         {
-            if (Instance != null)
-            {
-                Instance.ButtonsEnabled = false;
-            }
-
-            if (Steam.SteamDir == null)
-            {
-                Log.Logger.Warn("Steam Directory unknown. Please set it and try again.");
-                if (Instance != null)
-                {
-                    Instance.ButtonsEnabled = true;
-                }
-                return;
-            }
-
-            if (!SFP.Properties.Settings.Default.ShouldScanFriends && !SFP.Properties.Settings.Default.ShouldScanLibrary)
-            {
-                Log.Logger.Warn("No scan targets enabled");
-                if (Instance != null)
-                {
-                    Instance.ButtonsEnabled = true;
-                }
-                return;
-            }
-
-            await SFP.Models.FileSystemWatchers.FileSystemWatcher.StartFileWatchers();
-
-            Log.Logger.Info(SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive ? "Scanner started" : "Scanner could not be started");
-            if (Instance != null)
-            {
-                Instance.ScannerActive = SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive;
-                Instance.ButtonsEnabled = true;
-            }
-        }
-
-        public static async Task OnStopScanCommand()
-        {
-            if (Instance != null)
-            {
-                Instance.ButtonsEnabled = false;
-            }
-
-            await Task.Run(() => SFP.Models.FileSystemWatchers.FileSystemWatcher.StopFileWatchers());
-
-            Log.Logger.Info(!SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive ? "Scanner stopped" : "Scanner could not be stopped");
-
-            if (Instance != null)
-            {
-                Instance.ScannerActive = SFP.Models.FileSystemWatchers.FileSystemWatcher.WatchersActive;
-                Instance.ButtonsEnabled = true;
-            }
-        }
-
-        public static async Task OnResetSteamCommand()
-        {
-            if (Instance != null)
-            {
-                Instance.ButtonsEnabled = false;
-            }
-
-            await Task.Run(Steam.ResetSteam);
-
+            Log.Logger.Warn("No scan targets enabled");
             if (Instance != null)
             {
                 Instance.ButtonsEnabled = true;
             }
+
+            return;
         }
 
-        public static async Task OnOpenFriendsCustomCssCommand()
+        await FileSystemWatcher.StartFileWatchers();
+
+        Log.Logger.Info(FileSystemWatcher.WatchersActive ? "Scanner started" : "Scanner could not be started");
+        if (Instance != null)
         {
-            string file = Path.Join(Steam.ClientUIDir, "friends.custom.css");
-            try
-            {
-                if (!File.Exists(file))
-                {
-                    await File.Create(file).DisposeAsync();
-                }
-                Utils.OpenUrl(file);
-            }
-            catch (Exception e)
-            {
-                Log.Logger.Warn($"Could not open friends.custom.css");
-                Log.Logger.Error(e);
-            }
+            Instance.ScannerActive = FileSystemWatcher.WatchersActive;
+            Instance.ButtonsEnabled = true;
+        }
+    }
+
+    private static async Task OnStopScanCommand()
+    {
+        if (Instance != null)
+        {
+            Instance.ButtonsEnabled = false;
         }
 
-        public static async Task OnOpenLibraryrootCustomCssCommand()
+        await Task.Run(FileSystemWatcher.StopFileWatchers);
+
+        Log.Logger.Info(!FileSystemWatcher.WatchersActive ? "Scanner stopped" : "Scanner could not be stopped");
+
+        if (Instance != null)
         {
-            string file = Path.Join(Steam.SteamUIDir, "libraryroot.custom.css");
-            try
+            Instance.ScannerActive = FileSystemWatcher.WatchersActive;
+            Instance.ButtonsEnabled = true;
+        }
+    }
+
+    private static async Task OnResetSteamCommand()
+    {
+        if (Instance != null)
+        {
+            Instance.ButtonsEnabled = false;
+        }
+
+        await Task.Run(Steam.ResetSteam);
+
+        if (Instance != null)
+        {
+            Instance.ButtonsEnabled = true;
+        }
+    }
+
+    private static async Task OnOpenFriendsCustomCssCommand()
+    {
+        string file = Path.Join(Steam.ClientUiDir, "friends.custom.css");
+        try
+        {
+            if (!File.Exists(file))
             {
-                if (!File.Exists(file))
-                {
-                    await File.Create(file).DisposeAsync();
-                }
-                Utils.OpenUrl(file);
+                await File.Create(file).DisposeAsync();
             }
-            catch (Exception e)
+
+            Utils.OpenUrl(file);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Warn("Could not open friends.custom.css");
+            Log.Logger.Error(e);
+        }
+    }
+
+    private static async Task OnOpenLibraryRootCustomCssCommand()
+    {
+        string file = Path.Join(Steam.SteamUiDir, @"libraryroot.custom.css");
+        try
+        {
+            if (!File.Exists(file))
             {
-                Log.Logger.Warn($"Could not open libraryroot.custom.css");
-                Log.Logger.Error(e);
+                await File.Create(file).DisposeAsync();
             }
+
+            Utils.OpenUrl(file);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Warn("Could not open libraryroot.custom.css");
+            Log.Logger.Error(e);
         }
     }
 }
