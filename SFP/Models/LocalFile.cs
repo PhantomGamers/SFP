@@ -96,7 +96,7 @@ namespace SFP.Models
 
             try
             {
-                File.WriteAllText(file.FullName, contents);
+                await File.WriteAllTextAsync(file.FullName, contents);
             }
             catch (UnauthorizedAccessException e)
             {
@@ -108,7 +108,7 @@ namespace SFP.Models
             string? customFileName = Path.Join(uiDir ?? Steam.SteamUIDir, customFile.Name);
             if (!File.Exists(customFileName))
             {
-                File.Create(customFileName).Dispose();
+                await File.Create(customFileName).DisposeAsync();
             }
             Log.Logger.Info($"Patched {file.Name}.");
             return true;
