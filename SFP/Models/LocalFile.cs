@@ -94,7 +94,16 @@ namespace SFP.Models
             }
             contents = string.Concat(contents, new string('\t', (int)(file.Length - contents.Length)));
 
-            File.WriteAllText(file.FullName, contents);
+            try
+            {
+                File.WriteAllText(file.FullName, contents);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Log.Logger.Error($"Could not write to {file.FullName}");
+                Log.Logger.Error(e);
+                return false;
+            }
 
             string? customFileName = Path.Join(uiDir ?? Steam.SteamUIDir, customFile.Name);
             if (!File.Exists(customFileName))
