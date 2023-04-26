@@ -47,11 +47,12 @@ namespace SFP.Models
                 {
                     currentVal = currentVal[keyPart];
                 }
-                return currentVal;
+
+                return int.TryParse(currentVal.Value, out int val) ? val : -1;
             }
             catch
             {
-                return null;
+                return -1;
             }
         }
 
