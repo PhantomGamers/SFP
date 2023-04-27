@@ -119,6 +119,7 @@ public static class Steam
             dynamic reg = VdfConvert.Deserialize(File.ReadAllText(Path.Join(SteamRootDir, "registry.vdf")));
             string kn = @$"HKCU/{key.Replace('\\', '/')}/{valueName}";
             dynamic currentVal = reg.Value;
+            // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (string keyPart in kn.Split('/'))
             {
                 currentVal = currentVal[keyPart];

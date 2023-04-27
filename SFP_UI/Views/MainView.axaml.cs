@@ -39,13 +39,21 @@ public partial class MainView : UserControl
         }
 
         _frameView = this.FindControl<Frame>("FrameView");
+        if (_frameView == null)
+        {
+            return;
+        }
+
         _frameView.Navigated += OnFrameViewNavigated;
 
         _navView = this.FindControl<NavigationView>("NavView");
-        _navView.MenuItemsSource = GetNavigationViewItems();
-        _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
-        _navView.ItemInvoked += OnNavigationViewItemInvoked;
-        _navView.IsPaneOpen = false;
+        if (_navView != null)
+        {
+            _navView.MenuItemsSource = GetNavigationViewItems();
+            _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
+            _navView.ItemInvoked += OnNavigationViewItemInvoked;
+            _navView.IsPaneOpen = false;
+        }
 
         _ = _frameView.Navigate(typeof(MainPage));
     }
@@ -89,7 +97,7 @@ public partial class MainView : UserControl
         {
             Content = "Home",
             Tag = typeof(MainPage),
-            IconSource = (IconSource)this.FindResource("HomeIcon"),
+            IconSource = (IconSource)this.FindResource("HomeIcon")!,
             Classes = { "SFPAppNav" }
         }
     };
@@ -100,7 +108,7 @@ public partial class MainView : UserControl
         {
             Content = "Settings",
             Tag = typeof(SettingsPage),
-            IconSource = (IconSource)this.FindResource("SettingsIcon"),
+            IconSource = (IconSource)this.FindResource("SettingsIcon")!,
             Classes = { "SFPAppNav" }
         }
     };

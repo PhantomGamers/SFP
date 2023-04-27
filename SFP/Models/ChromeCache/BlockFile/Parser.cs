@@ -52,7 +52,7 @@ public static class Parser
             }
 
             EntryStore entry = new(new Addr(raw, cacheDir.FullName));
-            while (entry.next != 0)
+            while (entry.Next != 0)
             {
                 // Even if the key points to friends.css, it could be an evicted entry that has no addresses
                 if (entry.Key.Contains(fileName) && entry.data_addrs.Count >= 2)
@@ -60,7 +60,7 @@ public static class Parser
                     files.Add(entry.data_addrs[1].File);
                 }
 
-                entry = new EntryStore(new Addr(entry.next, cacheDir.FullName));
+                entry = new EntryStore(new Addr(entry.Next, cacheDir.FullName));
             }
 
             if (!entry.Key.Contains(fileName))

@@ -114,6 +114,7 @@ public class MainPageViewModel : ViewModelBase
                     Parser.FindCacheFilesWithName(new DirectoryInfo(Steam.CacheDir), "friends.css"));
                 if (!Settings.Default.ScanOnly)
                 {
+                    // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
                     foreach (FileInfo? cacheFile in cacheFiles)
                     {
                         cacheFilesPatched |= await Task.Run(() => Patcher.PatchFile(cacheFile));

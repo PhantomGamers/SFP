@@ -30,7 +30,7 @@ internal static class UpdateChecker
 #if DEBUG
         SemVersion? semver = new(0);
 #else
-            SemVersion? semver = await GetLatestVersionAsync();
+            SemVersion semver = await GetLatestVersionAsync();
 #endif
 
 #if !DEBUG
@@ -40,9 +40,12 @@ internal static class UpdateChecker
 #endif
         {
             Log.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
-            MainPageViewModel.Instance.UpdateNotificationContent =
-                $"Your version: {Version}{Environment.NewLine}Latest version: {semver}";
-            MainPageViewModel.Instance.UpdateNotificationIsOpen = true;
+            if (MainPageViewModel.Instance != null)
+            {
+                MainPageViewModel.Instance.UpdateNotificationContent =
+                    $"Your version: {Version}{Environment.NewLine}Latest version: {semver}";
+                MainPageViewModel.Instance.UpdateNotificationIsOpen = true;
+            }
         }
         else
         {

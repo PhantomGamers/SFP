@@ -327,6 +327,8 @@ public class SettingsPageViewModel : ViewModelBase
         CloseToTray = Settings.Default.CloseToTray;
         CheckForUpdates = Settings.Default.CheckForUpdates;
         ShowTrayIcon = Settings.Default.ShowTrayIcon;
+        ShouldPatchResources = Settings.Default.ShouldPatchResources;
+        ShouldScanResources = Settings.Default.ShouldScanResources;
         return Task.CompletedTask;
     }
 
@@ -374,7 +376,7 @@ public class SettingsPageViewModel : ViewModelBase
     {
         if (sender is ComboBox { SelectedItem: ComboBoxItem cbi })
         {
-            AppTheme = (string)cbi.Content;
+            AppTheme = (string?)cbi.Content ?? AppTheme;
         }
     }
 }

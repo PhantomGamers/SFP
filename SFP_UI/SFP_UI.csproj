@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\SFPCommon.props"/>
+  <Import Project="..\SFPCommon.props" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -8,22 +8,29 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets\SFP-logo.ico</ApplicationIcon>
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <!--Default TrimMode value breaks app, partial results in larger sizes than avalonia 10 builds so further investigation is needed-->
+    <TrimMode>partial</TrimMode>
   </PropertyGroup>
 
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**"/>
+    <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia"/>
-    <PackageReference Include="Avalonia.Desktop"/>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics"/>
-    <PackageReference Include="Avalonia.ReactiveUI"/>
-    <PackageReference Include="Semver"/>
-    <PackageReference Include="FluentAvaloniaUI"/>
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
+    <PackageReference Include="Avalonia.ReactiveUI" />
+    <PackageReference Include="Semver" />
+    <PackageReference Include="FluentAvaloniaUI" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFP\SFP.csproj"/>
+    <ProjectReference Include="..\SFP\SFP.csproj" />
+    <!--Unsure if this should be SFP or SFP_UI, or if it matters at all!-->
+    <TrimmerRootAssembly Include="SFP_UI" />
   </ItemGroup>
 </Project>

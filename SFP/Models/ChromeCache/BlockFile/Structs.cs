@@ -13,7 +13,7 @@ internal readonly struct EntryStore
 
     private readonly uint _keyLength = 0; // Next entry with the same hash or bucket.
     public readonly string Key = string.Empty;
-    public readonly uint next = 0;
+    public readonly uint Next = 0;
     public readonly List<Addr> data_addrs = new();
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler",
@@ -30,7 +30,7 @@ internal readonly struct EntryStore
         using FileStream fs = tmpFile.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         _ = fs.Seek(8196 + addr.Num_Blocks * addr.BlockSize, SeekOrigin.Begin);
         using BinaryReader br = new(fs);
-        next = br.ReadUInt32();
+        Next = br.ReadUInt32();
         _ = fs.Seek(24, SeekOrigin.Current);
         _keyLength = br.ReadUInt32();
         _ = fs.Seek(20, SeekOrigin.Current);

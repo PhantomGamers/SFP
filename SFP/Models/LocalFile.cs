@@ -128,6 +128,7 @@ public static class LocalFile
     public static async Task PatchAll(DirectoryInfo directoryInfo, string? overrideName = null)
     {
         bool patchedLibraryFiles = false;
+        // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (FileInfo? file in directoryInfo.EnumerateFiles())
         {
             patchedLibraryFiles |= await Patch(file, overrideName);

@@ -87,7 +87,7 @@ public partial class MainWindow : AppWindow
         {
             Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
                 ThemeVariant.Dark, out object? value)
-                ? (Color)value
+                ? (Color)value!
                 : new Color2(32, 32, 32);
 
             color = color.LightenPercent(-0.8f);
@@ -99,7 +99,7 @@ public partial class MainWindow : AppWindow
             // Similar effect here
             Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
                 ThemeVariant.Light, out object? value)
-                ? (Color)value
+                ? (Color)value!
                 : new Color2(243, 243, 243);
 
             color = color.LightenPercent(0.5f);
