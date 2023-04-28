@@ -53,5 +53,5 @@ public static class HardLink
     }
 
     public static bool RemoveAllHardLinks() =>
-        s_hardLinks.Keys.Aggregate(true, (current, file) => current & RemoveHardLink(file));
+        s_hardLinks.Keys.Aggregate(true, (current, file) => current && RemoveHardLink(file));
 }
