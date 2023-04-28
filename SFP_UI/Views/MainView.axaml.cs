@@ -1,9 +1,9 @@
 #region
 
+using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Avalonia.Media;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using SFP_UI.Pages;
@@ -14,14 +14,11 @@ namespace SFP_UI.Views;
 
 public partial class MainView : UserControl
 {
-    private static bool s_isActive;
-    private static MainView? s_instance;
     private Frame? _frameView;
     private NavigationView? _navView;
 
     public MainView()
     {
-        s_instance = this;
         InitializeComponent();
     }
 
@@ -30,13 +27,6 @@ public partial class MainView : UserControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
-
-        if (e.Root is Window b)
-        {
-            b.Opened += OnParentWindowOpened;
-            b.Activated += (_, _) => SetAppTitleColor(true);
-            b.Deactivated += (_, _) => SetAppTitleColor(false);
-        }
 
         _frameView = this.FindControl<Frame>("FrameView");
         if (_frameView == null)
@@ -58,37 +48,52 @@ public partial class MainView : UserControl
         _ = _frameView.Navigate(typeof(MainPage));
     }
 
-    private static void SetAppTitleColor(bool? isActive = null)
+    private void SetNviIcon(NavigationViewItem item, bool selected)
     {
-        s_isActive = isActive ?? s_isActive;
+        // Technically, yes you could set up binding and converters and whatnot to let the icon change
+        // between filled and unfilled based on selection, but this is so much simpler
 
-        if (s_instance?.FindControl<TextBlock>("AppTitle") is not { } t)
+        Type t = (item.Tag as Type)!;
+
+        if (t == typeof(MainPage))
         {
-            return;
+            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value) ?
+                (IconSource)value! : null;
         }
-
-        t.Foreground = s_isActive switch
+        else if (t == typeof(SettingsPage))
         {
-            false when s_instance.TryFindResource("TextFillColorDisabledBrush", out object? disabled) =>
-                (IBrush)disabled!,
-            true when s_instance.TryFindResource("TextFillColorPrimaryBrush", out object? primary) =>
-                (IBrush)primary!,
-            _ => t.Foreground
-        };
+            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value) ?
+                (IconSource)value! : null;
+        }
     }
 
     private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
     {
-        foreach (NavigationViewItem nvi in _navView!.MenuItemsSource)
+        if (_navView != null && !TryNavigateItem(e, _navView.MenuItemsSource))
+        {
+            _ = TryNavigateItem(e, _navView!.FooterMenuItemsSource);
+        }
+    }
+
+    private bool TryNavigateItem(NavigationEventArgs e, IEnumerable itemsSource)
+    {
+        foreach (NavigationViewItem nvi in itemsSource)
         {
             if (nvi.Tag is not Type tag || tag != e.SourcePageType)
             {
                 continue;
             }
 
-            _navView.SelectedItem = nvi;
-            break;
+            if (_navView != null)
+            {
+                _navView.SelectedItem = nvi;
+            }
+
+            SetNviIcon(nvi, true);
+            return true;
         }
+
+        return false;
     }
 
     private IEnumerable<NavigationViewItem> GetNavigationViewItems() => new List<NavigationViewItem>
@@ -115,38 +120,11 @@ public partial class MainView : UserControl
 
     private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
     {
+        // Change the current selected item back to normal
+        SetNviIcon((_navView!.SelectedItem as NavigationViewItem)!, false);
         if (e.InvokedItemContainer is NavigationViewItem { Tag: Type typ })
         {
             _ = _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
         }
-    }
-
-    private void OnParentWindowOpened(object? sender, EventArgs e)
-    {
-        if (sender is not Window w)
-        {
-            return;
-        }
-
-        w.Opened -= OnParentWindowOpened;
-
-        if (OperatingSystem.IsWindows())
-        {
-            return;
-        }
-
-        if (this.FindControl<Grid>("TitleBarHost") is { } g)
-        {
-            g.IsVisible = false;
-        }
-
-        const string key = "NavigationViewContentMargin";
-        if (!Resources.ContainsKey(key))
-        {
-            return;
-        }
-
-        Thickness newThickness = new(0, 0, 0, 0);
-        Resources[key] = newThickness;
     }
 }

@@ -72,6 +72,7 @@
                 <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
                     <ComboBoxItem>Dark</ComboBoxItem>
                     <ComboBoxItem>Light</ComboBoxItem>
+                    <ComboBoxItem>HighContrast</ComboBoxItem>
                     <ComboBoxItem>System Default</ComboBoxItem>
                 </ComboBox>
                 <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="True" />
