@@ -32,7 +32,7 @@ foreach ($currentOS in $os.Split(";")) {
             $selfcontainedValues = $False
         }
         "both" {
-            $selfcontainedValues = $True, $False
+            $selfcontainedValues = $False, $True
         }
     }
 
