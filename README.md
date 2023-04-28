@@ -2,6 +2,14 @@
 
 This utility is designed to allow you to apply themes to the modern Steam friends and library interfaces.
 
+## Steam Beta Update Notice
+
+**The 2023-04-27 Steam Beta is out and changes the entire Steam client to use the new Chromium based UI.**
+
+**This means that currently all elements of the client, including the library and friends list, are skinned through css files in the `steamui` folder.**
+
+**Until a new version of SFP is released, you can append the contents of your `clientui/friends.custom.css` file to `steamui/libraryroot.custom.css` and the changes will apply.**
+
 ## Instructions
 
 Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.
