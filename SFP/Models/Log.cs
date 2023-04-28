@@ -1,7 +1,12 @@
-namespace SFP.Models
+#region
+
+using NLog;
+
+#endregion
+
+namespace SFP.Models;
+
+public static class Log
 {
-    public class Log
-    {
-        public static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-    }
+    public static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 }

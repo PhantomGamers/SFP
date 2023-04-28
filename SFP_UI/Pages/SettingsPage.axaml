@@ -1,74 +1,82 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             x:Class="SFP_UI.Pages.SettingsPage">
+             xmlns:vm="using:SFP_UI.ViewModels"
+             x:Class="SFP_UI.Pages.SettingsPage"
+             x:DataType="vm:SettingsPageViewModel">
 
-  <DockPanel Margin="16">
-    <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
-      <Button Command="{Binding OnSaveCommand}"
-              ToolTip.Tip="Saves your settings to config">Save</Button>
-      <Button Command="{Binding OnReloadCommand}"
-              ToolTip.Tip="Reloads settings from config">Reload</Button>
-    </StackPanel>
-    <ScrollViewer>
-      <StackPanel Orientation="Vertical">
-
-        <TextBlock Text="Steam" Classes="BodyStrongTextBlockStyle"/>
-        <StackPanel Orientation="Horizontal" Spacing="8">
-          <Label Margin="0,10">Steam launch args</Label>
-          <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240" Text="{Binding SteamLaunchArgs}"/>
+    <DockPanel Margin="16">
+        <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
+            <Button Command="{Binding SaveCommand}"
+                    ToolTip.Tip="Saves your settings to config">
+                Save
+            </Button>
+            <Button Command="{Binding ReloadCommand}"
+                    ToolTip.Tip="Reloads settings from config">
+                Reload
+            </Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
-          <Label Margin="0,10">Steam directory</Label>
-          <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
-                   IsReadOnly="True"
-                   VerticalContentAlignment="Center"/>
-          <Button Margin="5,0,0,0" Command="{Binding OnBrowseSteamCommand}">Browse</Button>
-          <Button Margin="5,0,0,0" Command="{Binding OnResetSteamCommand}">Reset</Button>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
-          <Label Margin="0,10">Cache directory</Label>
-          <TextBox Watermark="dache Directory" Margin="20,0,0,0" Width="240" Text="{Binding CacheDirectory}"
-                   IsReadOnly="True"
-                   VerticalContentAlignment="Center"/>
-          <Button Margin="5,0,0,0" Command="{Binding OnBrowseCacheCommand}">Browse</Button>
-          <Button Margin="5,0,0,0" Command="{Binding OnResetCacheCommand}">Reset</Button>
-        </StackPanel>
-        <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam on patch</CheckBox>
+        <ScrollViewer>
+            <StackPanel Orientation="Vertical">
 
-        <TextBlock Text="Patcher" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
-        <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch on app startup</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldPatchFriends}">Patch friends</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldPatchLibrary}">Patch library</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldPatchResources}">Patch resources</CheckBox>
-        <CheckBox IsChecked="{Binding ScanOnly}">Scan only</CheckBox>
+                <TextBlock Text="Steam" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Label Margin="0,10">Steam launch args</Label>
+                    <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
+                             Text="{Binding SteamLaunchArgs}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
+                    <Label Margin="0,10">Steam directory</Label>
+                    <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
+                             IsReadOnly="True"
+                             VerticalContentAlignment="Center" />
+                    <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
+                    <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
+                    <Label Margin="0,10">Cache directory</Label>
+                    <TextBox Watermark="Cache Directory" Margin="20,0,0,0" Width="240" Text="{Binding CacheDirectory}"
+                             IsReadOnly="True"
+                             VerticalContentAlignment="Center" />
+                    <Button Margin="5,0,0,0" Command="{Binding BrowseCacheCommand}">Browse</Button>
+                    <Button Margin="5,0,0,0" Command="{Binding ResetCacheCommand}">Reset</Button>
+                </StackPanel>
+                <CheckBox IsChecked="{Binding RestartSteamOnPatch}">Restart Steam on patch</CheckBox>
 
-        <TextBlock Text="Scanner" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
-        <CheckBox IsChecked="{Binding ShouldScanOnStart}">Scan on app startup</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldScanFriends}">Scan friends</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan library</CheckBox>
-        <CheckBox IsChecked="{Binding ShouldScanResources}">Scan resources</CheckBox>
-        <StackPanel Orientation="Horizontal" Margin="0,5" Spacing="4">
-            <Label>Scanner delay (seconds)</Label>
-            <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110" Height="20" HorizontalContentAlignment="Center"/>
-        </StackPanel>
+                <TextBlock Text="Patcher" Margin="0 20 0 4" />
+                <CheckBox IsChecked="{Binding ShouldPatchOnStart}">Patch on app startup</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldPatchFriends}">Patch friends</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldPatchLibrary}">Patch library</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldPatchResources}">Patch resources</CheckBox>
+                <CheckBox IsChecked="{Binding ScanOnly}">Scan only</CheckBox>
 
-        <TextBlock Text="General" Margin="0 20 0 4" Classes="BodyStrongTextBlockStyle"/>
-        <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
-        <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
-        <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
-        <CheckBox IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
-        <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
-        <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
-        <Label>App theme</Label>
-        <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
-            <ComboBoxItem>Dark</ComboBoxItem>
-            <ComboBoxItem>Light</ComboBoxItem>
-            <ComboBoxItem>System Default</ComboBoxItem>
-        </ComboBox>
-        <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="{Binding s_isWindows}"/>
+                <TextBlock Text="Scanner" Margin="0 20 0 4" />
+                <CheckBox IsChecked="{Binding ShouldScanOnStart}">Scan on app startup</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldScanFriends}">Scan friends</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldScanLibrary}">Scan library</CheckBox>
+                <CheckBox IsChecked="{Binding ShouldScanResources}">Scan resources</CheckBox>
+                <StackPanel Orientation="Horizontal" Margin="0,5" Spacing="4">
+                    <Label>Scanner delay (seconds)</Label>
+                    <NumericUpDown Value="{Binding ScannerDelay}" Increment="1" Minimum="1" Maximum="10" Width="110"
+                                   Height="20" HorizontalContentAlignment="Center" />
+                </StackPanel>
 
-      </StackPanel>
-    </ScrollViewer>
-  </DockPanel>
+                <TextBlock Text="General" Margin="0 20 0 4" />
+                <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
+                <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
+                <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
+                <CheckBox IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
+                <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
+                <!-- <CheckBox IsChecked="{Binding StartWithOS}">Start With OS</CheckBox> -->
+                <Label>App theme</Label>
+                <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
+                    <ComboBoxItem>Dark</ComboBoxItem>
+                    <ComboBoxItem>Light</ComboBoxItem>
+                    <ComboBoxItem>System Default</ComboBoxItem>
+                </ComboBox>
+                <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="True" />
+
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>

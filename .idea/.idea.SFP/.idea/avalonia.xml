@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="SFP_UI/App.axaml" value="SFP_UI/SFP_UI.csproj" />
+        <entry key="SFP_UI/Pages/MainPage.axaml" value="SFP_UI/SFP_UI.csproj" />
+        <entry key="SFP_UI/Pages/SettingsPage.axaml" value="SFP_UI/SFP_UI.csproj" />
+        <entry key="SFP_UI/Views/MainView.axaml" value="SFP_UI/SFP_UI.csproj" />
+        <entry key="SFP_UI/Views/MainWindow.axaml" value="SFP_UI/SFP_UI.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

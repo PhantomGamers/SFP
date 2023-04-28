@@ -1,60 +1,79 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:Avalonia.Notification.Controls;assembly=Notification.Avalonia"
+             xmlns:vm="using:SFP_UI.ViewModels"
+             x:Class="SFP_UI.Pages.MainPage"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             x:Class="SFP_UI.Pages.MainPage">
-  <Grid>
-    <DockPanel Margin="16">
-      <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
-          <Button Margin="0 0 10 0"
-                  IsEnabled="{Binding ButtonsEnabled}"
-                  Command="{Binding OnPatchCommand}"
-                  ToolTip.Tip="Patches Steam, enabling skin support based on your settings">Patch</Button>
-          <Button Margin="0 0 10 0"
-                  IsEnabled="{Binding ButtonsEnabled}"
-                  IsVisible="{Binding !ScannerActive}"
-                  Command="{Binding OnScanCommand}"
-                  ToolTip.Tip="Starts scanning for changes to Steam, repatching as needed based on your settings">Start scanner</Button>
-          <Button Margin="0 0 10 0"
-                  IsEnabled="{Binding ButtonsEnabled}"
-                  IsVisible="{Binding ScannerActive}"
-                  Command="{Binding OnStopScanCommand}"
-                  ToolTip.Tip="Stops scanning for changes to Steam">Stop Scanner</Button>
-          <Button Margin="0 0 10 0"
-                  IsEnabled="{Binding ButtonsEnabled}"
-                  Command="{Binding OnResetSteamCommand}"
-                  ToolTip.Tip="Resets Steam to stock, removing all patches">Reset Steam</Button>
+             x:DataType="vm:MainPageViewModel">
+    <Panel>
+        <ui:TeachingTip IsLightDismissEnabled="False"
+                        Title="An update is available!"
+                        ActionButtonContent="View Update"
+                        CloseButtonContent="Dismiss"
+                        PreferredPlacement="Center"
+                        Name="UpdateNotification"
+                        ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
+                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases/latest"
+                        Content="{Binding UpdateNotificationContent}"
+                        IsOpen="{Binding UpdateNotificationIsOpen}" />
+        <Grid>
+            <DockPanel Margin="16">
+                <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
+                    <Button Margin="0 0 10 0"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            Command="{Binding PatchCommand}"
+                            ToolTip.Tip="Patches Steam, enabling skin support based on your settings">
+                        Patch
+                    </Button>
+                    <Button Margin="0 0 10 0"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            IsVisible="{Binding !ScannerActive}"
+                            Command="{Binding StartScanCommand}"
+                            ToolTip.Tip="Starts scanning for changes to Steam, repatching as needed based on your settings">
+                        Start scanner
+                    </Button>
+                    <Button Margin="0 0 10 0"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            IsVisible="{Binding ScannerActive}"
+                            Command="{Binding StopScanCommand}"
+                            ToolTip.Tip="Stops scanning for changes to Steam">
+                        Stop Scanner
+                    </Button>
+                    <Button Margin="0 0 10 0"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            Command="{Binding ResetSteamCommand}"
+                            ToolTip.Tip="Resets Steam to stock, removing all patches">
+                        Reset Steam
+                    </Button>
 
-          <ui:DropDownButton Content="Open file"
-                             HorizontalAlignment="Right"
-                             Margin="0 0 15 0">
-              <ui:DropDownButton.Flyout>
-                  <MenuFlyout Placement="Top">
-                      <MenuItem Header="friends.custom.css"
-                                Command="{Binding OnOpenFriendsCustomCssCommand}"
-                                ToolTip.Tip="Opens the friends.custom.css file where your custom skin for the friends list goes"/>
-                      <MenuItem Header="libraryroot.custom.css"
-                                Command="{Binding OnOpenLibraryrootCustomCssCommand}"
-                                ToolTip.Tip="Opens the libraryroot.custom.css file where your custom skin for the library goes"/>
-                  </MenuFlyout>
-              </ui:DropDownButton.Flyout>
-          </ui:DropDownButton>
-      </DockPanel>
-      <Border BorderThickness="5">
-        <ScrollViewer Margin="10">
-          <TextBox Name="Output"
-                   CaretIndex="{Binding CaretIndex}"
-                   BorderThickness="0"
-                   Focusable="False"
-                   IsReadOnly="True"
-                   TextWrapping="Wrap"
-                   IsTabStop="False"
-                   Text="{Binding Output, Mode=OneWay}" />
-        </ScrollViewer>
-      </Border>
-    </DockPanel>
-    <Border Grid.Column="1">
-      <controls:NotificationMessageContainer Manager="{Binding Manager}" />
-    </Border>
-  </Grid>
+                    <DropDownButton Content="Open file"
+                                    HorizontalAlignment="Right"
+                                    Margin="0 0 15 0">
+                        <DropDownButton.Flyout>
+                            <MenuFlyout Placement="Top">
+                                <MenuItem Header="friends.custom.css"
+                                          Command="{Binding OpenFriendsCustomCssCommand}"
+                                          ToolTip.Tip="Opens the friends.custom.css file where your custom skin for the friends list goes" />
+                                <MenuItem Header="libraryroot.custom.css"
+                                          Command="{Binding OpenLibraryRootCustomCssCommand}"
+                                          ToolTip.Tip="Opens the libraryroot.custom.css file where your custom skin for the library goes" />
+                            </MenuFlyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </DockPanel>
+                <Border BorderThickness="5">
+                    <ScrollViewer Margin="10">
+                        <TextBox Name="Output"
+                                 CaretIndex="{Binding CaretIndex}"
+                                 BorderThickness="0"
+                                 Focusable="False"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 IsTabStop="False"
+                                 Text="{Binding Output, Mode=OneWay}" />
+                    </ScrollViewer>
+                </Border>
+            </DockPanel>
+            <Border />
+        </Grid>
+    </Panel>
 </UserControl>

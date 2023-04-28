@@ -3,49 +3,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SFP_UI.Views.MainView">
 
     <UserControl.Resources>
-        <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
     </UserControl.Resources>
 
     <UserControl.Styles>
         <Style Selector="ui|NavigationView.SFPAppNav">
             <Setter Property="OpenPaneLength" Value="240" />
         </Style>
-        <Style Selector="ui|NavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
+        <Style
+            Selector="ui|NavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
             <Setter Property="Margin" Value="0 10 0 0" />
         </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto, *">
-
-        <Grid Name="TitleBarHost" ColumnDefinitions="Auto,Auto,*" Background="Transparent">
-            <Image Margin="50 15 10 12"
-                   Source="/Assets/SFP-logo.ico"
-                   Width="18" Height="18"
-                   DockPanel.Dock="Left"
-                   Name="WindowIcon"
-                   IsHitTestVisible="False"/>
-
-            <TextBlock Name="AppTitle"
-                       Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                       FontSize="12"
-                       IsHitTestVisible="False"
-                       VerticalAlignment="Center"
-                       Grid.Column="1"/>
-        </Grid>
-
         <ui:NavigationView Classes="SFPAppNav"
                            AlwaysShowHeader="False"
                            PaneDisplayMode="Left"
-                           Grid.RowSpan="2"
+                           Grid.Row="0" Grid.RowSpan="2"
                            Name="NavView"
                            IsSettingsVisible="False">
             <Panel>
-                <ui:Frame Name="FrameView"/>
+                <ui:Frame Name="FrameView" />
             </Panel>
         </ui:NavigationView>
     </Grid>

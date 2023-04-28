@@ -1,15 +1,17 @@
-using System.Configuration;
+#region
 
+using System.Configuration;
 using Bluegrams.Application;
 
-namespace SFP.Models
+#endregion
+
+namespace SFP.Models;
+
+public class Settings : ApplicationSettingsBase
 {
-    public class Settings : ApplicationSettingsBase
+    public Settings()
     {
-        public Settings()
-        {
-            PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
-            PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);
-        }
+        PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
+        PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);
     }
 }
