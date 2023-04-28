@@ -15,7 +15,7 @@ namespace SFP_UI.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    private static string s_output = string.Empty;
+    private string _output = string.Empty;
 
     private bool _buttonsEnabled = true;
 
@@ -63,8 +63,8 @@ public class MainPageViewModel : ViewModelBase
 
     public string Output
     {
-        get => s_output;
-        private set => this.RaiseAndSetIfChanged(ref s_output, value);
+        get => _output;
+        private set => this.RaiseAndSetIfChanged(ref _output, value);
     }
 
     public int CaretIndex
