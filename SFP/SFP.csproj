@@ -3,7 +3,6 @@
   <Import Project="..\SFPCommon.props"/>
 
   <PropertyGroup>
-    <TrimMode>link</TrimMode>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
