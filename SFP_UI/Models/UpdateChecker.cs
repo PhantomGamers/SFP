@@ -1,7 +1,9 @@
 #region
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Flurl.Http;
 using Semver;
@@ -18,11 +20,12 @@ internal static class UpdateChecker
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
         .InformationalVersion, SemVersionStyles.Strict);
 
+    [RequiresUnreferencedCode("Calls SFP_UI.Models.UpdateChecker.GetLatestVersionAsync()")]
     public static async Task CheckForUpdates()
     {
-        // #if DEBUG
-        // return;
-        // #endif
+#if DEBUG
+        return;
+#endif
 
         Log.Logger.Info("Checking for updates...");
 
@@ -46,19 +49,19 @@ internal static class UpdateChecker
     }
 
 #pragma warning disable CS1998
+    [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
     private static async Task<SemVersion> GetLatestVersionAsync()
 #pragma warning restore CS1998
     {
 #if DEBUG
         string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
-        Release release = JsonConvert.DeserializeObject<Release>(responseBody);
+        Release release = JsonSerializer.Deserialize<Release>(responseBody);
 #else
         Release release =
             await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
                 .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
                 .GetJsonAsync<Release>();
 #endif
-        Log.Logger.Info(release.TagName);
         return SemVersion.Parse(release.TagName, SemVersionStyles.Strict);
     }
 }

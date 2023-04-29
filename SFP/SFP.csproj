@@ -15,6 +15,7 @@
     <PackageReference Include="System.ServiceModel.Primitives" />
     <PackageReference Include="Gameloop.Vdf" />
     <PackageReference Include="FileWatcherEx" />
+    <PackageReference Include="Websocket.Client" />
   </ItemGroup>
 
   <ItemGroup>

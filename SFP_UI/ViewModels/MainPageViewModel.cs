@@ -5,6 +5,7 @@ using NLog;
 using ReactiveUI;
 using Semver;
 using SFP.Models;
+using SFP.Models.Injection;
 
 #endregion
 
@@ -26,6 +27,7 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
+    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.Inject);
 
     public bool UpdateNotificationIsOpen
     {

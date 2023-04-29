@@ -32,5 +32,6 @@
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.4.0" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7" />
+    <PackageVersion Include="Websocket.Client" Version="4.6.1" />
   </ItemGroup>
 </Project>
