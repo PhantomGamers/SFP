@@ -8,7 +8,6 @@ using SFP.Models;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;
-using FileSystemWatcher = SFP.Models.FileSystemWatchers.FileSystemWatcher;
 using Settings = SFP.Properties.Settings;
 
 #endregion
@@ -21,8 +20,6 @@ public class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
@@ -52,22 +49,6 @@ public class App : Application
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
         }
 
-        if (Settings.Default.ShouldPatchOnStart)
-        {
-            await Dispatcher.UIThread.InvokeAsync(MainPageViewModel.OnPatchCommand);
-        }
-
-        if (Settings.Default.ShouldScanOnStart)
-        {
-            await Dispatcher.UIThread.InvokeAsync(MainPageViewModel.OnScanCommand);
-        }
-
         base.OnFrameworkInitializationCompleted();
-    }
-
-    private async void OnProcessExit(object? sender, EventArgs e)
-    {
-        _ = HardLink.RemoveAllHardLinks();
-        await FileSystemWatcher.StopFileWatchers();
     }
 }

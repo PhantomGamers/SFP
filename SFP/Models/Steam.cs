@@ -3,7 +3,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Gameloop.Vdf;
-using FileSystemWatcher = SFP.Models.FileSystemWatchers.FileSystemWatcher;
 
 #endregion
 
@@ -11,20 +10,6 @@ namespace SFP.Models;
 
 public static class Steam
 {
-    public static string SteamUiDir => Path.Join(SteamDir, @"steamui");
-
-    public static string SteamUiCssDir => Path.Join(SteamUiDir, "css");
-
-    public static string ClientUiDir => Path.Join(SteamDir, @"clientui");
-
-    public static string ClientUiCssDir => Path.Join(ClientUiDir, "css");
-
-    public static string SkinDir => Path.Join(SteamDir, "skins", SkinName);
-
-    public static string ResourceDir => Path.Join(SteamDir, "resource");
-
-    private static string? SkinName => GetRegistryData(@"Software\Valve\Steam", "SkinV5")?.ToString();
-
     private static int RunningGameId => (int)(GetRegistryData(@"Software\Valve\Steam", "RunningAppID") ?? -1);
 
     private static string? RunningGameName =>
@@ -79,30 +64,6 @@ public static class Steam
         }
     }
 
-    public static string CacheDir
-    {
-        get
-        {
-            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.CacheDirectory))
-            {
-                return Properties.Settings.Default.CacheDirectory;
-            }
-
-            if (OperatingSystem.IsWindows())
-            {
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Steam",
-                    @"htmlcache", "Cache");
-            }
-
-            return OperatingSystem.IsLinux()
-                ? Path.Join(SteamDir, "config", @"htmlcache", "Cache")
-                :
-                // OSX
-                Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
-                    "Application Support", "Steam", "config", @"htmlcache", "Cache");
-        }
-    }
-
     private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler",
@@ -130,82 +91,6 @@ public static class Steam
         catch
         {
             return -1;
-        }
-    }
-
-    public static async Task ResetSteam()
-    {
-        Log.Logger.Info("Resetting Steam");
-        if (!Directory.Exists(SteamUiCssDir))
-        {
-            Log.Logger.Warn($"Missing directory {SteamUiCssDir}");
-        }
-
-        if (!Directory.Exists(ClientUiCssDir))
-        {
-            Log.Logger.Warn($"Missing directory {ClientUiCssDir}");
-        }
-
-        if (!Directory.Exists(CacheDir))
-        {
-            Log.Logger.Warn($"Missing directory {CacheDir}");
-        }
-
-        if (!Directory.Exists(SteamUiCssDir) && !Directory.Exists(ClientUiCssDir) && !Directory.Exists(CacheDir))
-        {
-            return;
-        }
-
-        if (IsGameRunning)
-        {
-            string gameName = RunningGameName ?? "Game";
-            Log.Logger.Warn($"{gameName} is running, aborting reset process... Close the game and try again.");
-            return;
-        }
-
-        bool steamState = IsSteamRunning;
-        if (steamState && !ShutDownSteam())
-        {
-            return;
-        }
-
-        bool scannerState = FileSystemWatcher.WatchersActive;
-        await FileSystemWatcher.StopFileWatchers();
-
-        try
-        {
-            if (Directory.Exists(SteamUiCssDir))
-            {
-                Log.Logger.Info($"Deleting {SteamUiCssDir}");
-                Directory.Delete(SteamUiCssDir, true);
-            }
-
-            if (Directory.Exists(ClientUiCssDir))
-            {
-                Log.Logger.Info($"Deleting {ClientUiCssDir}");
-                Directory.Delete(ClientUiCssDir, true);
-            }
-
-            if (Directory.Exists(CacheDir))
-            {
-                Log.Logger.Info($"Deleting {CacheDir}");
-                Directory.Delete(CacheDir, true);
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Logger.Debug(ex);
-            Log.Logger.Warn("Could not delete files because they were in use. Manually shut down Steam and try again.");
-        }
-
-        if (scannerState)
-        {
-            await FileSystemWatcher.StartFileWatchers();
-        }
-
-        if (steamState)
-        {
-            StartSteam(Properties.Settings.Default.SteamLaunchArgs.Replace(@"-noverifyfiles", string.Empty));
         }
     }
 
