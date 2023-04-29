@@ -22,22 +22,23 @@ public struct Tab
     [SuppressMessage("CodeSmell", "EPC13:Suspiciously unobserved result.")]
     public async Task EvaluateJavaScript(string javaScript)
     {
+        Log.Logger.Info(WebSocketDebuggerUrl);
         Log.Logger.Info(Environment.NewLine + javaScript);
         using WebsocketClient client = new(new Uri(WebSocketDebuggerUrl));
         await client.Start();
-        string evalString = $$"""
+        string evalString =
+        $$"""
         {
             "id": 1,
             "method": "Runtime.evaluate",
             "params": {
-              "expression": {{javaScript}},
-              "userGesture": True,
-              "awaitPromise": False
+              "expression": "{{javaScript}}"
             }
         }
-        """;
+        """.Trim().Replace('\n', ' ');
 
-        string navString = $$"""
+        string navString =
+        $$"""
         {
            "id": 1,
            "method": "Page.navigate",

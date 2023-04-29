@@ -32,8 +32,16 @@ public static class Injector
             if (tab.Url.Contains("store.steampowered.com"))
             {
                 Log.Logger.Info("Found store tab!");
-                _ = Guid.NewGuid();
-                await tab.EvaluateJavaScript($$"""!function(){let e=document.createElement('style');e.id='test123',document.head.append(e)}();""");
+                string cssInjectString =
+                $$"""
+                (function() {
+                    const style = document.createElement('style');
+                    style.id = '{{Guid.NewGuid()}}';
+                    document.head.append(style);
+                    style.textContent = `@import url('https://steamloopback.host/webkit.css');`;
+                })()
+                """.Trim().Replace('\n', ' ');
+                await tab.EvaluateJavaScript(cssInjectString);
                 Log.Logger.Info("Applied custom style");
             }
         }
