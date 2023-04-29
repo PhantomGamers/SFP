@@ -1,11 +1,14 @@
 #region
 
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
+using Avalonia.Platform;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Media;
@@ -48,9 +51,12 @@ public partial class MainWindow : AppWindow
             faTheme.RequestedTheme = Settings.Default.AppTheme;
         }
 
+        IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
+        var bitmap = new Bitmap(assets!.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().FullName}/Assets/SFP-logo.ico")));
+        var icon = new WindowIcon(bitmap);
         _trayIcon = new TrayIcon
         {
-            //Icon = (WindowIcon)Icon,
+            Icon = icon,
             ToolTipText = "Steam Friends Patcher"
         };
 
