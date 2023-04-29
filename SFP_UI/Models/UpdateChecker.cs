@@ -2,8 +2,8 @@
 
 using System.Net.Http.Headers;
 using System.Reflection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
+using Flurl.Http;
 using Semver;
 using SFP.Models;
 using SFP_UI.ViewModels;
@@ -18,11 +18,6 @@ internal static class UpdateChecker
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
         .InformationalVersion, SemVersionStyles.Strict);
 
-    private static readonly HttpClient s_client = new();
-
-    static UpdateChecker() =>
-        s_client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("SFP", Version.ToString()));
-
     public static async Task CheckForUpdates()
     {
         // #if DEBUG
@@ -30,14 +25,23 @@ internal static class UpdateChecker
         // #endif
 
         Log.Logger.Info("Checking for updates...");
-        SemVersion semver = await GetLatestVersionAsync();
-        if (SemVersion.ComparePrecedence(Version, semver) < 0)
+
+        try
         {
-            MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
+            SemVersion semver = await GetLatestVersionAsync();
+            if (SemVersion.ComparePrecedence(Version, semver) < 0)
+            {
+                MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
+            }
+            else
+            {
+                Log.Logger.Info("You are running the latest version.");
+            }
         }
-        else
+        catch (Exception e)
         {
-            Log.Logger.Info("You are running the latest version.");
+            Log.Logger.Error("Failed to fetch latest version.");
+            Log.Logger.Error(e);
         }
     }
 
@@ -47,19 +51,19 @@ internal static class UpdateChecker
     {
 #if DEBUG
         string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
-#else
-        string responseBody =
-            await s_client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
-#endif
         Release release = JsonConvert.DeserializeObject<Release>(responseBody);
-
-        return SemVersion.TryParse(release.TagName, SemVersionStyles.Strict,
-            out SemVersion? semver) ? semver : new SemVersion(-1);
+#else
+        Release release =
+            await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
+                .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
+                .GetJsonAsync<Release>();
+#endif
+        Log.Logger.Info(release.TagName);
+        return SemVersion.Parse(release.TagName, SemVersionStyles.Strict);
     }
 }
 
 internal struct Release
 {
-    [JsonProperty("tag_name")]
-    public string TagName { get; set; }
+    [JsonPropertyName("tag_name")] public string TagName { get; set; }
 }

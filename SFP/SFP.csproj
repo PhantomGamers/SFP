@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Crc32.NET" />
+    <PackageReference Include="Flurl.Http" />
     <PackageReference Include="Ionic.Zlib.Core" />
     <PackageReference Include="PortableJsonSettingsProvider" />
     <PackageReference Include="LazyCache" />
