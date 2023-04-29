@@ -1,11 +1,10 @@
 #region
 
 using System.Reactive;
-using System.Runtime.InteropServices;
 using NLog;
 using ReactiveUI;
+using Semver;
 using SFP.Models;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 
@@ -13,17 +12,18 @@ namespace SFP_UI.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    private string _output = string.Empty;
-
     private bool _buttonsEnabled = true;
 
     private int _caretIndex;
 
+    private string _output = string.Empty;
+
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
-
     public MainPageViewModel() => Instance = this;
+
     public static MainPageViewModel? Instance { get; private set; }
+
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
 
@@ -38,6 +38,7 @@ public class MainPageViewModel : ViewModelBase
         get => _updateNotificationContent;
         set => this.RaiseAndSetIfChanged(ref _updateNotificationContent, value);
     }
+
     public string Output
     {
         get => _output;
@@ -62,5 +63,13 @@ public class MainPageViewModel : ViewModelBase
     {
         Output = string.Concat(Output, $"[{DateTime.Now}][{level}] {message}");
         CaretIndex = Output.Length;
+    }
+
+    public void ShowUpdateNotification(SemVersion oldVersion, SemVersion newVersion)
+    {
+        Log.Logger.Info($"There is an update available! Your version: {oldVersion} Latest version: {newVersion}");
+        UpdateNotificationContent =
+            $"Your version: {oldVersion}{Environment.NewLine}Latest version: {newVersion}";
+        UpdateNotificationIsOpen = true;
     }
 }

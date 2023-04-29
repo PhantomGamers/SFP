@@ -2,9 +2,8 @@
 
 using System.Net.Http.Headers;
 using System.Reflection;
-#if !DEBUG
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-#endif
 using Semver;
 using SFP.Models;
 using SFP_UI.ViewModels;
@@ -26,26 +25,15 @@ internal static class UpdateChecker
 
     public static async Task CheckForUpdates()
     {
-        Log.Logger.Info("Checking for updates...");
-#if DEBUG
-        SemVersion? semver = new(0);
-#else
-            SemVersion semver = await GetLatestVersionAsync();
-#endif
+        // #if DEBUG
+        // return;
+        // #endif
 
-#if !DEBUG
-            if (SemVersion.ComparePrecedence(Version, semver) < 0)
-#else
-        if (true)
-#endif
+        Log.Logger.Info("Checking for updates...");
+        SemVersion semver = await GetLatestVersionAsync();
+        if (SemVersion.ComparePrecedence(Version, semver) < 0)
         {
-            Log.Logger.Info($"There is an update available! Your version: {Version} Latest version: {semver}");
-            if (MainPageViewModel.Instance != null)
-            {
-                MainPageViewModel.Instance.UpdateNotificationContent =
-                    $"Your version: {Version}{Environment.NewLine}Latest version: {semver}";
-                MainPageViewModel.Instance.UpdateNotificationIsOpen = true;
-            }
+            MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
         }
         else
         {
@@ -53,28 +41,25 @@ internal static class UpdateChecker
         }
     }
 
-#if !DEBUG
+#pragma warning disable CS1998
     private static async Task<SemVersion> GetLatestVersionAsync()
+#pragma warning restore CS1998
     {
-        try
-        {
-            string responseBody =
-                await s_client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
-            JObject json = JObject.Parse(responseBody);
-
-            if (SemVersion.TryParse(json["tag_name"]?.ToString() ?? string.Empty, SemVersionStyles.Strict,
-                    out SemVersion? semver))
-            {
-                return semver;
-            }
-        }
-        catch (HttpRequestException e)
-        {
-            Log.Logger.Error("Could not fetch latest version!");
-            Log.Logger.Error($"Exception: {e.Message}");
-        }
-
-        return new SemVersion(-1);
-    }
+#if DEBUG
+        string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
+#else
+        string responseBody =
+            await s_client.GetStringAsync("https://api.github.com/repos/phantomgamers/sfp/releases/latest");
 #endif
+        Release release = JsonConvert.DeserializeObject<Release>(responseBody);
+
+        return SemVersion.TryParse(release.TagName, SemVersionStyles.Strict,
+            out SemVersion? semver) ? semver : new SemVersion(-1);
+    }
+}
+
+internal struct Release
+{
+    [JsonProperty("tag_name")]
+    public string TagName { get; set; }
 }
