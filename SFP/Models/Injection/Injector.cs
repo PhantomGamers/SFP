@@ -9,24 +9,25 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-    private const string CefDebuggingUrl = "http://localhost:8080";
-
-    private static async Task<IEnumerable<Tab>> GetTabsAsync()
-    {
-        try
-        {
-            return await CefDebuggingUrl.AppendPathSegment("json").GetJsonAsync<IEnumerable<Tab>>();
-        }
-        catch (FlurlHttpException e)
-        {
-            Log.Logger.Error("Could not fetch tabs, is Steam running with CEF debugging enabled?");
-            Log.Logger.Error(e);
-            return Enumerable.Empty<Tab>();
-        }
-    }
+    public const string CefDebuggingUrl = "http://localhost:8080";
 
     public static async Task InjectAsync()
     {
+        try
+        {
+            Browser browser = await Browser.GetBrowserAsync();
+            /*if (browser == null)
+            {
+                return;
+            }*/
+            await Task.Run(browser.MonitorTargetsAsync);
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
+
+        /*
         Log.Logger.Info("Injecting!");
         IEnumerable<Tab> tabs = await GetTabsAsync();
         IEnumerable<Tab> enumerable = tabs.ToList();
@@ -49,5 +50,6 @@ public static class Injector
                 await tab.InjectCssAsync("friends.custom.css", "Friends");
             }
         }
+        */
     }
 }

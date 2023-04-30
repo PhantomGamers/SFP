@@ -6,6 +6,8 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Flurl;
+using Flurl.Http;
 
 // ReSharper disable MemberCanBePrivate.Global
 
