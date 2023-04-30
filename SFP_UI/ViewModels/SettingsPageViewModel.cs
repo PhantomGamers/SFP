@@ -1,7 +1,6 @@
 #region
 
 using System.Reactive;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -130,7 +129,6 @@ public class SettingsPageViewModel : ViewModelBase
         }
     }
 
-    [Obsolete("Obsolete")]
     private string AppTheme
     {
         get => _appTheme;
@@ -138,14 +136,7 @@ public class SettingsPageViewModel : ViewModelBase
         {
             _ = this.RaiseAndSetIfChanged(ref _appTheme, value);
             Settings.Default.AppTheme = value;
-            FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
-            if (faTheme == null)
-            {
-                return;
-            }
-
-            faTheme.PreferSystemTheme = value == "System Default";
-            faTheme.RequestedTheme = value;
+            App.SetApplicationTheme(value);
         }
     }
 

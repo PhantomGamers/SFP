@@ -1,9 +1,9 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 using System.Reflection;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using Flurl.Http;
 using Semver;
 using SFP.Models;
 using SFP_UI.ViewModels;
@@ -18,7 +18,6 @@ internal static class UpdateChecker
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
         .InformationalVersion, SemVersionStyles.Strict);
 
-    [RequiresUnreferencedCode("Calls SFP_UI.Models.UpdateChecker.GetLatestVersionAsync()")]
     public static async Task CheckForUpdates()
     {
 #if DEBUG
@@ -47,8 +46,6 @@ internal static class UpdateChecker
     }
 
 #pragma warning disable CS1998
-    [RequiresUnreferencedCode(
-        "Calls System.Text.Json.JsonSerializer.Deserialize<TValue>(String, JsonSerializerOptions)")]
     private static async Task<SemVersion> GetLatestVersionAsync()
 #pragma warning restore CS1998
     {

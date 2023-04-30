@@ -1,10 +1,11 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using FluentAvalonia.Styling;
 using SFP.Models;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -19,7 +20,6 @@ public class App : Application
 {
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    [RequiresUnreferencedCode()]
     public override async void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -52,5 +52,22 @@ public class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    public static void SetApplicationTheme(string themeVariantString)
+    {
+        FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+        if (faTheme != null)
+        {
+            faTheme.PreferSystemTheme = themeVariantString == "System Default";
+        }
+
+        Current!.RequestedThemeVariant = themeVariantString switch
+        {
+            FluentAvaloniaTheme.DarkModeString => ThemeVariant.Dark,
+            FluentAvaloniaTheme.LightModeString => ThemeVariant.Light,
+            FluentAvaloniaTheme.HighContrastModeString => FluentAvaloniaTheme.HighContrastTheme,
+            _ => ThemeVariant.Default
+        };
     }
 }

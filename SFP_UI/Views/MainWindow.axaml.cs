@@ -26,7 +26,6 @@ public partial class MainWindow : AppWindow
 
     private bool _isStarting = true;
 
-    [Obsolete("Obsolete")]
     public MainWindow()
     {
         Instance = this;
@@ -43,12 +42,7 @@ public partial class MainWindow : AppWindow
 
         Application.Current!.ActualThemeVariantChanged += ApplicationActualThemeVariantChanged;
 
-        FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
-        if (faTheme != null)
-        {
-            faTheme.PreferSystemTheme = Settings.Default.AppTheme == "System Default";
-            faTheme.RequestedTheme = Settings.Default.AppTheme;
-        }
+        App.SetApplicationTheme(Settings.Default.AppTheme);
 
         IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
         Bitmap bitmap =
