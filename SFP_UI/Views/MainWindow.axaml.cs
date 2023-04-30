@@ -22,8 +22,6 @@ namespace SFP_UI.Views;
 
 public partial class MainWindow : AppWindow
 {
-    private readonly TrayIcon _trayIcon;
-
     private bool _isStarting = true;
 
     public MainWindow()
@@ -43,19 +41,6 @@ public partial class MainWindow : AppWindow
         Application.Current!.ActualThemeVariantChanged += ApplicationActualThemeVariantChanged;
 
         App.SetApplicationTheme(Settings.Default.AppTheme);
-
-        IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        Bitmap bitmap =
-            new(
-                assets!.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().FullName}/Assets/SFP-logo.ico")));
-        WindowIcon icon = new(bitmap);
-        _trayIcon = new TrayIcon { Icon = icon, ToolTipText = "Steam Friends Patcher" };
-
-        // Workaround for https://github.com/AvaloniaUI/Avalonia/issues/7588
-        TrayIcons icons = new() { _trayIcon };
-        TrayIcon.SetIcons(Application.Current, icons);
-
-        InitializeTrayIcon();
     }
 
     public static MainWindow? Instance { get; private set; }
@@ -173,28 +158,7 @@ public partial class MainWindow : AppWindow
         base.HandleWindowStateChanged(state);
     }
 
-    private void InitializeTrayIcon()
-    {
-        _trayIcon.Clicked += (_, _) => ShowWindow();
-
-        NativeMenuItem showButton = new("Show Window");
-        showButton.Click += (_, _) => ShowWindow();
-
-        NativeMenuItem exitButton = new("Exit");
-        exitButton.Click += (_, _) =>
-        {
-            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
-            {
-                lifetime.Shutdown();
-            }
-        };
-
-        _trayIcon.Menu = new NativeMenu { showButton, exitButton };
-
-        _trayIcon.IsVisible = Settings.Default.ShowTrayIcon;
-    }
-
-    private void ShowWindow()
+    public void ShowWindow()
     {
         Show();
         WindowState = WindowState.Normal;
