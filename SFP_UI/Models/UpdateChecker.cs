@@ -2,7 +2,10 @@
 
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text.Json;
+#if DEBUG
 using System.Text.Json.Serialization;
+#endif
 using Flurl.Http;
 using Semver;
 using SFP.Models;
@@ -51,7 +54,9 @@ internal static class UpdateChecker
     {
 #if DEBUG
         string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
+#pragma warning disable IL2026
         Release release = JsonSerializer.Deserialize<Release>(responseBody);
+#pragma warning restore IL2026
 #else
         Release release =
             await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
