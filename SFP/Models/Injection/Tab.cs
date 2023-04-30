@@ -1,5 +1,6 @@
 #region
 
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.WebSockets;
 using System.Text;
@@ -28,7 +29,10 @@ public struct Tab
     {
         using ClientWebSocket ws = new();
         CancellationTokenSource cts = new();
+        Stopwatch stopwatch = Stopwatch.StartNew();
         await ws.ConnectAsync(new Uri(WebSocketDebuggerUrl), cts.Token);
+        stopwatch.Stop();
+        Log.Logger.Info("Connected to " + WebSocketDebuggerUrl + " in " + stopwatch.ElapsedMilliseconds + "ms");
         string request = JsonSerializer.Serialize(new
         {
             id = 1,
