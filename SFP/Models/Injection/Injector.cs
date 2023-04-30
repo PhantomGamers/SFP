@@ -1,6 +1,10 @@
+#region
+
 using System.Text.Json.Serialization;
 using Flurl;
 using Flurl.Http;
+
+#endregion
 
 namespace SFP.Models.Injection;
 
@@ -16,6 +20,7 @@ public static class Injector
         }
         catch (FlurlHttpException e)
         {
+            Log.Logger.Error("Could not fetch tabs, is Steam running with CEF debugging enabled?");
             Log.Logger.Error(e);
             return Enumerable.Empty<Tab>();
         }
@@ -32,17 +37,22 @@ public static class Injector
             if (tab.Url.Contains("store.steampowered.com"))
             {
                 Log.Logger.Info("Found store tab!");
-                string cssInjectString =
-                $$"""
-                (function() {
-                    const style = document.createElement('style');
-                    style.id = '{{Guid.NewGuid()}}';
-                    document.head.append(style);
-                    style.textContent = `@import url('https://steamloopback.host/webkit.css');`;
-                })()
-                """.Trim().Replace('\n', ' ');
-                await tab.EvaluateJavaScript(cssInjectString);
-                Log.Logger.Info("Applied custom style");
+                await tab.InjectCss("webkit.css", "Store");
+            }
+            else if (tab.Url.Contains("steamcommunity.com"))
+            {
+                Log.Logger.Info("Found community tab!");
+                await tab.InjectCss("webkit.css", "Community");
+            }
+            else if (tab.Title == "Steam")
+            {
+                Log.Logger.Info("Found Steam tab!");
+                await tab.InjectCss("libraryroot.custom.css", "Steam");
+            }
+            else if (tab.Title.Contains("Friends List"))
+            {
+                Log.Logger.Info("Found Friends tab!");
+                await tab.InjectCss("friends.custom.css", "Friends");
             }
         }
     }

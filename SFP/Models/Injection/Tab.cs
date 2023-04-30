@@ -3,6 +3,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Websocket.Client;
+// ReSharper disable MemberCanBePrivate.Global
 
 #endregion
 
@@ -20,7 +21,7 @@ public struct Tab
     public string WebSocketDebuggerUrl { get; set; }
 
     [SuppressMessage("CodeSmell", "EPC13:Suspiciously unobserved result.")]
-    public async Task EvaluateJavaScript(string javaScript)
+    private async Task EvaluateJavaScript(string javaScript)
     {
         Log.Logger.Info(WebSocketDebuggerUrl);
         Log.Logger.Info(Environment.NewLine + javaScript);
@@ -52,5 +53,21 @@ public struct Tab
         await client.SendInstant(evalString);
         //Log.Logger.Info("navString" + Environment.NewLine + navString);
         //await client.SendInstant(navString);
+    }
+
+    public async Task InjectCss(string cssFileRelativePath, string tabFriendlyName)
+    {
+        string cssInjectString =
+            $$"""
+                (function() {
+                    if (document.getElementById('{{Id}}') !== null) return;
+                    const style = document.createElement('style');
+                    style.id = '{{Id}}';
+                    document.head.append(style);
+                    style.textContent = `@import url('https://steamloopback.host/{{cssFileRelativePath}}');`;
+                })()
+                """;
+        await EvaluateJavaScript(cssInjectString);
+        Log.Logger.Info("Applied custom style to " + tabFriendlyName);
     }
 }
