@@ -27,7 +27,8 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
-    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.Inject);
+
+    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.InjectAsync);
 
     public bool UpdateNotificationIsOpen
     {

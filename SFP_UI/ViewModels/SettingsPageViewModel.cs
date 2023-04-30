@@ -47,6 +47,7 @@ public class SettingsPageViewModel : ViewModelBase
                 _ => 3
             };
         }
+
         ReloadCommand = ReactiveCommand.CreateFromTask(OnReloadCommand);
         BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
         ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
@@ -142,6 +143,7 @@ public class SettingsPageViewModel : ViewModelBase
             {
                 return;
             }
+
             faTheme.PreferSystemTheme = value == "System Default";
             faTheme.RequestedTheme = value;
         }

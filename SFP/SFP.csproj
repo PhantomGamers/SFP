@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Crc32.NET" />
     <PackageReference Include="Flurl.Http" />
+    <PackageReference Include="Gameloop.Vdf" />
     <PackageReference Include="Ionic.Zlib.Core" />
     <PackageReference Include="PortableJsonSettingsProvider" />
     <PackageReference Include="LazyCache" />
     <PackageReference Include="System.ServiceModel.Primitives" />
-    <PackageReference Include="Gameloop.Vdf" />
     <PackageReference Include="FileWatcherEx" />
     <PackageReference Include="Websocket.Client" />
   </ItemGroup>

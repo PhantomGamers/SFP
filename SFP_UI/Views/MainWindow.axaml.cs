@@ -46,19 +46,16 @@ public partial class MainWindow : AppWindow
         FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
         if (faTheme != null)
         {
-
             faTheme.PreferSystemTheme = Settings.Default.AppTheme == "System Default";
             faTheme.RequestedTheme = Settings.Default.AppTheme;
         }
 
         IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-        var bitmap = new Bitmap(assets!.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().FullName}/Assets/SFP-logo.ico")));
-        var icon = new WindowIcon(bitmap);
-        _trayIcon = new TrayIcon
-        {
-            Icon = icon,
-            ToolTipText = "Steam Friends Patcher"
-        };
+        Bitmap bitmap =
+            new(
+                assets!.Open(new Uri($"avares://{Assembly.GetExecutingAssembly().FullName}/Assets/SFP-logo.ico")));
+        WindowIcon icon = new(bitmap);
+        _trayIcon = new TrayIcon { Icon = icon, ToolTipText = "Steam Friends Patcher" };
 
         // Workaround for https://github.com/AvaloniaUI/Avalonia/issues/7588
         TrayIcons icons = new() { _trayIcon };

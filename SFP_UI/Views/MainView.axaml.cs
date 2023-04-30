@@ -17,10 +17,7 @@ public partial class MainView : UserControl
     private Frame? _frameView;
     private NavigationView? _navView;
 
-    public MainView()
-    {
-        InitializeComponent();
-    }
+    public MainView() => InitializeComponent();
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
 
@@ -57,13 +54,15 @@ public partial class MainView : UserControl
 
         if (t == typeof(MainPage))
         {
-            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value) ?
-                (IconSource)value! : null;
+            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value)
+                ? (IconSource)value!
+                : null;
         }
         else if (t == typeof(SettingsPage))
         {
-            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value) ?
-                (IconSource)value! : null;
+            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value)
+                ? (IconSource)value!
+                : null;
         }
     }
 

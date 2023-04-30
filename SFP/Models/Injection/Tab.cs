@@ -1,8 +1,11 @@
 #region
 
 using System.Diagnostics.CodeAnalysis;
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using Websocket.Client;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 #endregion
@@ -21,41 +24,25 @@ public struct Tab
     public string WebSocketDebuggerUrl { get; set; }
 
     [SuppressMessage("CodeSmell", "EPC13:Suspiciously unobserved result.")]
-    private async Task EvaluateJavaScript(string javaScript)
+    public async Task<string> EvaluateJavaScriptAsync(string javaScript)
     {
-        Log.Logger.Info(WebSocketDebuggerUrl);
-        Log.Logger.Info(Environment.NewLine + javaScript);
-        using WebsocketClient client = new(new Uri(WebSocketDebuggerUrl));
-        await client.Start();
-        string evalString =
-        $$"""
+        using ClientWebSocket ws = new();
+        CancellationTokenSource cts = new();
+        await ws.ConnectAsync(new Uri(WebSocketDebuggerUrl), cts.Token);
+        string request = JsonSerializer.Serialize(new
         {
-            "id": 1,
-            "method": "Runtime.evaluate",
-            "params": {
-              "expression": "{{javaScript}}"
-            }
-        }
-        """.Trim().Replace('\n', ' ');
-
-        string navString =
-        $$"""
-        {
-           "id": 1,
-           "method": "Page.navigate",
-           "params": {
-             "url": "https://www.google.com"
-           }
-        }
-        """;
-
-        Log.Logger.Info("evalString" + Environment.NewLine + evalString);
-        await client.SendInstant(evalString);
-        //Log.Logger.Info("navString" + Environment.NewLine + navString);
-        //await client.SendInstant(navString);
+            id = 1,
+            method = "Runtime.evaluate",
+            @params = new { expression = javaScript, userGesture = true }
+        });
+        await ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(request)), WebSocketMessageType.Text, true,
+            cts.Token);
+        byte[] buffer = new byte[1024];
+        WebSocketReceiveResult response = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
+        return Encoding.UTF8.GetString(buffer, 0, response.Count);
     }
 
-    public async Task InjectCss(string cssFileRelativePath, string tabFriendlyName)
+    public async Task InjectCssAsync(string cssFileRelativePath, string tabFriendlyName)
     {
         string cssInjectString =
             $$"""
@@ -67,7 +54,7 @@ public struct Tab
                     style.textContent = `@import url('https://steamloopback.host/{{cssFileRelativePath}}');`;
                 })()
                 """;
-        await EvaluateJavaScript(cssInjectString);
+        await EvaluateJavaScriptAsync(cssInjectString);
         Log.Logger.Info("Applied custom style to " + tabFriendlyName);
     }
 }

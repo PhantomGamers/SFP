@@ -11,7 +11,6 @@
     <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Flurl.Http" Version="4.0.0-pre3" />
     <PackageVersion Include="Semver" Version="2.3.0" />
-    <PackageVersion Include="Crc32.NET" Version="1.2.0" />
     <PackageVersion Include="Ionic.Zlib.Core" Version="1.0.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.1" />
     <PackageVersion Include="LazyCache" Version="2.4.0" />
