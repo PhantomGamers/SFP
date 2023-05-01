@@ -122,11 +122,7 @@ public class SettingsPageViewModel : ViewModelBase
         }
     }
 
-    public static void OnSaveCommand()
-    {
-        Log.Logger.Info("Settings saved.");
-        Settings.Default.Save();
-    }
+    public static void OnSaveCommand() => Settings.Default.Save();
 
     public void OnReloadCommand()
     {
