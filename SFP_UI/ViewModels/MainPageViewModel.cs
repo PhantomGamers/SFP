@@ -27,8 +27,8 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
-
     public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.InjectAsync);
+    public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
 
     public bool UpdateNotificationIsOpen
     {
@@ -74,5 +74,24 @@ public class MainPageViewModel : ViewModelBase
         UpdateNotificationContent =
             $"Your version: {oldVersion}{Environment.NewLine}Latest version: {newVersion}";
         UpdateNotificationIsOpen = true;
+    }
+
+    private static async Task OpenFile(string relativeFilePath)
+    {
+        string file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
+        try
+        {
+            if (!File.Exists(file))
+            {
+                await File.Create(file).DisposeAsync();
+            }
+
+            Utils.OpenUrl(file);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Warn("Could not open " + file);
+            Log.Logger.Error(e);
+        }
     }
 }
