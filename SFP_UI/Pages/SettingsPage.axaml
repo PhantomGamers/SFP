@@ -34,7 +34,7 @@
                 <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
 
                 <TextBlock Text="Steam" />
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Spacing="4">
+                <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
                     <Label Margin="0,10">Steam directory</Label>
                     <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                              IsReadOnly="True"
@@ -42,6 +42,13 @@
                     <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
                     <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Label Margin="0,10">Steam launch args</Label>
+                    <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
+                             Text="{Binding SteamLaunchArgs}" />
+                </StackPanel>
+                <CheckBox Margin="0, 10" IsChecked="{Binding InjectOnSteamStart}">Inject on Steam start</CheckBox>
+                <CheckBox Margin="0, 10" IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

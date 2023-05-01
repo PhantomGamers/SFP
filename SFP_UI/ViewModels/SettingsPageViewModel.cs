@@ -9,6 +9,7 @@ using ReactiveUI;
 using SFP.Models;
 using SFP_UI.Views;
 using Settings = SFP.Properties.Settings;
+// ReSharper disable MemberCanBePrivate.Global
 
 #endregion
 
@@ -23,6 +24,9 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _showTrayIcon = Settings.Default.ShowTrayIcon;
     private bool _startMinimized = Settings.Default.StartMinimized;
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
+    private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
+    private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
+    private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
@@ -56,17 +60,37 @@ public class SettingsPageViewModel : ViewModelBase
     public string SteamDirectory
     {
         get => _steamDirectory;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _steamDirectory, value);
             Settings.Default.SteamDirectory = value;
         }
     }
 
+    public string SteamLaunchArgs
+    {
+        get => _steamLaunchArgs;
+        set
+        {
+            _ = this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
+            Settings.Default.SteamLaunchArgs = value;
+        }
+    }
+
+    public bool RunSteamOnStart
+    {
+        get => _runSteamOnStart;
+        set
+        {
+            _ = this.RaiseAndSetIfChanged(ref _runSteamOnStart, value);
+            Settings.Default.RunSteamOnStart = value;
+        }
+    }
+
     public bool CheckForUpdates
     {
         get => _checkForUpdates;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
             Settings.Default.CheckForUpdates = value;
@@ -76,7 +100,7 @@ public class SettingsPageViewModel : ViewModelBase
     public bool ShowTrayIcon
     {
         get => _showTrayIcon;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
             Settings.Default.ShowTrayIcon = value;
@@ -86,7 +110,7 @@ public class SettingsPageViewModel : ViewModelBase
     public bool MinimizeToTray
     {
         get => _minimizeToTray;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
             Settings.Default.MinimizeToTray = value;
@@ -96,7 +120,7 @@ public class SettingsPageViewModel : ViewModelBase
     public bool CloseToTray
     {
         get => _closeToTray;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _closeToTray, value);
             Settings.Default.CloseToTray = value;
@@ -106,14 +130,14 @@ public class SettingsPageViewModel : ViewModelBase
     public bool StartMinimized
     {
         get => _startMinimized;
-        private set
+        set
         {
             _ = this.RaiseAndSetIfChanged(ref _startMinimized, value);
             Settings.Default.StartMinimized = value;
         }
     }
 
-    private string AppTheme
+    public string AppTheme
     {
         get => _appTheme;
         set
@@ -121,6 +145,29 @@ public class SettingsPageViewModel : ViewModelBase
             _ = this.RaiseAndSetIfChanged(ref _appTheme, value);
             Settings.Default.AppTheme = value;
             App.SetApplicationTheme(value);
+        }
+    }
+
+    public bool InjectOnSteamStart
+    {
+        get => _injectOnSteamStart;
+        set
+        {
+            if (_injectOnSteamStart != value)
+            {
+                if (value)
+                {
+                    Log.Logger.Info("Starting Steam monitor...");
+                    Steam.StartMonitorSteam();
+                }
+                else
+                {
+                    Log.Logger.Info("Stopping Steam monitor...");
+                    Steam.StopMonitorSteam();
+                }
+            }
+            _ = this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
+            Settings.Default.InjectOnSteamStart = value;
         }
     }
 
@@ -136,6 +183,7 @@ public class SettingsPageViewModel : ViewModelBase
         CloseToTray = Settings.Default.CloseToTray;
         CheckForUpdates = Settings.Default.CheckForUpdates;
         ShowTrayIcon = Settings.Default.ShowTrayIcon;
+        InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
     }
 
     private async Task OnBrowseSteamCommand()

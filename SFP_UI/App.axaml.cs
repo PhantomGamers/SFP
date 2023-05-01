@@ -39,6 +39,19 @@ public class App : Application
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version}");
+
+                    if (Settings.Default.InjectOnSteamStart)
+                    {
+                        _ = Task.Run(() =>
+                        {
+                            Steam.StartMonitorSteam();
+                            Steam.StartSteam();
+                        });
+                    }
+                    else if (Settings.Default.RunSteamOnStart)
+                    {
+                        _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
+                    }
                 });
             }
             catch (Exception e)

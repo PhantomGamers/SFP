@@ -2,7 +2,9 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using FileWatcherEx;
 using Gameloop.Vdf;
+using SFP.Models.Injection;
 
 #endregion
 
@@ -10,9 +12,11 @@ namespace SFP.Models;
 
 public static class Steam
 {
-    private static bool IsSteamRunning => SteamProcess is not null;
+    private static bool IsSteamRunning => SteamWebHelperProcess is not null;
 
-    private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
+    private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
+
+    private static FileSystemWatcherEx? s_watcher;
 
     private static string? SteamRootDir
     {
@@ -91,7 +95,7 @@ public static class Steam
     {
         Log.Logger.Info("Shutting down Steam");
         _ = Process.Start(SteamExe, "-shutdown");
-        Process? proc = SteamProcess;
+        Process? proc = SteamWebHelperProcess;
         if (proc == null || proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
         {
             return true;
@@ -101,18 +105,47 @@ public static class Steam
         return false;
     }
 
-    private static void StartSteam(string? args = null)
+    public static void StartSteam(string? args = null)
     {
         args ??= Properties.Settings.Default.SteamLaunchArgs;
+        if (!args.Contains("--cef-enable-debugging"))
+        {
+            args += " --cef-enable-debugging";
+            args = args.Trim();
+        }
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
     }
 
-    public static void RestartSteam()
+    public static void StartMonitorSteam()
     {
-        if (ShutDownSteam())
+        if (s_watcher != null || string.IsNullOrWhiteSpace(SteamDir))
         {
-            StartSteam();
+            return;
         }
+        s_watcher = new FileSystemWatcherEx(SteamDir)
+        {
+            Filter = ".crash"
+        };
+        s_watcher.OnCreated += OnCrashFileCreated;
+        s_watcher.Start();
+    }
+
+    public static void StopMonitorSteam()
+    {
+        s_watcher?.Stop();
+        s_watcher?.Dispose();
+        s_watcher = null;
+    }
+
+    private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
+    {
+        while (!IsSteamRunning)
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+        }
+
+
+        await Injector.StartInjectionAsync();
     }
 }

@@ -12,7 +12,7 @@ namespace SFP.Properties {
 
 
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
 
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,123 +20,6 @@ namespace SFP.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldPatchOnStart {
-            get {
-                return ((bool)(this["ShouldPatchOnStart"]));
-            }
-            set {
-                this["ShouldPatchOnStart"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldPatchFriends {
-            get {
-                return ((bool)(this["ShouldPatchFriends"]));
-            }
-            set {
-                this["ShouldPatchFriends"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldPatchLibrary {
-            get {
-                return ((bool)(this["ShouldPatchLibrary"]));
-            }
-            set {
-                this["ShouldPatchLibrary"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldScanFriends {
-            get {
-                return ((bool)(this["ShouldScanFriends"]));
-            }
-            set {
-                this["ShouldScanFriends"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldScanLibrary {
-            get {
-                return ((bool)(this["ShouldScanLibrary"]));
-            }
-            set {
-                this["ShouldScanLibrary"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ScanOnly {
-            get {
-                return ((bool)(this["ScanOnly"]));
-            }
-            set {
-                this["ScanOnly"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool RestartSteamOnPatch {
-            get {
-                return ((bool)(this["RestartSteamOnPatch"]));
-            }
-            set {
-                this["RestartSteamOnPatch"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldScanOnStart {
-            get {
-                return ((bool)(this["ShouldScanOnStart"]));
-            }
-            set {
-                this["ShouldScanOnStart"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string SteamLaunchArgs {
-            get {
-                return ((string)(this["SteamLaunchArgs"]));
-            }
-            set {
-                this["SteamLaunchArgs"] = value;
             }
         }
 
@@ -150,19 +33,6 @@ namespace SFP.Properties {
             }
             set {
                 this["SteamDirectory"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string CacheDirectory {
-            get {
-                return ((string)(this["CacheDirectory"]));
-            }
-            set {
-                this["CacheDirectory"] = value;
             }
         }
 
@@ -220,19 +90,6 @@ namespace SFP.Properties {
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public int ScannerDelay {
-            get {
-                return ((int)(this["ScannerDelay"]));
-            }
-            set {
-                this["ScannerDelay"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("System Default")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string AppTheme {
@@ -260,26 +117,48 @@ namespace SFP.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldPatchResources {
+        public bool InjectOnSteamStart {
             get {
-                return ((bool)(this["ShouldPatchResources"]));
+                return ((bool)(this["InjectOnSteamStart"]));
             }
             set {
-                this["ShouldPatchResources"] = value;
+                this["InjectOnSteamStart"] = value;
             }
         }
 
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool ShouldScanResources {
+        [global::System.Configuration.DefaultSettingValueAttribute("-cef-enable-debugging")]
+        public string SteamLaunchArgs {
             get {
-                return ((bool)(this["ShouldScanResources"]));
+                return ((string)(this["SteamLaunchArgs"]));
             }
             set {
-                this["ShouldScanResources"] = value;
+                this["SteamLaunchArgs"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunSteamOnStart {
+            get {
+                return ((bool)(this["RunSteamOnStart"]));
+            }
+            set {
+                this["RunSteamOnStart"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RunOnBoot {
+            get {
+                return ((bool)(this["RunOnBoot"]));
+            }
+            set {
+                this["RunOnBoot"] = value;
             }
         }
     }
