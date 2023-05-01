@@ -9,6 +9,7 @@ namespace SFP.Models.Injection;
 public static class Injector
 {
     private static PuppeteerSharp.Browser? s_browser;
+    private static readonly bool webkit_hooked = false;
 
     public static async Task InjectAsync()
     {
@@ -50,8 +51,12 @@ public static class Injector
             return;
         }
 
-        if (page.Url.Contains("store.steampowered.com") || page.Url.Contains("steamcommunity.com"))
+        if (page.Url.Contains("store.steampowered.com") || page.Url.Contains("steamcommunity.com") || page.Url.Contains("!--/library/"))
         {
+            if (!webkit_hooked)
+            {
+                page.DOMContentLoaded += Page_Load;
+            }
             await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
             return;
         }
@@ -73,6 +78,14 @@ public static class Injector
         else if (title.StartsWith("Friends List"))
         {
             await InjectCssAsync(page, "friends.custom.css", "Friends List");
+        }
+    }
+
+    private static async void Page_Load(object? sender, EventArgs _)
+    {
+        if (sender is Page page)
+        {
+            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
         }
     }
 
