@@ -96,10 +96,12 @@ public static class Injector
             $$"""
                 function injectCss() {
                     if (document.getElementById('{{page.Target.TargetId}}') !== null) return;
-                    const style = document.createElement('style');
-                    style.id = '{{page.Target.TargetId}}';
-                    document.head.append(style);
-                    style.textContent = `@import url('https://steamloopback.host/{{cssFileRelativePath}}');`;
+                    const link = document.createElement('link');
+                    link.id = '{{page.Target.TargetId}}';
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = 'https://steamloopback.host/{{cssFileRelativePath}}';
+                    document.head.append(link);
                 }
                 if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
                     addEventListener('DOMContentLoaded', injectCss);
