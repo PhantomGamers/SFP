@@ -24,6 +24,8 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _startMinimized = Settings.Default.StartMinimized;
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
 
+    public bool IsWindows { get; } = OperatingSystem.IsWindows();
+
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
         Instance = this;
