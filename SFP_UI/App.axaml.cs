@@ -1,11 +1,13 @@
 #region
 
+using System.Reactive;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using FluentAvalonia.Styling;
+using ReactiveUI;
 using SFP.Models;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -18,7 +20,10 @@ namespace SFP_UI;
 
 public class App : Application
 {
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
 
     public override async void OnFrameworkInitializationCompleted()
     {
@@ -69,5 +74,19 @@ public class App : Application
             FluentAvaloniaTheme.HighContrastModeString => FluentAvaloniaTheme.HighContrastTheme,
             _ => ThemeVariant.Default
         };
+    }
+
+
+    public static ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } = ReactiveCommand.Create(MainWindow.ShowWindow);
+
+    public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
+
+    private static void QuitApplication()
+    {
+        Log.Logger.Info("Quitting");
+        if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+        {
+            lifetime.Shutdown();
+        }
     }
 }

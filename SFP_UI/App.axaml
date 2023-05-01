@@ -1,11 +1,11 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="SFP_UI.App"
-             xmlns:vm="using:SFP_UI.ViewModels"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:sty="using:FluentAvalonia.Styling"
+             xmlns:sfpUi="clr-namespace:SFP_UI"
              RequestedThemeVariant="Dark"
-             x:DataType="vm:AppViewModel">
+             x:DataType="sfpUi:App">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -20,14 +20,13 @@
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" PreferSystemTheme="True" />
     </Application.Styles>
 
-
     <TrayIcon.Icons>
         <TrayIcons>
             <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Show Window" Command="{Binding ShowWindowCommand}" />
-                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand} " />
+                        <NativeMenuItem Header="Show Window" Command="{Binding Source={x:Static sfpUi:App.ShowWindowCommand}}" />
+                        <NativeMenuItem Header="Quit" Command="{Binding Source={x:Static sfpUi:App.QuitCommand}}" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

@@ -154,10 +154,14 @@ public partial class MainWindow : AppWindow
         base.HandleWindowStateChanged(state);
     }
 
-    public void ShowWindow()
+    public static void ShowWindow()
     {
-        Show();
-        WindowState = WindowState.Normal;
-        Activate();
+        if (Instance == null)
+        {
+            return;
+        }
+        Instance.Show();
+        Instance.WindowState = WindowState.Normal;
+        Instance.Activate();
     }
 }
