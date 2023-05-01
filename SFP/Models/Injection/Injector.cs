@@ -8,7 +8,6 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-    public const string CefDebuggingUrl = "http://localhost:8080";
 
     private static PuppeteerSharp.Browser? s_browser;
 
