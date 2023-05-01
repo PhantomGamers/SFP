@@ -11,6 +11,7 @@ namespace SFP.Models.Injection;
 public struct Browser
 {
     [JsonPropertyName("webSocketDebuggerUrl")]
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string? WebSocketDebuggerUrl { get; set; }
 
     private const string CefDebuggingUrl = "http://localhost:8080";
