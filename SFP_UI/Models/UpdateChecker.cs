@@ -1,15 +1,13 @@
 #region
 
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
+using Semver;
+using SFP_UI.ViewModels;
+using SFP.Models;
 #if DEBUG
 using System.Text.Json.Serialization;
 #endif
-using Flurl.Http;
-using Semver;
-using SFP.Models;
-using SFP_UI.ViewModels;
 
 #endregion
 

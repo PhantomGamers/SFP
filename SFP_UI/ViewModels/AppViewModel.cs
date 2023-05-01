@@ -1,10 +1,13 @@
+#region
+
 using System.Reactive;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using NLog.Fluent;
 using ReactiveUI;
+using SFP.Models;
 using SFP_UI.Views;
-using Log = SFP.Models.Log;
+
+#endregion
 
 namespace SFP_UI.ViewModels;
 
@@ -12,6 +15,7 @@ public class AppViewModel : ViewModelBase
 {
     public ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } =
         ReactiveCommand.Create(MainWindow.Instance!.ShowWindow);
+
     public ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
 
     private static void QuitApplication()
