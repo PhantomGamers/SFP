@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NoWarn>NU1507</NoWarn>
-    <AvaloniaVersion>11.0.0-preview7</AvaloniaVersion>
+    <AvaloniaVersion>11.0.999-cibuild0034035-beta</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)"/>
@@ -30,6 +30,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.4.0"/>
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7"/>
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7.1"/>
   </ItemGroup>
 </Project>
