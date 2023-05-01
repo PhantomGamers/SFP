@@ -160,6 +160,7 @@ public partial class MainWindow : AppWindow
         {
             return;
         }
+
         Instance.Show();
         Instance.WindowState = WindowState.Normal;
         Instance.Activate();

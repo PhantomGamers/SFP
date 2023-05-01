@@ -25,7 +25,8 @@
             <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Show Window" Command="{Binding Source={x:Static sfpUi:App.ShowWindowCommand}}" />
+                        <NativeMenuItem Header="Show Window"
+                                        Command="{Binding Source={x:Static sfpUi:App.ShowWindowCommand}}" />
                         <NativeMenuItem Header="Quit" Command="{Binding Source={x:Static sfpUi:App.QuitCommand}}" />
                     </NativeMenu>
                 </TrayIcon.Menu>

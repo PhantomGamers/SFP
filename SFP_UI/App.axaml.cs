@@ -20,10 +20,12 @@ namespace SFP_UI;
 
 public class App : Application
 {
-    public override void Initialize()
-    {
-        AvaloniaXamlLoader.Load(this);
-    }
+    public static ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } =
+        ReactiveCommand.Create(MainWindow.ShowWindow);
+
+    public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
+
+    public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override async void OnFrameworkInitializationCompleted()
     {
@@ -75,11 +77,6 @@ public class App : Application
             _ => ThemeVariant.Default
         };
     }
-
-
-    public static ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } = ReactiveCommand.Create(MainWindow.ShowWindow);
-
-    public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
 
     private static void QuitApplication()
     {
