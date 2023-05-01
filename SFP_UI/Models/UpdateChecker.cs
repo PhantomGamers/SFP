@@ -5,13 +5,13 @@ using System.Net.Http.Headers;
 using Flurl.Http;
 #endif
 using System.Reflection;
-#if DEBUG
-using System.Text.Json;
-#endif
 using System.Text.Json.Serialization;
 using Semver;
 using SFP_UI.ViewModels;
 using SFP.Models;
+#if DEBUG
+using System.Text.Json;
+#endif
 
 #endregion
 
