@@ -42,19 +42,19 @@
                                 <MenuItem Header="libraryroot.custom.css"
                                           ToolTip.Tip="Opens the libraryroot.custom.css file for your custom skin for the Steam client"
                                           Command="{Binding OpenFileCommand}"
-                                          CommandParameter="libraryroot.custom.css"/>
+                                          CommandParameter="libraryroot.custom.css" />
                                 <MenuItem Header="friends.custom.css"
                                           ToolTip.Tip="Opens the friends.custom.css file for your custom skin for the friends list"
                                           Command="{Binding OpenFileCommand}"
-                                          CommandParameter="friends.custom.css"/>
+                                          CommandParameter="friends.custom.css" />
                                 <MenuItem Header="webkit.css"
                                           ToolTip.Tip="Opens the webkit.css file for your custom skin for the Steam site"
                                           Command="{Binding OpenFileCommand}"
-                                          CommandParameter="webkit.css"/>
+                                          CommandParameter="webkit.css" />
                                 <MenuItem Header="bigpicture.custom.css"
                                           ToolTip.Tip="Opens the bigpicture.custom.css file for your custom skin for big picture mode"
                                           Command="{Binding OpenFileCommand}"
-                                          CommandParameter="bigpicture.custom.css"/>
+                                          CommandParameter="bigpicture.custom.css" />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
                     </DropDownButton>

@@ -8,10 +8,10 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-    public static bool IsInjected => s_isInjected && s_browser != null;
     private static PuppeteerSharp.Browser? s_browser;
     private static bool s_webkitHooked;
     private static bool s_isInjected;
+    public static bool IsInjected => s_isInjected && s_browser != null;
 
     public static event EventHandler? InjectionStateChanged;
 
@@ -45,6 +45,7 @@ public static class Injector
             Log.Logger.Warn("Inject was called but CEF instance is not connected");
             return;
         }
+
         Target[]? targets = s_browser.Targets();
         Log.Logger.Info("Found " + targets.Length + " targets");
         foreach (Target? target in targets)

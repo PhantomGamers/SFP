@@ -18,23 +18,7 @@
         </StackPanel>
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-
-                <TextBlock Text="Steam" />
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Label Margin="0,10">Steam launch args</Label>
-                    <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
-                             Text="{Binding SteamLaunchArgs}" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
-                    <Label Margin="0,10">Steam directory</Label>
-                    <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
-                             IsReadOnly="True"
-                             VerticalContentAlignment="Center" />
-                    <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
-                    <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
-                </StackPanel>
-
-                <TextBlock Text="App Settings" Margin="0 20 0 4" />
+                <TextBlock Text="App Settings" Margin="0 10 0 4" />
                 <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
                 <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
                 <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
@@ -48,6 +32,16 @@
                     <ComboBoxItem>System Default</ComboBoxItem>
                 </ComboBox>
                 <ui:HyperlinkButton Content="Windows color settings" NavigateUri="ms-settings:colors" IsVisible="True" />
+
+                <TextBlock Text="Steam" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0" Spacing="4">
+                    <Label Margin="0,10">Steam directory</Label>
+                    <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
+                             IsReadOnly="True"
+                             VerticalContentAlignment="Center" />
+                    <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
+                    <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

@@ -17,20 +17,12 @@ namespace SFP_UI.ViewModels;
 public class SettingsPageViewModel : ViewModelBase
 {
     private string _appTheme = Settings.Default.AppTheme;
-
     private bool _checkForUpdates = Settings.Default.CheckForUpdates;
-
     private bool _closeToTray = Settings.Default.CloseToTray;
-
     private bool _minimizeToTray = Settings.Default.MinimizeToTray;
-
     private bool _showTrayIcon = Settings.Default.ShowTrayIcon;
-
     private bool _startMinimized = Settings.Default.StartMinimized;
-
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
-
-    private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
 
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
@@ -47,27 +39,17 @@ public class SettingsPageViewModel : ViewModelBase
             };
         }
 
-        ReloadCommand = ReactiveCommand.CreateFromTask(OnReloadCommand);
+        ReloadCommand = ReactiveCommand.Create(OnReloadCommand);
         BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
         ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
     }
 
     public static SettingsPageViewModel? Instance { get; private set; }
 
-    public ReactiveCommand<Unit, Unit> SaveCommand { get; } = ReactiveCommand.CreateFromTask(OnSaveCommand);
+    public ReactiveCommand<Unit, Unit> SaveCommand { get; } = ReactiveCommand.Create(OnSaveCommand);
     public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
     public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
     public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
-
-    public string SteamLaunchArgs
-    {
-        get => _steamLaunchArgs;
-        private set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
-            Settings.Default.SteamLaunchArgs = value;
-        }
-    }
 
     public string SteamDirectory
     {
@@ -140,24 +122,22 @@ public class SettingsPageViewModel : ViewModelBase
         }
     }
 
-    public static Task OnSaveCommand()
+    public static void OnSaveCommand()
     {
+        Log.Logger.Info("Settings saved.");
         Settings.Default.Save();
-        return Task.CompletedTask;
     }
 
-    public Task OnReloadCommand()
+    public void OnReloadCommand()
     {
         Settings.Default.Reload();
         SteamDirectory = Steam.SteamDir ?? string.Empty;
-        SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
         AppTheme = Settings.Default.AppTheme;
         StartMinimized = Settings.Default.StartMinimized;
         MinimizeToTray = Settings.Default.MinimizeToTray;
         CloseToTray = Settings.Default.CloseToTray;
         CheckForUpdates = Settings.Default.CheckForUpdates;
         ShowTrayIcon = Settings.Default.ShowTrayIcon;
-        return Task.CompletedTask;
     }
 
     private async Task OnBrowseSteamCommand()

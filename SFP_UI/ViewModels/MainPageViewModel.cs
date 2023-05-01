@@ -14,8 +14,8 @@ namespace SFP_UI.ViewModels;
 public class MainPageViewModel : ViewModelBase
 {
     private bool _buttonsEnabled = true;
-    private bool _isInjected;
     private int _caretIndex;
+    private bool _isInjected;
     private string _output = string.Empty;
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
@@ -30,7 +30,10 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
-    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.StartInjectionAsync);
+
+    public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
+        ReactiveCommand.CreateFromTask(Injector.StartInjectionAsync);
+
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
 

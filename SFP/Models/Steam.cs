@@ -10,13 +10,6 @@ namespace SFP.Models;
 
 public static class Steam
 {
-    private static int RunningGameId => (int)(GetRegistryData(@"Software\Valve\Steam", "RunningAppID") ?? -1);
-
-    private static string? RunningGameName =>
-        GetRegistryData(@"Software\Valve\Steam\Apps\" + RunningGameId, "Name")?.ToString();
-
-    private static bool IsGameRunning => RunningGameId > 0;
-
     private static bool IsSteamRunning => SteamProcess is not null;
 
     private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
