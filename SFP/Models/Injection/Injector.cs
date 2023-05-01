@@ -26,9 +26,9 @@ public static class Injector
             s_browser = await Puppeteer.ConnectAsync(options);
             s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
-            await InjectAsync();
             s_browser.TargetCreated += Browser_TargetUpdate;
             s_browser.TargetChanged += Browser_TargetUpdate;
+            await InjectAsync();
             s_isInjected = true;
             InjectionStateChanged?.Invoke(null, EventArgs.Empty);
         }
