@@ -8,10 +8,14 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
+    public static bool IsInjected => s_isInjected && s_browser != null;
     private static PuppeteerSharp.Browser? s_browser;
     private static bool s_webkitHooked;
+    private static bool s_isInjected;
 
-    public static async Task InjectAsync()
+    public static event EventHandler? InjectionStateChanged;
+
+    public static async Task StartInjectionAsync()
     {
         try
         {
@@ -20,22 +24,50 @@ public static class Injector
 
             Log.Logger.Info("Connecting to " + browser);
             s_browser = await Puppeteer.ConnectAsync(options);
+            s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
-            Target[]? targets = s_browser.Targets();
-            Log.Logger.Info("Found " + targets.Length + " targets");
-            foreach (Target? target in targets)
-            {
-                Page? page = await target.PageAsync();
-                await ProcessPage(page);
-            }
-
+            await InjectAsync();
             s_browser.TargetCreated += Browser_TargetUpdate;
             s_browser.TargetChanged += Browser_TargetUpdate;
+            s_isInjected = true;
+            InjectionStateChanged?.Invoke(null, EventArgs.Empty);
         }
         catch (Exception e)
         {
             Log.Logger.Error(e);
         }
+    }
+
+    private static async Task InjectAsync()
+    {
+        if (s_browser == null)
+        {
+            Log.Logger.Warn("Inject was called but CEF instance is not connected");
+            return;
+        }
+        Target[]? targets = s_browser.Targets();
+        Log.Logger.Info("Found " + targets.Length + " targets");
+        foreach (Target? target in targets)
+        {
+            Page? page = await target.PageAsync();
+            await ProcessPage(page);
+        }
+    }
+
+    public static void StopInjection()
+    {
+        Log.Logger.Info("Disconnecting from Steam instance");
+        s_webkitHooked = false;
+        s_isInjected = false;
+        s_browser?.Disconnect();
+        s_browser = null;
+        InjectionStateChanged?.Invoke(null, EventArgs.Empty);
+    }
+
+    private static void OnDisconnected(object? sender, EventArgs e)
+    {
+        Log.Logger.Info("Disconnected from Steam instance");
+        StopInjection();
     }
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)

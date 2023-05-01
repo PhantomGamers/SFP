@@ -21,8 +21,17 @@
                     <Button Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding InjectCommand}"
+                            IsVisible="{Binding !IsInjected}"
                             ToolTip.Tip="Attaches to Steam instance, enabling skin and scripting support based on your settings">
                         Start Injection
+                    </Button>
+
+                    <Button Margin="0 0 10 0"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            Command="{Binding StopInjectCommand}"
+                            IsVisible="{Binding IsInjected}"
+                            ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted">
+                        Stop Injection
                     </Button>
 
                     <DropDownButton Content="Open file"

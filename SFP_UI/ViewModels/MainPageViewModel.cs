@@ -14,20 +14,24 @@ namespace SFP_UI.ViewModels;
 public class MainPageViewModel : ViewModelBase
 {
     private bool _buttonsEnabled = true;
-
+    private bool _isInjected;
     private int _caretIndex;
-
     private string _output = string.Empty;
-
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
-    public MainPageViewModel() => Instance = this;
+
+    public MainPageViewModel()
+    {
+        Instance = this;
+        Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
+    }
 
     public static MainPageViewModel? Instance { get; private set; }
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
-    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.InjectAsync);
+    public ReactiveCommand<Unit, Unit> InjectCommand { get; } = ReactiveCommand.CreateFromTask(Injector.StartInjectionAsync);
+    public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
 
     public bool UpdateNotificationIsOpen
@@ -58,6 +62,12 @@ public class MainPageViewModel : ViewModelBase
     {
         get => _buttonsEnabled;
         set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
+    }
+
+    public bool IsInjected
+    {
+        get => Injector.IsInjected;
+        set => this.RaiseAndSetIfChanged(ref _isInjected, value);
     }
 
     public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
