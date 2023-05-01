@@ -8,7 +8,6 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-
     private static PuppeteerSharp.Browser? s_browser;
 
     public static async Task InjectAsync()
@@ -53,7 +52,7 @@ public static class Injector
 
         if (page.Url.Contains("store.steampowered.com") || page.Url.Contains("steamcommunity.com"))
         {
-            await InjectCssAsync(page, "webkit.css", "Steam web");
+            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
             return;
         }
 
@@ -62,12 +61,7 @@ public static class Injector
         if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
             title.StartsWith(@"notificationtoasts_"))
         {
-            // var targetPage = await page.Target.PageAsync();
-            // var targetTitle = await targetPage.GetTitleAsync();
-            // Log.Logger.Info("title: " + targetTitle);
-            // Log.Logger.Info("url: " + targetPage.MainFrame.Url);
-            // await InjectCssAsync(targetPage, @"bigpicture.custom.css", "Steam Big Picture Mode", silent: true);
-            Log.Logger.Info("Big picture unsupported");
+            await InjectCssAsync(page, @"bigpicture.custom.css", "Steam Big Picture Mode", silent: true);
             return;
         }
 
@@ -83,7 +77,7 @@ public static class Injector
     }
 
     private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,
-        bool retry = true, bool silent = false)
+        bool retry = true, bool silent = false, bool client = true)
     {
         string cssInjectString =
             $$"""
@@ -94,7 +88,7 @@ public static class Injector
                     document.head.append(style);
                     style.textContent = `@import url('https://steamloopback.host/{{cssFileRelativePath}}');`;
                 }
-                if (document.readyState === 'loading') {
+                if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
                     addEventListener('DOMContentLoaded', injectCss);
                 } else {
                     injectCss();
@@ -118,7 +112,7 @@ public static class Injector
 
             if (retry)
             {
-                await InjectCssAsync(page, cssFileRelativePath, tabFriendlyName, false, silent);
+                await InjectCssAsync(page, cssFileRelativePath, tabFriendlyName, false, silent, client);
             }
         }
     }
