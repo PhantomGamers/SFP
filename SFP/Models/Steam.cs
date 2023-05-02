@@ -109,6 +109,10 @@ public static class Steam
 
     public static void StartSteam(string? args = null)
     {
+        if (IsSteamRunning)
+        {
+            return;
+        }
         args ??= Properties.Settings.Default.SteamLaunchArgs;
         if (!args.Contains("--cef-enable-debugging"))
         {
