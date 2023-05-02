@@ -9,7 +9,6 @@ using Avalonia.Threading;
 using FluentAvalonia.Styling;
 using ReactiveUI;
 using SFP.Models;
-using SFP.Models.Injection;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;

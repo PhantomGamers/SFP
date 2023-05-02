@@ -1,8 +1,11 @@
+#region
+
 using System.Diagnostics;
 using System.Runtime.Versioning;
 using WindowsShortcutFactory;
 using WmiLight;
-using File = System.IO.File;
+
+#endregion
 
 namespace SFP.Models.Windows;
 
@@ -32,7 +35,7 @@ public static class Utils
             return true;
         }
 
-        var shortcut = new WindowsShortcut { Path = processPath };
+        WindowsShortcut shortcut = new() { Path = processPath };
         shortcut.Save(shortcutAddress);
         return true;
     }

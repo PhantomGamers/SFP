@@ -12,15 +12,13 @@ namespace SFP.Models;
 
 public static class Steam
 {
+    private static FileSystemWatcherEx? s_watcher;
+    private static Process? s_steamProcess;
+    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
     public static bool IsSteamRunning => SteamProcess is not null;
     private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
     private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
-    private static FileSystemWatcherEx? s_watcher;
-    private static Process? s_steamProcess;
-    public static event EventHandler? SteamStarted;
-    public static event EventHandler? SteamStopped;
-    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
     private static string? SteamRootDir
     {
@@ -66,6 +64,8 @@ public static class Steam
     }
 
     private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
+    public static event EventHandler? SteamStarted;
+    public static event EventHandler? SteamStopped;
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in generic exception handler",
         Justification = "ok if null")]
@@ -101,6 +101,7 @@ public static class Steam
         {
             return;
         }
+
         Log.Logger.Info("Shutting down Steam");
         _ = Process.Start(SteamExe, "-shutdown");
     }
@@ -111,12 +112,14 @@ public static class Steam
         {
             return;
         }
+
         args ??= Properties.Settings.Default.SteamLaunchArgs;
         if (!args.Contains("-cef-enable-debugging"))
         {
             args += " -cef-enable-debugging";
             args = args.Trim();
         }
+
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
         if (Properties.Settings.Default.InjectOnSteamStart)
@@ -153,10 +156,8 @@ public static class Steam
         {
             return;
         }
-        s_watcher = new FileSystemWatcherEx(SteamDir)
-        {
-            Filter = ".crash"
-        };
+
+        s_watcher = new FileSystemWatcherEx(SteamDir) { Filter = ".crash" };
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.Start();
@@ -175,10 +176,8 @@ public static class Steam
         await TryInject();
     }
 
-    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
-    {
+    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>
         SteamStopped?.Invoke(null, EventArgs.Empty);
-    }
 
     public static async Task TryInject()
     {
@@ -213,6 +212,7 @@ public static class Steam
                 {
                     return;
                 }
+
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 

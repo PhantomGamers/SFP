@@ -1,21 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\SFPCommon.props" />
+  <Import Project="..\SFPCommon.props"/>
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Flurl.Http" />
-    <PackageReference Include="Gameloop.Vdf" />
-    <PackageReference Include="PortableJsonSettingsProvider" />
-    <PackageReference Include="LazyCache" />
-    <PackageReference Include="PuppeteerSharp" />
-    <PackageReference Include="System.ServiceModel.Primitives" />
-    <PackageReference Include="FileWatcherEx" />
-    <PackageReference Include="WindowsShortcutFactory" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
-    <PackageReference Include="WmiLight" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
+    <PackageReference Include="Flurl.Http"/>
+    <PackageReference Include="Gameloop.Vdf"/>
+    <PackageReference Include="PortableJsonSettingsProvider"/>
+    <PackageReference Include="PuppeteerSharp"/>
+    <PackageReference Include="FileWatcherEx"/>
+    <PackageReference Include="WindowsShortcutFactory" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+    <PackageReference Include="WmiLight" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
   </ItemGroup>
 
   <ItemGroup>

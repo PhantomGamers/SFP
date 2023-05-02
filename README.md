@@ -10,7 +10,8 @@ For the old version of SFP that works with Steam Stable see https://github.com/P
 
 ## Instructions
 
-Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.
+Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your
+given OS and run the SFP_UI application.
 
 If you have .net 7 installed you can download the _net7.zip release, otherwise download the _SelfContained.zip release.
 
@@ -20,9 +21,12 @@ For full functionality **SFP must be running with its injector started as long a
 
 **Steam must be running with the `-cef-enable-debugging` argument for SFP to work.**
 
-If Steam is started with SFP it will do this automatically. Otherwise, **on Windows only** for now, **you can use the "Force Steam arguments" setting to automatically restart Steam with the chosen arguments** if it does not already have them.
+If Steam is started with SFP it will do this automatically. Otherwise, **on Windows only** for now, **you can use the "
+Force Steam arguments" setting to automatically restart Steam with the chosen arguments** if it does not already have
+them.
 
 Use the "Open File" button in SFP to access the files where your custom skins are applied from.
+
 ## Features
 
 ### Steam Skinning
@@ -40,7 +44,8 @@ Use the "Open File" button in SFP to access the files where your custom skins ar
 
 ## Known Issues
 
-* Sometimes when Steam is first started and starts with the store page opened, the store page will not be skinned until it navigates to a new page.
+* Sometimes when Steam is first started and starts with the store page opened, the store page will not be skinned until
+  it navigates to a new page.
 
 ## Dependencies
 

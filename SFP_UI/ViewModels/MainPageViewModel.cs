@@ -17,9 +17,9 @@ public class MainPageViewModel : ViewModelBase
     private int _caretIndex;
     private bool _isInjected;
     private string _output = string.Empty;
+    private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
-    private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
 
     public MainPageViewModel()
     {
@@ -37,19 +37,11 @@ public class MainPageViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
         ReactiveCommand.CreateFromTask(ExecuteInjectCommand);
 
-    private static async Task ExecuteInjectCommand()
-    {
-        await Task.Run(() => Steam.TryInject());
-    }
-
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
-    public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } = ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
 
-    private static async Task ExecuteStartSteamCommand()
-    {
-        await Task.Run(() => Steam.RestartSteam());
-    }
+    public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
+        ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
 
     public bool UpdateNotificationIsOpen
     {
@@ -92,6 +84,10 @@ public class MainPageViewModel : ViewModelBase
         get => _startSteamText;
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
+
+    private static async Task ExecuteInjectCommand() => await Task.Run(() => Steam.TryInject());
+
+    private static async Task ExecuteStartSteamCommand() => await Task.Run(() => Steam.RestartSteam());
 
     public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
 
