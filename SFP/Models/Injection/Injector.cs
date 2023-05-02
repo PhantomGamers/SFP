@@ -17,6 +17,11 @@ public static class Injector
 
     public static async Task StartInjectionAsync(bool noError = false)
     {
+        if (s_browser is { IsConnected: true })
+        {
+            return;
+        }
+
         try
         {
             string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
