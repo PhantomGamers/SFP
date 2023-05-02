@@ -11,7 +11,7 @@ public static class Injector
     private static PuppeteerSharp.Browser? s_browser;
     private static bool s_webkitHooked;
     private static bool s_isInjected;
-    private static readonly ReaderWriterLockSlim s_lock = new();
+    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsInjected => s_isInjected && s_browser != null;
 
     public static event EventHandler? InjectionStateChanged;
@@ -23,12 +23,13 @@ public static class Injector
             return;
         }
 
+        if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
+        {
+            return;
+        }
+
         try
         {
-            if (!s_lock.TryEnterWriteLock(TimeSpan.Zero))
-            {
-                return;
-            }
             string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new() { BrowserWSEndpoint = browser, DefaultViewport = null };
 
@@ -41,6 +42,7 @@ public static class Injector
             await InjectAsync();
             s_isInjected = true;
             InjectionStateChanged?.Invoke(null, EventArgs.Empty);
+            Log.Logger.Info("Injection finished");
         }
         catch (Exception e)
         {
@@ -53,10 +55,7 @@ public static class Injector
         }
         finally
         {
-            if (s_lock.IsWriteLockHeld)
-            {
-                s_lock.ExitWriteLock();
-            }
+            s_semaphore.Release();
         }
     }
 
@@ -98,6 +97,10 @@ public static class Injector
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
     {
+        if (e.Target.Url.Contains("store.steampowered.com"))
+        {
+            Log.Logger.Info("target is steam site");
+        }
         Page? page = await e.Target.PageAsync();
         await ProcessPage(page);
     }
@@ -117,6 +120,8 @@ public static class Injector
                 page.DOMContentLoaded += Page_Load;
                 s_webkitHooked = true;
             }
+
+            Log.Logger.Info("found steam site");
 
             await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
             return;
