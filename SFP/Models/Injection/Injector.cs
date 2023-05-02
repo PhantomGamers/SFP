@@ -132,7 +132,7 @@ public static class Injector
         if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
             title.StartsWith(@"notificationtoasts_"))
         {
-            await InjectCssAsync(page, @"bigpicture.custom.css", "Steam Big Picture Mode", silent: true);
+            await InjectCssAsync(page, @"bigpicture.custom.css", "Steam Big Picture Mode");
             return;
         }
 
@@ -141,10 +141,12 @@ public static class Injector
             title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
         {
             await InjectCssAsync(page, @"libraryroot.custom.css", "Steam client");
+            return;
         }
-        else if (title.StartsWith("Friends List"))
+
+        if (await page.QuerySelectorAsync(".friendsui-container") != null)
         {
-            await InjectCssAsync(page, "friends.custom.css", "Friends List");
+            await InjectCssAsync(page, "friends.custom.css", "Friends and Chat");
         }
     }
 
