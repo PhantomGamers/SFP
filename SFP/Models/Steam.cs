@@ -20,6 +20,11 @@ public static class Steam
 
     private static FileSystemWatcherEx? s_watcher;
 
+    private static Process? s_steamProcess;
+
+
+    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
+
     private static string? SteamRootDir
     {
         get
@@ -93,21 +98,17 @@ public static class Steam
         }
     }
 
-    private static bool ShutDownSteam()
+    private static void ShutDownSteam(Process steamProcess)
     {
+        if (steamProcess.HasExited)
+        {
+            return;
+        }
         Log.Logger.Info("Shutting down Steam");
         _ = Process.Start(SteamExe, "-shutdown");
-        Process? proc = SteamWebHelperProcess;
-        if (proc == null || proc.WaitForExit((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
-        {
-            return true;
-        }
-
-        Log.Logger.Warn("Could not shut down Steam. Manually shut down Steam and try again.");
-        return false;
     }
 
-    public static void StartSteam(string? args = null)
+    public static async Task StartSteam(string? args = null)
     {
         if (IsSteamRunning)
         {
@@ -121,6 +122,29 @@ public static class Steam
         }
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
+        await TryInject();
+    }
+
+    public static async Task RestartSteam(string? args = null)
+    {
+        if (IsSteamRunning)
+        {
+            s_steamProcess = SteamProcess;
+            s_steamProcess!.EnableRaisingEvents = true;
+            s_steamProcess.Exited += OnSteamExited;
+            ShutDownSteam(s_steamProcess);
+        }
+        else
+        {
+            await StartSteam(args);
+        }
+    }
+
+    private static async void OnSteamExited(object? sender, EventArgs e)
+    {
+        s_steamProcess?.Dispose();
+        s_steamProcess = null;
+        await StartSteam();
     }
 
     public static void StartMonitorSteam()
@@ -146,15 +170,32 @@ public static class Steam
 
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
-        while (!IsSteamWebHelperRunning)
+        await TryInject();
+    }
+
+    private static async Task TryInject()
+    {
+        if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
         {
-            if (!IsSteamRunning)
-            {
-                return;
-            }
-            await Task.Delay(TimeSpan.FromMilliseconds(100));
+            return;
         }
 
-        await Injector.StartInjectionAsync(true);
+        try
+        {
+            while (!IsSteamWebHelperRunning)
+            {
+                if (!IsSteamRunning)
+                {
+                    return;
+                }
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+            }
+
+            await Injector.StartInjectionAsync(true);
+        }
+        finally
+        {
+            s_semaphore.Release();
+        }
     }
 }

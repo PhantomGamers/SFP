@@ -18,7 +18,8 @@
         <Grid>
             <DockPanel Margin="16">
                 <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
-                    <Button Margin="0 0 10 0"
+                    <Button HorizontalAlignment="Left"
+                            Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding InjectCommand}"
                             IsVisible="{Binding !IsInjected}"
@@ -26,12 +27,21 @@
                         Start Injection
                     </Button>
 
-                    <Button Margin="0 0 10 0"
+                    <Button HorizontalAlignment="Left"
+                            Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding StopInjectCommand}"
                             IsVisible="{Binding IsInjected}"
                             ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted">
                         Stop Injection
+                    </Button>
+
+                    <Button Margin="0 0 15 0"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding ButtonsEnabled}"
+                            Command="{Binding StartSteamCommand}"
+                            ToolTip.Tip="Starts or restarts Steam with the arguments given in settings">
+                        (Re)Start Steam
                     </Button>
 
                     <DropDownButton Content="Open file"

@@ -41,6 +41,12 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
+    public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } = ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
+
+    private static async Task ExecuteStartSteamCommand()
+    {
+        await Task.Run(() => Steam.RestartSteam());
+    }
 
     public bool UpdateNotificationIsOpen
     {
