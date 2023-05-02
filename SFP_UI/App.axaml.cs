@@ -45,7 +45,10 @@ public class App : Application
                         _ = Task.Run(() =>
                         {
                             Steam.StartMonitorSteam();
-                            Steam.StartSteam();
+                            if (Settings.Default.RunSteamOnStart)
+                            {
+                                Steam.StartSteam();
+                            }
                         });
                     }
                     else if (Settings.Default.RunSteamOnStart)
