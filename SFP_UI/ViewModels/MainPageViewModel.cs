@@ -31,8 +31,8 @@ public class MainPageViewModel : ViewModelBase
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
 
-    public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
-        ReactiveCommand.CreateFromTask(Injector.StartInjectionAsync);
+    public ReactiveCommand<bool, Unit> InjectCommand { get; } =
+        ReactiveCommand.CreateFromTask<bool>(Injector.StartInjectionAsync);
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
