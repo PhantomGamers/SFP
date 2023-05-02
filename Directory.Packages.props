@@ -15,7 +15,6 @@
     <PackageVersion Include="Semver" Version="2.3.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.1" />
     <PackageVersion Include="LazyCache" Version="2.4.0" />
-    <PackageVersion Include="System.Management" Version="8.0.0-preview.3.23174.8" />
     <PackageVersion Include="System.ServiceModel.Primitives" Version="6.0.0-rc.23205.4" />
     <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
     <PackageVersion Include="NLog" Version="5.1.4" />
@@ -34,5 +33,6 @@
     <PackageVersion Include="FileWatcherEx" Version="2.4.0" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7.1" />
     <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0" />
+    <PackageVersion Include="WmiLight" Version="3.1.0" />
   </ItemGroup>
 </Project>

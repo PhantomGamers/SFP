@@ -1,8 +1,7 @@
 using System.Diagnostics;
-using System.Management;
-using System.Reflection;
 using System.Runtime.Versioning;
 using WindowsShortcutFactory;
+using WmiLight;
 using File = System.IO.File;
 
 namespace SFP.Models.Windows;
@@ -40,9 +39,9 @@ public static class Utils
 
     public static List<string> GetCommandLine(Process process)
     {
-        using ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
-        using ManagementObjectCollection objects = searcher.Get();
-        string? commandLine = objects.Cast<ManagementBaseObject>().SingleOrDefault()?["CommandLine"]?.ToString();
+        using WmiConnection con = new();
+        WmiQuery query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
+        string? commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
         return commandLine != null ? commandLine.Split(' ').ToList() : new List<string>();
     }
 }
