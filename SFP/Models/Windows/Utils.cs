@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Management;
 using System.Reflection;
 using System.Runtime.Versioning;
 using WindowsShortcutFactory;
@@ -34,5 +36,13 @@ public static class Utils
         var shortcut = new WindowsShortcut { Path = processPath };
         shortcut.Save(shortcutAddress);
         return true;
+    }
+
+    public static List<string> GetCommandLine(Process process)
+    {
+        using ManagementObjectSearcher searcher = new("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
+        using ManagementObjectCollection objects = searcher.Get();
+        string? commandLine = objects.Cast<ManagementBaseObject>().SingleOrDefault()?["CommandLine"]?.ToString();
+        return commandLine != null ? commandLine.Split(' ').ToList() : new List<string>();
     }
 }

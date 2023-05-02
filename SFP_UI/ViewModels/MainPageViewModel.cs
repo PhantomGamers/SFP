@@ -36,7 +36,7 @@ public class MainPageViewModel : ViewModelBase
 
     private static async Task ExecuteInjectCommand()
     {
-        await Task.Run(() => Injector.StartInjectionAsync());
+        await Task.Run(() => Steam.TryInject());
     }
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);

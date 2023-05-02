@@ -122,7 +122,10 @@ public static class Steam
         }
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
-        await TryInject();
+        if (Properties.Settings.Default.InjectOnSteamStart)
+        {
+            await TryInject();
+        }
     }
 
     public static async Task RestartSteam(string? args = null)
@@ -173,7 +176,7 @@ public static class Steam
         await TryInject();
     }
 
-    private static async Task TryInject()
+    public static async Task TryInject()
     {
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
         {
@@ -182,6 +185,24 @@ public static class Steam
 
         try
         {
+            if (!IsSteamRunning)
+            {
+                return;
+            }
+
+            if (OperatingSystem.IsWindows() && Properties.Settings.Default.ForceSteamArgs)
+            {
+                bool argumentMissing = Properties.Settings.Default.SteamLaunchArgs.Split(' ')
+#pragma warning disable CA1416
+                    .Any(arg => !Windows.Utils.GetCommandLine(SteamProcess!).Contains(arg));
+#pragma warning restore CA1416
+
+                if (argumentMissing)
+                {
+                    await RestartSteam();
+                }
+            }
+
             while (!IsSteamWebHelperRunning)
             {
                 if (!IsSteamRunning)

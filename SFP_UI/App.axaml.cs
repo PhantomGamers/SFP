@@ -61,21 +61,15 @@ public class App : Application
 
         if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
         {
-            _ = Task.Run(() => Injector.StartInjectionAsync());
+            _ = Task.Run(Steam.TryInject);
         }
 
         if (Settings.Default.InjectOnSteamStart)
         {
-            _ = Task.Run(() =>
-            {
-                Steam.StartMonitorSteam();
-                if (Settings.Default.RunSteamOnStart)
-                {
-                    Steam.StartSteam();
-                }
-            });
+            _ = Task.Run(Steam.StartMonitorSteam);
         }
-        else if (Settings.Default.RunSteamOnStart)
+
+        if (Settings.Default.RunSteamOnStart)
         {
             _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
         }

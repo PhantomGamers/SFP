@@ -30,6 +30,7 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
     private bool _runOnBoot = Settings.Default.RunOnBoot;
     private bool _injectOnAppStart = Settings.Default.InjectOnAppStart;
+    private bool _forceSteamArgs = Settings.Default.ForceSteamArgs;
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
@@ -204,6 +205,16 @@ public class SettingsPageViewModel : ViewModelBase
         }
     }
 
+    public bool ForceSteamArgs
+    {
+        get => _forceSteamArgs;
+        set
+        {
+            _ = this.RaiseAndSetIfChanged(ref _forceSteamArgs, value);
+            Settings.Default.ForceSteamArgs = value;
+        }
+    }
+
     public static void OnSaveCommand() => Settings.Default.Save();
 
     public void OnReloadCommand()
@@ -221,6 +232,7 @@ public class SettingsPageViewModel : ViewModelBase
         RunOnBoot = Settings.Default.RunOnBoot;
         RunSteamOnStart = Settings.Default.RunSteamOnStart;
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
+        ForceSteamArgs = Settings.Default.ForceSteamArgs;
     }
 
     private async Task OnBrowseSteamCommand()

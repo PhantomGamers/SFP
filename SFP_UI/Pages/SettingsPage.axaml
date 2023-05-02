@@ -24,6 +24,8 @@
                 <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
                 <CheckBox IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
                 <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
+                <CheckBox Margin="0, 10" IsChecked="{Binding InjectOnAppStart}">Inject on app start</CheckBox>
+                <CheckBox Margin="0, 10" IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
                 <CheckBox Margin="0, 10" IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run On boot</CheckBox>
                 <Label>App theme</Label>
                 <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
@@ -50,8 +52,7 @@
                              Text="{Binding SteamLaunchArgs}" />
                 </StackPanel>
                 <CheckBox Margin="0, 10" IsChecked="{Binding InjectOnSteamStart}">Inject on Steam start</CheckBox>
-                <CheckBox Margin="0, 10" IsChecked="{Binding InjectOnAppStart}">Inject on app start</CheckBox>
-                <CheckBox Margin="0, 10" IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
+                <CheckBox Margin="0, 10" IsChecked="{Binding ForceSteamArgs}" IsVisible="{Binding IsWindows}">Force Steam arguments</CheckBox>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

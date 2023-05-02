@@ -12,9 +12,10 @@
     <PackageReference Include="PortableJsonSettingsProvider" />
     <PackageReference Include="LazyCache" />
     <PackageReference Include="PuppeteerSharp" />
+    <PackageReference Include="System.Management" />
     <PackageReference Include="System.ServiceModel.Primitives" />
     <PackageReference Include="FileWatcherEx" />
-    <PackageReference Include="WindowsShortcutFactory" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+    <PackageReference Include="WindowsShortcutFactory" Condition="$([MSBuild]::IsOSPlatform('Windows'))" />
   </ItemGroup>
 
   <ItemGroup>
