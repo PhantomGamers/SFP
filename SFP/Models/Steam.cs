@@ -140,12 +140,21 @@ public static class Steam
 
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
+        var timeout = TimeSpan.FromSeconds(10);
+        using var cts = new CancellationTokenSource(timeout);
         while (!IsSteamRunning)
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(100));
+            try
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(100), cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
         }
 
 
-        await Injector.StartInjectionAsync();
+        await Injector.StartInjectionAsync(true);
     }
 }

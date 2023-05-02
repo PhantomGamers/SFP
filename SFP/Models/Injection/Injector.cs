@@ -15,7 +15,7 @@ public static class Injector
 
     public static event EventHandler? InjectionStateChanged;
 
-    public static async Task StartInjectionAsync()
+    public static async Task StartInjectionAsync(bool noError = false)
     {
         try
         {
@@ -34,6 +34,10 @@ public static class Injector
         }
         catch (Exception e)
         {
+            if (noError)
+            {
+                return;
+            }
             Log.Logger.Error(e);
         }
     }
