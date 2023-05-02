@@ -18,44 +18,52 @@
         <Grid>
             <DockPanel Margin="16">
                 <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
-                    <Button Margin="0 0 10 0"
+                    <Button HorizontalAlignment="Left"
+                            Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            Command="{Binding PatchCommand}"
-                            ToolTip.Tip="Patches Steam, enabling skin support based on your settings">
-                        Patch
+                            Command="{Binding InjectCommand}"
+                            IsVisible="{Binding !IsInjected}"
+                            ToolTip.Tip="Attaches to Steam instance, enabling skin and scripting support based on your settings">
+                        Start Injection
                     </Button>
-                    <Button Margin="0 0 10 0"
+
+                    <Button HorizontalAlignment="Left"
+                            Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            IsVisible="{Binding !ScannerActive}"
-                            Command="{Binding StartScanCommand}"
-                            ToolTip.Tip="Starts scanning for changes to Steam, repatching as needed based on your settings">
-                        Start scanner
+                            Command="{Binding StopInjectCommand}"
+                            IsVisible="{Binding IsInjected}"
+                            ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted">
+                        Stop Injection
                     </Button>
-                    <Button Margin="0 0 10 0"
+
+                    <Button Margin="0 0 15 0"
+                            HorizontalAlignment="Right"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            IsVisible="{Binding ScannerActive}"
-                            Command="{Binding StopScanCommand}"
-                            ToolTip.Tip="Stops scanning for changes to Steam">
-                        Stop Scanner
-                    </Button>
-                    <Button Margin="0 0 10 0"
-                            IsEnabled="{Binding ButtonsEnabled}"
-                            Command="{Binding ResetSteamCommand}"
-                            ToolTip.Tip="Resets Steam to stock, removing all patches">
-                        Reset Steam
-                    </Button>
+                            Command="{Binding StartSteamCommand}"
+                            ToolTip.Tip="Starts or restarts Steam with the arguments given in settings"
+                            Content="{Binding StartSteamText}" />
 
                     <DropDownButton Content="Open file"
                                     HorizontalAlignment="Right"
                                     Margin="0 0 15 0">
                         <DropDownButton.Flyout>
                             <MenuFlyout Placement="Top">
-                                <MenuItem Header="friends.custom.css"
-                                          Command="{Binding OpenFriendsCustomCssCommand}"
-                                          ToolTip.Tip="Opens the friends.custom.css file where your custom skin for the friends list goes" />
                                 <MenuItem Header="libraryroot.custom.css"
-                                          Command="{Binding OpenLibraryRootCustomCssCommand}"
-                                          ToolTip.Tip="Opens the libraryroot.custom.css file where your custom skin for the library goes" />
+                                          ToolTip.Tip="Opens the libraryroot.custom.css file for your custom skin for the Steam client"
+                                          Command="{Binding OpenFileCommand}"
+                                          CommandParameter="libraryroot.custom.css" />
+                                <MenuItem Header="friends.custom.css"
+                                          ToolTip.Tip="Opens the friends.custom.css file for your custom skin for the friends list"
+                                          Command="{Binding OpenFileCommand}"
+                                          CommandParameter="friends.custom.css" />
+                                <MenuItem Header="webkit.css"
+                                          ToolTip.Tip="Opens the webkit.css file for your custom skin for the Steam site"
+                                          Command="{Binding OpenFileCommand}"
+                                          CommandParameter="webkit.css" />
+                                <MenuItem Header="bigpicture.custom.css"
+                                          ToolTip.Tip="Opens the bigpicture.custom.css file for your custom skin for big picture mode"
+                                          Command="{Binding OpenFileCommand}"
+                                          CommandParameter="bigpicture.custom.css" />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
                     </DropDownButton>

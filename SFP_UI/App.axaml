@@ -3,7 +3,9 @@
              x:Class="SFP_UI.App"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:sty="using:FluentAvalonia.Styling"
-             RequestedThemeVariant="Dark">
+             xmlns:sfpUi="clr-namespace:SFP_UI"
+             RequestedThemeVariant="Dark"
+             x:DataType="sfpUi:App">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -17,4 +19,18 @@
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" PreferSystemTheme="True" />
     </Application.Styles>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Show Window"
+                                        Command="{Binding Source={x:Static sfpUi:App.ShowWindowCommand}}" />
+                        <NativeMenuItem Header="Quit" Command="{Binding Source={x:Static sfpUi:App.QuitCommand}}" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
 </Application>

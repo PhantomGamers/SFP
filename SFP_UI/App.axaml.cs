@@ -1,14 +1,18 @@
 #region
 
+using System.Reactive;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using FluentAvalonia.Styling;
+using ReactiveUI;
 using SFP.Models;
+using SFP.Models.Injection;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;
-using FileSystemWatcher = SFP.Models.FileSystemWatchers.FileSystemWatcher;
 using Settings = SFP.Properties.Settings;
 
 #endregion
@@ -17,12 +21,15 @@ namespace SFP_UI;
 
 public class App : Application
 {
+    public static ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } =
+        ReactiveCommand.Create(MainWindow.ShowWindow);
+
+    public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
+
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
@@ -52,22 +59,47 @@ public class App : Application
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
         }
 
-        if (Settings.Default.ShouldPatchOnStart)
+        if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
         {
-            await Dispatcher.UIThread.InvokeAsync(MainPageViewModel.OnPatchCommand);
+            _ = Task.Run(Steam.TryInject);
         }
 
-        if (Settings.Default.ShouldScanOnStart)
+        if (Settings.Default.InjectOnSteamStart)
         {
-            await Dispatcher.UIThread.InvokeAsync(MainPageViewModel.OnScanCommand);
+            _ = Task.Run(Steam.StartMonitorSteam);
+        }
+
+        if (Settings.Default.RunSteamOnStart)
+        {
+            _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private async void OnProcessExit(object? sender, EventArgs e)
+    public static void SetApplicationTheme(string themeVariantString)
     {
-        _ = HardLink.RemoveAllHardLinks();
-        await FileSystemWatcher.StopFileWatchers();
+        FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+        if (faTheme != null)
+        {
+            faTheme.PreferSystemTheme = themeVariantString == "System Default";
+        }
+
+        Current!.RequestedThemeVariant = themeVariantString switch
+        {
+            FluentAvaloniaTheme.DarkModeString => ThemeVariant.Dark,
+            FluentAvaloniaTheme.LightModeString => ThemeVariant.Light,
+            FluentAvaloniaTheme.HighContrastModeString => FluentAvaloniaTheme.HighContrastTheme,
+            _ => ThemeVariant.Default
+        };
+    }
+
+    private static void QuitApplication()
+    {
+        Log.Logger.Info("Quitting");
+        if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
+        {
+            lifetime.Shutdown();
+        }
     }
 }
