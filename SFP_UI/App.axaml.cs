@@ -36,9 +36,10 @@ public class App : Application
             try
             {
                 desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version}");
+                    await HandleStartupTasks();
                 });
             }
             catch (Exception e)
@@ -58,22 +59,25 @@ public class App : Application
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
         }
 
+        base.OnFrameworkInitializationCompleted();
+    }
+
+    private static async Task HandleStartupTasks()
+    {
         if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
         {
-            _ = Task.Run(Steam.TryInject);
+            await Task.Run(Steam.TryInject);
         }
 
         if (Settings.Default.InjectOnSteamStart)
         {
-            _ = Task.Run(Steam.StartMonitorSteam);
+            await Task.Run(Steam.StartMonitorSteam);
         }
 
         if (Settings.Default.RunSteamOnStart)
         {
-            _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
+            await Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
         }
-
-        base.OnFrameworkInitializationCompleted();
     }
 
     public static void SetApplicationTheme(string themeVariantString)

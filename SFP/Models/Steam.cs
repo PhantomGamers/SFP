@@ -161,6 +161,7 @@ public static class Steam
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.Start();
+        Log.Logger.Info("Monitoring Steam state");
     }
 
     public static void StopMonitorSteam()
@@ -202,6 +203,7 @@ public static class Steam
 
                 if (argumentMissing)
                 {
+                    Log.Logger.Info("Steam process detected with missing launch arguments");
                     await RestartSteam();
                 }
             }

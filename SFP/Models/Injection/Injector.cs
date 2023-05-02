@@ -184,7 +184,7 @@ public static class Injector
         }
         catch (EvaluationFailedException e)
         {
-            if (!silent)
+            if (!silent && tabFriendlyName != "Steam web")
             {
                 Log.Logger.Error(tabFriendlyName + " failed to inject: " + e);
                 Log.Logger.Info("Retrying...");
