@@ -79,7 +79,10 @@ public static class Injector
 
     public static void StopInjection()
     {
-        Log.Logger.Info("Disconnecting from Steam instance");
+        if (s_browser?.IsConnected ?? false)
+        {
+            Log.Logger.Info("Disconnecting from Steam instance");
+        }
         s_webkitHooked = false;
         s_isInjected = false;
         s_browser?.Disconnect();
