@@ -19,11 +19,14 @@ public class MainPageViewModel : ViewModelBase
     private string _output = string.Empty;
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
+    private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
 
     public MainPageViewModel()
     {
         Instance = this;
         Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
+        Steam.SteamStarted += (_, _) => StartSteamText = "Restart Steam";
+        Steam.SteamStopped += (_, _) => StartSteamText = "Start Steam";
     }
 
     public static MainPageViewModel? Instance { get; private set; }
@@ -82,6 +85,12 @@ public class MainPageViewModel : ViewModelBase
     {
         get => Injector.IsInjected;
         set => this.RaiseAndSetIfChanged(ref _isInjected, value);
+    }
+
+    public string StartSteamText
+    {
+        get => _startSteamText;
+        set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
 
     public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");

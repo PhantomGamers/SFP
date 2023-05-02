@@ -13,16 +13,13 @@ namespace SFP.Models;
 public static class Steam
 {
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
-    private static bool IsSteamRunning => SteamProcess is not null;
-
+    public static bool IsSteamRunning => SteamProcess is not null;
     private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
     private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
-
     private static FileSystemWatcherEx? s_watcher;
-
     private static Process? s_steamProcess;
-
-
+    public static event EventHandler? SteamStarted;
+    public static event EventHandler? SteamStopped;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
     private static string? SteamRootDir
@@ -161,6 +158,7 @@ public static class Steam
             Filter = ".crash"
         };
         s_watcher.OnCreated += OnCrashFileCreated;
+        s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.Start();
     }
 
@@ -173,7 +171,13 @@ public static class Steam
 
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
+        SteamStarted?.Invoke(null, EventArgs.Empty);
         await TryInject();
+    }
+
+    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
+    {
+        SteamStopped?.Invoke(null, EventArgs.Empty);
     }
 
     public static async Task TryInject()

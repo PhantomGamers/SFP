@@ -40,9 +40,8 @@
                             HorizontalAlignment="Right"
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding StartSteamCommand}"
-                            ToolTip.Tip="Starts or restarts Steam with the arguments given in settings">
-                        (Re)Start Steam
-                    </Button>
+                            ToolTip.Tip="Starts or restarts Steam with the arguments given in settings"
+                            Content="{Binding StartSteamText}" />
 
                     <DropDownButton Content="Open file"
                                     HorizontalAlignment="Right"
