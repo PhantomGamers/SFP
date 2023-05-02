@@ -24,6 +24,7 @@
                 <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
                 <CheckBox IsChecked="{Binding CloseToTray}">Close to tray</CheckBox>
                 <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
+                <CheckBox IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run On boot</CheckBox>
                 <Label>App theme</Label>
                 <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
                     <ComboBoxItem>Dark</ComboBoxItem>

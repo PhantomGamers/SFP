@@ -1,6 +1,7 @@
 #region
 
 using System.Reactive;
+using System.Runtime.Versioning;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -27,6 +28,7 @@ public class SettingsPageViewModel : ViewModelBase
     private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
     private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
     private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
+    private bool _runOnBoot = Settings.Default.RunOnBoot;
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
@@ -168,6 +170,26 @@ public class SettingsPageViewModel : ViewModelBase
             }
             _ = this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
             Settings.Default.InjectOnSteamStart = value;
+        }
+    }
+
+    public bool RunOnBoot
+    {
+        get => _runOnBoot;
+        set
+        {
+            if (_runOnBoot != value)
+            {
+                if (OperatingSystem.IsWindows())
+                {
+                    if (!SFP.Models.Windows.Utils.SetAppRunOnLaunch(value))
+                    {
+                        return;
+                    }
+                }
+            }
+            _ = this.RaiseAndSetIfChanged(ref _runOnBoot, value);
+            Settings.Default.RunOnBoot = value;
         }
     }
 
