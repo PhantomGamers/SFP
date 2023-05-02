@@ -1,60 +1,50 @@
 # SFP (Formerly [SteamFriendsPatcher](https://github.com/PhantomGamers/SteamFriendsPatcher))
 
-This utility is designed to allow you to apply themes to the modern Steam friends and library interfaces.
+This utility is designed to allow you to apply themes to the new Steam beta client.
 
-## Steam Beta Update Notice
+## Steam Stable Users Read
 
-**The 2023-04-27 Steam Beta is out and changes the entire Steam client to use the new Chromium based UI.**
+The newest version of this readme and program are intended for use on the Steam Beta as of 2023-04-23
 
-**This means that currently all elements of the client, including the library and friends list, are skinned through css files in the `steamui` folder.**
-
-**Until a new version of SFP is released, you can append the contents of your `clientui/friends.custom.css` file to `steamui/libraryroot.custom.css` and the changes will apply.**
+For the old version of SFP that works with Steam Stable see https://github.com/PhantomGamers/SFP/tree/0.0.14
 
 ## Instructions
 
 Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your given OS and run the SFP_UI application.
 
-To use manually, simply click "Patch," by default this will run when you start the program.
-You will be required to do this everytime Valve pushes a new version of the friends.css file used by Steam or they update the library.
-To avoid this, use the "Start Scanner" option and leave the program running.
-With the scanner running, whenever a new version of the friends.css or library css is pushed it will automatically be patched.
+If you have .net 7 installed you can download the _net7.zip release, otherwise download the _SelfContained.zip release.
 
-Once your files are patched follow the instructions in the program to install the skins of your choosing!
+Run SFP_UI. By default it will automatically wait for Steam to start and inject, or inject if Steam is already running.
 
-**SFP does not include skins by itself, it simply patches the required files to allow the loading of skins made by others!**
+For full functionality **SFP must be running with its injector started as long as Steam is running**.
 
-**If you have used the old patcher before make sure to use the Reset Steam option on this one on your first use!**
+**Steam must be running with the `--cef-enable-debugging` argument for SFP to work.**
 
-**If any of the above is unclear I highly recommend reading this fantastic guide available on the Steam community: <https://steamcommunity.com/sharedfiles/filedetails/?id=1941650801>**
+If Steam is started with SFP it will do this automatically. Otherwise, **on Windows only** for now, **you can use the "Force Steam arguments" setting to automatically restart Steam with the chosen arguments** if it does not already have them.
 
+Use the "Open File" button in SFP to access the files where your custom skins are applied from.
 ## Features
 
-### Friends Skinning
+### Steam Skinning
 
-When the big [Steam Chat update](https://steamcommunity.com/updates/chatupdate) released, the Chat window no longer followed the theme for the Steam client. With SFP, you can theme the Chat window by putting your custom css in `clientui/friends.custom.css`
-
-### Library Skinning
-
-Similar to the Steam Chat update, when Steam released the [new Steam Library update](https://store.steampowered.com/libraryupdate), the library stopped following the Steam client theme. With SFP, you can customize the appearance of the library by putting your custom css in `steamui/libraryroot.custom.css`
-
-### Resource Patching
-
-While the Steam client has theme support built in, you are limited to theming the element classes that are built-in. SFP allows client theme authors to include an `override` folder in their theme directory. This folder should match the directory layout of the Steam `resource` folder, and it should contain files that the author wishes to replace the built-in resource files. This allows more customization in your skin!
-
-With this active it is recommended to launch Steam with the `-noverifyfiles` argument, otherwise Steam will attempt to repair the modified files on each launch.
+- Reads and applies custom css to Steam files.
+- Skins for the Steam client, library, and overlay go in `Steam/steamui/libraryroot.custom.css`
+- Skins for the friends list and chat windows go in `Steam/steamui/friends.custom.css`
+- Skins for the Steam store and community pages go in `Steam/steamui/webkit.css`
+- Skins for Big Picture Mode go in `Steam/steamui/bigpicture.custom.css`
 
 ## Todo
 
-* Improve automatic detection of correct library CSS file to patch.
+- Add support for javascript injection
+- Add Force Steam Arguments support for Linux and Mac
 
 ## Known Issues
 
-* Currently breaks Big Picture Mode chat due to Big Picture not utilizing steamloopback.host
-* Patching the friends list is currently unsupported on Linux and OSX as it uses a different file format from Windows. Contributions welcome!
+* Sometimes when Steam is first started and starts with the store page opened, the store page will not be skinned until it navigates to a new page.
 
 ## Dependencies
 
-* [.NET 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (Only if not using self contained version)
 
 ## Credits
 
