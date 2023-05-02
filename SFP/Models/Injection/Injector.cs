@@ -97,10 +97,6 @@ public static class Injector
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
     {
-        if (e.Target.Url.Contains("store.steampowered.com"))
-        {
-            Log.Logger.Info("target is steam site");
-        }
         Page? page = await e.Target.PageAsync();
         await ProcessPage(page);
     }
