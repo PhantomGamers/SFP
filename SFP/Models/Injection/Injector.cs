@@ -117,8 +117,6 @@ public static class Injector
                 s_webkitHooked = true;
             }
 
-            Log.Logger.Info("found steam site");
-
             await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
             return;
         }
