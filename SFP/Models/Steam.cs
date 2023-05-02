@@ -12,9 +12,11 @@ namespace SFP.Models;
 
 public static class Steam
 {
-    private static bool IsSteamRunning => SteamWebHelperProcess is not null;
+    private static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
+    private static bool IsSteamRunning => SteamProcess is not null;
 
     private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
+    private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
 
     private static FileSystemWatcherEx? s_watcher;
 
@@ -140,20 +142,14 @@ public static class Steam
 
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
-        var timeout = TimeSpan.FromSeconds(10);
-        using var cts = new CancellationTokenSource(timeout);
-        while (!IsSteamRunning)
+        while (!IsSteamWebHelperRunning)
         {
-            try
+            if (!IsSteamRunning)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(100), cts.Token);
+                return;
             }
-            catch (OperationCanceledException)
-            {
-                break;
-            }
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
         }
-
 
         await Injector.StartInjectionAsync(true);
     }
