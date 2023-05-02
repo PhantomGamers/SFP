@@ -18,7 +18,7 @@ Run SFP_UI. By default it will automatically wait for Steam to start and inject,
 
 For full functionality **SFP must be running with its injector started as long as Steam is running**.
 
-**Steam must be running with the `--cef-enable-debugging` argument for SFP to work.**
+**Steam must be running with the `-cef-enable-debugging` argument for SFP to work.**
 
 If Steam is started with SFP it will do this automatically. Otherwise, **on Windows only** for now, **you can use the "Force Steam arguments" setting to automatically restart Steam with the chosen arguments** if it does not already have them.
 

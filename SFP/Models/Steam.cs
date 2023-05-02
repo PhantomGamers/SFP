@@ -112,9 +112,9 @@ public static class Steam
             return;
         }
         args ??= Properties.Settings.Default.SteamLaunchArgs;
-        if (!args.Contains("--cef-enable-debugging"))
+        if (!args.Contains("-cef-enable-debugging"))
         {
-            args += " --cef-enable-debugging";
+            args += " -cef-enable-debugging";
             args = args.Trim();
         }
         Log.Logger.Info("Starting Steam");
