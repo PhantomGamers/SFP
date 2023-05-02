@@ -12,7 +12,7 @@ namespace SFP.Models;
 
 public static class Steam
 {
-    private static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
+    public static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
     private static bool IsSteamRunning => SteamProcess is not null;
 
     private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();

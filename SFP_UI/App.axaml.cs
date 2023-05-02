@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using FluentAvalonia.Styling;
 using ReactiveUI;
 using SFP.Models;
+using SFP.Models.Injection;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;
@@ -39,22 +40,6 @@ public class App : Application
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version}");
-
-                    if (Settings.Default.InjectOnSteamStart)
-                    {
-                        _ = Task.Run(() =>
-                        {
-                            Steam.StartMonitorSteam();
-                            if (Settings.Default.RunSteamOnStart)
-                            {
-                                Steam.StartSteam();
-                            }
-                        });
-                    }
-                    else if (Settings.Default.RunSteamOnStart)
-                    {
-                        _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
-                    }
                 });
             }
             catch (Exception e)
@@ -72,6 +57,27 @@ public class App : Application
         {
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
+        }
+
+        if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
+        {
+            _ = Task.Run(() => Injector.StartInjectionAsync());
+        }
+
+        if (Settings.Default.InjectOnSteamStart)
+        {
+            _ = Task.Run(() =>
+            {
+                Steam.StartMonitorSteam();
+                if (Settings.Default.RunSteamOnStart)
+                {
+                    Steam.StartSteam();
+                }
+            });
+        }
+        else if (Settings.Default.RunSteamOnStart)
+        {
+            _ = Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
         }
 
         base.OnFrameworkInitializationCompleted();
