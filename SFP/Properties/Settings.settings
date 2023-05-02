@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SFP.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="SteamDirectory" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="CheckForUpdates" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ShowTrayIcon" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="MinimizeToTray" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="StartMinimized" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="AppTheme" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)">System Default</Value>
-    </Setting>
-    <Setting Name="CloseToTray" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="InjectOnSteamStart" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="SteamLaunchArgs" Type="System.String" Scope="User">
-      <Value Profile="(Default)">-cef-enable-debugging</Value>
-    </Setting>
-    <Setting Name="RunSteamOnStart" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="RunOnBoot" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="InjectOnAppStart" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="ForceSteamArgs" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-  </Settings>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)"
+              GeneratedClassNamespace="SFP.Properties" GeneratedClassName="Settings">
+    <Profiles/>
+    <Settings>
+        <Setting Name="SteamDirectory" Roaming="true" Type="System.String" Scope="User">
+            <Value Profile="(Default)"/>
+        </Setting>
+        <Setting Name="CheckForUpdates" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">True</Value>
+        </Setting>
+        <Setting Name="ShowTrayIcon" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">True</Value>
+        </Setting>
+        <Setting Name="MinimizeToTray" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+        <Setting Name="StartMinimized" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+        <Setting Name="AppTheme" Roaming="true" Type="System.String" Scope="User">
+            <Value Profile="(Default)">System Default</Value>
+        </Setting>
+        <Setting Name="CloseToTray" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+        <Setting Name="InjectOnSteamStart" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">True</Value>
+        </Setting>
+        <Setting Name="SteamLaunchArgs" Roaming="true" Type="System.String" Scope="User">
+            <Value Profile="(Default)">-cef-enable-debugging</Value>
+        </Setting>
+        <Setting Name="RunSteamOnStart" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+        <Setting Name="RunOnBoot" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+        <Setting Name="InjectOnAppStart" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">True</Value>
+        </Setting>
+        <Setting Name="ForceSteamArgs" Roaming="true" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">False</Value>
+        </Setting>
+    </Settings>
 </SettingsFile>

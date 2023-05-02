@@ -1,7 +1,6 @@
 #region
 
 using System.Reactive;
-using System.Runtime.Versioning;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -10,6 +9,8 @@ using ReactiveUI;
 using SFP.Models;
 using SFP_UI.Views;
 using Settings = SFP.Properties.Settings;
+using Utils = SFP.Models.Windows.Utils;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 #endregion
@@ -21,18 +22,16 @@ public class SettingsPageViewModel : ViewModelBase
     private string _appTheme = Settings.Default.AppTheme;
     private bool _checkForUpdates = Settings.Default.CheckForUpdates;
     private bool _closeToTray = Settings.Default.CloseToTray;
+    private bool _forceSteamArgs = Settings.Default.ForceSteamArgs;
+    private bool _injectOnAppStart = Settings.Default.InjectOnAppStart;
+    private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
     private bool _minimizeToTray = Settings.Default.MinimizeToTray;
+    private bool _runOnBoot = Settings.Default.RunOnBoot;
+    private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
     private bool _showTrayIcon = Settings.Default.ShowTrayIcon;
     private bool _startMinimized = Settings.Default.StartMinimized;
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
     private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
-    private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
-    private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
-    private bool _runOnBoot = Settings.Default.RunOnBoot;
-    private bool _injectOnAppStart = Settings.Default.InjectOnAppStart;
-    private bool _forceSteamArgs = Settings.Default.ForceSteamArgs;
-
-    public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
@@ -53,6 +52,8 @@ public class SettingsPageViewModel : ViewModelBase
         BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
         ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
     }
+
+    public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
     public static SettingsPageViewModel? Instance { get; private set; }
 
@@ -170,6 +171,7 @@ public class SettingsPageViewModel : ViewModelBase
                     Steam.StopMonitorSteam();
                 }
             }
+
             _ = this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
             Settings.Default.InjectOnSteamStart = value;
         }
@@ -184,12 +186,13 @@ public class SettingsPageViewModel : ViewModelBase
             {
                 if (OperatingSystem.IsWindows())
                 {
-                    if (!SFP.Models.Windows.Utils.SetAppRunOnLaunch(value))
+                    if (!Utils.SetAppRunOnLaunch(value))
                     {
                         return;
                     }
                 }
             }
+
             _ = this.RaiseAndSetIfChanged(ref _runOnBoot, value);
             Settings.Default.RunOnBoot = value;
         }

@@ -24,7 +24,7 @@ public struct Browser
         }
         catch (FlurlHttpException e)
         {
-            Log.Logger.Error("Could not fetch browser, is Steam running with --cef-enable-debugging ?");
+            Log.Logger.Error("Could not fetch browser, is Steam running with -cef-enable-debugging ?");
             Log.Logger.Debug(e);
             throw;
         }
