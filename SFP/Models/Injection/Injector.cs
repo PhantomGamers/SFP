@@ -11,6 +11,7 @@ public static class Injector
     private static PuppeteerSharp.Browser? s_browser;
     private static bool s_webkitHooked;
     private static bool s_isInjected;
+    private static readonly ReaderWriterLockSlim s_lock = new();
     public static bool IsInjected => s_isInjected && s_browser != null;
 
     public static event EventHandler? InjectionStateChanged;
@@ -24,6 +25,10 @@ public static class Injector
 
         try
         {
+            if (!s_lock.TryEnterWriteLock(TimeSpan.Zero))
+            {
+                return;
+            }
             string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new() { BrowserWSEndpoint = browser, DefaultViewport = null };
 
@@ -39,11 +44,19 @@ public static class Injector
         }
         catch (Exception e)
         {
+            StopInjection();
             if (noError)
             {
                 return;
             }
             Log.Logger.Error(e);
+        }
+        finally
+        {
+            if (s_lock.IsWriteLockHeld)
+            {
+                s_lock.ExitWriteLock();
+            }
         }
     }
 
