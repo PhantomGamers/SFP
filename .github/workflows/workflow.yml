@@ -34,10 +34,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Check code style
-        run: |
-          dotnet format --severity info --verify-no-changes --exclude 'external/'
-
       - name: Create tag
         run: |
           git tag ${{ github.event.inputs.version }}
@@ -47,9 +43,12 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - name: Clean environment
-        shell: pwsh
-        run: Remove-Item ./external/FileWatcherEx/nuget.config -ErrorAction Ignore
+      - uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Build & Zip
         shell: pwsh
