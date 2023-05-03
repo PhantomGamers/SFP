@@ -19,6 +19,7 @@ public static class Steam
     public static bool IsSteamRunning => SteamProcess is not null;
     private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
     private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
+    internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
     private static string? SteamRootDir
     {
@@ -106,6 +107,7 @@ public static class Steam
         _ = Process.Start(SteamExe, "-shutdown");
     }
 
+    [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]
     public static async Task StartSteam(string? args = null)
     {
         if (IsSteamRunning)
@@ -118,6 +120,23 @@ public static class Steam
         {
             args += " -cef-enable-debugging";
             args = args.Trim();
+        }
+
+
+        if (File.Exists(MillenniumPath))
+        {
+            Log.Logger.Warn("Millennium Patcher install detected, disabling millenium patcher...");
+            try
+            {
+                var newPath = Path.Join(MillenniumPath, ".bak");
+                File.Move(MillenniumPath, newPath, true);
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Warn("Could not disable Millennium patcher, aborting as it is incompatible with SFP");
+                Log.Logger.Error(e);
+                return;
+            }
         }
 
         Log.Logger.Info("Starting Steam");

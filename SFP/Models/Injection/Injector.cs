@@ -29,6 +29,11 @@ public static class Injector
 
         try
         {
+            if (File.Exists(Steam.MillenniumPath))
+            {
+                Log.Logger.Warn("Millennium is already injected, skipping injection");
+                return;
+            }
             var browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new()
             {
