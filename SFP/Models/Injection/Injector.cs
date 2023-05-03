@@ -75,10 +75,9 @@ public static class Injector
 
         var targets = s_browser.Targets();
         Log.Logger.Info("Found " + targets.Length + " targets");
-        foreach (var target in targets)
+        foreach (var page in targets.Select(async t => await t.PageAsync()))
         {
-            var page = await target.PageAsync();
-            await ProcessPage(page);
+            await ProcessPage(await page);
         }
     }
 

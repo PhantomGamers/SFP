@@ -35,7 +35,7 @@ public static class Utils
             return true;
         }
 
-        WindowsShortcut shortcut = new() { Path = processPath };
+        using WindowsShortcut shortcut = new() { Path = processPath };
         shortcut.Save(shortcutAddress);
         return true;
     }

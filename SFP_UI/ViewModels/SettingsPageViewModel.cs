@@ -182,15 +182,9 @@ public class SettingsPageViewModel : ViewModelBase
         get => _runOnBoot;
         set
         {
-            if (_runOnBoot != value)
+            if (_runOnBoot != value && OperatingSystem.IsWindows() && !Utils.SetAppRunOnLaunch(value))
             {
-                if (OperatingSystem.IsWindows())
-                {
-                    if (!Utils.SetAppRunOnLaunch(value))
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             _ = this.RaiseAndSetIfChanged(ref _runOnBoot, value);
