@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Runtime.InteropServices;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
@@ -60,6 +61,11 @@ public class App : Application
         {
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
+        }
+
+        if (!OperatingSystem.IsWindows() && Settings.Default.MinimizeToTray && Settings.Default.StartMinimized)
+        {
+            MainWindow.Instance?.Hide();
         }
 
         base.OnFrameworkInitializationCompleted();

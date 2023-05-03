@@ -44,7 +44,7 @@ Use the "Open File" button in SFP to access the files where your custom skins ar
 
 ## Known Issues
 
-- Start minimized might have issues on Linux systems
+- None currently
 
 ## Dependencies
 
