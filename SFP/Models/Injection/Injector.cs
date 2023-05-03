@@ -110,18 +110,8 @@ public static class Injector
             return;
         }
 
-        if (page.Url.Contains("store.steampowered.com") || page.Url.Contains("steamcommunity.com") ||
-            page.Url.Contains("!--/library/"))
-        {
-            if (!s_webkitHooked)
-            {
-                page.DOMContentLoaded += Page_Load;
-                s_webkitHooked = true;
-            }
-
-            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
-            return;
-        }
+        page.FrameNavigated -= Frame_Navigate;
+        page.FrameNavigated += Frame_Navigate;
 
         string? title;
         try
@@ -157,6 +147,17 @@ public static class Injector
         }
     }
 
+    private static async void Frame_Navigate(object? sender, FrameEventArgs e)
+    {
+        if (!e.Frame.Url.StartsWith("https://store.steampowered.com") &&
+            !e.Frame.Url.StartsWith("https://steamcommunity.com"))
+        {
+            return;
+        }
+
+        await InjectCssAsync(e.Frame, "webkit.css", "Steam web", client: false);
+    }
+
     private static async void Page_Load(object? sender, EventArgs _)
     {
         if (sender is Page page)
@@ -168,12 +169,19 @@ public static class Injector
     private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,
         bool retry = true, bool silent = false, bool client = true)
     {
+        Frame frame = page.MainFrame;
+        await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, retry, silent, client);
+    }
+
+    private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
+        bool retry = true, bool silent = false, bool client = true)
+    {
         string cssInjectString =
             $$"""
                 function injectCss() {
-                    if (document.getElementById('{{page.Target.TargetId}}') !== null) return;
+                    if (document.getElementById('{{frame.Id}}') !== null) return;
                     const link = document.createElement('link');
-                    link.id = '{{page.Target.TargetId}}';
+                    link.id = '{{frame.Id}}';
                     link.rel = 'stylesheet';
                     link.type = 'text/css';
                     link.href = 'https://steamloopback.host/{{cssFileRelativePath}}';
@@ -187,7 +195,7 @@ public static class Injector
                 """;
         try
         {
-            await page.EvaluateExpressionAsync(cssInjectString);
+            await frame.EvaluateExpressionAsync(cssInjectString);
             if (!silent)
             {
                 Log.Logger.Info("Injected into " + tabFriendlyName);
@@ -203,7 +211,7 @@ public static class Injector
 
             if (retry)
             {
-                await InjectCssAsync(page, cssFileRelativePath, tabFriendlyName, false, silent, client);
+                await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, false, silent, client);
             }
         }
     }
