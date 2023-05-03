@@ -34,9 +34,10 @@ internal static class UpdateChecker
 
         try
         {
-            SemVersion semver = await GetLatestVersionAsync();
+            var semver = await GetLatestVersionAsync();
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
+                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
                 MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
             }
             else
@@ -57,12 +58,12 @@ internal static class UpdateChecker
 #pragma warning restore CS1998
     {
 #if DEBUG
-        string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
+        var responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
 #pragma warning disable IL2026
-        Release release = JsonSerializer.Deserialize<Release>(responseBody);
+        var release = JsonSerializer.Deserialize<Release>(responseBody);
 #pragma warning restore IL2026
 #else
-        Release release =
+        var release =
             await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
                 .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
                 .GetJsonAsync<Release>();

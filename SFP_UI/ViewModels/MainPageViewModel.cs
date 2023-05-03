@@ -107,7 +107,7 @@ public class MainPageViewModel : ViewModelBase
 
     private static async Task OpenFile(string relativeFilePath)
     {
-        string file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
+        var file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
         try
         {
             if (!File.Exists(file))

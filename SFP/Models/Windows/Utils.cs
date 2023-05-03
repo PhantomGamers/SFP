@@ -14,16 +14,16 @@ public static class Utils
 {
     public static bool SetAppRunOnLaunch(bool runOnLaunch)
     {
-        string? processPath = Environment.ProcessPath;
+        var processPath = Environment.ProcessPath;
         if (processPath == null)
         {
             Log.Logger.Error("Could not get process path, startup shortcut not created.");
             return false;
         }
 
-        string processName = Path.GetFileNameWithoutExtension(processPath);
-        string startupFolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-        string shortcutAddress = Path.Combine(startupFolder, processName + ".lnk");
+        var processName = Path.GetFileNameWithoutExtension(processPath);
+        var startupFolder = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+        var shortcutAddress = Path.Combine(startupFolder, processName + ".lnk");
 
         if (File.Exists(shortcutAddress) || !runOnLaunch)
         {
@@ -43,8 +43,8 @@ public static class Utils
     public static List<string> GetCommandLine(Process process)
     {
         using WmiConnection con = new();
-        WmiQuery query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
-        string? commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
+        var query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
+        var commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
         return commandLine != null ? commandLine.Split(' ').ToList() : new List<string>();
     }
 }

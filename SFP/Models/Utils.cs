@@ -13,9 +13,9 @@ public static class Utils
     [SupportedOSPlatform("windows")]
     public static object? GetRegistryData(string aKey, string aValueName)
     {
-        using RegistryKey? registryKey = Registry.CurrentUser.OpenSubKey(aKey);
+        using var registryKey = Registry.CurrentUser.OpenSubKey(aKey);
         object? value = null;
-        object? regValue = registryKey?.GetValue(aValueName);
+        var regValue = registryKey?.GetValue(aValueName);
         if (regValue != null)
         {
             value = regValue;

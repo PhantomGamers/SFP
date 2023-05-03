@@ -29,7 +29,7 @@ public static class Injector
 
         try
         {
-            string browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
+            var browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new()
             {
                 BrowserWSEndpoint = browserEndpoint,
@@ -73,11 +73,11 @@ public static class Injector
             return;
         }
 
-        Target[]? targets = s_browser.Targets();
+        var targets = s_browser.Targets();
         Log.Logger.Info("Found " + targets.Length + " targets");
-        foreach (Target? target in targets)
+        foreach (var target in targets)
         {
-            Page? page = await target.PageAsync();
+            var page = await target.PageAsync();
             await ProcessPage(page);
         }
     }
@@ -102,7 +102,7 @@ public static class Injector
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
     {
-        Page? page = await e.Target.PageAsync();
+        var page = await e.Target.PageAsync();
         await ProcessPage(page);
     }
 
@@ -164,14 +164,14 @@ public static class Injector
     private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,
         bool retry = true, bool silent = false, bool client = true)
     {
-        Frame frame = page.MainFrame;
+        var frame = page.MainFrame;
         await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, retry, silent, client);
     }
 
     private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
         bool retry = true, bool silent = false, bool client = true)
     {
-        string cssInjectString =
+        var cssInjectString =
             $$"""
                 function injectCss() {
                     if (document.getElementById('{{frame.Id}}') !== null) return;

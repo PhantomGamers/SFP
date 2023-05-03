@@ -85,7 +85,7 @@ public class App : Application
 
     public static void SetApplicationTheme(string themeVariantString)
     {
-        FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+        var faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
         if (faTheme != null)
         {
             faTheme.PreferSystemTheme = themeVariantString == "System Default";

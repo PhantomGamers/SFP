@@ -242,7 +242,7 @@ public class SettingsPageViewModel : ViewModelBase
     {
         if (MainWindow.Instance != null)
         {
-            IReadOnlyList<IStorageFolder> result =
+            var result =
                 await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
             if (result.Count > 0)
             {

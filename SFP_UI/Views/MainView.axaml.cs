@@ -50,17 +50,17 @@ public partial class MainView : UserControl
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
 
-        Type t = (item.Tag as Type)!;
+        var t = (item.Tag as Type)!;
 
         if (t == typeof(MainPage))
         {
-            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value)
+            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
                 ? (IconSource)value!
                 : null;
         }
         else if (t == typeof(SettingsPage))
         {
-            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value)
+            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
                 ? (IconSource)value!
                 : null;
         }
