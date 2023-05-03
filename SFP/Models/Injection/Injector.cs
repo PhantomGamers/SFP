@@ -102,8 +102,21 @@ public static class Injector
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
     {
-        var page = await e.Target.PageAsync();
-        await ProcessPage(page);
+        try
+        {
+            var page = await e.Target.PageAsync();
+            await ProcessPage(page);
+        }
+        catch (EvaluationFailedException err)
+        {
+            Log.Logger.Warn("Evaluation failed exception when trying to get page");
+            Log.Logger.Debug(err);
+        }
+        catch (PuppeteerException err)
+        {
+            Log.Logger.Warn("Puppeteer exception when trying to get page");
+            Log.Logger.Debug(err);
+        }
     }
 
     private static async Task ProcessPage(Page? page)
