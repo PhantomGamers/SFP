@@ -6,6 +6,7 @@
     <!--Currently breaks dotnet format!-->
     <!--https://github.com/dotnet/format/issues/1800-->
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NLog"/>
