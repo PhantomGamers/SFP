@@ -8,8 +8,7 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-    private static PuppeteerSharp.Browser? s_browser;
-    private static bool s_webkitHooked;
+    private static Browser? s_browser;
     private static bool s_isInjected;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsInjected => s_isInjected && s_browser != null;
@@ -30,16 +29,16 @@ public static class Injector
 
         try
         {
-            string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
+            string browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new()
             {
-                BrowserWSEndpoint = browser,
+                BrowserWSEndpoint = browserEndpoint,
                 DefaultViewport = null,
                 EnqueueAsyncMessages = false,
-                EnqueueTransportMessages = false,
+                EnqueueTransportMessages = false
             };
 
-            Log.Logger.Info("Connecting to " + browser);
+            Log.Logger.Info("Connecting to " + browserEndpoint);
             s_browser = await Puppeteer.ConnectAsync(options);
             s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
@@ -89,8 +88,6 @@ public static class Injector
         {
             Log.Logger.Info("Disconnecting from Steam instance");
         }
-
-        s_webkitHooked = false;
         s_isInjected = false;
         s_browser?.Disconnect();
         s_browser = null;
@@ -162,14 +159,6 @@ public static class Injector
         }
 
         await InjectCssAsync(e.Frame, "webkit.css", "Steam web", client: false);
-    }
-
-    private static async void Page_Load(object? sender, EventArgs _)
-    {
-        if (sender is Page page)
-        {
-            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
-        }
     }
 
     private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,

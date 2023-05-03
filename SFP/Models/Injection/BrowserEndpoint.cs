@@ -8,7 +8,7 @@ using Flurl.Http;
 
 namespace SFP.Models.Injection;
 
-public struct Browser
+public struct BrowserEndpoint
 {
     [JsonPropertyName("webSocketDebuggerUrl")]
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
@@ -16,11 +16,11 @@ public struct Browser
 
     private const string CefDebuggingUrl = "http://localhost:8080";
 
-    internal static async Task<Browser> GetBrowserAsync()
+    internal static async Task<BrowserEndpoint> GetBrowserEndpointAsync()
     {
         try
         {
-            return await CefDebuggingUrl.AppendPathSegments("json", "version").GetJsonAsync<Browser>();
+            return await CefDebuggingUrl.AppendPathSegments("json", "version").GetJsonAsync<BrowserEndpoint>();
         }
         catch (FlurlHttpException e)
         {

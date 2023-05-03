@@ -85,7 +85,7 @@ public class MainPageViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
 
-    private static async Task ExecuteInjectCommand() => await Task.Run(() => Steam.TryInject());
+    private static async Task ExecuteInjectCommand() => await Task.Run(Steam.TryInject);
 
     private static async Task ExecuteStartSteamCommand() => await Task.Run(() => Steam.RestartSteam());
 

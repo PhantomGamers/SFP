@@ -5,20 +5,20 @@
     <AvaloniaVersion>11.0.999-cibuild0034035-beta</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.0" />
-    <PackageVersion Include="Flurl.Http" Version="4.0.0-pre3" />
-    <PackageVersion Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
-    <PackageVersion Include="PuppeteerSharp" Version="6.2.0" />
-    <PackageVersion Include="Semver" Version="2.3.0" />
-    <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.1" />
-    <PackageVersion Include="LazyCache" Version="2.4.0" />
-    <PackageVersion Include="System.ServiceModel.Primitives" Version="6.0.0-rc.23205.4" />
-    <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageVersion Include="NLog" Version="5.1.4" />
+    <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)"/>
+    <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)"/>
+    <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)"/>
+    <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)"/>
+    <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.0"/>
+    <PackageVersion Include="Flurl.Http" Version="4.0.0-pre3"/>
+    <PackageVersion Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001"/>
+    <PackageVersion Include="PuppeteerSharp" Version="6.2.0"/>
+    <PackageVersion Include="Semver" Version="2.3.0"/>
+    <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.1"/>
+    <PackageVersion Include="LazyCache" Version="2.4.0"/>
+    <PackageVersion Include="System.ServiceModel.Primitives" Version="6.0.0-rc.23205.4"/>
+    <PackageVersion Include="Gameloop.Vdf" Version="0.6.2"/>
+    <PackageVersion Include="NLog" Version="5.1.4"/>
     <PackageVersion Include="MinVer" Version="4.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -31,9 +31,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="FileWatcherEx" Version="2.4.0" />
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7.1" />
-    <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0" />
-    <PackageVersion Include="WmiLight" Version="3.1.0" />
+    <PackageVersion Include="FileWatcherEx" Version="2.4.0"/>
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7.1"/>
+    <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0"/>
+    <PackageVersion Include="WmiLight" Version="3.1.0"/>
   </ItemGroup>
 </Project>

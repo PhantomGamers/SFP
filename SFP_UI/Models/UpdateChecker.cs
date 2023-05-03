@@ -29,6 +29,7 @@ internal static class UpdateChecker
         return;
 #endif
 
+#pragma warning disable CS0162
         Log.Logger.Info("Checking for updates...");
 
         try
@@ -48,6 +49,7 @@ internal static class UpdateChecker
             Log.Logger.Error("Failed to fetch latest version.");
             Log.Logger.Error(e);
         }
+#pragma warning restore CS0162
     }
 
 #pragma warning disable CS1998
@@ -71,5 +73,6 @@ internal static class UpdateChecker
 
 internal struct Release
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     [JsonPropertyName("tag_name")] public string TagName { get; set; }
 }
