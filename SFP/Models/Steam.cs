@@ -15,9 +15,11 @@ public static class Steam
     private static FileSystemWatcherEx? s_watcher;
     private static Process? s_steamProcess;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
-    public static bool IsSteamWebHelperRunning => SteamWebHelperProcess is not null;
+
+    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 0 : 6;
+    public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
-    private static Process? SteamWebHelperProcess => Process.GetProcessesByName("steamwebhelper").FirstOrDefault();
+    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName("steamwebhelper");
     private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
@@ -233,10 +235,8 @@ public static class Steam
                 {
                     return;
                 }
-
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
-
             await Injector.StartInjectionAsync(true);
         }
         finally
