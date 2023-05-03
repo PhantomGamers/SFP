@@ -24,7 +24,7 @@ public partial class MainWindow : AppWindow
     {
         Instance = this;
 
-        if (Settings.Default.StartMinimized)
+        if (OperatingSystem.IsWindows() && Settings.Default.StartMinimized)
         {
             WindowState = WindowState.Minimized;
         }
@@ -112,8 +112,6 @@ public partial class MainWindow : AppWindow
             Hide();
         }
 
-        var thm = ActualThemeVariant;
-
         // Enable Mica on Windows 11
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -121,7 +119,7 @@ public partial class MainWindow : AppWindow
         }
 
         // TODO: add Windows version to CoreWindow
-        if (!IsWindows11 || thm == FluentAvaloniaTheme.HighContrastTheme)
+        if (!IsWindows11 || ActualThemeVariant == FluentAvaloniaTheme.HighContrastTheme)
         {
             return;
         }

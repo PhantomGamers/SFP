@@ -29,6 +29,11 @@ public static class Injector
 
         try
         {
+            if (File.Exists(Steam.MillenniumPath))
+            {
+                Log.Logger.Warn("Millennium is already injected, skipping injection");
+                return;
+            }
             var browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
             ConnectOptions options = new()
             {
@@ -128,56 +133,63 @@ public static class Injector
         page.FrameNavigated -= Frame_Navigate;
         page.FrameNavigated += Frame_Navigate;
 
+        await ProcessFrame(page.MainFrame);
+    }
+
+    private static async Task ProcessFrame(Frame frame)
+    {
+        if (frame.Url.StartsWith("https://store.steampowered.com") ||
+            frame.Url.StartsWith("https://steamcommunity.com"))
+        {
+            await InjectCssAsync(frame, "webkit.css", "Steam web", client: false);
+            return;
+        }
+
         string? title;
         try
         {
-            title = await page.GetTitleAsync();
+            title = await frame.GetTitleAsync();
         }
-        catch (Exception e)
+        catch (PuppeteerException e)
         {
-            Log.Logger.Error("Unexpected error when trying to get page title");
-            Log.Logger.Debug("url: " + page.Url);
+            Log.Logger.Error("Unexpected error when trying to get frame title");
+            Log.Logger.Debug("url: " + frame.Url);
             Log.Logger.Debug(e);
+            return;
+        }
+
+        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title.EndsWith("Menu") ||
+            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
+        {
+            await InjectCssAsync(frame, @"libraryroot.custom.css", "Steam client");
             return;
         }
 
         if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
             title.StartsWith(@"notificationtoasts_"))
         {
-            await InjectCssAsync(page, @"bigpicture.custom.css", "Steam Big Picture Mode");
+            await InjectCssAsync(frame, @"bigpicture.custom.css", "Steam Big Picture Mode");
             return;
         }
 
-
-        if (title == "Steam" || title == "Steam Settings" || title == "GameOverview" || title.EndsWith("Menu") ||
-            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
+        try
         {
-            await InjectCssAsync(page, @"libraryroot.custom.css", "Steam client");
-            return;
+            if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+            {
+                await InjectCssAsync(frame, "friends.custom.css", "Friends and Chat");
+            }
         }
-
-        if (await page.QuerySelectorAsync(@".friendsui-container") != null)
+        catch (PuppeteerException e)
         {
-            await InjectCssAsync(page, "friends.custom.css", "Friends and Chat");
+            Log.Logger.Error("Unexpected error when trying to query frame selector");
+            Log.Logger.Debug("url: " + frame.Url);
+            Log.Logger.Debug(e);
         }
     }
 
     private static async void Frame_Navigate(object? sender, FrameEventArgs e)
     {
-        if (!e.Frame.Url.StartsWith("https://store.steampowered.com") &&
-            !e.Frame.Url.StartsWith("https://steamcommunity.com"))
-        {
-            return;
-        }
-
-        await InjectCssAsync(e.Frame, "webkit.css", "Steam web", client: false);
-    }
-
-    private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,
-        bool retry = true, bool silent = false, bool client = true)
-    {
-        var frame = page.MainFrame;
-        await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, retry, silent, client);
+        await ProcessFrame(e.Frame);
     }
 
     private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
