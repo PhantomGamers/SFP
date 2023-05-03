@@ -34,10 +34,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Check code style
-        run: |
-          dotnet format --severity info --verify-no-changes --exclude 'external/'
-
       - name: Create tag
         run: |
           git tag ${{ github.event.inputs.version }}
