@@ -123,7 +123,18 @@ public static class Injector
             return;
         }
 
-        string? title = await page.GetTitleAsync();
+        string? title;
+        try
+        {
+            title = await page.GetTitleAsync();
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error("Unexpected error when trying to get page title");
+            Log.Logger.Debug("url: " + page.Url);
+            Log.Logger.Debug(e);
+            return;
+        }
 
         if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
             title.StartsWith(@"notificationtoasts_"))
@@ -140,7 +151,7 @@ public static class Injector
             return;
         }
 
-        if (await page.QuerySelectorAsync(".friendsui-container") != null)
+        if (await page.QuerySelectorAsync(@".friendsui-container") != null)
         {
             await InjectCssAsync(page, "friends.custom.css", "Friends and Chat");
         }

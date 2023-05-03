@@ -17,6 +17,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		createpublishedzip.ps1 = createpublishedzip.ps1
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{58F784D2-1B84-4624-B61D-5C99D54A8947}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\workflow.yml = .github\workflows\workflow.yml
+		.github\FUNDING.yml = .github\FUNDING.yml
+		.github\dependabot.yml = .github\dependabot.yml
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,5 +45,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6467C57A-09C8-44F5-88AC-95F87E14ED73}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{58F784D2-1B84-4624-B61D-5C99D54A8947} = {50AF4859-D9C1-465A-97E5-66B7B944FE7D}
 	EndGlobalSection
 EndGlobal

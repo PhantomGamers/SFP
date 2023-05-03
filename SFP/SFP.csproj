@@ -12,8 +12,8 @@
     <PackageReference Include="PortableJsonSettingsProvider"/>
     <PackageReference Include="PuppeteerSharp"/>
     <PackageReference Include="FileWatcherEx"/>
-    <PackageReference Include="WindowsShortcutFactory" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
-    <PackageReference Include="WmiLight" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+    <PackageReference Include="WindowsShortcutFactory" />
+    <PackageReference Include="WmiLight" />
   </ItemGroup>
 
   <ItemGroup>
