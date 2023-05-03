@@ -31,7 +31,13 @@ public static class Injector
         try
         {
             string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
-            ConnectOptions options = new() { BrowserWSEndpoint = browser, DefaultViewport = null };
+            ConnectOptions options = new()
+            {
+                BrowserWSEndpoint = browser,
+                DefaultViewport = null,
+                EnqueueAsyncMessages = false,
+                EnqueueTransportMessages = false,
+            };
 
             Log.Logger.Info("Connecting to " + browser);
             s_browser = await Puppeteer.ConnectAsync(options);
