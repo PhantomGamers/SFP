@@ -15,7 +15,6 @@
     <PackageReference Include="FileWatcherEx"/>
     <PackageReference Include="WindowsShortcutFactory"/>
     <PackageReference Include="WmiLight"/>
-    <Publicize Include="PuppeteerSharp"/>
   </ItemGroup>
 
   <ItemGroup>

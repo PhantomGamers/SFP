@@ -1505,7 +1505,7 @@
       "sfp": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.AssemblyPublicizer.MSBuild": "[0.4.0, )",
+          "BepInEx.AssemblyPublicizer.MSBuild": "[0.4.1, )",
           "FileWatcherEx": "[2.4.0, )",
           "Flurl.Http": "[4.0.0-pre3, )",
           "Gameloop.Vdf": "[0.6.2, )",
@@ -1518,9 +1518,9 @@
       },
       "BepInEx.AssemblyPublicizer.MSBuild": {
         "type": "CentralTransitive",
-        "requested": "[0.4.0, )",
-        "resolved": "0.4.0",
-        "contentHash": "kD9iPQnCcOAS68C7lyWxMoxMcxNgZdd4xdraRp8YHf5xCuHs5UzYjqHxER5/v81NEoGs9QEiz6/NdvFPTbDZqg=="
+        "requested": "[0.4.1, )",
+        "resolved": "0.4.1",
+        "contentHash": "bbTaXa0CKDuap0vDR+NkSz9crQIYhMvIbId9njUajYZAcr8OTuVcyiSlexzeGxfkYAbbn0z9YpgbIoeyHADXqA=="
       },
       "FileWatcherEx": {
         "type": "CentralTransitive",
