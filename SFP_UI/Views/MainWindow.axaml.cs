@@ -73,7 +73,7 @@ public partial class MainWindow : AppWindow
         if (ActualThemeVariant == ThemeVariant.Dark)
         {
             Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Dark, out object? value)
+                ThemeVariant.Dark, out var value)
                 ? (Color)value!
                 : new Color2(32, 32, 32);
 
@@ -85,7 +85,7 @@ public partial class MainWindow : AppWindow
         {
             // Similar effect here
             Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Light, out object? value)
+                ThemeVariant.Light, out var value)
                 ? (Color)value!
                 : new Color2(243, 243, 243);
 
@@ -112,7 +112,7 @@ public partial class MainWindow : AppWindow
             Hide();
         }
 
-        ThemeVariant thm = ActualThemeVariant;
+        var thm = ActualThemeVariant;
 
         // Enable Mica on Windows 11
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

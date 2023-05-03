@@ -85,7 +85,7 @@ public class MainPageViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
 
-    private static async Task ExecuteInjectCommand() => await Task.Run(() => Steam.TryInject());
+    private static async Task ExecuteInjectCommand() => await Task.Run(Steam.TryInject);
 
     private static async Task ExecuteStartSteamCommand() => await Task.Run(() => Steam.RestartSteam());
 
@@ -107,7 +107,7 @@ public class MainPageViewModel : ViewModelBase
 
     private static async Task OpenFile(string relativeFilePath)
     {
-        string file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
+        var file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
         try
         {
             if (!File.Exists(file))

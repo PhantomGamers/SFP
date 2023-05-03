@@ -11,6 +11,7 @@ using SFP_UI.ViewModels;
 using SFP.Models;
 #if DEBUG
 using System.Text.Json;
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 #endif
 
 #endregion
@@ -29,11 +30,12 @@ internal static class UpdateChecker
         return;
 #endif
 
+#pragma warning disable CS0162
         Log.Logger.Info("Checking for updates...");
 
         try
         {
-            SemVersion semver = await GetLatestVersionAsync();
+            var semver = await GetLatestVersionAsync();
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
                 MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
@@ -48,6 +50,7 @@ internal static class UpdateChecker
             Log.Logger.Error("Failed to fetch latest version.");
             Log.Logger.Error(e);
         }
+#pragma warning restore CS0162
     }
 
 #pragma warning disable CS1998
@@ -55,12 +58,12 @@ internal static class UpdateChecker
 #pragma warning restore CS1998
     {
 #if DEBUG
-        string responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
+        var responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
 #pragma warning disable IL2026
-        Release release = JsonSerializer.Deserialize<Release>(responseBody);
+        var release = JsonSerializer.Deserialize<Release>(responseBody);
 #pragma warning restore IL2026
 #else
-        Release release =
+        var release =
             await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
                 .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
                 .GetJsonAsync<Release>();
@@ -71,5 +74,6 @@ internal static class UpdateChecker
 
 internal struct Release
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
     [JsonPropertyName("tag_name")] public string TagName { get; set; }
 }

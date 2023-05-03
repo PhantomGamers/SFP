@@ -79,10 +79,10 @@ public static class Steam
         try
         {
             dynamic reg = VdfConvert.Deserialize(File.ReadAllText(Path.Join(SteamRootDir, "registry.vdf")));
-            string kn = @$"HKCU/{key.Replace('\\', '/')}/{valueName}";
-            dynamic currentVal = reg.Value;
+            var kn = @$"HKCU/{key.Replace('\\', '/')}/{valueName}";
+            var currentVal = reg.Value;
             // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (string keyPart in kn.Split('/'))
+            foreach (var keyPart in kn.Split('/'))
             {
                 currentVal = currentVal[keyPart];
             }
@@ -196,7 +196,7 @@ public static class Steam
 
             if (OperatingSystem.IsWindows() && Properties.Settings.Default.ForceSteamArgs)
             {
-                bool argumentMissing = Properties.Settings.Default.SteamLaunchArgs.Split(' ')
+                var argumentMissing = Properties.Settings.Default.SteamLaunchArgs.Split(' ')
 #pragma warning disable CA1416
                     .Any(arg => !Windows.Utils.GetCommandLine(SteamProcess!).Contains(arg));
 #pragma warning restore CA1416

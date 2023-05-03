@@ -44,8 +44,6 @@ Use the "Open File" button in SFP to access the files where your custom skins ar
 
 ## Known Issues
 
-- Sometimes when Steam is first started and starts with the store page opened, the store page will not be skinned until
-  it navigates to a new page.
 - Start minimized might have issues on Linux systems
 
 ## Dependencies

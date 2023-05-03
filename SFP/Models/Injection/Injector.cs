@@ -8,8 +8,7 @@ namespace SFP.Models.Injection;
 
 public static class Injector
 {
-    private static PuppeteerSharp.Browser? s_browser;
-    private static bool s_webkitHooked;
+    private static Browser? s_browser;
     private static bool s_isInjected;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsInjected => s_isInjected && s_browser != null;
@@ -30,10 +29,16 @@ public static class Injector
 
         try
         {
-            string browser = (await Browser.GetBrowserAsync()).WebSocketDebuggerUrl!;
-            ConnectOptions options = new() { BrowserWSEndpoint = browser, DefaultViewport = null };
+            var browserEndpoint = (await BrowserEndpoint.GetBrowserEndpointAsync()).WebSocketDebuggerUrl!;
+            ConnectOptions options = new()
+            {
+                BrowserWSEndpoint = browserEndpoint,
+                DefaultViewport = null,
+                EnqueueAsyncMessages = false,
+                EnqueueTransportMessages = false
+            };
 
-            Log.Logger.Info("Connecting to " + browser);
+            Log.Logger.Info("Connecting to " + browserEndpoint);
             s_browser = await Puppeteer.ConnectAsync(options);
             s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
@@ -68,12 +73,11 @@ public static class Injector
             return;
         }
 
-        Target[]? targets = s_browser.Targets();
+        var targets = s_browser.Targets();
         Log.Logger.Info("Found " + targets.Length + " targets");
-        foreach (Target? target in targets)
+        foreach (var page in targets.Select(async t => await t.PageAsync()))
         {
-            Page? page = await target.PageAsync();
-            await ProcessPage(page);
+            await ProcessPage(await page);
         }
     }
 
@@ -83,8 +87,6 @@ public static class Injector
         {
             Log.Logger.Info("Disconnecting from Steam instance");
         }
-
-        s_webkitHooked = false;
         s_isInjected = false;
         s_browser?.Disconnect();
         s_browser = null;
@@ -99,8 +101,21 @@ public static class Injector
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
     {
-        Page? page = await e.Target.PageAsync();
-        await ProcessPage(page);
+        try
+        {
+            var page = await e.Target.PageAsync();
+            await ProcessPage(page);
+        }
+        catch (EvaluationFailedException err)
+        {
+            Log.Logger.Warn("Evaluation failed exception when trying to get page");
+            Log.Logger.Debug(err);
+        }
+        catch (PuppeteerException err)
+        {
+            Log.Logger.Warn("Puppeteer exception when trying to get page");
+            Log.Logger.Debug(err);
+        }
     }
 
     private static async Task ProcessPage(Page? page)
@@ -110,18 +125,8 @@ public static class Injector
             return;
         }
 
-        if (page.Url.Contains("store.steampowered.com") || page.Url.Contains("steamcommunity.com") ||
-            page.Url.Contains("!--/library/"))
-        {
-            if (!s_webkitHooked)
-            {
-                page.DOMContentLoaded += Page_Load;
-                s_webkitHooked = true;
-            }
-
-            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
-            return;
-        }
+        page.FrameNavigated -= Frame_Navigate;
+        page.FrameNavigated += Frame_Navigate;
 
         string? title;
         try
@@ -157,23 +162,33 @@ public static class Injector
         }
     }
 
-    private static async void Page_Load(object? sender, EventArgs _)
+    private static async void Frame_Navigate(object? sender, FrameEventArgs e)
     {
-        if (sender is Page page)
+        if (!e.Frame.Url.StartsWith("https://store.steampowered.com") &&
+            !e.Frame.Url.StartsWith("https://steamcommunity.com"))
         {
-            await InjectCssAsync(page, "webkit.css", "Steam web", client: false);
+            return;
         }
+
+        await InjectCssAsync(e.Frame, "webkit.css", "Steam web", client: false);
     }
 
     private static async Task InjectCssAsync(Page page, string cssFileRelativePath, string tabFriendlyName,
         bool retry = true, bool silent = false, bool client = true)
     {
-        string cssInjectString =
+        var frame = page.MainFrame;
+        await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, retry, silent, client);
+    }
+
+    private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
+        bool retry = true, bool silent = false, bool client = true)
+    {
+        var cssInjectString =
             $$"""
                 function injectCss() {
-                    if (document.getElementById('{{page.Target.TargetId}}') !== null) return;
+                    if (document.getElementById('{{frame.Id}}') !== null) return;
                     const link = document.createElement('link');
-                    link.id = '{{page.Target.TargetId}}';
+                    link.id = '{{frame.Id}}';
                     link.rel = 'stylesheet';
                     link.type = 'text/css';
                     link.href = 'https://steamloopback.host/{{cssFileRelativePath}}';
@@ -187,7 +202,7 @@ public static class Injector
                 """;
         try
         {
-            await page.EvaluateExpressionAsync(cssInjectString);
+            await frame.EvaluateExpressionAsync(cssInjectString);
             if (!silent)
             {
                 Log.Logger.Info("Injected into " + tabFriendlyName);
@@ -203,7 +218,7 @@ public static class Injector
 
             if (retry)
             {
-                await InjectCssAsync(page, cssFileRelativePath, tabFriendlyName, false, silent, client);
+                await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, false, silent, client);
             }
         }
     }

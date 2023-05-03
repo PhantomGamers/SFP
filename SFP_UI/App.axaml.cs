@@ -1,5 +1,6 @@
 #region
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Runtime.InteropServices;
 using Avalonia;
@@ -39,7 +40,8 @@ public class App : Application
                 desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
+                    Log.Logger.Info(
+                        $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
                     await HandleStartupTasks();
                 });
             }
@@ -83,7 +85,7 @@ public class App : Application
 
     public static void SetApplicationTheme(string themeVariantString)
     {
-        FluentAvaloniaTheme? faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
+        var faTheme = AvaloniaLocator.Current.GetService<FluentAvaloniaTheme>();
         if (faTheme != null)
         {
             faTheme.PreferSystemTheme = themeVariantString == "System Default";
@@ -107,8 +109,6 @@ public class App : Application
         }
     }
 
-    private void TrayIcon_OnClicked(object? sender, EventArgs e)
-    {
-        MainWindow.ShowWindow(); ;
-    }
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    private void TrayIcon_OnClicked(object? sender, EventArgs e) => MainWindow.ShowWindow();
 }

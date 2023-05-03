@@ -7,13 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild"/>
     <PackageReference Include="Flurl.Http"/>
     <PackageReference Include="Gameloop.Vdf"/>
     <PackageReference Include="PortableJsonSettingsProvider"/>
-    <PackageReference Include="PuppeteerSharp"/>
+    <PackageReference Include="PuppeteerSharp" Publicize="true"/>
     <PackageReference Include="FileWatcherEx"/>
-    <PackageReference Include="WindowsShortcutFactory" />
-    <PackageReference Include="WmiLight" />
+    <PackageReference Include="WindowsShortcutFactory"/>
+    <PackageReference Include="WmiLight"/>
+    <Publicize Include="PuppeteerSharp"/>
   </ItemGroup>
 
   <ItemGroup>
