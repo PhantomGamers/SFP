@@ -105,4 +105,9 @@ public class App : Application
             lifetime.Shutdown();
         }
     }
+
+    private void TrayIcon_OnClicked(object? sender, EventArgs e)
+    {
+        MainWindow.ShowWindow(); ;
+    }
 }

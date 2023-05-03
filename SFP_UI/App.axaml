@@ -22,7 +22,7 @@
 
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP">
+            <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP" Clicked="TrayIcon_OnClicked">
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Show Window"
