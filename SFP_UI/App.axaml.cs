@@ -1,6 +1,7 @@
 #region
 
 using System.Reactive;
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
@@ -38,7 +39,7 @@ public class App : Application
                 desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version}");
+                    Log.Logger.Info($"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
                     await HandleStartupTasks();
                 });
             }
