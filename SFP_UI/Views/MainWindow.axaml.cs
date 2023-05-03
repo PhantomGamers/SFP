@@ -132,16 +132,15 @@ public partial class MainWindow : AppWindow
         TryEnableMicaEffect();
     }
 
-    protected override void OnClosed(EventArgs e)
+    protected override void OnClosing(WindowClosingEventArgs e)
     {
-        if (!Settings.Default.CloseToTray || !Settings.Default.ShowTrayIcon)
+        if (Settings.Default.CloseToTray && Settings.Default.ShowTrayIcon)
         {
-            base.OnClosed(e);
-            return;
+            e.Cancel = true;
         }
 
-        Log.Logger.Debug("Closing to tray");
         Hide();
+        base.OnClosing(e);
     }
 
     protected override void HandleWindowStateChanged(WindowState state)
