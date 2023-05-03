@@ -11,6 +11,7 @@ using SFP_UI.ViewModels;
 using SFP.Models;
 #if DEBUG
 using System.Text.Json;
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
 #endif
 
 #endregion
@@ -37,7 +38,6 @@ internal static class UpdateChecker
             var semver = await GetLatestVersionAsync();
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
-                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
                 MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
             }
             else
