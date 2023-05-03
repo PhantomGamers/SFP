@@ -158,7 +158,7 @@ public static class Injector
             return;
         }
 
-        if (title == "Steam" || title == "Steam Settings" || title == "GameOverview" || title.EndsWith("Menu") ||
+        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title.EndsWith("Menu") ||
             title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
         {
             await InjectCssAsync(frame, @"libraryroot.custom.css", "Steam client");
