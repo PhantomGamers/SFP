@@ -158,15 +158,14 @@ public static class Injector
             return;
         }
 
-        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title == "Shutdown" || title.EndsWith("Menu") ||
-            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
+        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title == "Shutdown" || title == "OverlayBrowser_Browser" || title.EndsWith("Menu") ||
+            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:") || title.StartsWith(@"notificationtoasts_"))
         {
             await InjectCssAsync(frame, @"libraryroot.custom.css", "Steam client");
             return;
         }
 
-        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
-            title.StartsWith(@"notificationtoasts_"))
+        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_"))
         {
             await InjectCssAsync(frame, @"bigpicture.custom.css", "Steam Big Picture Mode");
             return;
