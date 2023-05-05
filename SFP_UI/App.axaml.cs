@@ -73,14 +73,11 @@ public class App : Application
 
     private static async Task HandleStartupTasks()
     {
+        await Task.Run(Steam.StartMonitorSteam);
+
         if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
         {
             await Task.Run(Steam.TryInject);
-        }
-
-        if (Settings.Default.InjectOnSteamStart)
-        {
-            await Task.Run(Steam.StartMonitorSteam);
         }
 
         if (Settings.Default.RunSteamOnStart)

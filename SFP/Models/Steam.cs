@@ -195,7 +195,10 @@ public static class Steam
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        await TryInject();
+        if (Properties.Settings.Default.InjectOnSteamStart)
+        {
+            await TryInject();
+        }
     }
 
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>

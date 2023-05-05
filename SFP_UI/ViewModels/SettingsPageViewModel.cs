@@ -160,20 +160,6 @@ public class SettingsPageViewModel : ViewModelBase
         get => _injectOnSteamStart;
         set
         {
-            if (_injectOnSteamStart != value)
-            {
-                if (value)
-                {
-                    Log.Logger.Info("Starting Steam monitor...");
-                    Steam.StartMonitorSteam();
-                }
-                else
-                {
-                    Log.Logger.Info("Stopping Steam monitor...");
-                    Steam.StopMonitorSteam();
-                }
-            }
-
             _ = this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
             Settings.Default.InjectOnSteamStart = value;
         }
