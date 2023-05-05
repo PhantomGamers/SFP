@@ -32,6 +32,8 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _startMinimized = Settings.Default.StartMinimized;
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
     private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
+    private bool _injectCss = Settings.Default.InjectCSS;
+    private bool _injectJs = Settings.Default.InjectJS;
 
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
@@ -209,6 +211,26 @@ public class SettingsPageViewModel : ViewModelBase
         {
             _ = this.RaiseAndSetIfChanged(ref _forceSteamArgs, value);
             Settings.Default.ForceSteamArgs = value;
+        }
+    }
+
+    public bool InjectCss
+    {
+        get => _injectCss;
+        set
+        {
+            _ = this.RaiseAndSetIfChanged(ref _injectCss, value);
+            Settings.Default.InjectCSS = value;
+        }
+    }
+
+    public bool InjectJs
+    {
+        get => _injectJs;
+        set
+        {
+            _ = this.RaiseAndSetIfChanged(ref _injectJs, value);
+            Settings.Default.InjectJS = value;
         }
     }
 
