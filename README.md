@@ -44,7 +44,7 @@ Use the "Open File" button in SFP to access the files where your custom skins ar
 
 ## Known Issues
 
-- None currently
+- Start minimized to tray functionality might not work properly on certain Linux systems
 
 ## Dependencies
 
