@@ -165,7 +165,7 @@ public static class Injector
             return;
         }
 
-        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title == "Shutdown" || title == "OverlayBrowser_Browser" || title.EndsWith("Menu") ||
+        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title == "Shutdown" || title == "OverlayBrowser_Browser" || title == "What's New Settings" || title.EndsWith("Menu") ||
             title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:") || title.StartsWith(@"notificationtoasts_"))
         {
             await InjectAsync(frame, @"libraryroot.custom", "Steam client");
