@@ -195,6 +195,30 @@ public static class Injector
         }
     }
 
+    private static async Task SetBypassCSP(Frame frame)
+    {
+        // find page with id matching frame id
+        var pageTask = s_browser?.Targets().FirstOrDefault(t => t.TargetId == frame.Id)?.PageAsync();
+        if (pageTask == null)
+        {
+            return;
+        }
+        var page = await pageTask;
+        if (page == null)
+        {
+            return;
+        }
+        try
+        {
+            await page.SetBypassCSPAsync(true);
+        }
+        catch (PuppeteerException e)
+        {
+            Log.Logger.Warn("Failed to bypass content security policy");
+            Log.Logger.Debug(e);
+        }
+    }
+
     private static async void Frame_Navigate(object? sender, FrameEventArgs e)
     {
         await ProcessFrame(e.Frame);
@@ -209,6 +233,10 @@ public static class Injector
 
         if (Properties.Settings.Default.InjectJS)
         {
+            if (tabFriendlyName == "Steam web")
+            {
+                await SetBypassCSP(frame);
+            }
             await InjectJsAsync(frame, fileRelativePath, tabFriendlyName, client: client);
         }
     }
