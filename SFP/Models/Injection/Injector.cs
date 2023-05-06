@@ -27,6 +27,13 @@ public static class Injector
             return;
         }
 
+
+        if (!Properties.Settings.Default.InjectJS && !Properties.Settings.Default.InjectCSS)
+        {
+            Log.Logger.Warn("No injection type is enabled, skipping injection");
+            return;
+        }
+
         try
         {
             if (File.Exists(Steam.MillenniumPath))
@@ -141,7 +148,7 @@ public static class Injector
         if (frame.Url.StartsWith("https://store.steampowered.com") ||
             frame.Url.StartsWith("https://steamcommunity.com"))
         {
-            await InjectCssAsync(frame, "webkit.css", "Steam web", client: false);
+            await InjectAsync(frame, "webkit", "Steam web", client: false);
             return;
         }
 
@@ -158,17 +165,18 @@ public static class Injector
             return;
         }
 
-        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" || title.EndsWith("Menu") ||
-            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:"))
+        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" ||
+            title == "Shutdown" || title == "OverlayBrowser_Browser" || title == "What's New Settings" ||
+            title == "GameNotes" || title == "Settings" || title == "SoundtrackPlayer" || title == "ScreenshotManager" || title == "Achievements" || title.EndsWith("Menu") ||
+            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:") || title.StartsWith(@"notificationtoasts_"))
         {
-            await InjectCssAsync(frame, @"libraryroot.custom.css", "Steam client");
+            await InjectAsync(frame, @"libraryroot.custom", "Steam client");
             return;
         }
 
-        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_") ||
-            title.StartsWith(@"notificationtoasts_"))
+        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_"))
         {
-            await InjectCssAsync(frame, @"bigpicture.custom.css", "Steam Big Picture Mode");
+            await InjectAsync(frame, @"bigpicture.custom", "Steam Big Picture Mode");
             return;
         }
 
@@ -176,7 +184,7 @@ public static class Injector
         {
             if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
             {
-                await InjectCssAsync(frame, "friends.custom.css", "Friends and Chat");
+                await InjectAsync(frame, "friends.custom", "Friends and Chat");
             }
         }
         catch (PuppeteerException e)
@@ -192,18 +200,31 @@ public static class Injector
         await ProcessFrame(e.Frame);
     }
 
+    private static async Task InjectAsync(Frame frame, string fileRelativePath, string tabFriendlyName, bool client = true)
+    {
+        if (Properties.Settings.Default.InjectCSS)
+        {
+            await InjectCssAsync(frame, fileRelativePath, tabFriendlyName, client: client);
+        }
+
+        if (Properties.Settings.Default.InjectJS)
+        {
+            await InjectJsAsync(frame, fileRelativePath, tabFriendlyName, client: client);
+        }
+    }
+
     private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
         bool retry = true, bool silent = false, bool client = true)
     {
         var cssInjectString =
             $$"""
                 function injectCss() {
-                    if (document.getElementById('{{frame.Id}}') !== null) return;
+                    if (document.getElementById('{{frame.Id}}css') !== null) return;
                     const link = document.createElement('link');
-                    link.id = '{{frame.Id}}';
+                    link.id = '{{frame.Id}}css';
                     link.rel = 'stylesheet';
                     link.type = 'text/css';
-                    link.href = 'https://steamloopback.host/{{cssFileRelativePath}}';
+                    link.href = 'https://steamloopback.host/{{cssFileRelativePath}}.css';
                     document.head.append(link);
                 }
                 if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
@@ -217,20 +238,62 @@ public static class Injector
             await frame.EvaluateExpressionAsync(cssInjectString);
             if (!silent)
             {
-                Log.Logger.Info("Injected into " + tabFriendlyName);
+                Log.Logger.Info("Injected CSS into " + tabFriendlyName);
             }
         }
-        catch (EvaluationFailedException e)
+        catch (PuppeteerException e)
         {
             if (!silent && tabFriendlyName != "Steam web")
             {
-                Log.Logger.Error(tabFriendlyName + " failed to inject: " + e);
+                Log.Logger.Error(tabFriendlyName + " failed to inject css: " + e);
                 Log.Logger.Info("Retrying...");
             }
 
             if (retry)
             {
                 await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, false, silent, client);
+            }
+        }
+    }
+
+    private static async Task InjectJsAsync(Frame frame, string jsFileRelativePath, string tabFriendlyName,
+        bool retry = true, bool silent = false, bool client = true)
+    {
+        var jsInjectString =
+            $$"""
+                function injectJs() {
+                    if (document.getElementById('{{frame.Id}}js') !== null) return;
+                    const script = document.createElement('script');
+                    script.id = '{{frame.Id}}js';
+                    script.type = 'text/javascript';
+                    script.src = 'https://steamloopback.host/{{jsFileRelativePath}}.js';
+                    document.head.append(script);
+                }
+                if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
+                    addEventListener('DOMContentLoaded', injectJs);
+                } else {
+                    injectJs();
+                }
+                """;
+        try
+        {
+            await frame.EvaluateExpressionAsync(jsInjectString);
+            if (!silent)
+            {
+                Log.Logger.Info("Injected JS into " + tabFriendlyName);
+            }
+        }
+        catch (PuppeteerException e)
+        {
+            if (!silent && tabFriendlyName != "Steam web")
+            {
+                Log.Logger.Error(tabFriendlyName + " failed to inject js: " + e);
+                Log.Logger.Info("Retrying...");
+            }
+
+            if (retry)
+            {
+                await InjectCssAsync(frame, jsFileRelativePath, tabFriendlyName, false, silent, client);
             }
         }
     }

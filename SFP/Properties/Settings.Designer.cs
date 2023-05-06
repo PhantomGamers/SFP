@@ -190,5 +190,44 @@ namespace SFP.Properties {
                 this["ForceSteamArgs"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool InjectCSS {
+            get {
+                return ((bool)(this["InjectCSS"]));
+            }
+            set {
+                this["InjectCSS"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool InjectJS {
+            get {
+                return ((bool)(this["InjectJS"]));
+            }
+            set {
+                this["InjectJS"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool InjectJSWarningAccepted {
+            get {
+                return ((bool)(this["InjectJSWarningAccepted"]));
+            }
+            set {
+                this["InjectJSWarningAccepted"] = value;
+            }
+        }
     }
 }

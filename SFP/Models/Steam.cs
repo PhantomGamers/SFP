@@ -185,17 +185,13 @@ public static class Steam
         Log.Logger.Info("Monitoring Steam state");
     }
 
-    public static void StopMonitorSteam()
-    {
-        s_watcher?.Stop();
-        s_watcher?.Dispose();
-        s_watcher = null;
-    }
-
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        await TryInject();
+        if (Properties.Settings.Default.InjectOnSteamStart)
+        {
+            await TryInject();
+        }
     }
 
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>
@@ -224,7 +220,7 @@ public static class Steam
 
                 if (argumentMissing)
                 {
-                    Log.Logger.Info("Steam process detected with missing launch arguments");
+                    Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
                     await RestartSteam();
                 }
             }
