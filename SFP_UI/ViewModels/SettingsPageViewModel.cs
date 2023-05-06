@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
 using FluentAvalonia.Styling;
+using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using SFP.Models;
 using SFP_UI.Views;
@@ -53,6 +54,7 @@ public class SettingsPageViewModel : ViewModelBase
         ReloadCommand = ReactiveCommand.Create(OnReloadCommand);
         BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
         ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
+        InjectWarningAcceptCommand = ReactiveCommand.CreateFromTask(OnInjectWarningAcceptCommand);
     }
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
@@ -63,6 +65,7 @@ public class SettingsPageViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
     public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
     public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
+    public ReactiveCommand<Unit, Unit> InjectWarningAcceptCommand { get; }
 
     public string SteamDirectory
     {
@@ -215,9 +218,30 @@ public class SettingsPageViewModel : ViewModelBase
         get => _injectJs;
         set
         {
+            if (value && !Settings.Default.InjectJSWarningAccepted)
+            {
+                ShowWarningDialog();
+                return;
+            }
             _ = this.RaiseAndSetIfChanged(ref _injectJs, value);
             Settings.Default.InjectJS = value;
         }
+    }
+
+    private async void ShowWarningDialog()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Warning",
+            Content =
+                "You are enabling JavaScript injection.\n" +
+                "JavaScript can potentially contain malicious code and you should only use scripts from people you trust.\n" +
+                "Continue?",
+            PrimaryButtonText = "Yes",
+            PrimaryButtonCommand = InjectWarningAcceptCommand,
+            SecondaryButtonText = "No"
+        };
+        await dialog.ShowAsync();
     }
 
     public static void OnSaveCommand() => Settings.Default.Save();
@@ -238,6 +262,8 @@ public class SettingsPageViewModel : ViewModelBase
         RunSteamOnStart = Settings.Default.RunSteamOnStart;
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
         ForceSteamArgs = Settings.Default.ForceSteamArgs;
+        InjectCss = Settings.Default.InjectCSS;
+        InjectJs = Settings.Default.InjectJS;
     }
 
     private async Task OnBrowseSteamCommand()
@@ -257,6 +283,14 @@ public class SettingsPageViewModel : ViewModelBase
     {
         Settings.Default.SteamDirectory = string.Empty;
         SteamDirectory = Steam.SteamDir ?? string.Empty;
+        return Task.CompletedTask;
+    }
+
+    private Task OnInjectWarningAcceptCommand()
+    {
+        Settings.Default.InjectJSWarningAccepted = true;
+        InjectJs = true;
+        Settings.Default.Save();
         return Task.CompletedTask;
     }
 

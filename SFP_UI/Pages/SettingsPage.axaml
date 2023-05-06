@@ -7,7 +7,8 @@
 
     <DockPanel Margin="16">
         <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
-            <Button Command="{Binding SaveCommand}"
+            <Button Name="SaveButton"
+                    Command="{Binding SaveCommand}"
                     ToolTip.Tip="Saves your settings to config">
                 Save
             </Button>
