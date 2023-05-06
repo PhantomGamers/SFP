@@ -241,7 +241,7 @@ public static class Injector
                 Log.Logger.Info("Injected CSS into " + tabFriendlyName);
             }
         }
-        catch (EvaluationFailedException e)
+        catch (PuppeteerException e)
         {
             if (!silent && tabFriendlyName != "Steam web")
             {
@@ -283,7 +283,7 @@ public static class Injector
                 Log.Logger.Info("Injected JS into " + tabFriendlyName);
             }
         }
-        catch (EvaluationFailedException e)
+        catch (PuppeteerException e)
         {
             if (!silent && tabFriendlyName != "Steam web")
             {
