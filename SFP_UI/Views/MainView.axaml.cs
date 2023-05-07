@@ -50,15 +50,18 @@ public partial class MainView : UserControl
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
 
-        var t = (item.Tag as Type)!;
+        if (item.Tag is not Type type)
+        {
+            return;
+        }
 
-        if (t == typeof(MainPage))
+        if (type == typeof(MainPage))
         {
             item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
                 ? (IconSource)value!
                 : null;
         }
-        else if (t == typeof(SettingsPage))
+        else if (type == typeof(SettingsPage))
         {
             item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
                 ? (IconSource)value!
@@ -70,25 +73,18 @@ public partial class MainView : UserControl
             return;
         }
 
-        if (_navView == null)
+        if (_navView is null)
         {
             return;
         }
 
-        foreach (NavigationViewItem nvi in _navView.MenuItemsSource)
-        {
-            if (!nvi.Equals(item))
-            {
-                SetNviIcon(nvi, false, true);
-            }
-        }
+        var allItems = _navView.MenuItemsSource.Cast<object>()
+            .Concat(_navView.FooterMenuItemsSource.Cast<object>())
+            .OfType<NavigationViewItem>();
 
-        foreach (NavigationViewItem nvi in _navView.FooterMenuItemsSource)
+        foreach (var nvi in allItems.Where(nvi => !nvi.Equals(item)))
         {
-            if (!nvi.Equals(item))
-            {
-                SetNviIcon(nvi, false, true);
-            }
+            SetNviIcon(nvi, false, true);
         }
     }
 
