@@ -32,10 +32,9 @@ internal static class UpdateChecker
 
 #pragma warning disable CS0162
         Log.Logger.Info("Checking for updates...");
-
         try
         {
-            var semver = await GetLatestVersionAsync();
+            var semver = await GetLatestVersionAsync(Version.IsPrerelease);
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
                 MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
@@ -54,7 +53,7 @@ internal static class UpdateChecker
     }
 
 #pragma warning disable CS1998
-    private static async Task<SemVersion> GetLatestVersionAsync()
+    private static async Task<SemVersion> GetLatestVersionAsync(bool preRelease)
 #pragma warning restore CS1998
     {
 #if DEBUG
@@ -63,10 +62,24 @@ internal static class UpdateChecker
         var release = JsonSerializer.Deserialize<Release>(responseBody);
 #pragma warning restore IL2026
 #else
-        var release =
-            await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
+        Release release;
+
+        if (!preRelease)
+        {
+            release = await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases/latest")
                 .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
-                .GetJsonAsync<Release>();
+                .GetJsonAsync<Release>()
+                .ConfigureAwait(false);
+        }
+        else
+        {
+            var releases = await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases")
+                .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
+                .GetJsonAsync<Release[]>()
+                .ConfigureAwait(false);
+            release = releases[0];
+        }
+
 #endif
         return SemVersion.Parse(release.TagName, SemVersionStyles.Strict);
     }
