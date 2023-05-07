@@ -190,10 +190,14 @@ public static class Injector
         }
         else
         {
-            var httpPatches = patches.Where(p => p.MatchRegex!.StartsWith("http")).ToList();
-            foreach (var patch in httpPatches.Where(p => Regex.IsMatch(frame.Url, p.MatchRegex!)))
+            var httpPatches = patches.Where(p => p.MatchRegex!.StartsWith("http"));
+            var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
+            if (patchEntries.Any(p => Regex.IsMatch(frame.Url, p.MatchRegex!)))
             {
-                await InjectAsync(frame, patch.TargetFile!, frame.Url);
+                foreach (var patch in patchEntries)
+                {
+                    await InjectAsync(frame, patch.TargetFile!, frame.Url);
+                }
             }
         }
     }

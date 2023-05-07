@@ -8,7 +8,7 @@ public class PatchEntry
 
 public static class PatchConfig
 {
-    public static List<PatchEntry> DefaultPatches { get; } = new()
+    public static IEnumerable<PatchEntry> DefaultPatches { get; } = new[]
     {
         new PatchEntry { MatchRegex = "https://store.steampowered.com", TargetFile = "webkit"},
         new PatchEntry { MatchRegex = "https://steamcommunity.com", TargetFile = "webkit"},
