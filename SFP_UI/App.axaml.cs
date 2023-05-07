@@ -65,7 +65,9 @@ public class App : Application
 
         base.OnFrameworkInitializationCompleted();
 
-        if (Settings.Default is { StartMinimized: true, ShowTrayIcon: true, MinimizeToTray: true })
+        SetIconsState(Settings.Default.ShowTrayIcon);
+
+        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
         {
             MainWindow.Instance?.Hide();
         }
@@ -83,6 +85,19 @@ public class App : Application
         if (Settings.Default.RunSteamOnStart)
         {
             await Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
+        }
+    }
+
+    public static void SetIconsState(bool state)
+    {
+        var icons = TrayIcon.GetIcons(Application.Current!);
+        if (icons == null)
+        {
+            return;
+        }
+        foreach (var icon in icons)
+        {
+            icon.IsVisible = state;
         }
     }
 

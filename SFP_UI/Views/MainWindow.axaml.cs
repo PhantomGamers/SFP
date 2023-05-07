@@ -121,7 +121,7 @@ public partial class MainWindow : AppWindow
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        if (Settings.Default.CloseToTray && Settings.Default.ShowTrayIcon)
+        if (Settings.Default.CloseToTray)
         {
             e.Cancel = true;
         }
