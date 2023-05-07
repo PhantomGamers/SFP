@@ -1,6 +1,8 @@
 #region
 
+using System.Text.RegularExpressions;
 using PuppeteerSharp;
+using SFP.Models.Injection.Config;
 
 #endregion
 
@@ -145,53 +147,54 @@ public static class Injector
 
     private static async Task ProcessFrame(Frame frame)
     {
-        if (frame.Url.StartsWith("https://store.steampowered.com") ||
-            frame.Url.StartsWith("https://steamcommunity.com"))
-        {
-            await InjectAsync(frame, "webkit", frame.Url);
-            return;
-        }
+        var patches = PatchConfig.DefaultPatches;
 
-        string? title;
-        try
+        if (frame.Url.StartsWith("https://steamloopback.host"))
         {
-            title = await frame.GetTitleAsync();
-        }
-        catch (PuppeteerException e)
-        {
-            Log.Logger.Error("Unexpected error when trying to get frame title");
-            Log.Logger.Debug("url: " + frame.Url);
-            Log.Logger.Debug(e);
-            return;
-        }
-
-        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" ||
-            title == "Shutdown" || title == "OverlayBrowser_Browser" || title == "What's New Settings" ||
-            title == "GameNotes" || title == "Settings" || title == "SoundtrackPlayer" || title == "ScreenshotManager" || title == "Achievements" || title.EndsWith("Menu") ||
-            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:") || title.StartsWith(@"notificationtoasts_"))
-        {
-            await InjectAsync(frame, @"libraryroot.custom", title);
-            return;
-        }
-
-        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_"))
-        {
-            await InjectAsync(frame, @"bigpicture.custom", title);
-            return;
-        }
-
-        try
-        {
-            if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+            string? title;
+            try
             {
-                await InjectAsync(frame, "friends.custom", "Friends and Chat");
+                title = await frame.GetTitleAsync();
+            }
+            catch (PuppeteerException e)
+            {
+                Log.Logger.Error("Unexpected error when trying to get frame title");
+                Log.Logger.Debug("url: " + frame.Url);
+                Log.Logger.Debug(e);
+                return;
+            }
+
+            foreach (var patch in patches)
+            {
+                if (patch.MatchRegex == "Friends")
+                {
+                    try
+                    {
+                        if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+                        {
+                            await InjectAsync(frame, patch.TargetFile!, "Friends and Chat");
+                        }
+                    }
+                    catch (PuppeteerException e)
+                    {
+                        Log.Logger.Error("Unexpected error when trying to query frame selector");
+                        Log.Logger.Debug("url: " + frame.Url);
+                        Log.Logger.Debug(e);
+                    }
+                }
+                else if (Regex.IsMatch(title, patch.MatchRegex!))
+                {
+                    await InjectAsync(frame, patch.TargetFile!, title);
+                }
             }
         }
-        catch (PuppeteerException e)
+        else
         {
-            Log.Logger.Error("Unexpected error when trying to query frame selector");
-            Log.Logger.Debug("url: " + frame.Url);
-            Log.Logger.Debug(e);
+            var httpPatches = patches.Where(p => p.MatchRegex!.StartsWith("http")).ToList();
+            foreach (var patch in httpPatches.Where(p => Regex.IsMatch(frame.Url, p.MatchRegex!)))
+            {
+                await InjectAsync(frame, patch.TargetFile!, frame.Url);
+            }
         }
     }
 
