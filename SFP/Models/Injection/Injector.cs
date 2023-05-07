@@ -8,7 +8,7 @@ using SFP.Models.Injection.Config;
 
 namespace SFP.Models.Injection;
 
-public static class Injector
+public static partial class Injector
 {
     private static Browser? s_browser;
     private static bool s_isInjected;
@@ -196,7 +196,9 @@ public static class Injector
             {
                 foreach (var patch in patchEntries)
                 {
-                    await InjectAsync(frame, patch.TargetFile!, frame.Url);
+                    var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
+                    await InjectAsync(frame, patch.TargetFile!, url);
+                    break;
                 }
             }
         }
@@ -281,4 +283,7 @@ public static class Injector
             }
         }
     }
+
+    [GeneratedRegex(@"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)")]
+    private static partial Regex GetDomainRegex();
 }
