@@ -39,6 +39,7 @@ public class MainPageViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
+    public ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
 
     public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
         ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
@@ -105,22 +106,42 @@ public class MainPageViewModel : ViewModelBase
         UpdateNotificationIsOpen = true;
     }
 
-    private static async Task OpenFile(string relativeFilePath)
+    private static async Task OpenPath(string relativePath, bool isDirectory)
     {
-        var file = Path.Join(Steam.SteamDir, @"steamui", relativeFilePath);
+        var path = Path.Join(Steam.SteamDir, @"steamui", relativePath);
         try
         {
-            if (!File.Exists(file))
+            if (isDirectory)
             {
-                await File.Create(file).DisposeAsync();
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+            }
+            else
+            {
+                if (!File.Exists(path))
+                {
+                    await File.Create(path).DisposeAsync();
+                }
             }
 
-            Utils.OpenUrl(file);
+            Utils.OpenUrl(path);
         }
         catch (Exception e)
         {
-            Log.Logger.Warn("Could not open " + file);
-            Log.Logger.Error(e);
+            Log.Logger.Warn("Could not open " + path);
+            Log.Logger.Debug(e);
         }
+    }
+
+    private static async Task OpenFile(string relativeFilePath)
+    {
+        await OpenPath(relativeFilePath, false);
+    }
+
+    private static void OpenDir(string relativeDirPath)
+    {
+        OpenPath(relativeDirPath, true).Wait();
     }
 }
