@@ -45,24 +45,46 @@ public partial class MainView : UserControl
         _ = _frameView.Navigate(typeof(MainPage));
     }
 
-    private void SetNviIcon(NavigationViewItem item, bool selected)
+    private void SetNviIcon(NavigationViewItem item, bool selected, bool recurse = false)
     {
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
 
-        var t = (item.Tag as Type)!;
+        if (item.Tag is not Type type)
+        {
+            return;
+        }
 
-        if (t == typeof(MainPage))
+        if (type == typeof(MainPage))
         {
             item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
                 ? (IconSource)value!
                 : null;
         }
-        else if (t == typeof(SettingsPage))
+        else if (type == typeof(SettingsPage))
         {
             item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
                 ? (IconSource)value!
                 : null;
+        }
+
+        if (recurse)
+        {
+            return;
+        }
+
+        if (_navView is null)
+        {
+            return;
+        }
+
+        var allItems = _navView.MenuItemsSource.Cast<object>()
+            .Concat(_navView.FooterMenuItemsSource.Cast<object>())
+            .OfType<NavigationViewItem>();
+
+        foreach (var nvi in allItems.Where(nvi => !nvi.Equals(item)))
+        {
+            SetNviIcon(nvi, false, true);
         }
     }
 
@@ -70,7 +92,7 @@ public partial class MainView : UserControl
     {
         if (_navView != null && !TryNavigateItem(e, _navView.MenuItemsSource))
         {
-            _ = TryNavigateItem(e, _navView!.FooterMenuItemsSource);
+            _ = TryNavigateItem(e, _navView.FooterMenuItemsSource);
         }
     }
 

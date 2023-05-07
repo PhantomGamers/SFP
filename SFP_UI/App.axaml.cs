@@ -63,12 +63,14 @@ public class App : Application
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
         }
 
-        if (!OperatingSystem.IsWindows() && Settings.Default.MinimizeToTray && Settings.Default.StartMinimized)
+        base.OnFrameworkInitializationCompleted();
+
+        SetIconsState(Settings.Default.ShowTrayIcon);
+
+        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
         {
             MainWindow.Instance?.Hide();
         }
-
-        base.OnFrameworkInitializationCompleted();
     }
 
     private static async Task HandleStartupTasks()
@@ -83,6 +85,19 @@ public class App : Application
         if (Settings.Default.RunSteamOnStart)
         {
             await Task.Run(() => Steam.StartSteam(Settings.Default.SteamLaunchArgs));
+        }
+    }
+
+    public static void SetIconsState(bool state)
+    {
+        var icons = TrayIcon.GetIcons(Application.Current!);
+        if (icons == null)
+        {
+            return;
+        }
+        foreach (var icon in icons)
+        {
+            icon.IsVisible = state;
         }
     }
 

@@ -1,6 +1,7 @@
 #region
 
 using System.Reactive;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -112,6 +113,7 @@ public class SettingsPageViewModel : ViewModelBase
         get => _showTrayIcon;
         set
         {
+            App.SetIconsState(value);
             _ = this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
             Settings.Default.ShowTrayIcon = value;
         }

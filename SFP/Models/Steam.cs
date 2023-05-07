@@ -181,6 +181,7 @@ public static class Steam
         s_watcher = new FileSystemWatcherEx(SteamDir) { Filter = ".crash" };
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
+        s_watcher.OnChanged += OnCrashFileCreated;
         s_watcher.Start();
         Log.Logger.Info("Monitoring Steam state");
     }

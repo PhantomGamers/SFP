@@ -1,12 +1,14 @@
 #region
 
+using System.Text.RegularExpressions;
 using PuppeteerSharp;
+using SFP.Models.Injection.Config;
 
 #endregion
 
 namespace SFP.Models.Injection;
 
-public static class Injector
+public static partial class Injector
 {
     private static Browser? s_browser;
     private static bool s_isInjected;
@@ -59,7 +61,7 @@ public static class Injector
             await InjectAsync();
             s_isInjected = true;
             InjectionStateChanged?.Invoke(null, EventArgs.Empty);
-            Log.Logger.Info("Injection finished");
+            Log.Logger.Info("Initial injection finished");
         }
         catch (Exception e)
         {
@@ -145,52 +147,82 @@ public static class Injector
 
     private static async Task ProcessFrame(Frame frame)
     {
-        if (frame.Url.StartsWith("https://store.steampowered.com") ||
-            frame.Url.StartsWith("https://steamcommunity.com"))
-        {
-            await InjectAsync(frame, "webkit", "Steam web", client: false);
-            return;
-        }
+        var patches = PatchConfig.DefaultPatches;
 
-        string? title;
-        try
+        if (frame.Url.StartsWith("https://steamloopback.host"))
         {
-            title = await frame.GetTitleAsync();
-        }
-        catch (PuppeteerException e)
-        {
-            Log.Logger.Error("Unexpected error when trying to get frame title");
-            Log.Logger.Debug("url: " + frame.Url);
-            Log.Logger.Debug(e);
-            return;
-        }
-
-        if (title == "Steam" || title == "Steam Settings" || title == "Sign in to Steam" || title == "GameOverview" ||
-            title == "Shutdown" || title == "OverlayBrowser_Browser" || title == "What's New Settings" ||
-            title == "GameNotes" || title == "Settings" || title == "SoundtrackPlayer" || title == "ScreenshotManager" || title == "Achievements" || title.EndsWith("Menu") ||
-            title.EndsWith(@"Supernav") || title.StartsWith("SP Overlay:") || title.StartsWith(@"notificationtoasts_"))
-        {
-            await InjectAsync(frame, @"libraryroot.custom", "Steam client");
-            return;
-        }
-
-        if (title == "Steam Big Picture Mode" || title.StartsWith("QuickAccess_") || title.StartsWith("MainMenu_"))
-        {
-            await InjectAsync(frame, @"bigpicture.custom", "Steam Big Picture Mode");
-            return;
-        }
-
-        try
-        {
-            if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+            string? title;
+            try
             {
-                await InjectAsync(frame, "friends.custom", "Friends and Chat");
+                title = await frame.GetTitleAsync();
+            }
+            catch (PuppeteerException e)
+            {
+                Log.Logger.Error("Unexpected error when trying to get frame title");
+                Log.Logger.Debug("url: " + frame.Url);
+                Log.Logger.Debug(e);
+                return;
+            }
+
+            foreach (var patch in patches)
+            {
+                if (patch.MatchRegex == "Friends")
+                {
+                    try
+                    {
+                        if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+                        {
+                            await InjectAsync(frame, patch.TargetFile!, "Friends and Chat");
+                        }
+                    }
+                    catch (PuppeteerException e)
+                    {
+                        Log.Logger.Error("Unexpected error when trying to query frame selector");
+                        Log.Logger.Debug("url: " + frame.Url);
+                        Log.Logger.Debug(e);
+                    }
+                }
+                else if (Regex.IsMatch(title, patch.MatchRegex!))
+                {
+                    await InjectAsync(frame, patch.TargetFile!, title);
+                }
             }
         }
+        else
+        {
+            var httpPatches = patches.Where(p => p.MatchRegex!.StartsWith("http"));
+            var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
+            if (patchEntries.Any(p => Regex.IsMatch(frame.Url, p.MatchRegex!)))
+            {
+                foreach (var patch in patchEntries)
+                {
+                    var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
+                    await InjectAsync(frame, patch.TargetFile!, url);
+                    break;
+                }
+            }
+        }
+    }
+
+    private static async Task SetBypassCsp(Frame frame)
+    {
+        var pageTask = s_browser?.Targets().FirstOrDefault(t => t.TargetId == frame.Id)?.PageAsync();
+        if (pageTask == null)
+        {
+            return;
+        }
+        var page = await pageTask;
+        if (page == null)
+        {
+            return;
+        }
+        try
+        {
+            await page.SetBypassCSPAsync(true);
+        }
         catch (PuppeteerException e)
         {
-            Log.Logger.Error("Unexpected error when trying to query frame selector");
-            Log.Logger.Debug("url: " + frame.Url);
+            Log.Logger.Warn("Failed to bypass content security policy");
             Log.Logger.Debug(e);
         }
     }
@@ -200,101 +232,58 @@ public static class Injector
         await ProcessFrame(e.Frame);
     }
 
-    private static async Task InjectAsync(Frame frame, string fileRelativePath, string tabFriendlyName, bool client = true)
+    private static async Task InjectAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
     {
         if (Properties.Settings.Default.InjectCSS)
         {
-            await InjectCssAsync(frame, fileRelativePath, tabFriendlyName, client: client);
+            await InjectResourceAsync(frame, fileRelativePath, tabFriendlyName, "css");
         }
 
         if (Properties.Settings.Default.InjectJS)
         {
-            await InjectJsAsync(frame, fileRelativePath, tabFriendlyName, client: client);
+            if (frame.Url.StartsWith("http"))
+            {
+                await SetBypassCsp(frame);
+            }
+            await InjectResourceAsync(frame, fileRelativePath, tabFriendlyName, "js");
         }
     }
 
-    private static async Task InjectCssAsync(Frame frame, string cssFileRelativePath, string tabFriendlyName,
-        bool retry = true, bool silent = false, bool client = true)
+    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName, string resourceType)
     {
-        var cssInjectString =
-            $$"""
-                function injectCss() {
-                    if (document.getElementById('{{frame.Id}}css') !== null) return;
-                    const link = document.createElement('link');
-                    link.id = '{{frame.Id}}css';
-                    link.rel = 'stylesheet';
-                    link.type = 'text/css';
-                    link.href = 'https://steamloopback.host/{{cssFileRelativePath}}.css';
-                    document.head.append(link);
-                }
-                if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
-                    addEventListener('DOMContentLoaded', injectCss);
-                } else {
-                    injectCss();
-                }
-                """;
+        var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
+        var injectString =
+            $@"
+            function inject() {{
+                if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
+                const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
+                element.id = '{frame.Id}{resourceType}';
+                {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
+                element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
+                element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}.{resourceType}';
+                document.head.append(element);
+            }}
+            if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
+                addEventListener('DOMContentLoaded', inject);
+            }} else {{
+                inject();
+            }}
+            ";
         try
         {
-            await frame.EvaluateExpressionAsync(cssInjectString);
-            if (!silent)
-            {
-                Log.Logger.Info("Injected CSS into " + tabFriendlyName);
-            }
+            await frame.EvaluateExpressionAsync(injectString);
+            Log.Logger.Info($"Injected {resourceType.ToUpper()} into {tabFriendlyName}");
         }
         catch (PuppeteerException e)
         {
-            if (!silent && tabFriendlyName != "Steam web")
+            if (!tabFriendlyName.StartsWith("http"))
             {
-                Log.Logger.Error(tabFriendlyName + " failed to inject css: " + e);
-                Log.Logger.Info("Retrying...");
-            }
-
-            if (retry)
-            {
-                await InjectCssAsync(frame, cssFileRelativePath, tabFriendlyName, false, silent, client);
+                Log.Logger.Error($"Failed to inject {resourceType} into {tabFriendlyName}");
+                Log.Logger.Debug(e);
             }
         }
     }
 
-    private static async Task InjectJsAsync(Frame frame, string jsFileRelativePath, string tabFriendlyName,
-        bool retry = true, bool silent = false, bool client = true)
-    {
-        var jsInjectString =
-            $$"""
-                function injectJs() {
-                    if (document.getElementById('{{frame.Id}}js') !== null) return;
-                    const script = document.createElement('script');
-                    script.id = '{{frame.Id}}js';
-                    script.type = 'text/javascript';
-                    script.src = 'https://steamloopback.host/{{jsFileRelativePath}}.js';
-                    document.head.append(script);
-                }
-                if ((document.readyState === 'loading') && '{{!client}}' === 'True') {
-                    addEventListener('DOMContentLoaded', injectJs);
-                } else {
-                    injectJs();
-                }
-                """;
-        try
-        {
-            await frame.EvaluateExpressionAsync(jsInjectString);
-            if (!silent)
-            {
-                Log.Logger.Info("Injected JS into " + tabFriendlyName);
-            }
-        }
-        catch (PuppeteerException e)
-        {
-            if (!silent && tabFriendlyName != "Steam web")
-            {
-                Log.Logger.Error(tabFriendlyName + " failed to inject js: " + e);
-                Log.Logger.Info("Retrying...");
-            }
-
-            if (retry)
-            {
-                await InjectCssAsync(frame, jsFileRelativePath, tabFriendlyName, false, silent, client);
-            }
-        }
-    }
+    [GeneratedRegex(@"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)")]
+    private static partial Regex GetDomainRegex();
 }

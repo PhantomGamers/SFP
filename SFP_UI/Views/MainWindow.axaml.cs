@@ -24,11 +24,6 @@ public partial class MainWindow : AppWindow
     {
         Instance = this;
 
-        if (OperatingSystem.IsWindows() && Settings.Default.StartMinimized)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
         InitializeComponent();
 #if DEBUG
         this.AttachDevTools();
@@ -106,12 +101,6 @@ public partial class MainWindow : AppWindow
 
         _isStarting = false;
 
-        if (Settings.Default.MinimizeToTray
-            && Settings.Default is { StartMinimized: true, ShowTrayIcon: true })
-        {
-            Hide();
-        }
-
         // Enable Mica on Windows 11
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
@@ -132,7 +121,7 @@ public partial class MainWindow : AppWindow
 
     protected override void OnClosing(WindowClosingEventArgs e)
     {
-        if (Settings.Default.CloseToTray && Settings.Default.ShowTrayIcon)
+        if (Settings.Default.CloseToTray)
         {
             e.Cancel = true;
         }
@@ -143,7 +132,7 @@ public partial class MainWindow : AppWindow
 
     protected override void HandleWindowStateChanged(WindowState state)
     {
-        if (state == WindowState.Minimized && Settings.Default.MinimizeToTray && Settings.Default.ShowTrayIcon)
+        if (state == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
         {
             Hide();
         }
