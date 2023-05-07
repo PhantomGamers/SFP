@@ -45,7 +45,7 @@ public partial class MainView : UserControl
         _ = _frameView.Navigate(typeof(MainPage));
     }
 
-    private void SetNviIcon(NavigationViewItem item, bool selected)
+    private void SetNviIcon(NavigationViewItem item, bool selected, bool recurse = false)
     {
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
@@ -64,13 +64,39 @@ public partial class MainView : UserControl
                 ? (IconSource)value!
                 : null;
         }
+
+        if (recurse)
+        {
+            return;
+        }
+
+        if (_navView == null)
+        {
+            return;
+        }
+
+        foreach (NavigationViewItem nvi in _navView.MenuItemsSource)
+        {
+            if (!nvi.Equals(item))
+            {
+                SetNviIcon(nvi, false, true);
+            }
+        }
+
+        foreach (NavigationViewItem nvi in _navView.FooterMenuItemsSource)
+        {
+            if (!nvi.Equals(item))
+            {
+                SetNviIcon(nvi, false, true);
+            }
+        }
     }
 
     private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
     {
         if (_navView != null && !TryNavigateItem(e, _navView.MenuItemsSource))
         {
-            _ = TryNavigateItem(e, _navView!.FooterMenuItemsSource);
+            _ = TryNavigateItem(e, _navView.FooterMenuItemsSource);
         }
     }
 
