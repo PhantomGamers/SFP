@@ -63,12 +63,12 @@ public class App : Application
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
         }
 
-        if (!OperatingSystem.IsWindows() && Settings.Default.MinimizeToTray && Settings.Default.StartMinimized)
+        base.OnFrameworkInitializationCompleted();
+
+        if (Settings.Default is { StartMinimized: true, ShowTrayIcon: true, MinimizeToTray: true })
         {
             MainWindow.Instance?.Hide();
         }
-
-        base.OnFrameworkInitializationCompleted();
     }
 
     private static async Task HandleStartupTasks()
