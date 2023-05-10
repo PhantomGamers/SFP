@@ -170,10 +170,12 @@ public static partial class Injector
                 {
                     try
                     {
-                        if (await frame.QuerySelectorAsync(@".friendsui-container") != null)
+                        if (await frame.QuerySelectorAsync(@".friendsui-container") == null)
                         {
-                            await InjectAsync(frame, patch.TargetFile!, "Friends and Chat");
+                            continue;
                         }
+                        await InjectAsync(frame, patch.TargetFile!, "Friends and Chat");
+                        return;
                     }
                     catch (PuppeteerException e)
                     {
@@ -185,6 +187,7 @@ public static partial class Injector
                 else if (Regex.IsMatch(title, patch.MatchRegex!))
                 {
                     await InjectAsync(frame, patch.TargetFile!, title);
+                    return;
                 }
             }
         }
@@ -198,7 +201,7 @@ public static partial class Injector
                 {
                     var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
                     await InjectAsync(frame, patch.TargetFile!, url);
-                    break;
+                    return;
                 }
             }
         }
