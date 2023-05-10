@@ -51,6 +51,7 @@ Use the "Open File" button in SFP to access the files where your custom skins an
 ## Todo
 
 - Add Force Steam Arguments support for Linux and Mac
+- Add ability to install and customize themes directly from SFP
 
 ## Known Issues
 
