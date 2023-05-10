@@ -10,7 +10,7 @@ For the old version of SFP that works with Steam Stable see <https://github.com/
 
 ## Instructions
 
-Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/latest) for your
+Download & extract [the latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
 given OS and run the SFP_UI application.
 
 If you have .net 7 installed you can download the \_net7.zip release, otherwise download the \_SelfContained.zip release.
