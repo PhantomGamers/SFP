@@ -182,8 +182,16 @@ public static class Steam
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.OnChanged += OnCrashFileCreated;
-        s_watcher.Start();
-        Log.Logger.Info("Monitoring Steam state");
+        try
+        {
+            s_watcher.Start();
+            Log.Logger.Info("Monitoring Steam state");
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error("Failed to start Steam monitorer");
+            Log.Logger.Debug(e);
+        }
     }
 
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
