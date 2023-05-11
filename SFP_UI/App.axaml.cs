@@ -39,7 +39,7 @@ public class App : Application
             try
             {
                 desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     Log.Logger.Info(
                         $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
