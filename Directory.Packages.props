@@ -32,7 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.4.0"/>
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview7.1"/>
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-preview8"/>
     <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0"/>
     <PackageVersion Include="WmiLight" Version="3.1.0"/>
   </ItemGroup>
