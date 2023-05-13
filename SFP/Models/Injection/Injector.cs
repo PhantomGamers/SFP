@@ -166,7 +166,7 @@ public static partial class Injector
 
             foreach (var patch in patches)
             {
-                if (patch.MatchRegex == "Friends")
+                if (patch.MatchRegexString.ToLower() == "friends")
                 {
                     try
                     {
@@ -174,7 +174,7 @@ public static partial class Injector
                         {
                             continue;
                         }
-                        await InjectAsync(frame, patch.TargetFile!, "Friends and Chat");
+                        await InjectAsync(frame, patch.TargetFile, "Friends and Chat");
                         return;
                     }
                     catch (PuppeteerException e)
@@ -184,23 +184,23 @@ public static partial class Injector
                         Log.Logger.Debug(e);
                     }
                 }
-                else if (Regex.IsMatch(title, patch.MatchRegex!))
+                else if (patch.MatchRegex.IsMatch(title))
                 {
-                    await InjectAsync(frame, patch.TargetFile!, title);
+                    await InjectAsync(frame, patch.TargetFile, title);
                     return;
                 }
             }
         }
         else
         {
-            var httpPatches = patches.Where(p => p.MatchRegex!.StartsWith("http"));
+            var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
             var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
-            if (patchEntries.Any(p => Regex.IsMatch(frame.Url, p.MatchRegex!)))
+            if (patchEntries.Any(p => p.MatchRegex.IsMatch(frame.Url)))
             {
                 foreach (var patch in patchEntries)
                 {
                     var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
-                    await InjectAsync(frame, patch.TargetFile!, url);
+                    await InjectAsync(frame, patch.TargetFile, url);
                     return;
                 }
             }
