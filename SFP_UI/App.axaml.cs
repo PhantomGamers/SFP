@@ -39,18 +39,25 @@ public class App : Application
             try
             {
                 desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
-                await Dispatcher.UIThread.InvokeAsync(async () =>
-                {
-                    Log.Logger.Info(
-                        $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
-                    await HandleStartupTasks();
-                });
+                await Dispatcher.UIThread.InvokeAsync(() => Log.Logger.Info(
+                    $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}"));
             }
             catch (Exception e)
             {
                 Log.Logger.Error(e);
             }
         }
+
+        base.OnFrameworkInitializationCompleted();
+
+        SetIconsState(Settings.Default.ShowTrayIcon);
+
+        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
+        {
+            MainWindow.Instance?.Hide();
+        }
+
+        await HandleStartupTasks();
 
         if (Settings.Default.CheckForUpdates)
         {
@@ -61,15 +68,6 @@ public class App : Application
         {
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
-        }
-
-        base.OnFrameworkInitializationCompleted();
-
-        SetIconsState(Settings.Default.ShowTrayIcon);
-
-        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
-        {
-            MainWindow.Instance?.Hide();
         }
     }
 
