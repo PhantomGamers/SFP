@@ -1,6 +1,7 @@
 #region
 
 using System.Text.RegularExpressions;
+using NLog.Targets;
 using PuppeteerSharp;
 using SFP.Models.Injection.Config;
 
@@ -105,6 +106,39 @@ public static partial class Injector
         s_browser?.Disconnect();
         s_browser = null;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
+    }
+
+    public static async void Reload()
+    {
+        if (s_browser == null)
+        {
+            return;
+        }
+
+
+        foreach (var pageTask in s_browser.Targets().Select(async t => await t.PageAsync()))
+        {
+            var page = await pageTask;
+            if (page == null)
+            {
+                continue;
+            }
+            try
+            {
+                var title = await page.MainFrame.GetTitleAsync();
+                if (title == "SharedJSContext")
+                {
+                    await page.EvaluateExpressionAsync("location.reload()");
+                }
+            }
+            catch (PuppeteerException e)
+            {
+                Log.Logger.Error("Unexpected error when trying to get frame title");
+                Log.Logger.Debug("url: " + page.Url);
+                Log.Logger.Debug(e);
+                continue;
+            }
+        }
     }
 
     private static void OnDisconnected(object? sender, EventArgs e)

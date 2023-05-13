@@ -66,6 +66,8 @@ public static class Steam
         }
     }
 
+    public static string SkinDir => !string.IsNullOrWhiteSpace(SteamDir) ? Path.Join(SteamDir, "steamui", "skins") : string.Empty;
+
     private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
     public static event EventHandler? SteamStarted;
     public static event EventHandler? SteamStopped;

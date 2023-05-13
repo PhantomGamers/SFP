@@ -17,8 +17,12 @@ public class PatchEntry
     [JsonIgnore] public Regex MatchRegex => _matchRegex ??= new Regex(MatchRegexString, RegexOptions.Compiled);
 }
 
-public static class PatchConfig
+public class PatchConfig
 {
+    public bool UseDefaultPatches { get; init; } = true;
+    public IEnumerable<PatchEntry> Patches { get; init; } = Array.Empty<PatchEntry>();
+
+    [JsonIgnore]
     public static IEnumerable<PatchEntry> DefaultPatches { get; } = new[]
     {
         new PatchEntry { MatchRegexString = "https://store.steampowered.com", TargetFile = "webkit" },
@@ -42,6 +46,8 @@ public static class PatchConfig
         new PatchEntry { MatchRegexString = "Menu$", TargetFile = "libraryroot.custom" },
         new PatchEntry { MatchRegexString = @"Supernav$", TargetFile = "libraryroot.custom" },
         new PatchEntry { MatchRegexString = @"^notificationtoasts_", TargetFile = "libraryroot.custom" },
+        new PatchEntry { MatchRegexString = @"^SteamBrowser_Find$", TargetFile = "libraryroot.custom" },
+        new PatchEntry { MatchRegexString = @"^OverlayTab\d+_Find$", TargetFile = "libraryroot.custom" },
         new PatchEntry { MatchRegexString = "^Steam Big Picture Mode$", TargetFile = "bigpicture.custom" },
         new PatchEntry { MatchRegexString = "^QuickAccess_", TargetFile = "bigpicture.custom" },
         new PatchEntry { MatchRegexString = "^MainMenu_", TargetFile = "bigpicture.custom" },

@@ -29,29 +29,33 @@
                 <CheckBox IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
                 <CheckBox IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run On boot</CheckBox>
                 <Label Margin="0, 10">App theme</Label>
-                <ComboBox Name="AppThemeComboBox" Width="200" SelectedIndex="2">
+                <ComboBox Margin="0, 0, 0, 10" Name="AppThemeComboBox" Width="200" SelectedIndex="2">
                     <ComboBoxItem>Dark</ComboBoxItem>
                     <ComboBoxItem>Light</ComboBoxItem>
                     <ComboBoxItem>HighContrast</ComboBoxItem>
                     <ComboBoxItem>System Default</ComboBoxItem>
                 </ComboBox>
-                <ui:HyperlinkButton Margin="0, 10, 0, 0" Content="Windows color settings"
+                <ui:HyperlinkButton Content="Windows color settings"
                                     NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
-                <Separator Margin="0,20" IsVisible="{Binding IsWindows}" />
+                <Separator Margin="0,10" />
 
-                <TextBlock Margin="0" Text="Steam" />
+                <TextBlock Margin="0,10" Text="Steam" />
                 <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
-                    <Label Margin="0,10">Steam directory</Label>
+                    <Label>Steam directory</Label>
                     <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                              IsReadOnly="True"
                              VerticalContentAlignment="Center" />
                     <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
                     <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Label Margin="0,10">Steam launch args</Label>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
+                    <Label>Steam launch args</Label>
                     <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
                              Text="{Binding SteamLaunchArgs}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
+                    <Label>Steam Skin</Label>
+                    <ComboBox x:Name="SteamSkinComboBox" Margin="45, 0, 0, 0" Width="240" />
                 </StackPanel>
                 <CheckBox Margin="0, 10" IsChecked="{Binding InjectOnSteamStart}">Inject on Steam start</CheckBox>
                 <CheckBox Margin="0, 10" IsChecked="{Binding ForceSteamArgs}" IsVisible="{Binding IsWindows}">Force Steam arguments</CheckBox>

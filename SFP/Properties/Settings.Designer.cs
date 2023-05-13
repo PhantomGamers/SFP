@@ -229,5 +229,18 @@ namespace SFP.Properties {
                 this["InjectJSWarningAccepted"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("steamui")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string SelectedSkin {
+            get {
+                return ((string)(this["SelectedSkin"]));
+            }
+            set {
+                this["SelectedSkin"] = value;
+            }
+        }
     }
 }

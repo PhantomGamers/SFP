@@ -1,7 +1,10 @@
 #region
 
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using SFP.Models;
+using SFP.Models.Injection;
 using SFP_UI.ViewModels;
 
 #endregion
@@ -13,8 +16,62 @@ public partial class SettingsPage : UserControl
     public SettingsPage()
     {
         InitializeComponent();
-        DataContext = new SettingsPageViewModel(this.FindControl<ComboBox>("AppThemeComboBox"));
+        DataContext = new SettingsPageViewModel(AppThemeComboBox);
+        PopulateSteamSkinComboBox();
+        SteamSkinComboBox.DropDownOpened += (sender, args) => PopulateSteamSkinComboBox();
+        SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;
     }
 
-    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+    private void PopulateSteamSkinComboBox()
+    {
+        var selectedItem = SteamSkinComboBox.SelectedItem;
+        SteamSkinComboBox.SelectionChanged -= SteamSkinComboBox_SelectionChanged;
+        SteamSkinComboBox.Items.Clear();
+        SteamSkinComboBox.Items.Add("steamui");
+        var skinDir = Steam.SkinDir;
+        if (!string.IsNullOrWhiteSpace(skinDir))
+        {
+            try
+            {
+                var sb = new StringBuilder();
+                foreach (var subDirectory in Directory.EnumerateDirectories(skinDir))
+                {
+                    if (subDirectory.EndsWith("steamui", StringComparison.OrdinalIgnoreCase))
+                    {
+                        sb.Clear();
+                        sb.Append("skins");
+                        sb.Append(Path.DirectorySeparatorChar);
+                        sb.Append(Path.GetFileName(subDirectory));
+                        SteamSkinComboBox.Items.Add(sb.ToString());
+                    }
+                    else
+                    {
+                        SteamSkinComboBox.Items.Add(Path.GetFileName(subDirectory));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (Directory.Exists(skinDir))
+                {
+                    Log.Logger.Warn("Failed to detect Steam skins");
+                    Log.Logger.Debug(e);
+                }
+            }
+        }
+        if (SteamSkinComboBox.Items.Contains(selectedItem))
+        {
+            SteamSkinComboBox.SelectedItem = selectedItem;
+        }
+        else
+        {
+            SteamSkinComboBox.SelectedIndex = 0;
+        }
+        SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;
+    }
+
+    private async void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        await Task.Run(Injector.Reload);
+    }
 }
