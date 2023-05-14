@@ -52,11 +52,6 @@ public class App : Application
 
         SetIconsState(Settings.Default.ShowTrayIcon);
 
-        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
-        {
-            MainWindow.Instance?.Hide();
-        }
-
         await HandleStartupTasks();
 
         if (Settings.Default.CheckForUpdates)
@@ -68,6 +63,11 @@ public class App : Application
         {
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
             await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
+        }
+
+        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
+        {
+            MainWindow.Instance?.Hide();
         }
     }
 
