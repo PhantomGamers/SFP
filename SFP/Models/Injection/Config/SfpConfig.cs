@@ -34,6 +34,7 @@ public class SfpConfig
         new PatchEntry { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
         new PatchEntry { MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new PatchEntry { MatchRegexString = "^Steam Settings$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
+        new PatchEntry { MatchRegexString = "^Properties -", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new PatchEntry { MatchRegexString = "^GameOverview$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new PatchEntry { MatchRegexString = "^Shutdown$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new PatchEntry { MatchRegexString = "^OverlayBrowser_Browser$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
