@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using SFP.Models;
 using SFP.Models.Injection;
+using SFP.Models.Injection.Config;
 using SFP.Properties;
 using SFP_UI.ViewModels;
 
@@ -84,9 +85,7 @@ public partial class SettingsPage : UserControl
     private void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         SFP.Properties.Settings.Default.SelectedSkin = SteamSkinComboBox.SelectedValue?.ToString();
-        if (Injector.IsInjected)
-        {
-            SettingsPageViewModel.ShowRestartDialog();
-        }
+        _ = SfpConfig.GetConfig(true);
+        Injector.Reload();
     }
 }
