@@ -12,7 +12,7 @@
                         PreferredPlacement="Center"
                         Name="UpdateNotification"
                         ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
-                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases/latest"
+                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases"
                         Content="{Binding UpdateNotificationContent}"
                         IsOpen="{Binding UpdateNotificationIsOpen}" />
         <Grid>
