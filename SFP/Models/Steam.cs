@@ -151,6 +151,8 @@ public static class Steam
         }
     }
 
+    public static async void RunRestartSteam() => await Task.Run(() => RestartSteam());
+
     public static async Task RestartSteam(string? args = null)
     {
         if (IsSteamRunning)
@@ -208,6 +210,7 @@ public static class Steam
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>
         SteamStopped?.Invoke(null, EventArgs.Empty);
 
+    public static async void RunTryInject() => await Task.Run(TryInject);
     public static async Task TryInject()
     {
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))

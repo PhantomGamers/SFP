@@ -30,7 +30,6 @@ public static partial class Injector
             return;
         }
 
-
         if (!Properties.Settings.Default.InjectJS && !Properties.Settings.Default.InjectCSS)
         {
             Log.Logger.Warn("No injection type is enabled, skipping injection");
@@ -108,13 +107,13 @@ public static partial class Injector
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
     }
 
+    // injection after reload occurs before content is fully loaded, needs investigation
     public static async void Reload()
     {
         if (s_browser == null)
         {
             return;
         }
-
 
         foreach (var pageTask in s_browser.Targets().Select(async t => await t.PageAsync()))
         {
@@ -288,6 +287,11 @@ public static partial class Injector
 
     private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName, string resourceType)
     {
+        var selectedSkin = Properties.Settings.Default.SelectedSkin;
+        if (!string.IsNullOrWhiteSpace(selectedSkin) && selectedSkin != "steamui")
+        {
+            fileRelativePath = $"skins/{selectedSkin}/{fileRelativePath}";
+        }
         var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
         var injectString =
             $@"

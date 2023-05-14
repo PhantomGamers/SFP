@@ -35,14 +35,14 @@ public class MainPageViewModel : ViewModelBase
         ReactiveCommand.Create<string>(Utils.OpenUrl);
 
     public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
-        ReactiveCommand.CreateFromTask(ExecuteInjectCommand);
+        ReactiveCommand.Create(Steam.RunTryInject);
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
     public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
     public ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
 
     public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
-        ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
+        ReactiveCommand.Create(Steam.RunRestartSteam);
 
     public bool UpdateNotificationIsOpen
     {
@@ -85,10 +85,6 @@ public class MainPageViewModel : ViewModelBase
         get => _startSteamText;
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
-
-    private static async Task ExecuteInjectCommand() => await Task.Run(Steam.TryInject);
-
-    private static async Task ExecuteStartSteamCommand() => await Task.Run(() => Steam.RestartSteam());
 
     public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
 

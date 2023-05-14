@@ -246,6 +246,21 @@ public class SettingsPageViewModel : ViewModelBase
         await dialog.ShowAsync();
     }
 
+    public static async void ShowRestartDialog()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Warning",
+            Content =
+                "You need to restart Steam for skin changes to take effect.\n" +
+                "Restart now?",
+            PrimaryButtonText = "Yes",
+            PrimaryButtonCommand = ReactiveCommand.Create(Steam.RunRestartSteam),
+            SecondaryButtonText = "No"
+        };
+        await dialog.ShowAsync();
+    }
+
     public static void OnSaveCommand() => Settings.Default.Save();
 
     public void OnReloadCommand()
