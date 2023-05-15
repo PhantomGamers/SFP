@@ -66,7 +66,36 @@ public static class Steam
         }
     }
 
+    public static string SteamUiDir => Path.Join(SteamDir, "steamui");
+
+    public static string SkinsDir => Path.Join(SteamUiDir, "skins");
+
     private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
+
+    public static string GetSkinDir()
+    {
+        return Path.Join(SteamUiDir, GetRelativeSkinDir());
+    }
+
+    public static string GetRelativeSkinDir()
+    {
+        string relativeSkinDir;
+        var selectedSkin = Properties.Settings.Default.SelectedSkin;
+        if (string.IsNullOrWhiteSpace(selectedSkin) || selectedSkin == "steamui")
+        {
+            relativeSkinDir = string.Empty;
+        }
+        else if (selectedSkin == "skins\\steamui")
+        {
+            relativeSkinDir = "skins/steamui";
+        }
+        else
+        {
+            relativeSkinDir = $"skins/{selectedSkin}";
+        }
+        return relativeSkinDir;
+    }
+
     public static event EventHandler? SteamStarted;
     public static event EventHandler? SteamStopped;
 
@@ -149,6 +178,11 @@ public static class Steam
         }
     }
 
+    public static async void RunRestartSteam()
+    {
+        await Task.Run(() => RestartSteam());
+    }
+
     public static async Task RestartSteam(string? args = null)
     {
         if (IsSteamRunning)
@@ -203,8 +237,15 @@ public static class Steam
         }
     }
 
-    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>
+    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
+    {
         SteamStopped?.Invoke(null, EventArgs.Empty);
+    }
+
+    public static async void RunTryInject()
+    {
+        await Task.Run(TryInject);
+    }
 
     public static async Task TryInject()
     {

@@ -29,7 +29,6 @@ public static partial class Injector
             return;
         }
 
-
         if (!Properties.Settings.Default.InjectJS && !Properties.Settings.Default.InjectCSS)
         {
             Log.Logger.Warn("No injection type is enabled, skipping injection");
@@ -87,12 +86,12 @@ public static partial class Injector
             return;
         }
 
-        var targets = s_browser.Targets();
-        Log.Logger.Info("Found " + targets.Length + " targets");
-        foreach (var page in targets.Select(async t => await t.PageAsync()))
-        {
-            await ProcessPage(await page);
-        }
+        var pages = await s_browser.PagesAsync();
+        Log.Logger.Info("Found " + pages.Length + " pages");
+
+        var processTasks = pages.Select(ProcessPage);
+
+        await Task.WhenAll(processTasks);
     }
 
     public static void StopInjection()
@@ -105,6 +104,34 @@ public static partial class Injector
         s_browser?.Disconnect();
         s_browser = null;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
+    }
+
+    // injection after reload occurs before content is fully loaded, needs investigation
+    public static async void Reload()
+    {
+        if (s_browser == null)
+        {
+            return;
+        }
+
+        var pages = await s_browser.PagesAsync();
+        foreach (var page in pages)
+        {
+            try
+            {
+                var title = await page.MainFrame.GetTitleAsync();
+                if (title != "SharedJSContext")
+                {
+                    continue;
+                }
+                await page.ReloadAsync();
+                break;
+            }
+            catch (PuppeteerException)
+            {
+                // ignored
+            }
+        }
     }
 
     private static void OnDisconnected(object? sender, EventArgs e)
@@ -147,7 +174,8 @@ public static partial class Injector
 
     private static async Task ProcessFrame(Frame frame)
     {
-        var patches = PatchConfig.DefaultPatches;
+        var config = SfpConfig.GetConfig();
+        var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray();
 
         if (frame.Url.StartsWith("https://steamloopback.host"))
         {
@@ -166,7 +194,7 @@ public static partial class Injector
 
             foreach (var patch in patches)
             {
-                if (patch.MatchRegexString.ToLower() == "friends")
+                if (patch.MatchRegexString.ToLower() == "friends" || patch.MatchRegexString == "Friends List")
                 {
                     try
                     {
@@ -174,7 +202,7 @@ public static partial class Injector
                         {
                             continue;
                         }
-                        await InjectAsync(frame, patch.TargetFile, "Friends and Chat");
+                        await InjectAsync(frame, patch, "Friends and Chat");
                         return;
                     }
                     catch (PuppeteerException e)
@@ -184,24 +212,43 @@ public static partial class Injector
                         Log.Logger.Debug(e);
                     }
                 }
-                else if (patch.MatchRegex.IsMatch(title))
-                {
-                    await InjectAsync(frame, patch.TargetFile, title);
-                    return;
-                }
+                else switch (config._isFromMillennium)
+                    {
+                        case false when patch.MatchRegex.IsMatch(title):
+                            await InjectAsync(frame, patch, title);
+                            return;
+                        case true when patch.MatchRegexString == title:
+                            await InjectAsync(frame, patch, title);
+                            return;
+                    }
             }
         }
         else
         {
-            var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
-            var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
-            if (patchEntries.Any(p => p.MatchRegex.IsMatch(frame.Url)))
+            if (!config._isFromMillennium)
             {
-                foreach (var patch in patchEntries)
+                var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
+                var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
+                if (patchEntries.Any(p => p.MatchRegex.IsMatch(frame.Url)))
                 {
-                    var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
-                    await InjectAsync(frame, patch.TargetFile, url);
-                    return;
+                    foreach (var patch in patchEntries)
+                    {
+                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
+                        await InjectAsync(frame, patch, url);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if (patches.Any(p => p.MatchRegex.IsMatch(frame.Url)))
+                {
+                    foreach (var patch in patches)
+                    {
+                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
+                        await InjectAsync(frame, patch, url);
+                        return;
+                    }
                 }
             }
         }
@@ -235,11 +282,18 @@ public static partial class Injector
         await ProcessFrame(e.Frame);
     }
 
-    private static async Task InjectAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
+    private static async Task InjectAsync(Frame frame, PatchEntry patch, string tabFriendlyName)
     {
         if (Properties.Settings.Default.InjectCSS)
         {
-            await InjectResourceAsync(frame, fileRelativePath, tabFriendlyName, "css");
+            if (string.IsNullOrWhiteSpace(patch.TargetCss) || !patch.TargetCss.EndsWith(".css"))
+            {
+                Log.Logger.Info("Target CSS file does not end in .css for patch " + patch.MatchRegexString);
+            }
+            else
+            {
+                await InjectResourceAsync(frame, patch.TargetCss, tabFriendlyName);
+            }
         }
 
         if (Properties.Settings.Default.InjectJS)
@@ -248,32 +302,46 @@ public static partial class Injector
             {
                 await SetBypassCsp(frame);
             }
-            await InjectResourceAsync(frame, fileRelativePath, tabFriendlyName, "js");
+            if (string.IsNullOrWhiteSpace(patch.TargetJs) || !patch.TargetJs.EndsWith(".js"))
+            {
+                Log.Logger.Info("Target Js file does not end in .js for patch " + patch.MatchRegexString);
+            }
+            else
+            {
+                await InjectResourceAsync(frame, patch.TargetJs, tabFriendlyName);
+            }
         }
     }
 
-    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName, string resourceType)
+    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
     {
+        var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
+        var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
+        fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
         var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
+
         var injectString =
-            $@"
-            function inject() {{
-                if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
-                const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
-                element.id = '{frame.Id}{resourceType}';
-                {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
-                element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
-                element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}.{resourceType}';
-                document.head.append(element);
-            }}
-            if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
-                addEventListener('DOMContentLoaded', inject);
-            }} else {{
-                inject();
-            }}
-            ";
+$@"function inject() {{
+    if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
+    const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
+    element.id = '{frame.Id}{resourceType}';
+    {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
+    element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
+    element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
+    document.head.append(element);
+}}
+if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
+    addEventListener('DOMContentLoaded', inject);
+}} else {{
+    inject();
+}}
+";
         try
         {
+            if (!isUrl && resourceType == "js")
+            {
+                await Task.Delay(500);
+            }
             await frame.EvaluateExpressionAsync(injectString);
             Log.Logger.Info($"Injected {resourceType.ToUpper()} into {tabFriendlyName}");
         }

@@ -10,6 +10,8 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Media;
 using FluentAvalonia.UI.Windowing;
 using SFP.Models;
+using SFP_UI.Models;
+using SFP_UI.ViewModels;
 using Settings = SFP.Properties.Settings;
 
 #endregion
@@ -22,9 +24,10 @@ public partial class MainWindow : AppWindow
 
     public MainWindow()
     {
-        Instance = this;
-
         InitializeComponent();
+        DataContext = new MainWindowViewModel();
+        Instance = this;
+        Title += $" v{UpdateChecker.Version}";
 #if DEBUG
         this.AttachDevTools();
 #endif
@@ -119,22 +122,30 @@ public partial class MainWindow : AppWindow
         TryEnableMicaEffect();
     }
 
-    protected override void OnClosing(WindowClosingEventArgs e)
+    protected override async void OnClosing(WindowClosingEventArgs e)
     {
+        base.OnClosing(e);
+        if (Instance is null)
+        {
+            return;
+        }
+        Instance = null;
         if (Settings.Default.CloseToTray)
         {
-            e.Cancel = true;
+            return;
         }
-
-        Hide();
-        base.OnClosing(e);
+        if (WindowState == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
+        {
+            return;
+        }
+        await Task.Run(App.QuitApplication);
     }
 
     protected override void HandleWindowStateChanged(WindowState state)
     {
         if (state == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
         {
-            Hide();
+            Close();
         }
 
         base.HandleWindowStateChanged(state);
@@ -144,10 +155,10 @@ public partial class MainWindow : AppWindow
     {
         if (Instance == null)
         {
-            return;
+            App.StartMainWindow();
         }
 
-        Instance.Show();
+        Instance!.Show();
         Instance.WindowState = WindowState.Normal;
         Instance.Activate();
     }

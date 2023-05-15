@@ -13,9 +13,6 @@ public sealed class OutputControlTarget : TargetWithLayout
 {
     protected override void Write(LogEventInfo logEvent)
     {
-        if (MainPageViewModel.Instance is { } mainPageViewModel)
-        {
-            mainPageViewModel.PrintLine(logEvent.Level, logEvent.FormattedMessage);
-        }
+        MainPageViewModel.PrintLine(logEvent.Level, logEvent.FormattedMessage);
     }
 }

@@ -13,10 +13,10 @@ namespace SFP_UI.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
+    private static int s_caretIndex;
+    private static string s_output = string.Empty;
     private bool _buttonsEnabled = true;
-    private int _caretIndex;
     private bool _isInjected;
-    private string _output = string.Empty;
     private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
@@ -35,14 +35,12 @@ public class MainPageViewModel : ViewModelBase
         ReactiveCommand.Create<string>(Utils.OpenUrl);
 
     public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
-        ReactiveCommand.CreateFromTask(ExecuteInjectCommand);
+        ReactiveCommand.Create(Steam.RunTryInject);
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
-    public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
-    public ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
 
     public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
-        ReactiveCommand.CreateFromTask(ExecuteStartSteamCommand);
+        ReactiveCommand.Create(Steam.RunRestartSteam);
 
     public bool UpdateNotificationIsOpen
     {
@@ -58,14 +56,14 @@ public class MainPageViewModel : ViewModelBase
 
     public string Output
     {
-        get => _output;
-        private set => this.RaiseAndSetIfChanged(ref _output, value);
+        get => s_output;
+        private set => this.RaiseAndSetIfChanged(ref s_output, value);
     }
 
     public int CaretIndex
     {
-        get => _caretIndex;
-        private set => this.RaiseAndSetIfChanged(ref _caretIndex, value);
+        get => s_caretIndex;
+        private set => this.RaiseAndSetIfChanged(ref s_caretIndex, value);
     }
 
     public bool ButtonsEnabled
@@ -86,16 +84,23 @@ public class MainPageViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
 
-    private static async Task ExecuteInjectCommand() => await Task.Run(Steam.TryInject);
-
-    private static async Task ExecuteStartSteamCommand() => await Task.Run(() => Steam.RestartSteam());
-
-    public void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
-
-    private void Print(LogLevel level, string message)
+    public static void PrintLine(LogLevel level, string message)
     {
-        Output = string.Concat(Output, $"[{DateTime.Now}][{level}] {message}");
-        CaretIndex = Output.Length;
+        Print(level, $"{message}\n");
+    }
+
+    private static void Print(LogLevel level, string message)
+    {
+        if (Instance != null)
+        {
+            Instance.Output = string.Concat(Instance.Output, $"[{DateTime.Now}][{level}] {message}");
+            Instance.CaretIndex = Instance.Output.Length;
+        }
+        else
+        {
+            s_output = string.Concat(s_output, $"[{DateTime.Now}][{level}] {message}");
+            s_caretIndex = s_output.Length;
+        }
     }
 
     public void ShowUpdateNotification(SemVersion oldVersion, SemVersion newVersion)
@@ -104,44 +109,5 @@ public class MainPageViewModel : ViewModelBase
         UpdateNotificationContent =
             $"Your version: {oldVersion}{Environment.NewLine}Latest version: {newVersion}";
         UpdateNotificationIsOpen = true;
-    }
-
-    private static async Task OpenPath(string relativePath, bool isDirectory)
-    {
-        var path = Path.Join(Steam.SteamDir, @"steamui", relativePath);
-        try
-        {
-            if (isDirectory)
-            {
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-            }
-            else
-            {
-                if (!File.Exists(path))
-                {
-                    await File.Create(path).DisposeAsync();
-                }
-            }
-
-            Utils.OpenUrl(path);
-        }
-        catch (Exception e)
-        {
-            Log.Logger.Warn("Could not open " + path);
-            Log.Logger.Debug(e);
-        }
-    }
-
-    private static async Task OpenFile(string relativeFilePath)
-    {
-        await OpenPath(relativeFilePath, false);
-    }
-
-    private static void OpenDir(string relativeDirPath)
-    {
-        OpenPath(relativeDirPath, true).Wait();
     }
 }

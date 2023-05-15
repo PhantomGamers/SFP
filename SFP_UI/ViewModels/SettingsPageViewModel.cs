@@ -1,7 +1,6 @@
 #region
 
 using System.Reactive;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -25,6 +24,8 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _checkForUpdates = Settings.Default.CheckForUpdates;
     private bool _closeToTray = Settings.Default.CloseToTray;
     private bool _forceSteamArgs = Settings.Default.ForceSteamArgs;
+    private bool _injectCss = Settings.Default.InjectCSS;
+    private bool _injectJs = Settings.Default.InjectJS;
     private bool _injectOnAppStart = Settings.Default.InjectOnAppStart;
     private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
     private bool _minimizeToTray = Settings.Default.MinimizeToTray;
@@ -34,8 +35,6 @@ public class SettingsPageViewModel : ViewModelBase
     private bool _startMinimized = Settings.Default.StartMinimized;
     private string _steamDirectory = Steam.SteamDir ?? string.Empty;
     private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
-    private bool _injectCss = Settings.Default.InjectCSS;
-    private bool _injectJs = Settings.Default.InjectJS;
 
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
@@ -246,7 +245,25 @@ public class SettingsPageViewModel : ViewModelBase
         await dialog.ShowAsync();
     }
 
-    public static void OnSaveCommand() => Settings.Default.Save();
+    public static async void ShowRestartDialog()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Warning",
+            Content =
+                "You need to restart Steam for skin changes to take effect.\n" +
+                "Restart now?",
+            PrimaryButtonText = "Yes",
+            PrimaryButtonCommand = ReactiveCommand.Create(Steam.RunRestartSteam),
+            SecondaryButtonText = "No"
+        };
+        await dialog.ShowAsync();
+    }
+
+    public static void OnSaveCommand()
+    {
+        Settings.Default.Save();
+    }
 
     public void OnReloadCommand()
     {

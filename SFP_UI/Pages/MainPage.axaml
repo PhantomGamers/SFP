@@ -12,7 +12,7 @@
                         PreferredPlacement="Center"
                         Name="UpdateNotification"
                         ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
-                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases/latest"
+                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases"
                         Content="{Binding UpdateNotificationContent}"
                         IsOpen="{Binding UpdateNotificationIsOpen}" />
         <Grid>
@@ -43,49 +43,13 @@
                             ToolTip.Tip="Starts or restarts Steam with the arguments given in settings"
                             Content="{Binding StartSteamText}" />
 
-                    <DropDownButton Content="Open file"
+                    <DropDownButton Name="OpenFileDropDownButton"
+                                    Content="Open file"
                                     HorizontalAlignment="Right"
                                     Margin="0 0 15 0">
                         <DropDownButton.Flyout>
                             <MenuFlyout Placement="Top">
-                                <MenuItem Header="steamui"
-                                          ToolTip.Tip="Opens the steamui folder, the root for your custom scripts and skins"
-                                          Command="{Binding OpenDirCommand}"
-                                          CommandParameter="" />
-                                <Separator/>
-                                <MenuItem Header="libraryroot.custom.css"
-                                          ToolTip.Tip="Opens the libraryroot.custom.css file for your custom skin for the Steam client"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="libraryroot.custom.css" />
-                                <MenuItem Header="friends.custom.css"
-                                          ToolTip.Tip="Opens the friends.custom.css file for your custom skin for the friends list"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="friends.custom.css" />
-                                <MenuItem Header="webkit.css"
-                                          ToolTip.Tip="Opens the webkit.css file for your custom skin for the Steam site"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="webkit.css" />
-                                <MenuItem Header="bigpicture.custom.css"
-                                          ToolTip.Tip="Opens the bigpicture.custom.css file for your custom skin for big picture mode"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="bigpicture.custom.css" />
-                                <Separator/>
-                                <MenuItem Header="libraryroot.custom.js"
-                                          ToolTip.Tip="Opens the libraryroot.custom.js file for your custom script for the Steam client"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="libraryroot.custom.js" />
-                                <MenuItem Header="friends.custom.js"
-                                          ToolTip.Tip="Opens the friends.custom.js file for your custom script for the friends list"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="friends.custom.js" />
-                                <MenuItem Header="webkit.js"
-                                          ToolTip.Tip="Opens the webkit.js file for your custom script for the Steam site"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="webkit.js" />
-                                <MenuItem Header="bigpicture.custom.js"
-                                          ToolTip.Tip="Opens the bigpicture.custom.js file for your custom script for big picture mode"
-                                          Command="{Binding OpenFileCommand}"
-                                          CommandParameter="bigpicture.custom.js" />
+                                <Separator />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
                     </DropDownButton>

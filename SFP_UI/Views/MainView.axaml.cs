@@ -3,7 +3,6 @@
 using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using SFP_UI.Pages;
@@ -17,9 +16,10 @@ public partial class MainView : UserControl
     private Frame? _frameView;
     private NavigationView? _navView;
 
-    public MainView() => InitializeComponent();
-
-    private void InitializeComponent() => AvaloniaXamlLoader.Load(this);
+    public MainView()
+    {
+        InitializeComponent();
+    }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
@@ -117,27 +117,33 @@ public partial class MainView : UserControl
         return false;
     }
 
-    private IEnumerable<NavigationViewItem> GetNavigationViewItems() => new List<NavigationViewItem>
+    private IEnumerable<NavigationViewItem> GetNavigationViewItems()
     {
-        new()
+        return new List<NavigationViewItem>
         {
-            Content = "Home",
-            Tag = typeof(MainPage),
-            IconSource = (IconSource)this.FindResource("HomeIcon")!,
-            Classes = { "SFPAppNav" }
-        }
-    };
+            new()
+            {
+                Content = "Home",
+                Tag = typeof(MainPage),
+                IconSource = (IconSource)this.FindResource("HomeIcon")!,
+                Classes = { "SFPAppNav" }
+            }
+        };
+    }
 
-    private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems() => new List<NavigationViewItem>
+    private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems()
     {
-        new()
+        return new List<NavigationViewItem>
         {
-            Content = "Settings",
-            Tag = typeof(SettingsPage),
-            IconSource = (IconSource)this.FindResource("SettingsIcon")!,
-            Classes = { "SFPAppNav" }
-        }
-    };
+            new()
+            {
+                Content = "Settings",
+                Tag = typeof(SettingsPage),
+                IconSource = (IconSource)this.FindResource("SettingsIcon")!,
+                Classes = { "SFPAppNav" }
+            }
+        };
+    }
 
     private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
     {
