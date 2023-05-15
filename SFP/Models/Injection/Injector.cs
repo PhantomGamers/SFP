@@ -179,7 +179,7 @@ public static partial class Injector
     private static async Task ProcessFrame(Frame frame)
     {
         var config = SfpConfig.GetConfig();
-        var patches = config.Patches;
+        var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray(); ;
 
         if (frame.Url.StartsWith("https://steamloopback.host"))
         {
@@ -216,16 +216,15 @@ public static partial class Injector
                         Log.Logger.Debug(e);
                     }
                 }
-                else if (!config._isFromMillennium && patch.MatchRegex.IsMatch(title))
-                {
-                    await InjectAsync(frame, patch, title);
-                    return;
-                }
-                else if (config._isFromMillennium && patch.MatchRegexString == title)
-                {
-                    await InjectAsync(frame, patch, title);
-                    return;
-                }
+                else switch (config._isFromMillennium)
+                    {
+                        case false when patch.MatchRegex.IsMatch(title):
+                            await InjectAsync(frame, patch, title);
+                            return;
+                        case true when patch.MatchRegexString == title:
+                            await InjectAsync(frame, patch, title);
+                            return;
+                    }
             }
         }
         else
