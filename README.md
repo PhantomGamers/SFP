@@ -32,21 +32,86 @@ Use the "Open File" button in SFP to access the files where your custom skins an
 ### Steam Skinning
 
 - Reads and applies custom css to Steam pages.
-  - Skins for the Steam client, library, and overlay go in `Steam/steamui/libraryroot.custom.css`
-  - Skins for the friends list and chat windows go in `Steam/steamui/friends.custom.css`
-  - Skins for the Steam store and community pages go in `Steam/steamui/webkit.css`
-  - Skins for Big Picture Mode go in `Steam/steamui/bigpicture.custom.css`
+  - You can customize which files apply to which pages in the skin config.
+  - By default SFP will apply skins from:
+    - Skins for the Steam client, library, and overlay go in `Steam/steamui/libraryroot.custom.css`
+    - Skins for the friends list and chat windows go in `Steam/steamui/friends.custom.css`
+    - Skins for the Steam store and community pages go in `Steam/steamui/webkit.css`
+    - Skins for Big Picture Mode go in `Steam/steamui/bigpicture.custom.css`
 
 ### Scripting
 
 - Reads and applies custom javascript to Steam pages.
-  - Scripts for the Steam client, library, and overlay go in `Steam/steamui/libraryroot.custom.js`
-  - Scripts for the friends list and chat windows go in `Steam/steamui/friends.custom.js`
-  - Scripts for the Steam store and community pages go in `Steam/steamui/webkit.js`
-  - Scripts for Big Picture Mode go in `Steam/steamui/bigpicture.custom.js`
+    - You can customize which files apply to which pages in the skin config.
+    - By default SFP will apply scripts from:
+      - Scripts for the Steam client, library, and overlay go in `Steam/steamui/libraryroot.custom.js`
+      - Scripts for the friends list and chat windows go in `Steam/steamui/friends.custom.js`
+      - Scripts for the Steam store and community pages go in `Steam/steamui/webkit.js`
+      - Scripts for Big Picture Mode go in `Steam/steamui/bigpicture.custom.js`
 
-**Javascript injection is disabled by default and must be enabled in SFP's settings.**
-**Javascript code can potentially be malicious so only install scripts from people you trust!**
+#### Skins and scripts can also be added to their own folders within `Steam/steamui/skins` and then selected in SFP's settings.
+
+#### Javascript injection is disabled by default and must be enabled in SFP's settings.
+#### Javascript code can potentially be malicious so only install scripts from people you trust!
+
+## Skin Authors
+
+If you would like to customize which Steam pages are skinned and which files applied to each page you can include a `skin.json` file in the root of your skin folder.
+
+Example `skin.json`:
+
+```json
+{
+  "Patches": [
+    {
+      "MatchRegexString": "https://store.steampowered.com",
+      "TargetCss": "webkit.css",
+      "TargetJs": "webkit.js"
+    },
+    {
+      "MatchRegexString": "^Steam$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": "Menu$",
+      "TargetCss": "libraryroot.custom.css"
+    },
+    {
+      "MatchRegexString": "Supernav$",
+      "TargetCss": "libraryroot.custom.css"
+    },
+    {
+      "MatchRegexString": "Friends",
+      "TargetCss": "friends.custom.css",
+      "TargetJs": "friends.custom.js"
+    }
+  ]
+}
+```
+
+Each entry should have a "MatchRegexString" key, where the value is either a regex string that will be matched against a Steam page title or a url that begins with `http://` or `https://` that will be matched against a url.
+
+Each entry can also have a TargetCss key and a TargetJs key, which will be the css and js files that are applied to the page if the regex matches.
+
+One entry can have both a TargetCss and a TargetJs key, or just one of them.
+
+If you would like to use SFP's default config you can simply omit the skin.json file or include this:
+
+```json
+{
+    "UseDefaultPatches": true
+}
+```
+
+### Matching against Friends List
+
+To match against the friends list and chat windows, simply put `Friends`in the MatchRegexString value as matching against the page title will not work across Steam language settings.
+
+### Finding Steam Page Titles
+
+To find steam page titles to match against, make sure Steam is running with `cef-enable-debugging` and then visit <http://localhost:8080> in your web browser.
+
 
 ## Todo
 
