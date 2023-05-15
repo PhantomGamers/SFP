@@ -114,26 +114,20 @@ public static partial class Injector
             return;
         }
 
-        foreach (var pageTask in s_browser.Targets().Select(async t => await t.PageAsync()))
+        var pages = await s_browser.PagesAsync();
+        foreach (var page in pages)
         {
-            var page = await pageTask;
-            if (page == null)
-            {
-                continue;
-            }
             try
             {
                 var title = await page.MainFrame.GetTitleAsync();
                 if (title == "SharedJSContext")
                 {
-                    await page.EvaluateExpressionAsync("location.reload()");
+                    await page.ReloadAsync();
                 }
             }
             catch (PuppeteerException)
             {
-                //Log.Logger.Error("Unexpected error when trying to get frame title");
-                //Log.Logger.Debug("url: " + page.Url);
-                //Log.Logger.Debug(e);
+                continue;
             }
         }
     }
