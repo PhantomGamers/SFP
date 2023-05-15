@@ -10,13 +10,15 @@ For the old version of SFP that works with Steam Stable, see [here](https://gith
 
 ## Instructions
 
-1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your operating system.
+1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
+   operating system.
 2. Run the SFP_UI application.
 3. If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip release.
 4. By default, SFP_UI will automatically wait for Steam to start and inject, or inject if Steam is already running.
 5. For full functionality, **SFP must be running with its injector started as long as Steam is running**.
 6. Steam must be running with the `-cef-enable-debugging` argument for SFP to work.
-7. If Steam is started with SFP, it will do this automatically. Otherwise, on Windows only, you can use the "Force Steam arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
+7. If Steam is started with SFP, it will do this automatically. Otherwise, on Windows only, you can use the "Force Steam
+   arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
 8. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
 
 ## Features
@@ -43,7 +45,8 @@ For the old version of SFP that works with Steam Stable, see [here](https://gith
 
 ### Skins and Scripts in Separate Folders
 
-- Skins and scripts can also be added to their own folders within `Steam/steamui/skins` and then selected in SFP's settings.
+- Skins and scripts can also be added to their own folders within `Steam/steamui/skins` and then selected in SFP's
+  settings.
 
 ### Enable JavaScript Injection
 
@@ -52,7 +55,8 @@ For the old version of SFP that works with Steam Stable, see [here](https://gith
 
 ## Skin Authors
 
-If you want to customize which Steam pages are skinned and which files are applied to each page, include a `skin.json` file in the root of your skin folder.
+If you want to customize which Steam pages are skinned and which files are applied to each page, include a `skin.json`
+file in the root of your skin folder.
 
 Example `skin.json`:
 
@@ -86,9 +90,11 @@ Example `skin.json`:
 }
 ```
 
-Each entry should have a "MatchRegexString" key, where the value is either a regex string that will be matched against a Steam page title or a url that begins with `http://` or `https://` that will be matched against a url.
+Each entry should have a "MatchRegexString" key, where the value is either a regex string that will be matched against a
+Steam page title or a url that begins with `http://` or `https://` that will be matched against a url.
 
-Each entry can also have a TargetCss key and a TargetJs key, which will be the css and js files that are applied to the page if the regex matches.
+Each entry can also have a TargetCss key and a TargetJs key, which will be the css and js files that are applied to the
+page if the regex matches.
 
 An entry can have both a TargetCss and a TargetJs key, or just one of them.
 
@@ -102,12 +108,13 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 
 ### Matching against Friends List
 
-To match against the friends list and chat windows, simply put `Friends`in the MatchRegexString value as matching against the page title will not work across Steam language settings.
+To match against the friends list and chat windows, simply put `Friends`in the MatchRegexString value as matching
+against the page title will not work across Steam language settings.
 
 ### Finding Steam Page Titles
 
-To find steam page titles to match against, make sure Steam is running with `cef-enable-debugging` and then visit <http://localhost:8080> in your web browser.
-
+To find steam page titles to match against, make sure Steam is running with `cef-enable-debugging` and then
+visit <http://localhost:8080> in your web browser.
 
 ## Todo
 

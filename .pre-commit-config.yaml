@@ -1,26 +1,26 @@
 ci:
-  skip: [dotnet-format]
+  skip: [ dotnet-format ]
 
 repos:
-  -   repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v4.4.0
-      hooks:
-      -   id: check-added-large-files
-      -   id: check-json
-      -   id: check-merge-conflict
-      -   id: check-toml
-      -   id: check-yaml
-      -   id: end-of-file-fixer
-      -   id: trailing-whitespace
-      -   id: check-xml
-      -   id: detect-private-key
-      -   id: fix-byte-order-marker
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-xml
+      - id: detect-private-key
+      - id: fix-byte-order-marker
 
-  -   repo: local
-      hooks:
+  - repo: local
+    hooks:
       #Use dotnet format already installed on your machine
-      -   id: dotnet-format
-          name: dotnet-format
-          language: system
-          entry: dotnet format --severity info --exclude 'external/' --include
-          types_or: ["c#", "vb"]
+      - id: dotnet-format
+        name: dotnet-format
+        language: system
+        entry: dotnet format --severity info --exclude 'external/' --include
+        types_or: [ "c#", "vb" ]

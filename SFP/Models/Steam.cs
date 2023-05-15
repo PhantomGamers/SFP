@@ -70,6 +70,8 @@ public static class Steam
 
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
+    private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
+
     public static string GetSkinDir()
     {
         return Path.Join(SteamUiDir, GetRelativeSkinDir());
@@ -94,7 +96,6 @@ public static class Steam
         return relativeSkinDir;
     }
 
-    private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
     public static event EventHandler? SteamStarted;
     public static event EventHandler? SteamStopped;
 
@@ -177,7 +178,10 @@ public static class Steam
         }
     }
 
-    public static async void RunRestartSteam() => await Task.Run(() => RestartSteam());
+    public static async void RunRestartSteam()
+    {
+        await Task.Run(() => RestartSteam());
+    }
 
     public static async Task RestartSteam(string? args = null)
     {
@@ -233,10 +237,16 @@ public static class Steam
         }
     }
 
-    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e) =>
+    private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
+    {
         SteamStopped?.Invoke(null, EventArgs.Empty);
+    }
 
-    public static async void RunTryInject() => await Task.Run(TryInject);
+    public static async void RunTryInject()
+    {
+        await Task.Run(TryInject);
+    }
+
     public static async Task TryInject()
     {
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))

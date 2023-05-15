@@ -28,7 +28,10 @@ public class App : Application
 
     public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
 
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize()
+    {
+        AvaloniaXamlLoader.Load(this);
+    }
 
     public override async void OnFrameworkInitializationCompleted()
     {
@@ -104,7 +107,8 @@ public class App : Application
 
     public static void StartMainWindow()
     {
-        if (MainWindow.Instance is not null || Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        if (MainWindow.Instance is not null ||
+            Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
@@ -122,5 +126,8 @@ public class App : Application
     }
 
     [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-    private void TrayIcon_OnClicked(object? sender, EventArgs e) => MainWindow.ShowWindow();
+    private void TrayIcon_OnClicked(object? sender, EventArgs e)
+    {
+        MainWindow.ShowWindow();
+    }
 }

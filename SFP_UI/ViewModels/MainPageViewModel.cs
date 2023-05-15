@@ -13,10 +13,10 @@ namespace SFP_UI.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    private bool _buttonsEnabled = true;
     private static int s_caretIndex;
-    private bool _isInjected;
     private static string s_output = string.Empty;
+    private bool _buttonsEnabled = true;
+    private bool _isInjected;
     private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
     private string _updateNotificationContent = string.Empty;
     private bool _updateNotificationIsOpen;
@@ -84,7 +84,10 @@ public class MainPageViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
     }
 
-    public static void PrintLine(LogLevel level, string message) => Print(level, $"{message}\n");
+    public static void PrintLine(LogLevel level, string message)
+    {
+        Print(level, $"{message}\n");
+    }
 
     private static void Print(LogLevel level, string message)
     {

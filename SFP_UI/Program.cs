@@ -42,7 +42,8 @@ internal static class Program
         var tempPath = Path.GetTempPath();
         try
         {
-            s_fs = new FileStream(Path.Combine(tempPath, "sfp_ui"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+            s_fs = new FileStream(Path.Combine(tempPath, "sfp_ui"), FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                FileShare.None);
         }
         catch (IOException)
         {
@@ -68,11 +69,16 @@ internal static class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    private static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>()
-        .UsePlatformDetect()
-        .LogToTrace()
-        .UseReactiveUI();
+    private static AppBuilder BuildAvaloniaApp()
+    {
+        return AppBuilder.Configure<App>()
+            .UsePlatformDetect()
+            .LogToTrace()
+            .UseReactiveUI();
+    }
 
-    private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) =>
+    private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
         Log.Logger.Error(e.ExceptionObject);
+    }
 }

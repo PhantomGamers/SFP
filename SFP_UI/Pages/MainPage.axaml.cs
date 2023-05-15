@@ -21,6 +21,10 @@ public partial class MainPage : UserControl
         OpenFileDropDownButton.Flyout!.Opened += (sender, args) => PopulateOpenFileDropDownButton();
     }
 
+
+    private ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
+    private ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
+
     private void PopulateOpenFileDropDownButton()
     {
         if (OpenFileDropDownButton.Flyout is not MenuFlyout flyout)
@@ -73,10 +77,6 @@ public partial class MainPage : UserControl
             });
         }
     }
-
-
-    private ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
-    private ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
 
     private static async Task OpenPath(string path, bool isDirectory)
     {

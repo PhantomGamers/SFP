@@ -2,12 +2,11 @@
 
 using System.Text;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Models.Injection.Config;
-using SFP.Properties;
 using SFP_UI.ViewModels;
+using Settings = SFP.Properties.Settings;
 
 #endregion
 
@@ -61,7 +60,7 @@ public partial class SettingsPage : UserControl
                 }
             }
         }
-        var selectedSkin = SFP.Properties.Settings.Default.SelectedSkin;
+        var selectedSkin = Settings.Default.SelectedSkin;
         var skinSet = new HashSet<object>(SteamSkinComboBox.Items.Cast<object>());
         if (skinSet.Contains(selectedSkin))
         {
@@ -80,7 +79,7 @@ public partial class SettingsPage : UserControl
 
     private void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        SFP.Properties.Settings.Default.SelectedSkin = SteamSkinComboBox.SelectedValue?.ToString();
+        Settings.Default.SelectedSkin = SteamSkinComboBox.SelectedValue?.ToString();
         _ = SfpConfig.GetConfig(true);
         Injector.Reload();
     }

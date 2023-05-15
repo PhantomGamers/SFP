@@ -1,7 +1,6 @@
 #region
 
 using System.Text.RegularExpressions;
-using NLog.Targets;
 using PuppeteerSharp;
 using SFP.Models.Injection.Config;
 
@@ -135,7 +134,6 @@ public static partial class Injector
                 //Log.Logger.Error("Unexpected error when trying to get frame title");
                 //Log.Logger.Debug("url: " + page.Url);
                 //Log.Logger.Debug(e);
-                continue;
             }
         }
     }

@@ -49,7 +49,7 @@
                                     Margin="0 0 15 0">
                         <DropDownButton.Flyout>
                             <MenuFlyout Placement="Top">
-                                <Separator/>
+                                <Separator />
                             </MenuFlyout>
                         </DropDownButton.Flyout>
                     </DropDownButton>
