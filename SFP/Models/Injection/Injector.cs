@@ -179,7 +179,7 @@ public static partial class Injector
     private static async Task ProcessFrame(Frame frame)
     {
         var config = SfpConfig.GetConfig();
-        var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray(); ;
+        var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray();
 
         if (frame.Url.StartsWith("https://steamloopback.host"))
         {
