@@ -88,10 +88,10 @@ public static partial class Injector
 
         var pages = await s_browser.PagesAsync();
         Log.Logger.Info("Found " + pages.Length + " pages");
-        foreach (var page in pages)
-        {
-            await ProcessPage(page);
-        }
+
+        var processTasks = pages.Select(ProcessPage);
+
+        await Task.WhenAll(processTasks);
     }
 
     public static void StopInjection()
