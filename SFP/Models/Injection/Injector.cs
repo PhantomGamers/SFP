@@ -120,14 +120,16 @@ public static partial class Injector
             try
             {
                 var title = await page.MainFrame.GetTitleAsync();
-                if (title == "SharedJSContext")
+                if (title != "SharedJSContext")
                 {
-                    await page.ReloadAsync();
+                    continue;
                 }
+                await page.ReloadAsync();
+                break;
             }
             catch (PuppeteerException)
             {
-                continue;
+                // ignored
             }
         }
     }
