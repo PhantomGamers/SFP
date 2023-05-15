@@ -319,6 +319,7 @@ public static partial class Injector
         var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
         fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
         var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
+
         var injectString =
 $@"function inject() {{
     if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
@@ -337,6 +338,10 @@ if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
 ";
         try
         {
+            if (!isUrl && resourceType == "js")
+            {
+                await Task.Delay(500);
+            }
             await frame.EvaluateExpressionAsync(injectString);
             Log.Logger.Info($"Injected {resourceType.ToUpper()} into {tabFriendlyName}");
         }
