@@ -52,6 +52,12 @@ public partial class MainPage : UserControl
         flyout.Items.Clear();
         flyout.Items.Add(new MenuItem
         {
+            Header = "skins",
+            Command = OpenDirCommand,
+            CommandParameter = Steam.SkinsDir
+        });
+        flyout.Items.Add(new MenuItem
+        {
             Header = Settings.Default.SelectedSkin,
             Command = OpenDirCommand,
             CommandParameter = Steam.GetSkinDir()
