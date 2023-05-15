@@ -38,8 +38,6 @@ public class MainPageViewModel : ViewModelBase
         ReactiveCommand.Create(Steam.RunTryInject);
 
     public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
-    public ReactiveCommand<string, Unit> OpenFileCommand { get; } = ReactiveCommand.CreateFromTask<string>(OpenFile);
-    public ReactiveCommand<string, Unit> OpenDirCommand { get; } = ReactiveCommand.Create<string>(OpenDir);
 
     public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
         ReactiveCommand.Create(Steam.RunRestartSteam);
@@ -108,44 +106,5 @@ public class MainPageViewModel : ViewModelBase
         UpdateNotificationContent =
             $"Your version: {oldVersion}{Environment.NewLine}Latest version: {newVersion}";
         UpdateNotificationIsOpen = true;
-    }
-
-    private static async Task OpenPath(string relativePath, bool isDirectory)
-    {
-        var path = Path.Join(Steam.SteamDir, @"steamui", relativePath);
-        try
-        {
-            if (isDirectory)
-            {
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-            }
-            else
-            {
-                if (!File.Exists(path))
-                {
-                    await File.Create(path).DisposeAsync();
-                }
-            }
-
-            Utils.OpenUrl(path);
-        }
-        catch (Exception e)
-        {
-            Log.Logger.Warn("Could not open " + path);
-            Log.Logger.Debug(e);
-        }
-    }
-
-    private static async Task OpenFile(string relativeFilePath)
-    {
-        await OpenPath(relativeFilePath, false);
-    }
-
-    private static void OpenDir(string relativeDirPath)
-    {
-        OpenPath(relativeDirPath, true).Wait();
     }
 }
