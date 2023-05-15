@@ -22,10 +22,10 @@ public class PatchEntry
 
 public class SfpConfig
 {
-    public bool UseDefaultPatches { get; init; } = false;
+    public bool UseDefaultPatches { get; init; }
     public IEnumerable<PatchEntry> Patches { get; init; } = GetDefaultPatches();
 
-    [JsonIgnore] public bool _isFromMillennium = false;
+    [JsonIgnore] public bool _isFromMillennium;
 
     [JsonIgnore]
     private static readonly IReadOnlyCollection<PatchEntry> s_defaultPatches = new[]
@@ -62,19 +62,18 @@ public class SfpConfig
 
     [JsonIgnore]
     private static SfpConfig? s_sfpConfig;
-    [JsonIgnore] public static SfpConfig DefaultConfig { get; } = new SfpConfig();
+    [JsonIgnore] public static SfpConfig DefaultConfig { get; } = new();
     [ExcludeFromCodeCoverage]
-    private static IReadOnlyCollection<PatchEntry> GetDefaultPatches() => s_defaultPatches;
+    private static IEnumerable<PatchEntry> GetDefaultPatches() => s_defaultPatches;
 
     public static SfpConfig GetConfig(bool overWrite = false)
     {
         if (s_sfpConfig != null && !overWrite)
             return s_sfpConfig;
 
-        var configPath = Path.Combine(Steam.SkinDir, Properties.Settings.Default.SelectedSkin);
-        var sfpConfigPath = Path.Combine(configPath, "skin.json");
-        var millenniumConfigPath = Path.Combine(configPath, "config.json");
-        _ = DefaultConfig;
+        var skinDir = Steam.GetSkinDir();
+        var sfpConfigPath = Path.Combine(skinDir, "skin.json");
+        var millenniumConfigPath = Path.Combine(skinDir, "config.json");
 
         try
         {
@@ -123,7 +122,7 @@ public class SfpConfig
             Log.Logger.Error(e);
             s_sfpConfig = DefaultConfig;
         }
-        return s_sfpConfig ??= DefaultConfig;
+        return s_sfpConfig;
     }
 
 

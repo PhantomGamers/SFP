@@ -30,7 +30,7 @@ public partial class SettingsPage : UserControl
         SteamSkinComboBox.SelectionChanged -= SteamSkinComboBox_SelectionChanged;
         SteamSkinComboBox.Items.Clear();
         SteamSkinComboBox.Items.Add("steamui");
-        var skinDir = Steam.SkinDir;
+        var skinDir = Steam.SkinsDir;
         if (!string.IsNullOrWhiteSpace(skinDir))
         {
             try
@@ -62,21 +62,17 @@ public partial class SettingsPage : UserControl
             }
         }
         var selectedSkin = SFP.Properties.Settings.Default.SelectedSkin;
-        Log.Logger.Info("Selected skin: {Skin}", selectedSkin);
         var skinSet = new HashSet<object>(SteamSkinComboBox.Items.Cast<object>());
         if (skinSet.Contains(selectedSkin))
         {
-            Log.Logger.Info("skinset contains selected skin");
             SteamSkinComboBox.SelectedItem = selectedSkin;
         }
         else if (selectedItem != null && skinSet.Contains(selectedItem))
         {
-            Log.Logger.Info("skinset contains selected item");
             SteamSkinComboBox.SelectedItem = selectedItem;
         }
         else
         {
-            Log.Logger.Info("skinset does not contain selected skin or item");
             SteamSkinComboBox.SelectedIndex = 0;
         }
         SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;

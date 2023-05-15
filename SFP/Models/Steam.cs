@@ -66,7 +66,33 @@ public static class Steam
         }
     }
 
-    public static string SkinDir => !string.IsNullOrWhiteSpace(SteamDir) ? Path.Join(SteamDir, "steamui", "skins") : string.Empty;
+    public static string SteamUiDir => Path.Join(SteamDir, "steamui");
+
+    public static string SkinsDir => Path.Join(SteamUiDir, "skins");
+
+    public static string GetSkinDir()
+    {
+        return Path.Join(SteamUiDir, GetRelativeSkinDir());
+    }
+
+    public static string GetRelativeSkinDir()
+    {
+        string relativeSkinDir;
+        var selectedSkin = Properties.Settings.Default.SelectedSkin;
+        if (string.IsNullOrWhiteSpace(selectedSkin) || selectedSkin == "steamui")
+        {
+            relativeSkinDir = string.Empty;
+        }
+        else if (selectedSkin == "skins\\steamui")
+        {
+            relativeSkinDir = "skins/steamui";
+        }
+        else
+        {
+            relativeSkinDir = $"skins/{selectedSkin}";
+        }
+        return relativeSkinDir;
+    }
 
     private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
     public static event EventHandler? SteamStarted;

@@ -130,11 +130,11 @@ public static partial class Injector
                     await page.EvaluateExpressionAsync("location.reload()");
                 }
             }
-            catch (PuppeteerException e)
+            catch (PuppeteerException)
             {
-                Log.Logger.Error("Unexpected error when trying to get frame title");
-                Log.Logger.Debug("url: " + page.Url);
-                Log.Logger.Debug(e);
+                //Log.Logger.Error("Unexpected error when trying to get frame title");
+                //Log.Logger.Debug("url: " + page.Url);
+                //Log.Logger.Debug(e);
                 continue;
             }
         }
@@ -322,12 +322,9 @@ public static partial class Injector
 
     private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
     {
-        var selectedSkin = Properties.Settings.Default.SelectedSkin;
-        if (!string.IsNullOrWhiteSpace(selectedSkin) && selectedSkin != "steamui")
-        {
-            fileRelativePath = $"skins/{selectedSkin}/{fileRelativePath}";
-        }
+        var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
         var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
+        fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
         var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
         var injectString =
             $@"
