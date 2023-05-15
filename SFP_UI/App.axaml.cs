@@ -32,21 +32,12 @@ public class App : Application
 
     public override async void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        if (!Settings.Default.StartMinimized || !Settings.Default.MinimizeToTray)
         {
-            desktop.MainWindow = new MainWindow { DataContext = new MainWindowViewModel() };
-
-            try
-            {
-                desktop.MainWindow.Title += $" v{UpdateChecker.Version}";
-                await Dispatcher.UIThread.InvokeAsync(() => Log.Logger.Info(
-                    $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}"));
-            }
-            catch (Exception e)
-            {
-                Log.Logger.Error(e);
-            }
+            StartMainWindow();
         }
+        Dispatcher.UIThread.Post(() => Log.Logger.Info(
+            $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}"));
 
         base.OnFrameworkInitializationCompleted();
 
@@ -56,18 +47,13 @@ public class App : Application
 
         if (Settings.Default.CheckForUpdates)
         {
-            await Dispatcher.UIThread.InvokeAsync(UpdateChecker.CheckForUpdates);
+            Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
         }
 
         if (SettingsPageViewModel.Instance != null)
         {
-            await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.Instance.OnReloadCommand);
-            await Dispatcher.UIThread.InvokeAsync(SettingsPageViewModel.OnSaveCommand);
-        }
-
-        if (Settings.Default is { StartMinimized: true, MinimizeToTray: true })
-        {
-            MainWindow.Instance?.Hide();
+            Dispatcher.UIThread.Post(SettingsPageViewModel.Instance.OnReloadCommand);
+            Dispatcher.UIThread.Post(SettingsPageViewModel.OnSaveCommand);
         }
     }
 
@@ -88,7 +74,7 @@ public class App : Application
 
     public static void SetIconsState(bool state)
     {
-        var icons = TrayIcon.GetIcons(Application.Current!);
+        var icons = TrayIcon.GetIcons(Current!);
         if (icons == null)
         {
             return;
@@ -116,7 +102,17 @@ public class App : Application
         };
     }
 
-    private static void QuitApplication()
+    public static void StartMainWindow()
+    {
+        if (MainWindow.Instance is not null || Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            return;
+        }
+
+        desktop.MainWindow = new MainWindow();
+    }
+
+    public static void QuitApplication()
     {
         Log.Logger.Info("Quitting");
         if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)

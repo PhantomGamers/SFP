@@ -1,6 +1,7 @@
 #region
 
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
 using FileWatcherEx;
@@ -33,7 +34,7 @@ internal static class Program
         Target.Register("OutputControl", typeof(OutputControlTarget));
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         _ = new Settings();
-        _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
     }
 
     private static bool EnforceSingleInstance()
