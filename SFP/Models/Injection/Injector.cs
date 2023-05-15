@@ -86,11 +86,11 @@ public static partial class Injector
             return;
         }
 
-        var targets = s_browser.Targets();
-        Log.Logger.Info("Found " + targets.Length + " targets");
-        foreach (var page in targets.Select(async t => await t.PageAsync()))
+        var pages = await s_browser.PagesAsync();
+        Log.Logger.Info("Found " + pages.Length + " pages");
+        foreach (var page in pages)
         {
-            await ProcessPage(await page);
+            await ProcessPage(page);
         }
     }
 
