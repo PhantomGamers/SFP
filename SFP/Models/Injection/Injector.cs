@@ -290,7 +290,7 @@ public static partial class Injector
     {
         if (Properties.Settings.Default.InjectCSS)
         {
-            if (!string.IsNullOrWhiteSpace(patch.TargetCss) && !patch.TargetCss.EndsWith(".css"))
+            if (string.IsNullOrWhiteSpace(patch.TargetCss) || !patch.TargetCss.EndsWith(".css"))
             {
                 Log.Logger.Info("Target CSS file does not end in .css for patch " + patch.MatchRegexString);
             }
@@ -306,7 +306,7 @@ public static partial class Injector
             {
                 await SetBypassCsp(frame);
             }
-            if (!string.IsNullOrWhiteSpace(patch.TargetJs) && !patch.TargetJs.EndsWith(".js"))
+            if (string.IsNullOrWhiteSpace(patch.TargetJs) || !patch.TargetJs.EndsWith(".js"))
             {
                 Log.Logger.Info("Target Js file does not end in .js for patch " + patch.MatchRegexString);
             }
@@ -324,22 +324,21 @@ public static partial class Injector
         fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
         var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
         var injectString =
-            $@"
-            function inject() {{
-                if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
-                const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
-                element.id = '{frame.Id}{resourceType}';
-                {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
-                element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
-                element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
-                document.head.append(element);
-            }}
-            if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
-                addEventListener('DOMContentLoaded', inject);
-            }} else {{
-                inject();
-            }}
-            ";
+$@"function inject() {{
+    if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
+    const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
+    element.id = '{frame.Id}{resourceType}';
+    {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
+    element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
+    element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
+    document.head.append(element);
+}}
+if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
+    addEventListener('DOMContentLoaded', inject);
+}} else {{
+    inject();
+}}
+";
         try
         {
             await frame.EvaluateExpressionAsync(injectString);

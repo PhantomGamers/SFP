@@ -79,7 +79,9 @@ public partial class SettingsPage : UserControl
 
     private void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        Settings.Default.SelectedSkin = SteamSkinComboBox.SelectedValue?.ToString();
+        var value = SteamSkinComboBox.SelectedValue?.ToString();
+        Log.Logger.Info("Switching to skin {Skin}", value);
+        Settings.Default.SelectedSkin = value;
         _ = SfpConfig.GetConfig(true);
         Injector.Reload();
     }
