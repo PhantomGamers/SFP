@@ -125,6 +125,10 @@ public partial class MainWindow : AppWindow
     protected override async void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
+        if (Instance is null)
+        {
+            return;
+        }
         Instance = null;
         if (Settings.Default.CloseToTray)
         {
