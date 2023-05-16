@@ -20,8 +20,6 @@ namespace SFP_UI.Views;
 
 public partial class MainWindow : AppWindow
 {
-    private bool _isStarting = true;
-
     public MainWindow()
     {
         InitializeComponent();
@@ -96,13 +94,6 @@ public partial class MainWindow : AppWindow
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
-
-        if (!_isStarting)
-        {
-            return;
-        }
-
-        _isStarting = false;
 
         // Enable Mica on Windows 11
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
