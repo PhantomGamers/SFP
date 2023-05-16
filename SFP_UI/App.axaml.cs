@@ -52,12 +52,6 @@ public class App : Application
         {
             Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
         }
-
-        if (SettingsPageViewModel.Instance != null)
-        {
-            Dispatcher.UIThread.Post(SettingsPageViewModel.Instance.OnReloadCommand);
-            Dispatcher.UIThread.Post(SettingsPageViewModel.OnSaveCommand);
-        }
     }
 
     private static async Task HandleStartupTasks()
