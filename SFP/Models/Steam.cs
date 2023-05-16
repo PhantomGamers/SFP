@@ -135,7 +135,14 @@ public static class Steam
         }
 
         Log.Logger.Info("Shutting down Steam");
-        _ = Process.Start(SteamExe, "-shutdown");
+        if (IsSteamWebHelperRunning)
+        {
+            _ = Process.Start(SteamExe, "-shutdown");
+        }
+        else
+        {
+            steamProcess.Kill();
+        }
     }
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]
