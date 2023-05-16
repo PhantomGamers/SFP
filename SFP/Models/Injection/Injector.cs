@@ -312,7 +312,7 @@ public static partial class Injector
 
         if (Properties.Settings.Default.InjectJS)
         {
-            if (frame.Url.StartsWith("http"))
+            if (frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host"))
             {
                 await SetBypassCsp(frame);
             }
