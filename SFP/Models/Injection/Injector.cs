@@ -147,6 +147,12 @@ public static partial class Injector
             return;
         }
 
+        await Task.Delay(500);
+        if (!Steam.IsSteamWebHelperRunning)
+        {
+            return;
+        }
+        Log.Logger.Warn("Unexpected disconnect, trying to reconnect to Steam instance");
         await Steam.TryInject();
     }
 
