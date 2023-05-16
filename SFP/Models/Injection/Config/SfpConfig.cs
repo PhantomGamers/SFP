@@ -39,6 +39,10 @@ public class SfpConfig
         },
         new PatchEntry
         {
+            MatchRegexString = "^Steam Dialog$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+        },
+        new PatchEntry
+        {
             MatchRegexString = "^Steam Settings$",
             TargetCss = "libraryroot.custom.css",
             TargetJs = "libraryroot.custom.js"
