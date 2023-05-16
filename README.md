@@ -58,7 +58,7 @@ For the old version of SFP that works with Steam Stable, see [here](https://gith
 If you want to customize which Steam pages are skinned and which files are applied to each page, include a `skin.json`
 file in the root of your skin folder.
 
-Example `skin.json`:
+Default `skin.json`:
 
 ```json
 {
@@ -69,22 +69,79 @@ Example `skin.json`:
       "TargetJs": "webkit.js"
     },
     {
+      "MatchRegexString": "https://steamcommunity.com",
+      "TargetCss": "webkit.css",
+      "TargetJs": "webkit.js"
+    },
+    {
       "MatchRegexString": "^Steam$",
       "TargetCss": "libraryroot.custom.css",
       "TargetJs": "libraryroot.custom.js"
     },
     {
+      "MatchRegexString": ".ModalDialogPopup",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": ".FullModalOverlay",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": ".friendsui-container",
+      "TargetCss": "friends.custom.css",
+      "TargetJs": "friends.custom.js"
+    },
+    {
+      "MatchRegexString": "^OverlayBrowser_Browser$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": "^SP Overlay:",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
       "MatchRegexString": "Menu$",
-      "TargetCss": "libraryroot.custom.css"
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
     },
     {
       "MatchRegexString": "Supernav$",
-      "TargetCss": "libraryroot.custom.css"
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
     },
     {
-      "MatchRegexString": "Friends",
-      "TargetCss": "friends.custom.css",
-      "TargetJs": "friends.custom.js"
+      "MatchRegexString": "^notificationtoasts_",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": "^SteamBrowser_Find$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": "^OverlayTab\\d+_Find$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
+    },
+    {
+      "MatchRegexString": "^Steam Big Picture Mode$",
+      "TargetCss": "bigpicture.custom.css",
+      "TargetJs": "bigpicture.custom.js"
+    },
+    {
+      "MatchRegexString": "^QuickAccess_",
+      "TargetCss": "bigpicture.custom.css",
+      "TargetJs": "bigpicture.custom.js"
+    },
+    {
+      "MatchRegexString": "^MainMenu_",
+      "TargetCss": "bigpicture.custom.css",
+      "TargetJs": "bigpicture.custom.js"
     }
   ]
 }
@@ -106,10 +163,19 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 }
 ```
 
-### Matching against Friends List
+### Matching against pages with variable titles
 
-To match against the friends list and chat windows, simply put `Friends`in the MatchRegexString value as matching
-against the page title will not work across Steam language settings.
+Certain pages will have titles that change either depending on the user's language settings or some other factor.
+
+In order to match against these pages, you can match against a selector that exists within the page. SFP will match against a selector if MatchRegexString begins with `.`, `#`, or `[`.
+
+For example:
+
+- The Friends List and Chat windows can be matched against with `.friendsui-container`
+
+- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against with `.ModalDialogPopup`
+
+- The sign in page can be matched against with `.FullModalOverlay`
 
 ### Finding Steam Page Titles
 

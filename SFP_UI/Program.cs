@@ -34,6 +34,9 @@ internal static class Program
         Target.Register("OutputControl", typeof(OutputControlTarget));
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         _ = new Settings();
+        SFP.Properties.Settings.Default.Reload();
+        SFP.Properties.Settings.Default.DummySetting = true;
+        SFP.Properties.Settings.Default.Save();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
     }
 

@@ -12,6 +12,7 @@ public static partial class Injector
 {
     private static Browser? s_browser;
     private static bool s_isInjected;
+    private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsInjected => s_isInjected && s_browser != null;
 
@@ -101,6 +102,7 @@ public static partial class Injector
             Log.Logger.Info("Disconnecting from Steam instance");
         }
         s_isInjected = false;
+        s_manualDisconnect = true;
         s_browser?.Disconnect();
         s_browser = null;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
@@ -134,10 +136,24 @@ public static partial class Injector
         }
     }
 
-    private static void OnDisconnected(object? sender, EventArgs e)
+    private static async void OnDisconnected(object? sender, EventArgs e)
     {
         Log.Logger.Info("Disconnected from Steam instance");
+        var manualDisconnect = s_manualDisconnect;
         StopInjection();
+        if (manualDisconnect)
+        {
+            s_manualDisconnect = false;
+            return;
+        }
+
+        await Task.Delay(500);
+        if (!Steam.IsSteamWebHelperRunning)
+        {
+            return;
+        }
+        Log.Logger.Warn("Unexpected disconnect, trying to reconnect to Steam instance");
+        await Steam.TryInject();
     }
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
@@ -194,15 +210,16 @@ public static partial class Injector
 
             foreach (var patch in patches)
             {
-                if (patch.MatchRegexString.ToLower() == "friends" || patch.MatchRegexString == "Friends List")
+                var regex = patch.MatchRegexString;
+                if (regex.StartsWith('.') || regex.StartsWith('#') || regex.StartsWith('['))
                 {
                     try
                     {
-                        if (await frame.QuerySelectorAsync(@".friendsui-container") == null)
+                        if (await frame.QuerySelectorAsync(patch.MatchRegexString) == null)
                         {
                             continue;
                         }
-                        await InjectAsync(frame, patch, "Friends and Chat");
+                        await InjectAsync(frame, patch, title);
                         return;
                     }
                     catch (PuppeteerException e)
@@ -215,9 +232,7 @@ public static partial class Injector
                 else switch (config._isFromMillennium)
                     {
                         case false when patch.MatchRegex.IsMatch(title):
-                            await InjectAsync(frame, patch, title);
-                            return;
-                        case true when patch.MatchRegexString == title:
+                        case true when regex == title:
                             await InjectAsync(frame, patch, title);
                             return;
                     }
@@ -225,6 +240,7 @@ public static partial class Injector
         }
         else
         {
+            var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
             if (!config._isFromMillennium)
             {
                 var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
@@ -233,7 +249,6 @@ public static partial class Injector
                 {
                     foreach (var patch in patchEntries)
                     {
-                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
                         await InjectAsync(frame, patch, url);
                         return;
                     }
@@ -245,7 +260,6 @@ public static partial class Injector
                 {
                     foreach (var patch in patches)
                     {
-                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
                         await InjectAsync(frame, patch, url);
                         return;
                     }

@@ -52,12 +52,6 @@ public class App : Application
         {
             Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
         }
-
-        if (SettingsPageViewModel.Instance != null)
-        {
-            Dispatcher.UIThread.Post(SettingsPageViewModel.Instance.OnReloadCommand);
-            Dispatcher.UIThread.Post(SettingsPageViewModel.OnSaveCommand);
-        }
     }
 
     private static async Task HandleStartupTasks()
@@ -118,10 +112,13 @@ public class App : Application
 
     public static void QuitApplication()
     {
-        Log.Logger.Info("Quitting");
         if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
         {
-            lifetime.Shutdown();
+            Dispatcher.UIThread.Post(() =>
+            {
+                Log.Logger.Info("Quitting");
+                lifetime.Shutdown();
+            });
         }
     }
 

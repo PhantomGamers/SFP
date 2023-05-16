@@ -39,24 +39,16 @@ public class SfpConfig
         },
         new PatchEntry
         {
-            MatchRegexString = "^Steam Settings$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
+            // Steam Dialog popups (Settings, Game Properties, etc)
+            MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
         new PatchEntry
         {
-            MatchRegexString = "^Properties -", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            // Sign In Page
+            MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
-        {
-            MatchRegexString = "^GameOverview$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Shutdown$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
+        // Friends List and Chat
+        new PatchEntry { MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js" },
         new PatchEntry
         {
             MatchRegexString = "^OverlayBrowser_Browser$",
@@ -66,60 +58,6 @@ public class SfpConfig
         new PatchEntry
         {
             MatchRegexString = "^SP Overlay:", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^What's New Settings$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^GameNotes$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Settings$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^SoundtrackPlayer$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^ScreenshotManager$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Screenshot Manager$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Achievements$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Add Non-Steam Game$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Game Servers$",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            MatchRegexString = "^Players$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
         new PatchEntry
         {
@@ -160,8 +98,7 @@ public class SfpConfig
         new PatchEntry
         {
             MatchRegexString = "^MainMenu_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
-        },
-        new PatchEntry { MatchRegexString = "Friends", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js" }
+        }
     };
 
     [JsonIgnore] private static SfpConfig? s_sfpConfig;
