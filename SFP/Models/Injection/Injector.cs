@@ -204,15 +204,16 @@ public static partial class Injector
 
             foreach (var patch in patches)
             {
-                if (patch.MatchRegexString.ToLower() == "friends" || patch.MatchRegexString == "Friends List")
+                var regex = patch.MatchRegexString;
+                if (regex.StartsWith('.') || regex.StartsWith('#') || regex.StartsWith('['))
                 {
                     try
                     {
-                        if (await frame.QuerySelectorAsync(@".friendsui-container") == null)
+                        if (await frame.QuerySelectorAsync(patch.MatchRegexString) == null)
                         {
                             continue;
                         }
-                        await InjectAsync(frame, patch, "Friends and Chat");
+                        await InjectAsync(frame, patch, title);
                         return;
                     }
                     catch (PuppeteerException e)
@@ -227,7 +228,7 @@ public static partial class Injector
                         case false when patch.MatchRegex.IsMatch(title):
                             await InjectAsync(frame, patch, title);
                             return;
-                        case true when patch.MatchRegexString == title:
+                        case true when regex == title:
                             await InjectAsync(frame, patch, title);
                             return;
                     }

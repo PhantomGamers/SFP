@@ -82,7 +82,11 @@ Example `skin.json`:
       "TargetCss": "libraryroot.custom.css"
     },
     {
-      "MatchRegexString": "Friends",
+      "MatchRegexString": ".ModalDialogPopup",
+      "TargetCss": "libraryroot.custom.css"
+    },
+    {
+      "MatchRegexString": ".friendsui-container",
       "TargetCss": "friends.custom.css",
       "TargetJs": "friends.custom.js"
     }
@@ -106,10 +110,17 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 }
 ```
 
-### Matching against Friends List
+### Matching against pages with variable titles
 
-To match against the friends list and chat windows, simply put `Friends`in the MatchRegexString value as matching
-against the page title will not work across Steam language settings.
+Certain pages will have titles that change either depending on the user's language settings or some other factor.
+
+In order to match against these pages, you can match against a selector that exists within the page. SFP will match against a selector if MatchRegexString begins with `.`, `#`, or `[`.
+
+For example:
+
+- The Friends List and Chat windows can be matched against with `.friendsui-container`
+
+- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against with `.ModalDialogPopup`
 
 ### Finding Steam Page Titles
 
