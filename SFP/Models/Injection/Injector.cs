@@ -232,8 +232,6 @@ public static partial class Injector
                 else switch (config._isFromMillennium)
                     {
                         case false when patch.MatchRegex.IsMatch(title):
-                            await InjectAsync(frame, patch, title);
-                            return;
                         case true when regex == title:
                             await InjectAsync(frame, patch, title);
                             return;
@@ -242,6 +240,7 @@ public static partial class Injector
         }
         else
         {
+            var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
             if (!config._isFromMillennium)
             {
                 var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
@@ -250,7 +249,6 @@ public static partial class Injector
                 {
                     foreach (var patch in patchEntries)
                     {
-                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
                         await InjectAsync(frame, patch, url);
                         return;
                     }
@@ -262,7 +260,6 @@ public static partial class Injector
                 {
                     foreach (var patch in patches)
                     {
-                        var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
                         await InjectAsync(frame, patch, url);
                         return;
                     }
