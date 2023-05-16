@@ -118,10 +118,13 @@ public class App : Application
 
     public static void QuitApplication()
     {
-        Log.Logger.Info("Quitting");
         if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime lifetime)
         {
-            lifetime.Shutdown();
+            Dispatcher.UIThread.Post(() =>
+            {
+                Log.Logger.Info("Quitting");
+                lifetime.Shutdown();
+            });
         }
     }
 
