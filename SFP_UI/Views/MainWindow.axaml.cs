@@ -134,12 +134,11 @@ public partial class MainWindow : AppWindow
 
     protected override void HandleWindowStateChanged(WindowState state)
     {
+        base.HandleWindowStateChanged(state);
         if (state == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
         {
             Close();
         }
-
-        base.HandleWindowStateChanged(state);
     }
 
     public static void ShowWindow()
