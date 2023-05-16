@@ -189,6 +189,7 @@ public static class Steam
         {
             s_steamProcess = SteamProcess;
             s_steamProcess!.EnableRaisingEvents = true;
+            s_steamProcess.Exited -= OnSteamExited;
             s_steamProcess.Exited += OnSteamExited;
             ShutDownSteam(s_steamProcess);
         }

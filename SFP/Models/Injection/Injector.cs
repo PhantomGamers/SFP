@@ -12,6 +12,7 @@ public static partial class Injector
 {
     private static Browser? s_browser;
     private static bool s_isInjected;
+    private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
     public static bool IsInjected => s_isInjected && s_browser != null;
 
@@ -101,6 +102,7 @@ public static partial class Injector
             Log.Logger.Info("Disconnecting from Steam instance");
         }
         s_isInjected = false;
+        s_manualDisconnect = true;
         s_browser?.Disconnect();
         s_browser = null;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
@@ -134,10 +136,18 @@ public static partial class Injector
         }
     }
 
-    private static void OnDisconnected(object? sender, EventArgs e)
+    private static async void OnDisconnected(object? sender, EventArgs e)
     {
         Log.Logger.Info("Disconnected from Steam instance");
+        var manualDisconnect = s_manualDisconnect;
         StopInjection();
+        if (manualDisconnect)
+        {
+            s_manualDisconnect = false;
+            return;
+        }
+
+        await Steam.TryInject();
     }
 
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
