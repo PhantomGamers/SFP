@@ -193,7 +193,7 @@ public static partial class Injector
         var config = SfpConfig.GetConfig();
         var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray();
 
-        if (frame.Url.StartsWith("https://steamloopback.host"))
+        if (!IsFrameWebkit(frame))
         {
             string? title;
             try
@@ -229,17 +229,23 @@ public static partial class Injector
                         Log.Logger.Debug(e);
                     }
                 }
-                else switch (config._isFromMillennium)
+                else
+                {
+                    switch (config._isFromMillennium)
                     {
                         case false when patch.MatchRegex.IsMatch(title):
                         case true when regex == title:
                             await InjectAsync(frame, patch, title);
                             return;
                     }
+                }
             }
         }
         else
         {
+            // needed to accept including css and js from steamloopback.host
+            // only needed for css in certain instances, needs investigation
+            await SetBypassCsp(frame);
             var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
             if (!config._isFromMillennium)
             {
@@ -312,10 +318,6 @@ public static partial class Injector
 
         if (Properties.Settings.Default.InjectJS)
         {
-            if (frame.Url.StartsWith("http"))
-            {
-                await SetBypassCsp(frame);
-            }
             if (string.IsNullOrWhiteSpace(patch.TargetJs) || !patch.TargetJs.EndsWith(".js"))
             {
                 Log.Logger.Info("Target Js file does not end in .js for patch " + patch.MatchRegexString);
@@ -332,10 +334,9 @@ public static partial class Injector
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
         var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
         fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
-        var isUrl = frame.Url.StartsWith("http") && !frame.Url.StartsWith("https://steamloopback.host");
 
         var injectString =
-$@"function inject() {{
+            $@"function inject() {{
     if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
     const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
     element.id = '{frame.Id}{resourceType}';
@@ -344,7 +345,7 @@ $@"function inject() {{
     element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
     document.head.append(element);
 }}
-if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
+if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') {{
     addEventListener('DOMContentLoaded', inject);
 }} else {{
     inject();
@@ -352,7 +353,7 @@ if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
 ";
         try
         {
-            if (!isUrl && resourceType == "js")
+            if (!IsFrameWebkit(frame) && resourceType == "js")
             {
                 await Task.Delay(500);
             }
@@ -367,6 +368,11 @@ if ((document.readyState === 'loading') && '{isUrl}' === 'True') {{
                 Log.Logger.Debug(e);
             }
         }
+    }
+
+    private static bool IsFrameWebkit(Frame frame)
+    {
+        return !frame.Url.StartsWith("https://steamloopback.host");
     }
 
     [GeneratedRegex(@"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)")]

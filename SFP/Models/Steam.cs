@@ -280,6 +280,7 @@ public static class Steam
                 {
                     Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
                     await RestartSteam();
+                    return;
                 }
             }
 

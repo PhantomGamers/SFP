@@ -167,13 +167,15 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 
 Certain pages will have titles that change either depending on the user's language settings or some other factor.
 
-In order to match against these pages, you can match against a selector that exists within the page. SFP will match against a selector if MatchRegexString begins with `.`, `#`, or `[`.
+In order to match against these pages, you can match against a selector that exists within the page. SFP will match
+against a selector if MatchRegexString begins with `.`, `#`, or `[`.
 
 For example:
 
 - The Friends List and Chat windows can be matched against with `.friendsui-container`
 
-- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against with `.ModalDialogPopup`
+- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against
+  with `.ModalDialogPopup`
 
 - The sign in page can be matched against with `.FullModalOverlay`
 
