@@ -36,21 +36,6 @@ public class SfpConfig
         },
         new PatchEntry
         {
-            // Steam Dialog popups (Settings, Game Properties, etc)
-            MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
-        new PatchEntry
-        {
-            // Sign In Page
-            MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
-        // Friends List and Chat
-        new PatchEntry
-        {
-            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
-        },
-        new PatchEntry
-        {
             MatchRegexString = "^OverlayBrowser_Browser$",
             TargetCss = "libraryroot.custom.css",
             TargetJs = "libraryroot.custom.js"
@@ -95,6 +80,21 @@ public class SfpConfig
         new PatchEntry
         {
             MatchRegexString = "^MainMenu_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
+        },
+        // Friends List and Chat
+        new PatchEntry
+        {
+            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
+        },
+        new PatchEntry
+        {
+        // Steam Dialog popups (Settings, Game Properties, etc)
+        MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+        },
+        new PatchEntry
+        {
+            // Sign In Page
+            MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         }
     };
 
