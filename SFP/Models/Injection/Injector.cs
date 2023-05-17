@@ -229,13 +229,16 @@ public static partial class Injector
                         Log.Logger.Debug(e);
                     }
                 }
-                else switch (config._isFromMillennium)
+                else
+                {
+                    switch (config._isFromMillennium)
                     {
                         case false when patch.MatchRegex.IsMatch(title):
                         case true when regex == title:
                             await InjectAsync(frame, patch, title);
                             return;
                     }
+                }
             }
         }
         else
@@ -333,7 +336,7 @@ public static partial class Injector
         fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
 
         var injectString =
-$@"function inject() {{
+            $@"function inject() {{
     if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
     const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
     element.id = '{frame.Id}{resourceType}';

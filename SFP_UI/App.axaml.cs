@@ -13,7 +13,6 @@ using FluentAvalonia.Styling;
 using ReactiveUI;
 using SFP.Models;
 using SFP_UI.Models;
-using SFP_UI.ViewModels;
 using SFP_UI.Views;
 using Settings = SFP.Properties.Settings;
 

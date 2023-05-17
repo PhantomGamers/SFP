@@ -29,10 +29,7 @@ public class SfpConfig
         {
             MatchRegexString = "https://store.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
         },
-        new PatchEntry
-        {
-            MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
-        },
+        new PatchEntry { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
         new PatchEntry
         {
             MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
@@ -48,7 +45,10 @@ public class SfpConfig
             MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
         // Friends List and Chat
-        new PatchEntry { MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js" },
+        new PatchEntry
+        {
+            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
+        },
         new PatchEntry
         {
             MatchRegexString = "^OverlayBrowser_Browser$",
@@ -59,10 +59,7 @@ public class SfpConfig
         {
             MatchRegexString = "^SP Overlay:", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
-        {
-            MatchRegexString = "Menu$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
-        },
+        new PatchEntry { MatchRegexString = "Menu$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new PatchEntry
         {
             MatchRegexString = @"Supernav$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
