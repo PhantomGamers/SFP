@@ -47,7 +47,6 @@ public partial class MainWindow : AppWindow
         // TODO: add Windows version to CoreWindow
         if (IsWindows11 && ActualThemeVariant != FluentAvaloniaTheme.HighContrastTheme)
         {
-            Log.Logger.Info("Enabling Mica effect");
             TryEnableMicaEffect();
         }
         else if (ActualThemeVariant != FluentAvaloniaTheme.HighContrastTheme)
