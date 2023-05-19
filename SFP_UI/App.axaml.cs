@@ -57,7 +57,7 @@ public class App : Application
     {
         await Task.Run(Steam.StartMonitorSteam);
 
-        if (Settings.Default.InjectOnAppStart && Steam.IsSteamWebHelperRunning)
+        if (Settings.Default.InjectOnAppStart)
         {
             await Task.Run(Steam.TryInject);
         }

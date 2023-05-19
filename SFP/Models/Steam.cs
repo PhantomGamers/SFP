@@ -16,7 +16,7 @@ public static class Steam
     private static Process? s_steamProcess;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
-    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 0 : 6;
+    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
     private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName("steamwebhelper");
