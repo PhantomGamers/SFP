@@ -332,8 +332,12 @@ public static partial class Injector
     private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
     {
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
+        if (!string.IsNullOrWhiteSpace(relativeSkinDir))
+        {
+            relativeSkinDir += '/';
+        }
         var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
-        fileRelativePath = $"{relativeSkinDir}/{fileRelativePath}";
+        fileRelativePath = $"{relativeSkinDir}{fileRelativePath}";
 
         var injectString =
             $@"function inject() {{
