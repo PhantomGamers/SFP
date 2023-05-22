@@ -345,7 +345,7 @@ public static partial class Injector
     const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
     element.id = '{frame.Id}{resourceType}';
     {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
-    element.type = '{(resourceType == "css" ? "text/css" : "text/javascript")}';
+    element.type = '{(resourceType == "css" ? "text/css" : "module")}';
     element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
     document.head.append(element);
 }}
