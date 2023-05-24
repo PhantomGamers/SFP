@@ -312,7 +312,7 @@ public static partial class Injector
             }
             else
             {
-                await InjectResourceAsync(frame, patch.TargetCss, tabFriendlyName);
+                await InjectResourceAsync(frame, patch.TargetCss, tabFriendlyName, patch.MatchRegexString);
             }
         }
 
@@ -324,12 +324,12 @@ public static partial class Injector
             }
             else
             {
-                await InjectResourceAsync(frame, patch.TargetJs, tabFriendlyName);
+                await InjectResourceAsync(frame, patch.TargetJs, tabFriendlyName, patch.MatchRegexString);
             }
         }
     }
 
-    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
+    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName, string patchName)
     {
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
         if (!string.IsNullOrWhiteSpace(relativeSkinDir))
@@ -362,7 +362,7 @@ if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') 
                 await Task.Delay(500);
             }
             await frame.EvaluateExpressionAsync(injectString);
-            Log.Logger.Info($"Injected {resourceType.ToUpper()} into {tabFriendlyName}");
+            Log.Logger.Info($"Injected {fileRelativePath} into {tabFriendlyName} from patch {patchName}");
         }
         catch (PuppeteerException e)
         {
