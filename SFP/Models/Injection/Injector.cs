@@ -304,9 +304,9 @@ public static partial class Injector
 
     private static async Task InjectAsync(Frame frame, PatchEntry patch, string tabFriendlyName)
     {
-        if (Properties.Settings.Default.InjectCSS)
+        if (Properties.Settings.Default.InjectCSS && !string.IsNullOrWhiteSpace(patch.TargetCss))
         {
-            if (string.IsNullOrWhiteSpace(patch.TargetCss) || !patch.TargetCss.EndsWith(".css"))
+            if (!patch.TargetCss.EndsWith(".css"))
             {
                 Log.Logger.Info("Target CSS file does not end in .css for patch " + patch.MatchRegexString);
             }
@@ -316,9 +316,9 @@ public static partial class Injector
             }
         }
 
-        if (Properties.Settings.Default.InjectJS)
+        if (Properties.Settings.Default.InjectJS && !string.IsNullOrWhiteSpace(patch.TargetJs))
         {
-            if (string.IsNullOrWhiteSpace(patch.TargetJs) || !patch.TargetJs.EndsWith(".js"))
+            if (!patch.TargetJs.EndsWith(".js"))
             {
                 Log.Logger.Info("Target Js file does not end in .js for patch " + patch.MatchRegexString);
             }
