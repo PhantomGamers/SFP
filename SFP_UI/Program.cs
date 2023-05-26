@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+using Bluegrams.Application;
 using FileWatcherEx;
 using NLog;
 using NLog.Targets;
@@ -33,10 +34,7 @@ internal static class Program
         LogManager.AutoShutdown = true;
         Target.Register("OutputControl", typeof(OutputControlTarget));
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-        _ = new Settings();
-        SFP.Properties.Settings.Default.Reload();
-        SFP.Properties.Settings.Default.DummySetting = true;
-        SFP.Properties.Settings.Default.Save();
+        InitSettings();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
     }
 
@@ -69,6 +67,15 @@ internal static class Program
     private static async void OnInstanceFileChanged(object? sender, FileChangedEvent e)
     {
         await Dispatcher.UIThread.InvokeAsync(MainWindow.ShowWindow);
+    }
+
+    private static void InitSettings()
+    {
+        PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
+        PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);
+        SFP.Properties.Settings.Default.Reload();
+        SFP.Properties.Settings.Default.DummySetting = true;
+        SFP.Properties.Settings.Default.Save();
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
