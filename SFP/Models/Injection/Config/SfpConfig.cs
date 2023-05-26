@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace SFP.Models.Injection.Config;
 
-public class PatchEntry
+public class PatchEntry : IEquatable<PatchEntry>
 {
     [JsonIgnore] private Regex? _matchRegex;
 
@@ -18,6 +18,25 @@ public class PatchEntry
     public string TargetJs { get; init; } = string.Empty;
 
     [JsonIgnore] public Regex MatchRegex => _matchRegex ??= new Regex(MatchRegexString, RegexOptions.Compiled);
+
+    public bool Equals(PatchEntry? entry)
+    {
+        if (entry == null) return false;
+        return MatchRegexString == entry.MatchRegexString && TargetCss == entry.TargetCss &&
+               TargetJs == entry.TargetJs;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null) return false;
+        if (obj is not PatchEntry entry) return false;
+        return Equals(entry);
+    }
+
+    public override int GetHashCode()
+    {
+        return MatchRegexString.GetHashCode() ^ TargetCss.GetHashCode() ^ TargetJs.GetHashCode();
+    }
 }
 
 public class SfpConfig
@@ -131,9 +150,14 @@ public class SfpConfig
                 json = JsonSerializer.Deserialize<SfpConfig>(jsonBytes);
                 if (json?.UseDefaultPatches ?? true)
                 {
-                    s_sfpConfig = DefaultConfig;
-                    Log.Logger.Info("Using default SFP skin config");
+                    var patches = json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
+                    s_sfpConfig = new SfpConfig
+                    {
+                        Patches = patches
+                    };
+                    Log.Logger.Info("Using default SFP skin config as base");
                 }
+
                 else
                 {
                     s_sfpConfig = json;
