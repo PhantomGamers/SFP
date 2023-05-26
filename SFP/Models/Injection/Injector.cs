@@ -362,7 +362,7 @@ if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') 
                 await Task.Delay(500);
             }
             await frame.EvaluateExpressionAsync(injectString);
-            Log.Logger.Info($"Injected {fileRelativePath} into {tabFriendlyName} from patch {patchName}");
+            Log.Logger.Info($"Injected {Path.GetFileName(fileRelativePath)} into {tabFriendlyName} from patch {patchName}");
         }
         catch (PuppeteerException e)
         {
