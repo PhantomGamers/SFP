@@ -31,15 +31,7 @@ public class PatchEntry : IEquatable<PatchEntry>
 
     public override bool Equals(object? obj)
     {
-        if (obj == null)
-        {
-            return false;
-        }
-        if (obj is not PatchEntry entry)
-        {
-            return false;
-        }
-        return Equals(entry);
+        return obj is PatchEntry entry && Equals(entry);
     }
 
     public override int GetHashCode()

@@ -153,11 +153,11 @@ public static class Steam
     }
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]
-    public static async Task StartSteam(string? args = null)
+    public static Task StartSteam(string? args = null)
     {
         if (IsSteamRunning)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         args ??= Settings.Default.SteamLaunchArgs;
@@ -166,7 +166,6 @@ public static class Steam
             args += " -cef-enable-debugging";
             args = args.Trim();
         }
-
 
         if (File.Exists(MillenniumPath))
         {
@@ -180,12 +179,13 @@ public static class Steam
             {
                 Log.Logger.Warn("Could not disable Millennium patcher, aborting as it is incompatible with SFP");
                 Log.Logger.Error(e);
-                return;
+                return Task.CompletedTask;
             }
         }
 
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
+        return Task.CompletedTask;
     }
 
     public static async void RunRestartSteam()
@@ -242,11 +242,12 @@ public static class Steam
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        if (Settings.Default.InjectOnSteamStart || s_injectOnce)
+        if (!Settings.Default.InjectOnSteamStart && !s_injectOnce)
         {
-            s_injectOnce = false;
-            await TryInject();
+            return;
         }
+        s_injectOnce = false;
+        await TryInject();
     }
 
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)

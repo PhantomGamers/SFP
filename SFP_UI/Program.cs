@@ -41,6 +41,7 @@ internal static class Program
             $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
         InitSettings();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
+        CloseFileStream();
     }
 
     private static bool EnforceSingleInstance()
@@ -58,6 +59,12 @@ internal static class Program
         }
         _ = Task.Run(WatchInstanceFile);
         return true;
+    }
+
+    private static void CloseFileStream()
+    {
+        s_fs?.Close();
+        s_fs = null;
     }
 
     private static void WatchInstanceFile()

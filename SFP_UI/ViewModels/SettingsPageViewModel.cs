@@ -38,7 +38,6 @@ public class SettingsPageViewModel : ViewModelBase
 
     public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
     {
-        Instance = this;
         if (appThemeComboBox != null)
         {
             appThemeComboBox.SelectionChanged += OnAppThemeSelectedChanged;
@@ -58,8 +57,6 @@ public class SettingsPageViewModel : ViewModelBase
     }
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
-
-    public static SettingsPageViewModel? Instance { get; private set; }
 
     public ReactiveCommand<Unit, Unit> SaveCommand { get; } = ReactiveCommand.Create(OnSaveCommand);
     public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
@@ -240,21 +237,6 @@ public class SettingsPageViewModel : ViewModelBase
                 "Continue?",
             PrimaryButtonText = "Yes",
             PrimaryButtonCommand = InjectWarningAcceptCommand,
-            SecondaryButtonText = "No"
-        };
-        await dialog.ShowAsync();
-    }
-
-    public static async void ShowRestartDialog()
-    {
-        var dialog = new ContentDialog
-        {
-            Title = "Warning",
-            Content =
-                "You need to restart Steam for skin changes to take effect.\n" +
-                "Restart now?",
-            PrimaryButtonText = "Yes",
-            PrimaryButtonCommand = ReactiveCommand.Create(Steam.RunRestartSteam),
             SecondaryButtonText = "No"
         };
         await dialog.ShowAsync();
