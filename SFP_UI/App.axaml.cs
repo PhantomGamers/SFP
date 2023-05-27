@@ -38,8 +38,6 @@ public class App : Application
         {
             StartMainWindow();
         }
-        Dispatcher.UIThread.Post(() => Log.Logger.Info(
-            $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}"));
 
         base.OnFrameworkInitializationCompleted();
 

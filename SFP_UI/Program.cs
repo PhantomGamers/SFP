@@ -1,5 +1,6 @@
 #region
 
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
@@ -9,6 +10,7 @@ using FileWatcherEx;
 using NLog;
 using NLog.Targets;
 using SFP.Models;
+using SFP_UI.Models;
 using SFP_UI.Targets;
 using SFP_UI.Views;
 
@@ -34,6 +36,8 @@ internal static class Program
         LogManager.AutoShutdown = true;
         Target.Register("OutputControl", typeof(OutputControlTarget));
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        Log.Logger.Info(
+            $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
         InitSettings();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
     }
