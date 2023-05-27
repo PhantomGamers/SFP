@@ -15,6 +15,7 @@ public static class Steam
 {
     private static FileSystemWatcherEx? s_watcher;
     private static Process? s_steamProcess;
+    private static bool s_injectOnce;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
     private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
@@ -245,8 +246,9 @@ public static class Steam
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        if (Settings.Default.InjectOnSteamStart)
+        if (Settings.Default.InjectOnSteamStart || s_injectOnce)
         {
+            s_injectOnce = false;
             await TryInject();
         }
     }
@@ -283,8 +285,9 @@ public static class Steam
             if (Settings.Default.ForceSteamArgs)
             {
                 var argumentsMissing = await CheckForMissingArgumentsAsync();
-                if (argumentsMissing && Settings.Default.InjectOnSteamStart)
+                if (argumentsMissing)
                 {
+                    s_injectOnce = true;
                     return;
                 }
             }
