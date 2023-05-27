@@ -322,7 +322,7 @@ public static class Steam
             return false;
         }
 
-        var cmdLine = Utils.GetCommandLine(SteamProcess);
+        var cmdLine = GetCommandLine();
         if (!cmdLine.Any())
         {
             Log.Logger.Error("Arguments are empty, cannot check arguments");
