@@ -27,7 +27,7 @@
                 <CheckBox IsChecked="{Binding StartMinimized}">Start minimized</CheckBox>
                 <CheckBox IsChecked="{Binding InjectOnAppStart}">Inject on app start</CheckBox>
                 <CheckBox IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
-                <CheckBox IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run On boot</CheckBox>
+                <CheckBox IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run on boot</CheckBox>
                 <Label Margin="0, 10">App theme</Label>
                 <ComboBox Margin="0, 0, 0, 10" Name="AppThemeComboBox" Width="200" SelectedIndex="2">
                     <ComboBoxItem>Dark</ComboBoxItem>
