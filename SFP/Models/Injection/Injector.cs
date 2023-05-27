@@ -3,6 +3,7 @@
 using System.Text.RegularExpressions;
 using PuppeteerSharp;
 using SFP.Models.Injection.Config;
+using SFP.Properties;
 
 #endregion
 
@@ -30,7 +31,7 @@ public static partial class Injector
             return;
         }
 
-        if (!Properties.Settings.Default.InjectJS && !Properties.Settings.Default.InjectCSS)
+        if (!Settings.Default.InjectJS && !Settings.Default.InjectCSS)
         {
             Log.Logger.Warn("No injection type is enabled, skipping injection");
             return;
@@ -304,32 +305,33 @@ public static partial class Injector
 
     private static async Task InjectAsync(Frame frame, PatchEntry patch, string tabFriendlyName)
     {
-        if (Properties.Settings.Default.InjectCSS)
+        if (Settings.Default.InjectCSS && !string.IsNullOrWhiteSpace(patch.TargetCss))
         {
-            if (string.IsNullOrWhiteSpace(patch.TargetCss) || !patch.TargetCss.EndsWith(".css"))
+            if (!patch.TargetCss.EndsWith(".css"))
             {
                 Log.Logger.Info("Target CSS file does not end in .css for patch " + patch.MatchRegexString);
             }
             else
             {
-                await InjectResourceAsync(frame, patch.TargetCss, tabFriendlyName);
+                await InjectResourceAsync(frame, patch.TargetCss, tabFriendlyName, patch.MatchRegexString);
             }
         }
 
-        if (Properties.Settings.Default.InjectJS)
+        if (Settings.Default.InjectJS && !string.IsNullOrWhiteSpace(patch.TargetJs))
         {
-            if (string.IsNullOrWhiteSpace(patch.TargetJs) || !patch.TargetJs.EndsWith(".js"))
+            if (!patch.TargetJs.EndsWith(".js"))
             {
                 Log.Logger.Info("Target Js file does not end in .js for patch " + patch.MatchRegexString);
             }
             else
             {
-                await InjectResourceAsync(frame, patch.TargetJs, tabFriendlyName);
+                await InjectResourceAsync(frame, patch.TargetJs, tabFriendlyName, patch.MatchRegexString);
             }
         }
     }
 
-    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName)
+    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName,
+        string patchName)
     {
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
         if (!string.IsNullOrWhiteSpace(relativeSkinDir))
@@ -362,7 +364,7 @@ if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') 
                 await Task.Delay(500);
             }
             await frame.EvaluateExpressionAsync(injectString);
-            Log.Logger.Info($"Injected {resourceType.ToUpper()} into {tabFriendlyName}");
+            Log.Logger.Info($"Injected {Path.GetFileName(fileRelativePath)} into {tabFriendlyName} from patch {patchName}");
         }
         catch (PuppeteerException e)
         {

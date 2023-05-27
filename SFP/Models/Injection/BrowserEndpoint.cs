@@ -24,7 +24,19 @@ public struct BrowserEndpoint
         }
         catch (FlurlHttpException e)
         {
-            Log.Logger.Error("Could not fetch browser, is Steam running with -cef-enable-debugging ?");
+            var cmdLine = Steam.GetCommandLine();
+            if (!cmdLine.Any())
+            {
+                Log.Logger.Error("Could not fetch browser, is Steam running with -cef-enable-debugging ?");
+            }
+            else if (!cmdLine.Contains("-cef-enable-debugging"))
+            {
+                Log.Logger.Error("Could not fetch browser, Steam is not running with -cef-enable-debugging");
+            }
+            else
+            {
+                Log.Logger.Error("Could not fetch browser, SFP possibly tried to inject too early");
+            }
             Log.Logger.Debug(e);
             throw;
         }

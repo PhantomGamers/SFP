@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using Microsoft.Win32;
 using WindowsShortcutFactory;
 using WmiLight;
 
@@ -45,6 +46,21 @@ public static class Utils
         using WmiConnection con = new();
         var query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
         var commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
-        return commandLine != null ? commandLine.Split(' ').ToList() : new List<string>();
+        return commandLine != null
+            ? commandLine.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList()
+            : new List<string>();
+    }
+
+    public static object? GetRegistryData(string aKey, string aValueName)
+    {
+        using var registryKey = Registry.CurrentUser.OpenSubKey(aKey);
+        object? value = null;
+        var regValue = registryKey?.GetValue(aValueName);
+        if (regValue != null)
+        {
+            value = regValue;
+        }
+
+        return value;
     }
 }

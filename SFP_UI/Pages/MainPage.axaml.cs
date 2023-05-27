@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using ReactiveUI;
 using SFP.Models;
 using SFP.Models.Injection.Config;
+using SFP.Properties;
 using SFP_UI.ViewModels;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 
@@ -18,7 +18,7 @@ public partial class MainPage : UserControl
     {
         InitializeComponent();
         DataContext = new MainPageViewModel();
-        OpenFileDropDownButton.Flyout!.Opened += (sender, args) => PopulateOpenFileDropDownButton();
+        OpenFileDropDownButton.Flyout!.Opened += (_, _) => PopulateOpenFileDropDownButton();
     }
 
 

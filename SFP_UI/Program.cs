@@ -1,13 +1,17 @@
 #region
 
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+using Bluegrams.Application;
 using FileWatcherEx;
 using NLog;
 using NLog.Targets;
 using SFP.Models;
+using SFP.Properties;
+using SFP_UI.Models;
 using SFP_UI.Targets;
 using SFP_UI.Views;
 
@@ -33,11 +37,11 @@ internal static class Program
         LogManager.AutoShutdown = true;
         Target.Register("OutputControl", typeof(OutputControlTarget));
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-        _ = new Settings();
-        SFP.Properties.Settings.Default.Reload();
-        SFP.Properties.Settings.Default.DummySetting = true;
-        SFP.Properties.Settings.Default.Save();
+        Log.Logger.Info(
+            $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
+        InitSettings();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
+        CloseFileStream();
     }
 
     private static bool EnforceSingleInstance()
@@ -57,6 +61,12 @@ internal static class Program
         return true;
     }
 
+    private static void CloseFileStream()
+    {
+        s_fs?.Close();
+        s_fs = null;
+    }
+
     private static void WatchInstanceFile()
     {
         var tempPath = Path.GetTempPath();
@@ -69,6 +79,15 @@ internal static class Program
     private static async void OnInstanceFileChanged(object? sender, FileChangedEvent e)
     {
         await Dispatcher.UIThread.InvokeAsync(MainWindow.ShowWindow);
+    }
+
+    private static void InitSettings()
+    {
+        PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
+        PortableJsonSettingsProvider.ApplyProvider(Settings.Default);
+        Settings.Default.Reload();
+        Settings.Default.DummySetting = true;
+        Settings.Default.Save();
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

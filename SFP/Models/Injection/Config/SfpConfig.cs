@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace SFP.Models.Injection.Config;
 
-public class PatchEntry
+public class PatchEntry : IEquatable<PatchEntry>
 {
     [JsonIgnore] private Regex? _matchRegex;
 
@@ -18,6 +18,26 @@ public class PatchEntry
     public string TargetJs { get; init; } = string.Empty;
 
     [JsonIgnore] public Regex MatchRegex => _matchRegex ??= new Regex(MatchRegexString, RegexOptions.Compiled);
+
+    public bool Equals(PatchEntry? entry)
+    {
+        if (entry == null)
+        {
+            return false;
+        }
+        return MatchRegexString == entry.MatchRegexString && TargetCss == entry.TargetCss &&
+               TargetJs == entry.TargetJs;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return this.GetType() == obj?.GetType() && Equals(obj as PatchEntry);
+    }
+
+    public override int GetHashCode()
+    {
+        return MatchRegexString.GetHashCode() ^ TargetCss.GetHashCode() ^ TargetJs.GetHashCode();
+    }
 }
 
 public class SfpConfig
@@ -88,8 +108,8 @@ public class SfpConfig
         },
         new PatchEntry
         {
-        // Steam Dialog popups (Settings, Game Properties, etc)
-        MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            // Steam Dialog popups (Settings, Game Properties, etc)
+            MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
         new PatchEntry
         {
@@ -131,9 +151,11 @@ public class SfpConfig
                 json = JsonSerializer.Deserialize<SfpConfig>(jsonBytes);
                 if (json?.UseDefaultPatches ?? true)
                 {
-                    s_sfpConfig = DefaultConfig;
-                    Log.Logger.Info("Using default SFP skin config");
+                    var patches = json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
+                    s_sfpConfig = new SfpConfig { Patches = patches };
+                    Log.Logger.Info("Using default SFP skin config as base");
                 }
+
                 else
                 {
                     s_sfpConfig = json;

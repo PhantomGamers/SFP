@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Models.Injection.Config;
+using SFP.Properties;
 using SFP_UI.ViewModels;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 
@@ -19,7 +19,7 @@ public partial class SettingsPage : UserControl
         InitializeComponent();
         DataContext = new SettingsPageViewModel(AppThemeComboBox);
         PopulateSteamSkinComboBox();
-        SteamSkinComboBox.DropDownOpened += (sender, args) => PopulateSteamSkinComboBox();
+        SteamSkinComboBox.DropDownOpened += (_, _) => PopulateSteamSkinComboBox();
         SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;
     }
 

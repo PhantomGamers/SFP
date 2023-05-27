@@ -2,7 +2,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -12,9 +11,9 @@ using Avalonia.Threading;
 using FluentAvalonia.Styling;
 using ReactiveUI;
 using SFP.Models;
+using SFP.Properties;
 using SFP_UI.Models;
 using SFP_UI.Views;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 
@@ -38,8 +37,6 @@ public class App : Application
         {
             StartMainWindow();
         }
-        Dispatcher.UIThread.Post(() => Log.Logger.Info(
-            $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}"));
 
         base.OnFrameworkInitializationCompleted();
 

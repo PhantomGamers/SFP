@@ -12,14 +12,15 @@ For the old version of SFP that works with Steam Stable, see [here](https://gith
 
 1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
    operating system.
+   - If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip release.
 2. Run the SFP_UI application.
-3. If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip release.
-4. By default, SFP_UI will automatically wait for Steam to start and inject, or inject if Steam is already running.
-5. For full functionality, **SFP must be running with its injector started as long as Steam is running**.
-6. Steam must be running with the `-cef-enable-debugging` argument for SFP to work.
-7. If Steam is started with SFP, it will do this automatically. Otherwise, on Windows only, you can use the "Force Steam
-   arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
-8. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
+3. By default, SFP_UI will automatically wait for Steam to start and inject, or inject if Steam is already running.
+4. For full functionality, **SFP must be running with its injector started as long as Steam is running**.
+5. Steam must be running with the `-cef-enable-debugging` argument for SFP to work.
+    - If Steam is started with SFP, it will do this automatically. Otherwise, you can use the "Force Steam
+      arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
+    - This setting is enabled by default
+6. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
 
 ## Features
 
@@ -155,7 +156,8 @@ page if the regex matches.
 
 An entry can have both a TargetCss and a TargetJs key, or just one of them.
 
-Each target can only have one Css and one Js file injected at a time, with the first match taking precedence, so order your patches correctly.
+Each target can only have one Css and one Js file injected at a time, with the first match taking precedence, so order
+your patches correctly.
 
 If you would like to use SFP's default config you can simply omit the skin.json file or include this:
 
@@ -164,6 +166,8 @@ If you would like to use SFP's default config you can simply omit the skin.json 
     "UseDefaultPatches": true
 }
 ```
+
+If that key is included along with custom patches, the custom patches will be applied first, followed by the default patches.
 
 ### Matching against pages with variable titles
 
@@ -188,7 +192,6 @@ visit <http://localhost:8080> in your web browser.
 
 ## Todo
 
-- Add Force Steam Arguments support for Linux and Mac
 - Add ability to install and customize themes directly from SFP
 
 ## Known Issues

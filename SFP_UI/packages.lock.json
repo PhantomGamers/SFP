@@ -87,9 +87,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.1.4, )",
-        "resolved": "5.1.4",
-        "contentHash": "Ki0XThITEd//RrQ21yi1HB/Uid4pzTRE5YLvEpk91d0vDXp3OPtVCvWgrYsqqcpTwiipFSOLSsU1RblaexrFiA=="
+        "requested": "[5.1.5, )",
+        "resolved": "5.1.5",
+        "contentHash": "ZITyL6pD8f7w6ahHoP7DC4KpsyZMVuSsP7lmMo9WOYg/65/yEqpCteEOWI9lOIqJB2i8/obIj1ivIAOiMt4+eg=="
       },
       "Semver": {
         "type": "Direct",
@@ -1506,10 +1506,10 @@
         "type": "Project",
         "dependencies": {
           "BepInEx.AssemblyPublicizer.MSBuild": "[0.4.1, )",
-          "FileWatcherEx": "[2.4.0, )",
+          "FileWatcherEx": "[2.5.0, )",
           "Flurl.Http": "[4.0.0-pre3, )",
           "Gameloop.Vdf": "[0.6.2, )",
-          "NLog": "[5.1.4, )",
+          "NLog": "[5.1.5, )",
           "PortableJsonSettingsProvider": "[0.2.1, )",
           "PuppeteerSharp": "[6.2.0, )",
           "WindowsShortcutFactory": "[1.1.0, )",
@@ -1524,9 +1524,9 @@
       },
       "FileWatcherEx": {
         "type": "CentralTransitive",
-        "requested": "[2.4.0, )",
-        "resolved": "2.4.0",
-        "contentHash": "EcXW+K8sw+0oGwGOw/KyX7Yt7L9w1mmuqKo02b9Q/kdrLdpezNRIQY7EmoJpsMXeBbzN/oH/e1d4cc1CtF4new=="
+        "requested": "[2.5.0, )",
+        "resolved": "2.5.0",
+        "contentHash": "XmNJt94gt/xlr0RY5w6gKcZhwQ2wNSA7j+VqakpEHY3kk8dXVnYShNZMBVyEPUcDdCzFrI+4d7BvGnmDHB/m/w=="
       },
       "Flurl.Http": {
         "type": "CentralTransitive",

@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using FileWatcherEx;
 using Gameloop.Vdf;
 using SFP.Models.Injection;
+using SFP.Properties;
 
 #endregion
 
@@ -14,13 +15,19 @@ public static class Steam
 {
     private static FileSystemWatcherEx? s_watcher;
     private static Process? s_steamProcess;
+    private static bool s_injectOnce;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
     private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
-    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName("steamwebhelper");
-    private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
+
+    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
+        .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+    private static Process? SteamProcess => Process.GetProcessesByName("steam")
+        .FirstOrDefault(p => p.ProcessName.Equals("steam", StringComparison.OrdinalIgnoreCase));
+
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
     private static string? SteamRootDir
@@ -48,9 +55,9 @@ public static class Steam
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.SteamDirectory))
+            if (!string.IsNullOrWhiteSpace(Settings.Default.SteamDirectory))
             {
-                return Properties.Settings.Default.SteamDirectory;
+                return Settings.Default.SteamDirectory;
             }
 
             if (OperatingSystem.IsWindows())
@@ -66,7 +73,7 @@ public static class Steam
         }
     }
 
-    public static string SteamUiDir => Path.Join(SteamDir, "steamui");
+    private static string SteamUiDir => Path.Join(SteamDir, "steamui");
 
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
@@ -80,7 +87,7 @@ public static class Steam
     public static string GetRelativeSkinDir()
     {
         string relativeSkinDir;
-        var selectedSkin = Properties.Settings.Default.SelectedSkin;
+        var selectedSkin = Settings.Default.SelectedSkin;
         if (string.IsNullOrWhiteSpace(selectedSkin) || selectedSkin == "steamui")
         {
             relativeSkinDir = string.Empty;
@@ -105,7 +112,7 @@ public static class Steam
     {
         if (OperatingSystem.IsWindows())
         {
-            return Utils.GetRegistryData(key, valueName);
+            return Windows.Utils.GetRegistryData(key, valueName);
         }
 
         try
@@ -146,20 +153,19 @@ public static class Steam
     }
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]
-    public static async Task StartSteam(string? args = null)
+    public static Task StartSteam(string? args = null)
     {
         if (IsSteamRunning)
         {
-            return;
+            return Task.CompletedTask;
         }
 
-        args ??= Properties.Settings.Default.SteamLaunchArgs;
+        args ??= Settings.Default.SteamLaunchArgs;
         if (!args.Contains("-cef-enable-debugging"))
         {
             args += " -cef-enable-debugging";
             args = args.Trim();
         }
-
 
         if (File.Exists(MillenniumPath))
         {
@@ -173,16 +179,13 @@ public static class Steam
             {
                 Log.Logger.Warn("Could not disable Millennium patcher, aborting as it is incompatible with SFP");
                 Log.Logger.Error(e);
-                return;
+                return Task.CompletedTask;
             }
         }
 
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
-        if (Properties.Settings.Default.InjectOnSteamStart)
-        {
-            await TryInject();
-        }
+        return Task.CompletedTask;
     }
 
     public static async void RunRestartSteam()
@@ -190,7 +193,7 @@ public static class Steam
         await Task.Run(() => RestartSteam());
     }
 
-    public static async Task RestartSteam(string? args = null)
+    private static async Task RestartSteam(string? args = null)
     {
         if (IsSteamRunning)
         {
@@ -239,15 +242,22 @@ public static class Steam
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        if (Properties.Settings.Default.InjectOnSteamStart)
+        if (!Settings.Default.InjectOnSteamStart && !s_injectOnce)
         {
-            await TryInject();
+            return;
         }
+        s_injectOnce = false;
+        await TryInject();
     }
 
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
     {
         SteamStopped?.Invoke(null, EventArgs.Empty);
+    }
+
+    public static List<string> GetCommandLine()
+    {
+        return Utils.GetCommandLine(SteamProcess);
     }
 
     public static async void RunTryInject()
@@ -269,17 +279,12 @@ public static class Steam
                 return;
             }
 
-            if (OperatingSystem.IsWindows() && Properties.Settings.Default.ForceSteamArgs)
+            if (Settings.Default.ForceSteamArgs)
             {
-                var argumentMissing = Properties.Settings.Default.SteamLaunchArgs.Split(' ')
-#pragma warning disable CA1416
-                    .Any(arg => !Windows.Utils.GetCommandLine(SteamProcess!).Contains(arg));
-#pragma warning restore CA1416
-
-                if (argumentMissing)
+                var argumentsMissing = await CheckForMissingArgumentsAsync();
+                if (argumentsMissing)
                 {
-                    Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
-                    await RestartSteam();
+                    s_injectOnce = true;
                     return;
                 }
             }
@@ -292,11 +297,45 @@ public static class Steam
                 }
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
+
             await Injector.StartInjectionAsync(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Warn("Failed to inject");
+            Log.Logger.Error(ex.ToString());
         }
         finally
         {
             s_semaphore.Release();
         }
+    }
+
+    private static async Task<bool> CheckForMissingArgumentsAsync()
+    {
+        if (!IsSteamRunning)
+        {
+            Log.Logger.Error("Steam is not running, cannot check arguments");
+            return false;
+        }
+
+        var cmdLine = GetCommandLine();
+        if (!cmdLine.Any())
+        {
+            Log.Logger.Error("Arguments are empty, cannot check arguments");
+            return false;
+        }
+
+        var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
+            .Any(arg => !cmdLine.Contains(arg));
+
+        if (!argumentMissing)
+        {
+            return false;
+        }
+
+        Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
+        await RestartSteam();
+        return true;
     }
 }
