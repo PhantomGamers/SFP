@@ -166,6 +166,8 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 }
 ```
 
+If that key is included along with custom patches, the custom patches will be applied first, followed by the default patches.
+
 ### Matching against pages with variable titles
 
 Certain pages will have titles that change either depending on the user's language settings or some other factor.
