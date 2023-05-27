@@ -282,47 +282,55 @@ public static class Steam
 
             if (Settings.Default.ForceSteamArgs)
             {
-                var proc = SteamProcess;
-                if (proc == null)
+                var argumentsMissing = await CheckForMissingArgumentsAsync();
+                if (argumentsMissing && Settings.Default.InjectOnSteamStart)
                 {
-                    Log.Logger.Error("Steam process is null, cannot check arguments");
                     return;
-                }
-
-                var cmdLine = Utils.GetCommandLine(proc);
-                if (!cmdLine.Any())
-                {
-                    Log.Logger.Error("Arguments are empty, cannot check arguments");
-                    return;
-                }
-
-                var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
-                    .Any(arg => !cmdLine.Contains(arg));
-
-                if (argumentMissing)
-                {
-                    Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
-                    await RestartSteam();
-                    if (Settings.Default.InjectOnSteamStart)
-                    {
-                        return;
-                    }
                 }
             }
 
-            while (!IsSteamWebHelperRunning)
+            while (!IsSteamWebHelperRunning && IsSteamRunning)
             {
-                if (!IsSteamRunning)
-                {
-                    return;
-                }
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
+
             await Injector.StartInjectionAsync(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Warn("Failed to inject");
+            Log.Logger.Error(ex.ToString());
         }
         finally
         {
             s_semaphore.Release();
         }
+    }
+
+    private static async Task<bool> CheckForMissingArgumentsAsync()
+    {
+        if (!IsSteamRunning)
+        {
+            Log.Logger.Error("Steam is not running, cannot check arguments");
+            return false;
+        }
+
+        var cmdLine = Utils.GetCommandLine(SteamProcess);
+        if (!cmdLine.Any())
+        {
+            Log.Logger.Error("Arguments are empty, cannot check arguments");
+            return false;
+        }
+
+        var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
+            .Any(arg => !cmdLine.Contains(arg));
+
+        if (argumentMissing)
+        {
+            Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
+            await RestartSteam();
+            return true;
+        }
+        return false;
     }
 }
