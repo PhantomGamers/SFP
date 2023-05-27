@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
 
 namespace SFP.Models.Unix;
@@ -12,10 +13,11 @@ public static class Utils
         var processName = process.ProcessName;
         var command = $"pgrep -x {processName} | xargs -r ps -o command -p | tail -n 1";
         var output = RunCommand(command);
-        var lines = output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        var lines = output.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         return lines.Select(line => line.Trim()).Where(arg => !string.IsNullOrWhiteSpace(arg)).ToList();
     }
 
+    [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]
     private static string RunCommand(string command)
     {
         var output = string.Empty;
