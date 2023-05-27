@@ -289,8 +289,12 @@ public static class Steam
                 }
             }
 
-            while (!IsSteamWebHelperRunning && IsSteamRunning)
+            while (!IsSteamWebHelperRunning)
             {
+                if (!IsSteamRunning)
+                {
+                    return;
+                }
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
@@ -325,12 +329,13 @@ public static class Steam
         var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
             .Any(arg => !cmdLine.Contains(arg));
 
-        if (argumentMissing)
+        if (!argumentMissing)
         {
-            Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
-            await RestartSteam();
-            return true;
+            return false;
         }
-        return false;
+
+        Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
+        await RestartSteam();
+        return true;
     }
 }
