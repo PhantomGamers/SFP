@@ -256,6 +256,11 @@ public static class Steam
         SteamStopped?.Invoke(null, EventArgs.Empty);
     }
 
+    public static List<string> GetCommandLine()
+    {
+        return Utils.GetCommandLine(SteamProcess);
+    }
+
     public static async void RunTryInject()
     {
         await Task.Run(TryInject);

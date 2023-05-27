@@ -55,8 +55,13 @@ public static class Utils
         }
     }
 
-    public static List<string> GetCommandLine(Process process)
+    public static List<string> GetCommandLine(Process? process)
     {
+        if (process == null)
+        {
+            return new List<string>();
+        }
+
         if (OperatingSystem.IsWindows())
         {
             return Windows.Utils.GetCommandLine(process);
