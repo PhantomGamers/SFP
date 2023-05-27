@@ -186,10 +186,6 @@ public static class Steam
 
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
-        if (Settings.Default.InjectOnSteamStart)
-        {
-            await TryInject();
-        }
     }
 
     public static async void RunRestartSteam()
