@@ -8,8 +8,8 @@ using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using SFP.Models;
+using SFP.Properties;
 using SFP_UI.Views;
-using Settings = SFP.Properties.Settings;
 using Utils = SFP.Models.Windows.Utils;
 
 // ReSharper disable MemberCanBePrivate.Global

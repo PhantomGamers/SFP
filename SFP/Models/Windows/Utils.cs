@@ -45,6 +45,8 @@ public static class Utils
         using WmiConnection con = new();
         var query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
         var commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
-        return commandLine != null ? commandLine.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+        return commandLine != null
+            ? commandLine.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList()
+            : new List<string>();
     }
 }

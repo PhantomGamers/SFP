@@ -155,7 +155,8 @@ page if the regex matches.
 
 An entry can have both a TargetCss and a TargetJs key, or just one of them.
 
-Each target can only have one Css and one Js file injected at a time, with the first match taking precedence, so order your patches correctly.
+Each target can only have one Css and one Js file injected at a time, with the first match taking precedence, so order
+your patches correctly.
 
 If you would like to use SFP's default config you can simply omit the skin.json file or include this:
 

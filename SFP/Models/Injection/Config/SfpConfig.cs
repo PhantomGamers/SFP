@@ -21,15 +21,24 @@ public class PatchEntry : IEquatable<PatchEntry>
 
     public bool Equals(PatchEntry? entry)
     {
-        if (entry == null) return false;
+        if (entry == null)
+        {
+            return false;
+        }
         return MatchRegexString == entry.MatchRegexString && TargetCss == entry.TargetCss &&
                TargetJs == entry.TargetJs;
     }
 
     public override bool Equals(object? obj)
     {
-        if (obj == null) return false;
-        if (obj is not PatchEntry entry) return false;
+        if (obj == null)
+        {
+            return false;
+        }
+        if (obj is not PatchEntry entry)
+        {
+            return false;
+        }
         return Equals(entry);
     }
 
@@ -107,8 +116,8 @@ public class SfpConfig
         },
         new PatchEntry
         {
-        // Steam Dialog popups (Settings, Game Properties, etc)
-        MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            // Steam Dialog popups (Settings, Game Properties, etc)
+            MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
         new PatchEntry
         {
@@ -151,10 +160,7 @@ public class SfpConfig
                 if (json?.UseDefaultPatches ?? true)
                 {
                     var patches = json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
-                    s_sfpConfig = new SfpConfig
-                    {
-                        Patches = patches
-                    };
+                    s_sfpConfig = new SfpConfig { Patches = patches };
                     Log.Logger.Info("Using default SFP skin config as base");
                 }
 

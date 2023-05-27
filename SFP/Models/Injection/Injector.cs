@@ -3,6 +3,7 @@
 using System.Text.RegularExpressions;
 using PuppeteerSharp;
 using SFP.Models.Injection.Config;
+using SFP.Properties;
 
 #endregion
 
@@ -30,7 +31,7 @@ public static partial class Injector
             return;
         }
 
-        if (!Properties.Settings.Default.InjectJS && !Properties.Settings.Default.InjectCSS)
+        if (!Settings.Default.InjectJS && !Settings.Default.InjectCSS)
         {
             Log.Logger.Warn("No injection type is enabled, skipping injection");
             return;
@@ -304,7 +305,7 @@ public static partial class Injector
 
     private static async Task InjectAsync(Frame frame, PatchEntry patch, string tabFriendlyName)
     {
-        if (Properties.Settings.Default.InjectCSS && !string.IsNullOrWhiteSpace(patch.TargetCss))
+        if (Settings.Default.InjectCSS && !string.IsNullOrWhiteSpace(patch.TargetCss))
         {
             if (!patch.TargetCss.EndsWith(".css"))
             {
@@ -316,7 +317,7 @@ public static partial class Injector
             }
         }
 
-        if (Properties.Settings.Default.InjectJS && !string.IsNullOrWhiteSpace(patch.TargetJs))
+        if (Settings.Default.InjectJS && !string.IsNullOrWhiteSpace(patch.TargetJs))
         {
             if (!patch.TargetJs.EndsWith(".js"))
             {
@@ -329,7 +330,8 @@ public static partial class Injector
         }
     }
 
-    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName, string patchName)
+    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName,
+        string patchName)
     {
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
         if (!string.IsNullOrWhiteSpace(relativeSkinDir))

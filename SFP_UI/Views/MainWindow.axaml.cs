@@ -9,10 +9,9 @@ using Avalonia.Styling;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Media;
 using FluentAvalonia.UI.Windowing;
-using SFP.Models;
+using SFP.Properties;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 

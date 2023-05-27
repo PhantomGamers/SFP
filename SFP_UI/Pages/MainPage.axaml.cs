@@ -5,8 +5,8 @@ using Avalonia.Controls;
 using ReactiveUI;
 using SFP.Models;
 using SFP.Models.Injection.Config;
+using SFP.Properties;
 using SFP_UI.ViewModels;
-using Settings = SFP.Properties.Settings;
 
 #endregion
 

@@ -10,6 +10,7 @@ using FileWatcherEx;
 using NLog;
 using NLog.Targets;
 using SFP.Models;
+using SFP.Properties;
 using SFP_UI.Models;
 using SFP_UI.Targets;
 using SFP_UI.Views;
@@ -76,10 +77,10 @@ internal static class Program
     private static void InitSettings()
     {
         PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
-        PortableJsonSettingsProvider.ApplyProvider(SFP.Properties.Settings.Default);
-        SFP.Properties.Settings.Default.Reload();
-        SFP.Properties.Settings.Default.DummySetting = true;
-        SFP.Properties.Settings.Default.Save();
+        PortableJsonSettingsProvider.ApplyProvider(Settings.Default);
+        Settings.Default.Reload();
+        Settings.Default.DummySetting = true;
+        Settings.Default.Save();
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
