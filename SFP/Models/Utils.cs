@@ -1,8 +1,6 @@
 #region
 
 using System.Diagnostics;
-using System.Runtime.Versioning;
-using Microsoft.Win32;
 
 #endregion
 
@@ -10,20 +8,6 @@ namespace SFP.Models;
 
 public static class Utils
 {
-    [SupportedOSPlatform("windows")]
-    public static object? GetRegistryData(string aKey, string aValueName)
-    {
-        using var registryKey = Registry.CurrentUser.OpenSubKey(aKey);
-        object? value = null;
-        var regValue = registryKey?.GetValue(aValueName);
-        if (regValue != null)
-        {
-            value = regValue;
-        }
-
-        return value;
-    }
-
     public static void OpenUrl(string url)
     {
         try

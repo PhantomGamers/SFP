@@ -112,7 +112,7 @@ public static class Steam
     {
         if (OperatingSystem.IsWindows())
         {
-            return Utils.GetRegistryData(key, valueName);
+            return Windows.Utils.GetRegistryData(key, valueName);
         }
 
         try
