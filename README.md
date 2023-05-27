@@ -188,7 +188,6 @@ visit <http://localhost:8080> in your web browser.
 
 ## Todo
 
-- Add Force Steam Arguments support for Linux and Mac
 - Add ability to install and customize themes directly from SFP
 
 ## Known Issues
