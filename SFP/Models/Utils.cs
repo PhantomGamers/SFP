@@ -1,6 +1,7 @@
 #region
 
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using Microsoft.Win32;
 
@@ -52,5 +53,20 @@ public static class Utils
                 throw;
             }
         }
+    }
+
+    public static List<string> GetCommandLine(Process process)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return Windows.Utils.GetCommandLine(process);
+        }
+
+        if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
+        {
+            return Unix.Utils.GetCommandLine(process);
+        }
+
+        return new List<string>();
     }
 }

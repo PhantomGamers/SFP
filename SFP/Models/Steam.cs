@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using FileWatcherEx;
 using Gameloop.Vdf;
 using SFP.Models.Injection;
+using SFP.Properties;
 
 #endregion
 
@@ -19,8 +20,13 @@ public static class Steam
     private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
-    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName("steamwebhelper");
-    private static Process? SteamProcess => Process.GetProcessesByName("steam").FirstOrDefault();
+
+    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
+        .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+    private static Process? SteamProcess => Process.GetProcessesByName("steam")
+        .FirstOrDefault(p => p.ProcessName.Equals("steam", StringComparison.OrdinalIgnoreCase));
+
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
     private static string? SteamRootDir
@@ -48,9 +54,9 @@ public static class Steam
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.SteamDirectory))
+            if (!string.IsNullOrWhiteSpace(Settings.Default.SteamDirectory))
             {
-                return Properties.Settings.Default.SteamDirectory;
+                return Settings.Default.SteamDirectory;
             }
 
             if (OperatingSystem.IsWindows())
@@ -66,7 +72,7 @@ public static class Steam
         }
     }
 
-    public static string SteamUiDir => Path.Join(SteamDir, "steamui");
+    private static string SteamUiDir => Path.Join(SteamDir, "steamui");
 
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
@@ -80,7 +86,7 @@ public static class Steam
     public static string GetRelativeSkinDir()
     {
         string relativeSkinDir;
-        var selectedSkin = Properties.Settings.Default.SelectedSkin;
+        var selectedSkin = Settings.Default.SelectedSkin;
         if (string.IsNullOrWhiteSpace(selectedSkin) || selectedSkin == "steamui")
         {
             relativeSkinDir = string.Empty;
@@ -153,7 +159,7 @@ public static class Steam
             return;
         }
 
-        args ??= Properties.Settings.Default.SteamLaunchArgs;
+        args ??= Settings.Default.SteamLaunchArgs;
         if (!args.Contains("-cef-enable-debugging"))
         {
             args += " -cef-enable-debugging";
@@ -179,7 +185,7 @@ public static class Steam
 
         Log.Logger.Info("Starting Steam");
         _ = Process.Start(SteamExe, args);
-        if (Properties.Settings.Default.InjectOnSteamStart)
+        if (Settings.Default.InjectOnSteamStart)
         {
             await TryInject();
         }
@@ -190,7 +196,7 @@ public static class Steam
         await Task.Run(() => RestartSteam());
     }
 
-    public static async Task RestartSteam(string? args = null)
+    private static async Task RestartSteam(string? args = null)
     {
         if (IsSteamRunning)
         {
@@ -239,7 +245,7 @@ public static class Steam
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
     {
         SteamStarted?.Invoke(null, EventArgs.Empty);
-        if (Properties.Settings.Default.InjectOnSteamStart)
+        if (Settings.Default.InjectOnSteamStart)
         {
             await TryInject();
         }
@@ -269,12 +275,24 @@ public static class Steam
                 return;
             }
 
-            if (OperatingSystem.IsWindows() && Properties.Settings.Default.ForceSteamArgs)
+            if (Settings.Default.ForceSteamArgs)
             {
-                var argumentMissing = Properties.Settings.Default.SteamLaunchArgs.Split(' ')
-#pragma warning disable CA1416
-                    .Any(arg => !Windows.Utils.GetCommandLine(SteamProcess!).Contains(arg));
-#pragma warning restore CA1416
+                var proc = SteamProcess;
+                if (proc == null)
+                {
+                    Log.Logger.Error("Steam process is null, cannot check arguments");
+                    return;
+                }
+
+                var cmdLine = Utils.GetCommandLine(proc);
+                if (!cmdLine.Any())
+                {
+                    Log.Logger.Error("Arguments are empty, cannot check arguments");
+                    return;
+                }
+
+                var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
+                    .Any(arg => !cmdLine.Contains(arg));
 
                 if (argumentMissing)
                 {
