@@ -39,7 +39,7 @@ jobs:
           git tag ${{ github.event.inputs.version }}
           git push origin ${{ github.event.inputs.version }}
 
-      - uses: actions/setup-dotnet@v3.0.3
+      - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
 
