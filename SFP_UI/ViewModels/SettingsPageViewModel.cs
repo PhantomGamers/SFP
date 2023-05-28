@@ -7,6 +7,7 @@ using Avalonia.Platform.Storage;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using SFP.Models;
 using SFP.Properties;
 using SFP_UI.Views;
@@ -21,113 +22,38 @@ namespace SFP_UI.ViewModels;
 public class SettingsPageViewModel : ViewModelBase
 {
     #region App
-    private bool _checkForUpdates;
-    public bool CheckForUpdates
-    {
-        get => _checkForUpdates;
-        set => this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
-    }
+    [Reactive] public bool CheckForUpdates { get; set; }
 
-    private bool _showTrayIcon;
-    public bool ShowTrayIcon
-    {
-        get => _showTrayIcon;
-        set => this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
-    }
+    [Reactive] public bool ShowTrayIcon { get; set; }
 
-    private bool _minimizeToTray;
-    public bool MinimizeToTray
-    {
-        get => _minimizeToTray;
-        set => this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
-    }
+    [Reactive] public bool MinimizeToTray { get; set; }
 
-    private bool _closeToTray;
-    public bool CloseToTray
-    {
-        get => _closeToTray;
-        set => this.RaiseAndSetIfChanged(ref _closeToTray, value);
-    }
+    [Reactive] public bool CloseToTray { get; set; }
 
-    private bool _startMinimized;
-    public bool StartMinimized
-    {
-        get => _startMinimized;
-        set => this.RaiseAndSetIfChanged(ref _startMinimized, value);
-    }
+    [Reactive] public bool StartMinimized { get; set; }
 
-    private bool _injectOnAppStart;
-    public bool InjectOnAppStart
-    {
-        get => _injectOnAppStart;
-        set => this.RaiseAndSetIfChanged(ref _injectOnAppStart, value);
-    }
+    [Reactive] public bool InjectOnAppStart { get; set; }
 
-    private bool _runSteamOnStart;
-    public bool RunSteamOnStart
-    {
-        get => _runSteamOnStart;
-        set => this.RaiseAndSetIfChanged(ref _runSteamOnStart, value);
-    }
+    [Reactive] public bool RunSteamOnStart { get; set; }
 
-    private bool _runOnBoot = Settings.Default.RunOnBoot;
-    public bool RunOnBoot
-    {
-        get => _runOnBoot;
-        set => this.RaiseAndSetIfChanged(ref _runOnBoot, value);
-    }
+    [Reactive] public bool RunOnBoot { get; set; }
 
     public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
-    private string _selectedTheme = null!;
-    public string SelectedTheme
-    {
-        get => _selectedTheme;
-        set => this.RaiseAndSetIfChanged(ref _selectedTheme, value);
-    }
+    [Reactive] public string SelectedTheme { get; set; }
     #endregion
 
     #region Steam
-    private string _steamDirectory = null!;
-    public string SteamDirectory
-    {
-        get => _steamDirectory;
-        set => this.RaiseAndSetIfChanged(ref _steamDirectory, value);
-    }
+    [Reactive] public string SteamDirectory { get; set; }
 
-    private string _steamLaunchArgs = null!;
-    public string SteamLaunchArgs
-    {
-        get => _steamLaunchArgs;
-        set => this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
-    }
+    [Reactive] public string SteamLaunchArgs { get; set; }
 
-    private bool _injectOnSteamStart;
-    public bool InjectOnSteamStart
-    {
-        get => _injectOnSteamStart;
-        set => this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
-    }
+    [Reactive] public bool InjectOnSteamStart { get; set; }
 
-    private bool _forceSteamArgs;
-    public bool ForceSteamArgs
-    {
-        get => _forceSteamArgs;
-        set => this.RaiseAndSetIfChanged(ref _forceSteamArgs, value);
-    }
+    [Reactive] public bool ForceSteamArgs { get; set; }
 
-    private bool _injectCss;
-    public bool InjectCss
-    {
-        get => _injectCss;
-        set => this.RaiseAndSetIfChanged(ref _injectCss, value);
-    }
+    [Reactive] public bool InjectCss { get; set; }
 
-    private bool _injectJs;
-    public bool InjectJs
-    {
-        get => _injectJs;
-        set => this.RaiseAndSetIfChanged(ref _injectJs, value);
-    }
+    [Reactive] public bool InjectJs { get; set; }
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
