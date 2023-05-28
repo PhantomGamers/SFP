@@ -35,6 +35,7 @@
                     <Label>Steam directory</Label>
                     <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                              IsReadOnly="True"
+                             Focusable="False"
                              VerticalContentAlignment="Center" />
                     <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
                     <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
