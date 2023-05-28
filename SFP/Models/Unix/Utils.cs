@@ -15,7 +15,7 @@ public static class Utils
     public static List<string> GetCommandLine(Process process)
     {
         var processName = process.ProcessName;
-        var command = $"pgrep -x {processName} | xargs -r ps -o command -p | tail -n 1";
+        var command = $"pgrep -x {processName} | xargs sh -c 'if [ -n \"$1\" ]; then ps -o command= -p \"$1\"; fi' _";
         var output = RunCommand(command);
         var lines = output.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         return lines.Select(line => line.Trim()).Where(arg => !string.IsNullOrWhiteSpace(arg)).ToList();
