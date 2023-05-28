@@ -144,7 +144,7 @@ public class SettingsPageViewModel : ViewModelBase
         #endregion
 
         #region Steam
-        SteamDirectory = Settings.Default.SteamDirectory;
+        SteamDirectory = Steam.SteamDir ?? string.Empty;
         this.WhenAnyValue(x => x.SteamDirectory)
             .Subscribe(value =>
             {
