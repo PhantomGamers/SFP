@@ -1,6 +1,7 @@
 #region
 
 using System.Reactive;
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
@@ -149,6 +150,7 @@ public class SettingsPageViewModel : ViewModelBase
 
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
         this.WhenAnyValue(x => x.SteamLaunchArgs)
+            .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
                 Settings.Default.SteamLaunchArgs = SteamLaunchArgs;
