@@ -6,17 +6,6 @@
              x:DataType="vm:SettingsPageViewModel">
 
     <DockPanel Margin="16">
-        <StackPanel Orientation="Horizontal" Spacing="15" DockPanel.Dock="Bottom" Margin="0 15 0 0">
-            <Button Name="SaveButton"
-                    Command="{Binding SaveCommand}"
-                    ToolTip.Tip="Saves your settings to config">
-                Save
-            </Button>
-            <Button Command="{Binding ReloadCommand}"
-                    ToolTip.Tip="Reloads settings from config">
-                Reload
-            </Button>
-        </StackPanel>
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="App Settings" Margin="0 10 0 4" />
@@ -29,11 +18,13 @@
                 <CheckBox IsChecked="{Binding RunSteamOnStart}">Run Steam on start</CheckBox>
                 <CheckBox IsChecked="{Binding RunOnBoot}" IsVisible="{Binding IsWindows}">Run on boot</CheckBox>
                 <Label Margin="0, 10">App theme</Label>
-                <ComboBox Margin="0, 0, 0, 10" Name="AppThemeComboBox" Width="200" SelectedIndex="2">
-                    <ComboBoxItem>Dark</ComboBoxItem>
-                    <ComboBoxItem>Light</ComboBoxItem>
-                    <ComboBoxItem>HighContrast</ComboBoxItem>
-                    <ComboBoxItem>System Default</ComboBoxItem>
+                <ComboBox Margin="0, 0, 0, 10" Name="AppThemeComboBox" Width="200"
+                          ItemsSource="{Binding AppThemes}" SelectedItem="{Binding SelectedTheme}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
                 <ui:HyperlinkButton Content="Windows color settings"
                                     NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
