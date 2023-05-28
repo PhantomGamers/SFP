@@ -60,7 +60,6 @@ public class SettingsPageViewModel : ViewModelBase
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
     public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
     public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
-    public ReactiveCommand<Unit, Unit> InjectWarningAcceptCommand { get; }
 
     public SettingsPageViewModel()
     {
