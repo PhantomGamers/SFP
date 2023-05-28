@@ -8,7 +8,7 @@
     <DockPanel Margin="16" Focusable="True">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="App Settings" Margin="0 10 0 4" />
+                <TextBlock FontSize="16" FontWeight="DemiBold" Text="App" Margin="0 10 0 10" />
                 <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
                 <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
                 <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
@@ -30,7 +30,7 @@
                                     NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
                 <Separator Margin="0,10" />
 
-                <TextBlock Margin="0,10" Text="Steam" />
+                <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="Steam" />
                 <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
                     <Label>Steam directory</Label>
                     <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
@@ -46,13 +46,18 @@
                              Text="{Binding SteamLaunchArgs}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
-                    <Label>Steam Skin</Label>
+                    <Label>Steam skin</Label>
                     <ComboBox x:Name="SteamSkinComboBox" Margin="45, 0, 0, 0" Width="240" />
                 </StackPanel>
                 <CheckBox IsChecked="{Binding InjectOnSteamStart}">Inject on Steam start</CheckBox>
                 <CheckBox IsChecked="{Binding ForceSteamArgs}">Force Steam arguments</CheckBox>
                 <CheckBox IsChecked="{Binding InjectCss}">Inject CSS</CheckBox>
                 <CheckBox IsChecked="{Binding InjectJs}">Inject JavaScript</CheckBox>
+                <Separator Margin="0,10" />
+
+                <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
+                <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
+                <ui:HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
             </StackPanel>
         </ScrollViewer>
     </DockPanel>
