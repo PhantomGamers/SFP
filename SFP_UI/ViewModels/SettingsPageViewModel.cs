@@ -123,10 +123,15 @@ public class SettingsPageViewModel : ViewModelBase
 
         RunOnBoot = Settings.Default.RunOnBoot;
         this.WhenAnyValue(x => x.RunOnBoot)
+            .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
                 Settings.Default.RunOnBoot = value;
                 Settings.Default.Save();
+                if (OperatingSystem.IsWindows())
+                {
+                    Utils.SetAppRunOnLaunch(value);
+                }
             });
 
         SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
@@ -185,14 +190,49 @@ public class SettingsPageViewModel : ViewModelBase
         this.WhenAnyValue(x => x.InjectJs)
             .Subscribe(value =>
             {
-                Settings.Default.InjectJS = value;
-                Settings.Default.Save();
+                if (value && !Settings.Default.InjectJSWarningAccepted)
+                {
+                    Settings.Default.InjectJS = false;
+                    Settings.Default.Save();
+                    ShowWarningDialog();
+                }
+                else
+                {
+                    Settings.Default.InjectJS = value;
+                    Settings.Default.Save();
+                }
             });
         #endregion
 
         BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
         ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
-        InjectWarningAcceptCommand = ReactiveCommand.CreateFromTask(OnInjectWarningAcceptCommand);
+    }
+
+    private async void ShowWarningDialog()
+    {
+        var dialog = new ContentDialog
+        {
+            Title = "Warning",
+            Content =
+                "You are enabling JavaScript injection.\n" +
+                "JavaScript can potentially contain malicious code and you should only use scripts from people you trust.\n" +
+                "Continue?",
+            PrimaryButtonText = "Yes",
+            PrimaryButtonCommand = ReactiveCommand.Create(() =>
+            {
+                Settings.Default.InjectJS = true;
+                Settings.Default.InjectJSWarningAccepted = true;
+                Settings.Default.Save();
+                InjectJs = true;
+            }),
+            SecondaryButtonText = "No",
+            SecondaryButtonCommand = ReactiveCommand.Create(() =>
+            {
+                InjectJs = false;
+                Settings.Default.Save();
+            })
+        };
+        await dialog.ShowAsync();
     }
 
     private async Task OnBrowseSteamCommand()
@@ -212,14 +252,6 @@ public class SettingsPageViewModel : ViewModelBase
     {
         Settings.Default.SteamDirectory = string.Empty;
         SteamDirectory = Steam.SteamDir ?? string.Empty;
-        return Task.CompletedTask;
-    }
-
-    private Task OnInjectWarningAcceptCommand()
-    {
-        Settings.Default.InjectJSWarningAccepted = true;
-        InjectJs = true;
-        Settings.Default.Save();
         return Task.CompletedTask;
     }
 }
