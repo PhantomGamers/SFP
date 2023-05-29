@@ -17,7 +17,7 @@ public partial class SettingsPage : UserControl
     public SettingsPage()
     {
         InitializeComponent();
-        DataContext = new SettingsPageViewModel(AppThemeComboBox);
+        DataContext = new SettingsPageViewModel();
         PopulateSteamSkinComboBox();
         SteamSkinComboBox.DropDownOpened += (_, _) => PopulateSteamSkinComboBox();
         SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;

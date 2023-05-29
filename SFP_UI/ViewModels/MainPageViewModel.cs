@@ -3,6 +3,7 @@
 using System.Reactive;
 using NLog;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Semver;
 using SFP.Models;
 using SFP.Models.Injection;
@@ -13,23 +14,31 @@ namespace SFP_UI.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
-    private static int s_caretIndex;
-    private static string s_output = string.Empty;
-    private bool _buttonsEnabled = true;
-    private bool _isInjected;
-    private string _startSteamText = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
-    private string _updateNotificationContent = string.Empty;
-    private bool _updateNotificationIsOpen;
+    public static MainPageViewModel? Instance { get; private set; }
 
-    public MainPageViewModel()
+    [Reactive] public bool UpdateNotificationIsOpen { get; set; }
+
+    [Reactive] public string UpdateNotificationContent { get; set; } = string.Empty;
+
+    [Reactive] public bool ButtonsEnabled { get; set; } = true;
+
+    [Reactive] public bool IsInjected { get; set; }
+
+    [Reactive] public string StartSteamText { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
+
+    private static string s_output = string.Empty;
+    public string Output
     {
-        Instance = this;
-        Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
-        Steam.SteamStarted += (_, _) => StartSteamText = "Restart Steam";
-        Steam.SteamStopped += (_, _) => StartSteamText = "Start Steam";
+        get => s_output;
+        private set => this.RaiseAndSetIfChanged(ref s_output, value);
     }
 
-    public static MainPageViewModel? Instance { get; private set; }
+    private static int s_caretIndex;
+    public int CaretIndex
+    {
+        get => s_caretIndex;
+        private set => this.RaiseAndSetIfChanged(ref s_caretIndex, value);
+    }
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
@@ -42,46 +51,12 @@ public class MainPageViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
         ReactiveCommand.Create(Steam.RunRestartSteam);
 
-    public bool UpdateNotificationIsOpen
+    public MainPageViewModel()
     {
-        get => _updateNotificationIsOpen;
-        set => this.RaiseAndSetIfChanged(ref _updateNotificationIsOpen, value);
-    }
-
-    public string UpdateNotificationContent
-    {
-        get => _updateNotificationContent;
-        set => this.RaiseAndSetIfChanged(ref _updateNotificationContent, value);
-    }
-
-    public string Output
-    {
-        get => s_output;
-        private set => this.RaiseAndSetIfChanged(ref s_output, value);
-    }
-
-    public int CaretIndex
-    {
-        get => s_caretIndex;
-        private set => this.RaiseAndSetIfChanged(ref s_caretIndex, value);
-    }
-
-    public bool ButtonsEnabled
-    {
-        get => _buttonsEnabled;
-        set => this.RaiseAndSetIfChanged(ref _buttonsEnabled, value);
-    }
-
-    public bool IsInjected
-    {
-        get => Injector.IsInjected;
-        set => this.RaiseAndSetIfChanged(ref _isInjected, value);
-    }
-
-    public string StartSteamText
-    {
-        get => _startSteamText;
-        set => this.RaiseAndSetIfChanged(ref _startSteamText, value);
+        Instance = this;
+        Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
+        Steam.SteamStarted += (_, _) => StartSteamText = "Restart Steam";
+        Steam.SteamStopped += (_, _) => StartSteamText = "Start Steam";
     }
 
     public static void PrintLine(LogLevel level, string message)

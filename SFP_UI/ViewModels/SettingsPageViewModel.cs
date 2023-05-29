@@ -1,12 +1,14 @@
 #region
 
 using System.Reactive;
+using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using SFP.Models;
 using SFP.Properties;
 using SFP_UI.Views;
@@ -20,210 +22,210 @@ namespace SFP_UI.ViewModels;
 
 public class SettingsPageViewModel : ViewModelBase
 {
-    private string _appTheme = Settings.Default.AppTheme;
-    private bool _checkForUpdates = Settings.Default.CheckForUpdates;
-    private bool _closeToTray = Settings.Default.CloseToTray;
-    private bool _forceSteamArgs = Settings.Default.ForceSteamArgs;
-    private bool _injectCss = Settings.Default.InjectCSS;
-    private bool _injectJs = Settings.Default.InjectJS;
-    private bool _injectOnAppStart = Settings.Default.InjectOnAppStart;
-    private bool _injectOnSteamStart = Settings.Default.InjectOnSteamStart;
-    private bool _minimizeToTray = Settings.Default.MinimizeToTray;
-    private bool _runOnBoot = Settings.Default.RunOnBoot;
-    private bool _runSteamOnStart = Settings.Default.RunSteamOnStart;
-    private bool _showTrayIcon = Settings.Default.ShowTrayIcon;
-    private bool _startMinimized = Settings.Default.StartMinimized;
-    private string _steamDirectory = Steam.SteamDir ?? string.Empty;
-    private string _steamLaunchArgs = Settings.Default.SteamLaunchArgs;
+    #region App
+    [Reactive] public bool CheckForUpdates { get; set; }
 
-    public SettingsPageViewModel(SelectingItemsControl? appThemeComboBox)
-    {
-        if (appThemeComboBox != null)
-        {
-            appThemeComboBox.SelectionChanged += OnAppThemeSelectedChanged;
-            appThemeComboBox.SelectedIndex = Settings.Default.AppTheme switch
-            {
-                FluentAvaloniaTheme.DarkModeString => 0,
-                FluentAvaloniaTheme.LightModeString => 1,
-                FluentAvaloniaTheme.HighContrastModeString => 2,
-                _ => 3
-            };
-        }
+    [Reactive] public bool ShowTrayIcon { get; set; }
 
-        ReloadCommand = ReactiveCommand.Create(OnReloadCommand);
-        BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
-        ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
-        InjectWarningAcceptCommand = ReactiveCommand.CreateFromTask(OnInjectWarningAcceptCommand);
-    }
+    [Reactive] public bool MinimizeToTray { get; set; }
+
+    [Reactive] public bool CloseToTray { get; set; }
+
+    [Reactive] public bool StartMinimized { get; set; }
+
+    [Reactive] public bool InjectOnAppStart { get; set; }
+
+    [Reactive] public bool RunSteamOnStart { get; set; }
+
+    [Reactive] public bool RunOnBoot { get; set; }
+
+    public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
+    [Reactive] public string SelectedTheme { get; set; } = null!;
+
+    #endregion
+
+    #region Steam
+    [Reactive] public string SteamDirectory { get; set; } = null!;
+
+    [Reactive] public string SteamLaunchArgs { get; set; } = null!;
+
+    [Reactive] public bool InjectOnSteamStart { get; set; }
+
+    [Reactive] public bool ForceSteamArgs { get; set; }
+
+    [Reactive] public bool InjectCss { get; set; }
+
+    [Reactive] public bool InjectJs { get; set; }
+    #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
-    public ReactiveCommand<Unit, Unit> SaveCommand { get; } = ReactiveCommand.Create(OnSaveCommand);
-    public ReactiveCommand<Unit, Unit> ReloadCommand { get; }
-    public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
-    public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
-    public ReactiveCommand<Unit, Unit> InjectWarningAcceptCommand { get; }
-
-    public string SteamDirectory
+    public SettingsPageViewModel()
     {
-        get => _steamDirectory;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _steamDirectory, value);
-            Settings.Default.SteamDirectory = value;
-        }
-    }
-
-    public string SteamLaunchArgs
-    {
-        get => _steamLaunchArgs;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _steamLaunchArgs, value);
-            Settings.Default.SteamLaunchArgs = value;
-        }
-    }
-
-    public bool RunSteamOnStart
-    {
-        get => _runSteamOnStart;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _runSteamOnStart, value);
-            Settings.Default.RunSteamOnStart = value;
-        }
-    }
-
-    public bool CheckForUpdates
-    {
-        get => _checkForUpdates;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _checkForUpdates, value);
-            Settings.Default.CheckForUpdates = value;
-        }
-    }
-
-    public bool ShowTrayIcon
-    {
-        get => _showTrayIcon;
-        set
-        {
-            App.SetIconsState(value);
-            _ = this.RaiseAndSetIfChanged(ref _showTrayIcon, value);
-            Settings.Default.ShowTrayIcon = value;
-        }
-    }
-
-    public bool MinimizeToTray
-    {
-        get => _minimizeToTray;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _minimizeToTray, value);
-            Settings.Default.MinimizeToTray = value;
-        }
-    }
-
-    public bool CloseToTray
-    {
-        get => _closeToTray;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _closeToTray, value);
-            Settings.Default.CloseToTray = value;
-        }
-    }
-
-    public bool StartMinimized
-    {
-        get => _startMinimized;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _startMinimized, value);
-            Settings.Default.StartMinimized = value;
-        }
-    }
-
-    public string AppTheme
-    {
-        get => _appTheme;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _appTheme, value);
-            Settings.Default.AppTheme = value;
-            App.SetApplicationTheme(value);
-        }
-    }
-
-    public bool InjectOnSteamStart
-    {
-        get => _injectOnSteamStart;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _injectOnSteamStart, value);
-            Settings.Default.InjectOnSteamStart = value;
-        }
-    }
-
-    public bool RunOnBoot
-    {
-        get => _runOnBoot;
-        set
-        {
-            if (_runOnBoot != value && OperatingSystem.IsWindows() && !Utils.SetAppRunOnLaunch(value))
+        InitProperties();
+        #region App
+        this.WhenAnyValue(x => x.CheckForUpdates)
+            .Subscribe(value =>
             {
-                return;
-            }
+                Settings.Default.CheckForUpdates = value;
+                Settings.Default.Save();
+            });
 
-            _ = this.RaiseAndSetIfChanged(ref _runOnBoot, value);
-            Settings.Default.RunOnBoot = value;
-        }
-    }
-
-    public bool InjectOnAppStart
-    {
-        get => _injectOnAppStart;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _injectOnAppStart, value);
-            Settings.Default.InjectOnAppStart = value;
-        }
-    }
-
-    public bool ForceSteamArgs
-    {
-        get => _forceSteamArgs;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _forceSteamArgs, value);
-            Settings.Default.ForceSteamArgs = value;
-        }
-    }
-
-    public bool InjectCss
-    {
-        get => _injectCss;
-        set
-        {
-            _ = this.RaiseAndSetIfChanged(ref _injectCss, value);
-            Settings.Default.InjectCSS = value;
-        }
-    }
-
-    public bool InjectJs
-    {
-        get => _injectJs;
-        set
-        {
-            if (value && !Settings.Default.InjectJSWarningAccepted)
+        this.WhenAnyValue(x => x.ShowTrayIcon)
+            .Subscribe(value =>
             {
-                ShowWarningDialog();
-                return;
-            }
-            _ = this.RaiseAndSetIfChanged(ref _injectJs, value);
-            Settings.Default.InjectJS = value;
-        }
+                Settings.Default.ShowTrayIcon = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.MinimizeToTray)
+            .Subscribe(value =>
+            {
+                Settings.Default.MinimizeToTray = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.CloseToTray)
+            .Subscribe(value =>
+            {
+                Settings.Default.CloseToTray = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.StartMinimized)
+            .Subscribe(value =>
+            {
+                Settings.Default.StartMinimized = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.InjectOnAppStart)
+            .Subscribe(value =>
+            {
+                Settings.Default.InjectOnAppStart = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.RunSteamOnStart)
+            .Subscribe(value =>
+            {
+                Settings.Default.RunSteamOnStart = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.RunOnBoot)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(value =>
+            {
+                Settings.Default.RunOnBoot = value;
+                Settings.Default.Save();
+                if (OperatingSystem.IsWindows())
+                {
+                    Utils.SetAppRunOnLaunch(value);
+                }
+            });
+
+        this.WhenAnyValue(x => x.SelectedTheme)
+            .Subscribe(value =>
+            {
+                Settings.Default.AppTheme = value.ToString();
+                Settings.Default.Save();
+                App.SetApplicationTheme(value);
+            });
+        #endregion
+
+        #region Steam
+        this.WhenAnyValue(x => x.SteamDirectory)
+            .Subscribe(value =>
+            {
+                Settings.Default.SteamDirectory = SteamDirectory;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.SteamLaunchArgs)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(value =>
+            {
+                Settings.Default.SteamLaunchArgs = SteamLaunchArgs;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.InjectOnSteamStart)
+            .Subscribe(value =>
+            {
+                Settings.Default.InjectOnSteamStart = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.ForceSteamArgs)
+            .Subscribe(value =>
+            {
+                Settings.Default.ForceSteamArgs = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.InjectCss)
+            .Subscribe(value =>
+            {
+                Settings.Default.InjectCSS = value;
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.InjectJs)
+            .Subscribe(value =>
+            {
+                if (value && !Settings.Default.InjectJSWarningAccepted)
+                {
+                    Settings.Default.InjectJS = false;
+                    Settings.Default.Save();
+                    ShowWarningDialog();
+                }
+                else
+                {
+                    Settings.Default.InjectJS = value;
+                    Settings.Default.Save();
+                }
+            });
+        #endregion
+
+        BrowseSteam = ReactiveCommand.Create(BrowseSteamImpl);
+        ResetSteam = ReactiveCommand.Create(() =>
+        {
+            Settings.Default.SteamDirectory = string.Empty;
+            SteamDirectory = Steam.SteamDir ?? string.Empty;
+            Settings.Default.Save();
+        });
+        ResetSettings = ReactiveCommand.Create(() =>
+        {
+            Settings.Default.Reset();
+            InitProperties();
+            Settings.Default.Save();
+        });
+    }
+
+    private void InitProperties()
+    {
+        #region App
+        CheckForUpdates = Settings.Default.CheckForUpdates;
+        ShowTrayIcon = Settings.Default.ShowTrayIcon;
+        MinimizeToTray = Settings.Default.MinimizeToTray;
+        CloseToTray = Settings.Default.CloseToTray;
+        StartMinimized = Settings.Default.StartMinimized;
+        InjectOnAppStart = Settings.Default.InjectOnAppStart;
+        RunSteamOnStart = Settings.Default.RunSteamOnStart;
+        RunOnBoot = Settings.Default.RunOnBoot;
+        SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
+        #endregion
+
+        #region Steam
+        SteamDirectory = Steam.SteamDir ?? string.Empty;
+        SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
+        InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
+        ForceSteamArgs = Settings.Default.ForceSteamArgs;
+        InjectCss = Settings.Default.InjectCSS;
+        InjectJs = Settings.Default.InjectJS;
+        #endregion
+
     }
 
     private async void ShowWarningDialog()
@@ -236,70 +238,38 @@ public class SettingsPageViewModel : ViewModelBase
                 "JavaScript can potentially contain malicious code and you should only use scripts from people you trust.\n" +
                 "Continue?",
             PrimaryButtonText = "Yes",
-            PrimaryButtonCommand = InjectWarningAcceptCommand,
-            SecondaryButtonText = "No"
+            PrimaryButtonCommand = ReactiveCommand.Create(() =>
+            {
+                Settings.Default.InjectJS = true;
+                Settings.Default.InjectJSWarningAccepted = true;
+                Settings.Default.Save();
+                InjectJs = true;
+            }),
+            SecondaryButtonText = "No",
+            SecondaryButtonCommand = ReactiveCommand.Create(() =>
+            {
+                InjectJs = false;
+                Settings.Default.Save();
+            })
         };
         await dialog.ShowAsync();
     }
 
-    public static void OnSaveCommand()
-    {
-        Settings.Default.Save();
-    }
+    public ReactiveCommand<Unit, Unit> ResetSteam { get; }
+    public ReactiveCommand<Unit, Unit> ResetSettings { get; }
+    public ReactiveCommand<Unit, Unit> BrowseSteam { get; }
 
-    public void OnReloadCommand()
+    private async void BrowseSteamImpl()
     {
-        Settings.Default.Reload();
-        SteamDirectory = Steam.SteamDir ?? string.Empty;
-        AppTheme = Settings.Default.AppTheme;
-        StartMinimized = Settings.Default.StartMinimized;
-        MinimizeToTray = Settings.Default.MinimizeToTray;
-        CloseToTray = Settings.Default.CloseToTray;
-        CheckForUpdates = Settings.Default.CheckForUpdates;
-        ShowTrayIcon = Settings.Default.ShowTrayIcon;
-        InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
-        InjectOnAppStart = Settings.Default.InjectOnAppStart;
-        RunOnBoot = Settings.Default.RunOnBoot;
-        RunSteamOnStart = Settings.Default.RunSteamOnStart;
-        SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
-        ForceSteamArgs = Settings.Default.ForceSteamArgs;
-        InjectCss = Settings.Default.InjectCSS;
-        InjectJs = Settings.Default.InjectJS;
-    }
-
-    private async Task OnBrowseSteamCommand()
-    {
-        if (MainWindow.Instance != null)
+        if (MainWindow.Instance == null)
         {
-            var result =
-                await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
-            if (result.Count > 0)
-            {
-                SteamDirectory = result[0].Path.LocalPath;
-            }
+            return;
         }
-    }
-
-    private Task OnResetSteamCommand()
-    {
-        Settings.Default.SteamDirectory = string.Empty;
-        SteamDirectory = Steam.SteamDir ?? string.Empty;
-        return Task.CompletedTask;
-    }
-
-    private Task OnInjectWarningAcceptCommand()
-    {
-        Settings.Default.InjectJSWarningAccepted = true;
-        InjectJs = true;
-        Settings.Default.Save();
-        return Task.CompletedTask;
-    }
-
-    private void OnAppThemeSelectedChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (sender is ComboBox { SelectedItem: ComboBoxItem cbi })
+        var result =
+            await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
+        if (result.Count > 0)
         {
-            AppTheme = (string?)cbi.Content ?? AppTheme;
+            SteamDirectory = result[0].Path.LocalPath;
         }
     }
 }
