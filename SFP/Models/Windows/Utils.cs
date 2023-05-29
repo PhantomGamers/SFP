@@ -13,13 +13,13 @@ namespace SFP.Models.Windows;
 [SupportedOSPlatform("windows")]
 public static class Utils
 {
-    public static bool SetAppRunOnLaunch(bool runOnLaunch)
+    public static void SetAppRunOnLaunch(bool runOnLaunch)
     {
         var processPath = Environment.ProcessPath;
         if (processPath == null)
         {
             Log.Logger.Error("Could not get process path, startup shortcut not created.");
-            return false;
+            return;
         }
 
         var processName = Path.GetFileNameWithoutExtension(processPath);
@@ -33,12 +33,11 @@ public static class Utils
 
         if (!runOnLaunch)
         {
-            return true;
+            return;
         }
 
         using WindowsShortcut shortcut = new() { Path = processPath };
         shortcut.Save(shortcutAddress);
-        return true;
     }
 
     public static List<string> GetCommandLine(Process process)

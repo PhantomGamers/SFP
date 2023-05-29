@@ -65,7 +65,7 @@ public class App : Application
         }
     }
 
-    public static void SetIconsState(bool state)
+    private static void SetIconsState(bool state)
     {
         var icons = TrayIcon.GetIcons(Current!);
         if (icons == null)

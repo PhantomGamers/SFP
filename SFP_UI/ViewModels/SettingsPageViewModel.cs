@@ -2,10 +2,7 @@
 
 using System.Reactive;
 using System.Reactive.Linq;
-using Avalonia.Controls;
-using Avalonia.Controls.Primitives;
 using Avalonia.Platform.Storage;
-using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -138,7 +135,7 @@ public class SettingsPageViewModel : ViewModelBase
         this.WhenAnyValue(x => x.SteamDirectory)
             .Subscribe(value =>
             {
-                Settings.Default.SteamDirectory = SteamDirectory;
+                Settings.Default.SteamDirectory = value;
                 Settings.Default.Save();
             });
 
@@ -146,7 +143,7 @@ public class SettingsPageViewModel : ViewModelBase
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
-                Settings.Default.SteamLaunchArgs = SteamLaunchArgs;
+                Settings.Default.SteamLaunchArgs = value;
                 Settings.Default.Save();
             });
 
