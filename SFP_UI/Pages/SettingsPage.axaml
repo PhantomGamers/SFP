@@ -37,8 +37,8 @@
                              IsReadOnly="True"
                              Focusable="False"
                              VerticalContentAlignment="Center" />
-                    <Button Margin="5,0,0,0" Command="{Binding BrowseSteamCommand}">Browse</Button>
-                    <Button Margin="5,0,0,0" Command="{Binding ResetSteamCommand}">Reset</Button>
+                    <Button Margin="5,0,0,0" Command="{Binding BrowseSteam}">Browse</Button>
+                    <Button Margin="5,0,0,0" Command="{Binding ResetSteam}">Reset</Button>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
                     <Label>Steam launch args</Label>
@@ -58,6 +58,7 @@
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
                 <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
                 <ui:HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
+                <Button Margin="0, 10" Command="{Binding ResetSettings}">Reset Settings</Button>
             </StackPanel>
         </ScrollViewer>
     </DockPanel>

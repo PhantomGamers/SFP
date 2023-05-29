@@ -40,13 +40,14 @@ public class SettingsPageViewModel : ViewModelBase
     [Reactive] public bool RunOnBoot { get; set; }
 
     public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
-    [Reactive] public string SelectedTheme { get; set; }
+    [Reactive] public string SelectedTheme { get; set; } = null!;
+
     #endregion
 
     #region Steam
-    [Reactive] public string SteamDirectory { get; set; }
+    [Reactive] public string SteamDirectory { get; set; } = null!;
 
-    [Reactive] public string SteamLaunchArgs { get; set; }
+    [Reactive] public string SteamLaunchArgs { get; set; } = null!;
 
     [Reactive] public bool InjectOnSteamStart { get; set; }
 
@@ -58,13 +59,11 @@ public class SettingsPageViewModel : ViewModelBase
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
-    public ReactiveCommand<Unit, Unit> BrowseSteamCommand { get; }
-    public ReactiveCommand<Unit, Unit> ResetSteamCommand { get; }
 
     public SettingsPageViewModel()
     {
+        InitProperties();
         #region App
-        CheckForUpdates = Settings.Default.CheckForUpdates;
         this.WhenAnyValue(x => x.CheckForUpdates)
             .Subscribe(value =>
             {
@@ -72,7 +71,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        ShowTrayIcon = Settings.Default.ShowTrayIcon;
         this.WhenAnyValue(x => x.ShowTrayIcon)
             .Subscribe(value =>
             {
@@ -80,7 +78,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        MinimizeToTray = Settings.Default.MinimizeToTray;
         this.WhenAnyValue(x => x.MinimizeToTray)
             .Subscribe(value =>
             {
@@ -88,7 +85,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        CloseToTray = Settings.Default.CloseToTray;
         this.WhenAnyValue(x => x.CloseToTray)
             .Subscribe(value =>
             {
@@ -96,7 +92,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        StartMinimized = Settings.Default.StartMinimized;
         this.WhenAnyValue(x => x.StartMinimized)
             .Subscribe(value =>
             {
@@ -104,7 +99,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        InjectOnAppStart = Settings.Default.InjectOnAppStart;
         this.WhenAnyValue(x => x.InjectOnAppStart)
             .Subscribe(value =>
             {
@@ -112,7 +106,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        RunSteamOnStart = Settings.Default.RunSteamOnStart;
         this.WhenAnyValue(x => x.RunSteamOnStart)
             .Subscribe(value =>
             {
@@ -120,7 +113,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        RunOnBoot = Settings.Default.RunOnBoot;
         this.WhenAnyValue(x => x.RunOnBoot)
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
@@ -133,7 +125,6 @@ public class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
         this.WhenAnyValue(x => x.SelectedTheme)
             .Subscribe(value =>
             {
@@ -144,7 +135,6 @@ public class SettingsPageViewModel : ViewModelBase
         #endregion
 
         #region Steam
-        SteamDirectory = Steam.SteamDir ?? string.Empty;
         this.WhenAnyValue(x => x.SteamDirectory)
             .Subscribe(value =>
             {
@@ -152,7 +142,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
         this.WhenAnyValue(x => x.SteamLaunchArgs)
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
@@ -161,7 +150,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
         this.WhenAnyValue(x => x.InjectOnSteamStart)
             .Subscribe(value =>
             {
@@ -169,7 +157,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        ForceSteamArgs = Settings.Default.ForceSteamArgs;
         this.WhenAnyValue(x => x.ForceSteamArgs)
             .Subscribe(value =>
             {
@@ -177,7 +164,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        InjectCss = Settings.Default.InjectCSS;
         this.WhenAnyValue(x => x.InjectCss)
             .Subscribe(value =>
             {
@@ -185,7 +171,6 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        InjectJs = Settings.Default.InjectJS;
         this.WhenAnyValue(x => x.InjectJs)
             .Subscribe(value =>
             {
@@ -203,8 +188,44 @@ public class SettingsPageViewModel : ViewModelBase
             });
         #endregion
 
-        BrowseSteamCommand = ReactiveCommand.CreateFromTask(OnBrowseSteamCommand);
-        ResetSteamCommand = ReactiveCommand.CreateFromTask(OnResetSteamCommand);
+        BrowseSteam = ReactiveCommand.Create(BrowseSteamImpl);
+        ResetSteam = ReactiveCommand.Create(() =>
+        {
+            Settings.Default.SteamDirectory = string.Empty;
+            SteamDirectory = Steam.SteamDir ?? string.Empty;
+            Settings.Default.Save();
+        });
+        ResetSettings = ReactiveCommand.Create(() =>
+        {
+            Settings.Default.Reset();
+            InitProperties();
+            Settings.Default.Save();
+        });
+    }
+
+    private void InitProperties()
+    {
+        #region App
+        CheckForUpdates = Settings.Default.CheckForUpdates;
+        ShowTrayIcon = Settings.Default.ShowTrayIcon;
+        MinimizeToTray = Settings.Default.MinimizeToTray;
+        CloseToTray = Settings.Default.CloseToTray;
+        StartMinimized = Settings.Default.StartMinimized;
+        InjectOnAppStart = Settings.Default.InjectOnAppStart;
+        RunSteamOnStart = Settings.Default.RunSteamOnStart;
+        RunOnBoot = Settings.Default.RunOnBoot;
+        SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
+        #endregion
+
+        #region Steam
+        SteamDirectory = Steam.SteamDir ?? string.Empty;
+        SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
+        InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
+        ForceSteamArgs = Settings.Default.ForceSteamArgs;
+        InjectCss = Settings.Default.InjectCSS;
+        InjectJs = Settings.Default.InjectJS;
+        #endregion
+
     }
 
     private async void ShowWarningDialog()
@@ -234,23 +255,21 @@ public class SettingsPageViewModel : ViewModelBase
         await dialog.ShowAsync();
     }
 
-    private async Task OnBrowseSteamCommand()
-    {
-        if (MainWindow.Instance != null)
-        {
-            var result =
-                await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
-            if (result.Count > 0)
-            {
-                SteamDirectory = result[0].Path.LocalPath;
-            }
-        }
-    }
+    public ReactiveCommand<Unit, Unit> ResetSteam { get; }
+    public ReactiveCommand<Unit, Unit> ResetSettings { get; }
+    public ReactiveCommand<Unit, Unit> BrowseSteam { get; }
 
-    private Task OnResetSteamCommand()
+    private async void BrowseSteamImpl()
     {
-        Settings.Default.SteamDirectory = string.Empty;
-        SteamDirectory = Steam.SteamDir ?? string.Empty;
-        return Task.CompletedTask;
+        if (MainWindow.Instance == null)
+        {
+            return;
+        }
+        var result =
+            await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
+        if (result.Count > 0)
+        {
+            SteamDirectory = result[0].Path.LocalPath;
+        }
     }
 }
