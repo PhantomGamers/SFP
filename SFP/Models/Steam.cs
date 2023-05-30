@@ -142,6 +142,12 @@ public static class Steam
             return;
         }
 
+        if (!File.Exists(SteamExe))
+        {
+            Log.Logger.Error($"{SteamExe} does not exist. Please set the correct Steam path in the settings.");
+            return;
+        }
+
         Log.Logger.Info("Shutting down Steam");
         if (IsSteamWebHelperRunning)
         {
@@ -158,6 +164,12 @@ public static class Steam
     {
         if (IsSteamRunning)
         {
+            return Task.CompletedTask;
+        }
+
+        if (!File.Exists(SteamExe))
+        {
+            Log.Logger.Error($"{SteamExe} does not exist. Please set the correct Steam path in the settings.");
             return Task.CompletedTask;
         }
 
