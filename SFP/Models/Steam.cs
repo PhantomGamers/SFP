@@ -226,12 +226,20 @@ public static class Steam
 
     public static void StartMonitorSteam()
     {
-        if (s_watcher != null || string.IsNullOrWhiteSpace(SteamDir))
+        if (s_watcher != null)
         {
             return;
         }
 
-        s_watcher = new FileSystemWatcherEx(SteamDir) { Filter = ".crash" };
+        var dir = OperatingSystem.IsMacOS() ? SteamRootDir : SteamDir;
+
+        if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
+        {
+            Log.Logger.Warn($"Path {dir} does not exist, cannot monitor Steam state");
+            return;
+        }
+
+        s_watcher = new FileSystemWatcherEx(dir) { Filter = ".crash" };
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.OnChanged += OnCrashFileCreated;
