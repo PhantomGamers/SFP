@@ -33,7 +33,7 @@ jobs:
           } elseif ("${{ runner.os }}" -eq "macOS") {
             echo "OS_ARG=osx" | Out-File -FilePath $env:GITHUB_ENV -Append
           }
-      - run: ./createpublishedzip.ps1 -os $OS_ARG
+      - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }}
       - uses: actions/upload-artifact@v3
         with:
           path: Release/*.zip
