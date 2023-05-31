@@ -28,7 +28,7 @@ public static class Utils
             }
             else if (OperatingSystem.IsMacOS())
             {
-                _ = Process.Start("open", url);
+                _ = Process.Start("open", $"-t \"{url}\"");
             }
             else
             {
