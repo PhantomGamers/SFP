@@ -30,59 +30,54 @@ public static class Steam
 
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
-    private static string? SteamRootDir
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                return SteamDir;
-            }
+    private static string? SteamRootDir => GetSteamRootDir();
 
-            if (OperatingSystem.IsLinux())
-            {
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
-            }
-
-            return OperatingSystem.IsMacOS()
-                ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
-                    "Application Support", "Steam")
-                : null;
-        }
-    }
-
-    public static string? SteamDir
-    {
-        get
-        {
-            var dir = Settings.Default.SteamDirectory;
-            if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
-            {
-                return dir;
-            }
-
-            if (OperatingSystem.IsWindows())
-            {
-                return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
-            }
-
-            return OperatingSystem.IsLinux()
-                ? Path.Join(SteamRootDir, "steam")
-                :
-                // OSX
-                Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
-        }
-    }
+    public static string? SteamDir => GetSteamDir();
 
     private static string SteamUiDir => Path.Join(SteamDir, "steamui");
+
+    public static string SkinDir => Path.Join(SteamUiDir, GetRelativeSkinDir());
 
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
     private static string SteamExe => Path.Join(SteamDir, OperatingSystem.IsWindows() ? "Steam.exe" : "steam.sh");
 
-    public static string GetSkinDir()
+    private static string? GetSteamRootDir()
     {
-        return Path.Join(SteamUiDir, GetRelativeSkinDir());
+        if (OperatingSystem.IsWindows())
+        {
+            return SteamDir;
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
+        }
+
+        return OperatingSystem.IsMacOS()
+            ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
+                "Application Support", "Steam")
+            : null;
+    }
+
+    private static string? GetSteamDir()
+    {
+        var dir = Settings.Default.SteamDirectory;
+        if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
+        {
+            return dir;
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
+        }
+
+        return OperatingSystem.IsLinux()
+            ? Path.Join(SteamRootDir, "steam")
+            :
+            // OSX
+            Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
     }
 
     public static string GetRelativeSkinDir()
