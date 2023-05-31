@@ -25,8 +25,10 @@ public static class Steam
     private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
         .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-    private static Process? SteamProcess => Process.GetProcessesByName("steam")
-        .FirstOrDefault(p => p.ProcessName.Equals("steam", StringComparison.OrdinalIgnoreCase));
+    private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
+        .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
+
+    private static string SteamProcName => OperatingSystem.IsMacOS() ? "steam_osx" : "steam";
 
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
@@ -175,9 +177,17 @@ public static class Steam
         }
 
         args ??= Settings.Default.SteamLaunchArgs;
-        if (!args.Contains("-cef-enable-debugging"))
+        const string DebuggingString = @"-cef-enable-debugging";
+        if (!args.Contains(DebuggingString))
         {
-            args += " -cef-enable-debugging";
+            args += $" {DebuggingString}";
+            args = args.Trim();
+        }
+
+        const string BootstrapString = @"-skipinitialbootstrap";
+        if (OperatingSystem.IsMacOS() && !args.Contains(BootstrapString))
+        {
+            args += $" {BootstrapString}";
             args = args.Trim();
         }
 
