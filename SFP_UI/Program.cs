@@ -35,7 +35,10 @@ internal static class Program
             return;
         }
         LogManager.AutoShutdown = true;
-        Target.Register("OutputControl", typeof(OutputControlTarget));
+        LogManager.Setup().SetupExtensions(ext =>
+        {
+            ext.RegisterTarget<OutputControlTarget>("OutputControl");
+        });
         AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
         Log.Logger.Info(
             $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
