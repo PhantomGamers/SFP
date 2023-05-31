@@ -58,7 +58,7 @@ public static class Steam
             var dir = Settings.Default.SteamDirectory;
             if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
             {
-                return Settings.Default.SteamDirectory;
+                return dir;
             }
 
             if (OperatingSystem.IsWindows())
