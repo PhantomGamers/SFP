@@ -40,7 +40,13 @@ public static class Steam
 
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
-    private static string SteamExe => Path.Join(SteamDir, OperatingSystem.IsWindows() ? "Steam.exe" : "steam.sh");
+    private static string SteamExe =>
+        Path.Join(SteamDir,
+            OperatingSystem.IsWindows()
+                ? "Steam.exe"
+                : OperatingSystem.IsLinux()
+                    ? "steam.sh"
+                    : "steam_osx");
 
     private static string? GetSteamRootDir()
     {
