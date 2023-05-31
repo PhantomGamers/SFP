@@ -18,6 +18,9 @@ jobs:
         with:
           dotnet-version: 7.x
           cache: true
+          cache-key: ${{ runner.os }}-dotnet-${{ hashFiles('**/packages.lock.json') }}
+          cache-restore-keys: |
+            ${{ runner.os }}-dotnet-
       - run: dotnet restore --locked-mode
       - name: Set OS_ARG environment variable
         run: |
