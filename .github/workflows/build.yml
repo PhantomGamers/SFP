@@ -26,13 +26,13 @@ jobs:
       - run: dotnet restore --locked-mode
       - name: Set OS_ARG environment variable
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            echo "OS_ARG=win10" >> $GITHUB_ENV
-          elif [ "${{ runner.os }}" == "Linux" ]; then
-            echo "OS_ARG=linux" >> $GITHUB_ENV
-          elif [ "${{ runner.os }}" == "macOS" ]; then
-            echo "OS_ARG=osx" >> $GITHUB_ENV
-          fi
+          if ("${{ runner.os }}" -eq "Windows") {
+            echo "OS_ARG=win10" | Out-File -FilePath $env:GITHUB_ENV -Append
+          } elseif ("${{ runner.os }}" -eq "Linux") {
+            echo "OS_ARG=linux" | Out-File -FilePath $env:GITHUB_ENV -Append
+          } elseif ("${{ runner.os }}" -eq "macOS") {
+            echo "OS_ARG=osx" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
       - run: ./createpublishedzip.ps1 -os $OS_ARG
       - uses: actions/upload-artifact@v3
         with:
