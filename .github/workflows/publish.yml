@@ -1,4 +1,4 @@
-name: Publish Release
+name: Publish
 
 on:
   workflow_dispatch:
@@ -9,12 +9,10 @@ on:
         required: true
 
 jobs:
-  build:
+  create-tag:
+    runs-on:  ubuntu-latest
     strategy:
-      matrix:
-        os: [ win10, linux, osx ]
       fail-fast: true
-    runs-on: windows-latest
     steps:
       - name: Check Tag
         id: check-tag
@@ -22,45 +20,70 @@ jobs:
         with:
           text: ${{ github.event.inputs.version }}
           regex: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
-
       - name: Fail if invalid
         if: steps.check-tag.outputs.match == ''
         uses: Actions/github-script@v6
         with:
           script: |
             core.setFailed('Invalid tag')
-
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-
       - name: Create tag
         run: |
           git tag ${{ github.event.inputs.version }}
           git push origin ${{ github.event.inputs.version }}
 
+  build:
+    needs: create-tag
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+      fail-fast: true
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
-
-      - uses: actions/cache@v3
+          dotnet-version: 7.x
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore --locked-mode
+      - name: Set OS_ARG environment variable
+        run: |
+          if ("${{ runner.os }}" -eq "Windows") {
+            echo "OS_ARG=win10" | Out-File -FilePath $env:GITHUB_ENV -Append
+          } elseif ("${{ runner.os }}" -eq "Linux") {
+            echo "OS_ARG=linux" | Out-File -FilePath $env:GITHUB_ENV -Append
+          } elseif ("${{ runner.os }}" -eq "macOS") {
+            echo "OS_ARG=osx" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+      - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }} -selfcontained true
+      - uses: actions/upload-artifact@v3
         with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          name: SFP_UI-${{ env.OS_ARG }}-x64-SelfContained-${{ github.sha }}
+          path: Release/SFP_UI-*
 
-      - name: Build & Zip
-        shell: pwsh
-        run: .\createpublishedzip.ps1 -os ${{ matrix.os }}
-
-      - name: Publish to Github
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "Release/SFP_UI-*"
-          tag: ${{ github.event.inputs.version }}
-          commit: ${{ github.ref }}
-          artifactErrorsFailBuild: true
-          draft: true
-          allowUpdates: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+    publish:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/download-artifact@v3
+        - name: Display structure of downloaded files
+          run: ls -R
+        - name: Publish to Github
+          uses: ncipollo/release-action@v1
+          with:
+            artifacts: "Release/SFP_UI-*"
+            tag: ${{ github.event.inputs.version }}
+            commit: ${{ github.ref }}
+            artifactErrorsFailBuild: true
+            draft: true
+            allowUpdates: true
+            token: ${{ secrets.GITHUB_TOKEN }}
