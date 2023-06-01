@@ -57,7 +57,7 @@ jobs:
       - name: Publish to Github
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "Release/*.zip"
+          artifacts: "Release/SFP_UI-*"
           tag: ${{ github.event.inputs.version }}
           commit: ${{ github.ref }}
           artifactErrorsFailBuild: true

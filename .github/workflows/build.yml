@@ -38,5 +38,5 @@ jobs:
       - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }} -selfcontained true
       - uses: actions/upload-artifact@v3
         with:
-          name: SFP_UI-${{ runner.os }}-x64-SelfContained-${{ github.sha }}.zip
-          path: Release/*.zip
+          name: SFP_UI-${{ runner.os }}-x64-SelfContained-${{ github.sha }}
+          path: Release/SFP_UI-*
