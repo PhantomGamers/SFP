@@ -63,10 +63,10 @@ jobs:
           } elseif ("${{ runner.os }}" -eq "macOS") {
             echo "OS_ARG=osx" | Out-File -FilePath $env:GITHUB_ENV -Append
           }
-      - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }} -selfcontained true
+      - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }}
       - uses: actions/upload-artifact@v3
         with:
-          name: SFP_UI-${{ env.OS_ARG }}-x64-SelfContained-${{ github.sha }}
+          name: SFP_UI-${{ env.OS_ARG }}-x64-${{ github.sha }}
           path: Release/SFP_UI-*
 
   publish:
@@ -80,7 +80,7 @@ jobs:
       - name: Publish to Github
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "Release/SFP_UI-*"
+          artifacts: "**/SFP_UI-*.*"
           tag: ${{ github.event.inputs.version }}
           commit: ${{ github.ref }}
           artifactErrorsFailBuild: true

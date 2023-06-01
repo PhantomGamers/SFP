@@ -28,6 +28,13 @@ public partial class MainWindow : AppWindow
 #if DEBUG
         this.AttachDevTools();
 #endif
+        PropertyChanged += (_, args) =>
+        {
+            if (args.Property == WindowStateProperty)
+            {
+                HandleWindowStateChanged(WindowState);
+            }
+        };
 
         Application.Current!.ActualThemeVariantChanged += ApplicationActualThemeVariantChanged;
 
@@ -106,7 +113,7 @@ public partial class MainWindow : AppWindow
         }
 
         TransparencyBackgroundFallback = Brushes.Transparent;
-        TransparencyLevelHint = WindowTransparencyLevel.Mica;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
 
         TryEnableMicaEffect();
     }
@@ -130,9 +137,8 @@ public partial class MainWindow : AppWindow
         await Task.Run(App.QuitApplication);
     }
 
-    protected override void HandleWindowStateChanged(WindowState state)
+    private void HandleWindowStateChanged(WindowState state)
     {
-        base.HandleWindowStateChanged(state);
         if (state == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
         {
             Close();
