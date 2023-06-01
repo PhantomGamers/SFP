@@ -69,21 +69,21 @@ jobs:
           name: SFP_UI-${{ env.OS_ARG }}-x64-SelfContained-${{ github.sha }}
           path: Release/SFP_UI-*
 
-    publish:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: actions/download-artifact@v3
-        - name: Display structure of downloaded files
-          run: ls -R
-        - name: Publish to Github
-          uses: ncipollo/release-action@v1
-          with:
-            artifacts: "Release/SFP_UI-*"
-            tag: ${{ github.event.inputs.version }}
-            commit: ${{ github.ref }}
-            artifactErrorsFailBuild: true
-            draft: true
-            allowUpdates: true
-            token: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+      - name: Display structure of downloaded files
+        run: ls -R
+      - name: Publish to Github
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "Release/SFP_UI-*"
+          tag: ${{ github.event.inputs.version }}
+          commit: ${{ github.ref }}
+          artifactErrorsFailBuild: true
+          draft: true
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
