@@ -21,14 +21,18 @@ public static class Utils
             {
                 url = url.Replace("&", "^&");
                 _ = Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                return;
             }
-            else if (OperatingSystem.IsLinux())
+
+            url = $@"""{url}""";
+
+            if (OperatingSystem.IsLinux())
             {
                 _ = Process.Start("xdg-open", url);
             }
             else if (OperatingSystem.IsMacOS())
             {
-                _ = Process.Start("open", url);
+                _ = Process.Start("open", $"-t {url}");
             }
             else
             {

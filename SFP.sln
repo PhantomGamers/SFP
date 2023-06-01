@@ -17,12 +17,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.pre-commit-config.yaml = .pre-commit-config.yaml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{58F784D2-1B84-4624-B61D-5C99D54A8947}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{D50C3657-84AF-4631-9291-21EEF38F94B6}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\workflow.yml = .github\workflows\workflow.yml
 		.github\FUNDING.yml = .github\FUNDING.yml
 		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{DED8434F-5A66-487D-A851-DC06DF32242D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\publish.yml = .github\workflows\publish.yml
 		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject
 Global
@@ -47,6 +52,7 @@ Global
 		SolutionGuid = {6467C57A-09C8-44F5-88AC-95F87E14ED73}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{58F784D2-1B84-4624-B61D-5C99D54A8947} = {50AF4859-D9C1-465A-97E5-66B7B944FE7D}
+		{D50C3657-84AF-4631-9291-21EEF38F94B6} = {50AF4859-D9C1-465A-97E5-66B7B944FE7D}
+		{DED8434F-5A66-487D-A851-DC06DF32242D} = {D50C3657-84AF-4631-9291-21EEF38F94B6}
 	EndGlobalSection
 EndGlobal

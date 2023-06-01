@@ -25,64 +25,67 @@ public static class Steam
     private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
         .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-    private static Process? SteamProcess => Process.GetProcessesByName("steam")
-        .FirstOrDefault(p => p.ProcessName.Equals("steam", StringComparison.OrdinalIgnoreCase));
+    private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
+        .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
+
+    private static string SteamProcName => OperatingSystem.IsMacOS() ? "steam_osx" : "steam";
 
     internal static string MillenniumPath => Path.Join(SteamDir, "User32.dll");
 
-    private static string? SteamRootDir
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-            {
-                return SteamDir;
-            }
+    private static string? SteamRootDir => GetSteamRootDir();
 
-            if (OperatingSystem.IsLinux())
-            {
-                return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
-            }
-
-            return OperatingSystem.IsMacOS()
-                ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
-                    "Application Support", "Steam")
-                : null;
-        }
-    }
-
-    public static string? SteamDir
-    {
-        get
-        {
-            var dir = Settings.Default.SteamDirectory;
-            if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
-            {
-                return Settings.Default.SteamDirectory;
-            }
-
-            if (OperatingSystem.IsWindows())
-            {
-                return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
-            }
-
-            return OperatingSystem.IsLinux()
-                ? Path.Join(SteamRootDir, "steam")
-                :
-                // OSX
-                Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
-        }
-    }
+    public static string? SteamDir => GetSteamDir();
 
     private static string SteamUiDir => Path.Join(SteamDir, "steamui");
 
+    public static string SkinDir => Path.Join(SteamUiDir, GetRelativeSkinDir());
+
     public static string SkinsDir => Path.Join(SteamUiDir, "skins");
 
-    private static string SteamExe => OperatingSystem.IsWindows() ? Path.Join(SteamDir, "Steam.exe") : "steam";
+    private static string SteamExe =>
+        Path.Join(SteamDir,
+            OperatingSystem.IsWindows()
+                ? "Steam.exe"
+                : OperatingSystem.IsLinux()
+                    ? "steam.sh"
+                    : "steam_osx");
 
-    public static string GetSkinDir()
+    private static string? GetSteamRootDir()
     {
-        return Path.Join(SteamUiDir, GetRelativeSkinDir());
+        if (OperatingSystem.IsWindows())
+        {
+            return SteamDir;
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
+        }
+
+        return OperatingSystem.IsMacOS()
+            ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
+                "Application Support", "Steam")
+            : null;
+    }
+
+    private static string? GetSteamDir()
+    {
+        var dir = Settings.Default.SteamDirectory;
+        if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
+        {
+            return dir;
+        }
+
+        if (OperatingSystem.IsWindows())
+        {
+            return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
+        }
+
+        return OperatingSystem.IsLinux()
+            ? Path.Join(SteamRootDir, "steam")
+            :
+            // OSX
+            Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
     }
 
     public static string GetRelativeSkinDir()
@@ -142,6 +145,12 @@ public static class Steam
             return;
         }
 
+        if (!File.Exists(SteamExe))
+        {
+            Log.Logger.Error($"{SteamExe} does not exist. Please set the correct Steam path in the settings.");
+            return;
+        }
+
         Log.Logger.Info("Shutting down Steam");
         if (IsSteamWebHelperRunning)
         {
@@ -161,10 +170,24 @@ public static class Steam
             return Task.CompletedTask;
         }
 
-        args ??= Settings.Default.SteamLaunchArgs;
-        if (!args.Contains("-cef-enable-debugging"))
+        if (!File.Exists(SteamExe))
         {
-            args += " -cef-enable-debugging";
+            Log.Logger.Error($"{SteamExe} does not exist. Please set the correct Steam path in the settings.");
+            return Task.CompletedTask;
+        }
+
+        args ??= Settings.Default.SteamLaunchArgs;
+        const string DebuggingString = @"-cef-enable-debugging";
+        if (!args.Contains(DebuggingString))
+        {
+            args += $" {DebuggingString}";
+            args = args.Trim();
+        }
+
+        const string BootstrapString = @"-skipinitialbootstrap";
+        if (OperatingSystem.IsMacOS() && !args.Contains(BootstrapString))
+        {
+            args += $" {BootstrapString}";
             args = args.Trim();
         }
 
@@ -219,12 +242,20 @@ public static class Steam
 
     public static void StartMonitorSteam()
     {
-        if (s_watcher != null || string.IsNullOrWhiteSpace(SteamDir))
+        if (s_watcher != null)
         {
             return;
         }
 
-        s_watcher = new FileSystemWatcherEx(SteamDir) { Filter = ".crash" };
+        var dir = OperatingSystem.IsMacOS() ? SteamRootDir : SteamDir;
+
+        if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
+        {
+            Log.Logger.Warn($"Path {dir} does not exist, cannot monitor Steam state");
+            return;
+        }
+
+        s_watcher = new FileSystemWatcherEx(dir) { Filter = ".crash" };
         s_watcher.OnCreated += OnCrashFileCreated;
         s_watcher.OnDeleted += OnCrashFileDeleted;
         s_watcher.OnChanged += OnCrashFileCreated;

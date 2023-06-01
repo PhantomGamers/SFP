@@ -138,7 +138,7 @@ public class SfpConfig
             return s_sfpConfig;
         }
 
-        var skinDir = Steam.GetSkinDir();
+        var skinDir = Steam.SkinDir;
         var sfpConfigPath = Path.Combine(skinDir, "skin.json");
         var millenniumConfigPath = Path.Combine(skinDir, "config.json");
 

@@ -25,15 +25,34 @@ function Build-SFP
   dotnet publish "SFP_UI/SFP_UI.csproj" --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
   if ($createzip)
   {
-    $zipname = if ($selfContained)
-    {
-      "SFP_UI-$TargetRuntime-SelfContained.zip"
+    $excludeFiles = "SFP*.config", "*.log", "FluentAvalonia.pdb", "FileWatcherEx.pdb"
+    $publishDir = Join-Path "." "$configuration" "publish"
+    if ($TargetRuntime.StartsWith("win")) {
+      $zipname = if ($selfContained)
+      {
+        "SFP_UI-$TargetRuntime-SelfContained.zip"
+      }
+      else
+      {
+        "SFP_UI-$TargetRuntime-net7.zip"
+      }
+      Get-ChildItem "$publishDir/*" -Recurse -Exclude $excludeFiles | Compress-Archive -DestinationPath "./$configuration/$zipname" -Force
+    } else {
+      $zipname = if ($selfContained)
+      {
+        "SFP_UI-$TargetRuntime-SelfContained.tar.gz"
+      }
+      else
+      {
+        "SFP_UI-$TargetRuntime-net7.tar.gz"
+      }
+      $excludeOptions = ""
+      foreach ($file in $excludeFiles) {
+        $excludeOptions += "--exclude=""$file"" "
+      }
+      $tarCommand = "tar $excludeOptions -czvf ""./$configuration/$zipname"" -C ""$publishDir"" ."
+      Invoke-Expression $tarCOmmand
     }
-    else
-    {
-      "SFP_UI-$TargetRuntime-net7.zip"
-    }
-    Get-ChildItem "./$configuration/publish/*" -Recurse -Exclude SFP*.config, *.log, FluentAvalonia.pdb, FileWatcherEx.pdb | Compress-Archive -DestinationPath "./$configuration/$zipname" -Force
   }
 }
 

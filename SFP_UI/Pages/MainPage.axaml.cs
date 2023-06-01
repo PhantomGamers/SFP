@@ -34,7 +34,7 @@ public partial class MainPage : UserControl
         var sfpConfig = SfpConfig.GetConfig();
         var targetCssFiles = new HashSet<string>();
         var targetJsFiles = new HashSet<string>();
-        var skinDir = Steam.GetSkinDir();
+        var skinDir = Steam.SkinDir;
         foreach (var patch in sfpConfig.Patches)
         {
             // only add if not empty
@@ -55,7 +55,7 @@ public partial class MainPage : UserControl
         {
             Header = Settings.Default.SelectedSkin,
             Command = OpenDirCommand,
-            CommandParameter = Steam.GetSkinDir()
+            CommandParameter = Steam.SkinDir
         });
         flyout.Items.Add(new Separator());
         foreach (var cssFile in targetCssFiles)
