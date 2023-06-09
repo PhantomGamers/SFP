@@ -18,7 +18,7 @@ public static class Steam
     private static bool s_injectOnce;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
-    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
+    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : OperatingSystem.IsMacOS() ? 4 : 6;
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
@@ -334,7 +334,6 @@ public static class Steam
                     Log.Logger.Warn("Steam is not running, cannot inject");
                     return;
                 }
-                Log.Logger.Info(SteamWebHelperProcesses.Length);
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
