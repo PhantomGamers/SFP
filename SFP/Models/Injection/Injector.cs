@@ -23,11 +23,13 @@ public static partial class Injector
     {
         if (s_browser is { IsConnected: true })
         {
+            Log.Logger.Warn("Injection already started, skipping injection");
             return;
         }
 
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
         {
+            Log.Logger.Warn("Injection already in progress, skipping injection");
             return;
         }
 

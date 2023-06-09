@@ -18,15 +18,17 @@ public static class Steam
     private static bool s_injectOnce;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
 
-    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : 6;
+    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : OperatingSystem.IsMacOS() ? 4 : 6;
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
-    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
-        .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
+    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(SteamWebHelperProcName)
+        .Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase)).ToArray();
 
     private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
         .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
+
+    private static string SteamWebHelperProcName => OperatingSystem.IsMacOS() ? "Steam Helper" : @"steamwebhelper";
 
     private static string SteamProcName => OperatingSystem.IsMacOS() ? "steam_osx" : "steam";
 
@@ -294,6 +296,7 @@ public static class Steam
 
     public static async void RunTryInject()
     {
+        Log.Logger.Info("Starting injection...");
         await Task.Run(TryInject);
     }
 
@@ -301,6 +304,7 @@ public static class Steam
     {
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
         {
+            Log.Logger.Warn("Injection already in progress");
             return;
         }
 
@@ -308,6 +312,7 @@ public static class Steam
         {
             if (!IsSteamRunning)
             {
+                Log.Logger.Warn("Steam is not running, cannot inject");
                 return;
             }
 
@@ -317,6 +322,7 @@ public static class Steam
                 if (argumentsMissing)
                 {
                     s_injectOnce = true;
+                    Log.Logger.Warn("Steam is missing arguments, restarting Steam to fix...");
                     return;
                 }
             }
@@ -325,6 +331,7 @@ public static class Steam
             {
                 if (!IsSteamRunning)
                 {
+                    Log.Logger.Warn("Steam is not running, cannot inject");
                     return;
                 }
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
