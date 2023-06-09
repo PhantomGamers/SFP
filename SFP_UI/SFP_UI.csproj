@@ -18,13 +18,13 @@
     <!-- Mac OS bundling with -t:BundleApp !-->
     <CFBundleName>SFP_UI</CFBundleName> <!-- Also defines .app file name -->
     <CFBundleDisplayName>SFP_UI</CFBundleDisplayName>
-    <CFBundleIdentifier>com.github.phantomgamers.sfp_ui</CFBundleIdentifier>
+    <CFBundleIdentifier>com.github.phantomgamers.sfp</CFBundleIdentifier>
     <CFBundleVersion>0.0.1</CFBundleVersion>
     <CFBundleShortVersionString>$(CFBundleVersion)</CFBundleShortVersionString>
     <CFBundlePackageType>APPL</CFBundlePackageType>
     <CFBundleSignature>????</CFBundleSignature>
     <CFBundleExecutable>SFP_UI</CFBundleExecutable>
-    <CFBundleIconFile>Assets/SFP-logo.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
+    <CFBundleIconFile>SFP-logo.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
     <NSPrincipalClass>NSApplication</NSPrincipalClass>
     <NSHighResolutionCapable>true</NSHighResolutionCapable>
   </PropertyGroup>
