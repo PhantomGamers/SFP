@@ -93,12 +93,12 @@
       },
       "ReactiveUI.Fody": {
         "type": "Direct",
-        "requested": "[18.4.44, )",
-        "resolved": "18.4.44",
-        "contentHash": "FmzTAmlzUoi2AK49FCiC7vfv92tWyf/ySIpY/Bm1iVQr7jEIHmN0KyvYt18QI4sdTMJi86GSTnTapZupiEPqIQ==",
+        "requested": "[19.2.1, )",
+        "resolved": "19.2.1",
+        "contentHash": "G9yhjzf19zFZXwnM6L6AykEGTUg5hmDrEClMOyZ6uNlbRJRXDodoPkjnvFeOzlpzRl19ZHMgvOxNJ1QxUqW8lQ==",
         "dependencies": {
           "Fody": "6.7.0",
-          "ReactiveUI": "18.4.44"
+          "ReactiveUI": "19.2.1"
         }
       },
       "Semver": {
@@ -210,10 +210,10 @@
       },
       "DynamicData": {
         "type": "Transitive",
-        "resolved": "7.13.5",
-        "contentHash": "jpu26ujgGrMSO68t8b6ClEL3tvZy6K7np8Iem30JkQaLMeOCLxLCZ2Uk/Eyq67k/rwEWrraQ3FB5SBEKJaE2iw==",
+        "resolved": "7.14.2",
+        "contentHash": "r0QHWrxOuWngobI/QXbhvZvGNuLUjAo9ocDuSEsDftf47e6SulGoY8id6vMW2Oo5ZOi4c78NQlL22N+4CJ1CbA==",
         "dependencies": {
-          "System.Reactive": "5.0.0"
+          "System.Reactive": "6.0.0"
         }
       },
       "Flurl": {
@@ -471,11 +471,11 @@
       },
       "ReactiveUI": {
         "type": "Transitive",
-        "resolved": "18.4.44",
-        "contentHash": "DRtnK85MBdtwG+zjTluLWVnbUPzDOoHOFuIy6B4OAwvWNCkkRpf7FIHVwZz7cTjlG25eBeIJqWjgaejP6ejCHg==",
+        "resolved": "19.2.1",
+        "contentHash": "utHBuxDlB/Rajhi9EwgjSdXv8Lqwd2GU8sFlcjjeCBd3Y4lyVvcB9qS/SM87juZGf9mr1A7cd3ML/kEL+Lsxkg==",
         "dependencies": {
-          "DynamicData": "7.13.5",
-          "Splat": "14.6.8"
+          "DynamicData": "7.14.2",
+          "Splat": "14.6.37"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
@@ -624,8 +624,8 @@
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "14.6.8",
-        "contentHash": "WdhGXUvsWPNPzBLc/LC1Q5jLOczupHDc+4Skl0JaTEuyoDjxxe/Dme8UjGTkCPYbhnVWEsEJprWqyWDY5RNB9A=="
+        "resolved": "14.6.37",
+        "contentHash": "6BXbAks4Rqjo6dJW4KfTBZAf6ZRygjE78aVUbEBuSLwKGl+WZjsWZSIYIfYtqPbCEs74HvSTg+4xhSE93xl1kQ=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -1044,8 +1044,8 @@
       },
       "System.Reactive": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "erBZjkQHWL9jpasCE/0qKAryzVBJFxGHVBAvgRN1bzM0q2s1S4oYREEEL0Vb+1kA/6BKb5FjUZMp5VXmy+gzkQ=="
+        "resolved": "6.0.0",
+        "contentHash": "31kfaW4ZupZzPsI5PVe77VhnvFF55qgma7KZr/E0iFTs6fmdhhG8j0mgEx620iLTey1EynOkEfnyTjtNEpJzGw=="
       },
       "System.Reflection": {
         "type": "Transitive",
