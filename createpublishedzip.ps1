@@ -34,6 +34,10 @@ function Build-SFP
   if ($TargetRuntime.StartsWith("osx"))
   {
     Copy-Item -Path "./SFP_UI/Assets/SFP-logo.icns" -Destination "$configuration/publish/SFP_UI.app/Contents/Resources/SFP-logo.icns" -Force
+     if ($IsMacOS)
+     {
+       xattr -c "$configuration/publish/SFP_UI.app"
+     }
   }
   if ($createzip)
   {
