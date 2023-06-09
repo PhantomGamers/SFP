@@ -52,6 +52,12 @@
           "System.Reactive": "5.0.0"
         }
       },
+      "DotNet.Bundle": {
+        "type": "Direct",
+        "requested": "[0.9.13, )",
+        "resolved": "0.9.13",
+        "contentHash": "ap71k9yjYyvi2kZNkrH7mP/IZ68apMoU84AqL8FDHlEa7f3YwEcck4UU4uweS2zfx1x0C33JcYCeCp4wewag8w=="
+      },
       "ErrorProne.NET.CoreAnalyzers": {
         "type": "Direct",
         "requested": "[0.4.0-beta.1, )",

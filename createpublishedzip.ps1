@@ -22,7 +22,19 @@ function Build-SFP
   {
     "--no-self-contained -p:PublishTrimmed=false -p:TrimMode=""full""".Split(" ")
   }
-  dotnet publish "SFP_UI/SFP_UI.csproj" --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
+  [String]$bundleFlag = if ($TargetRuntime.StartsWith("osx"))
+  {
+    "-t:BundleApp"
+  }
+  else
+  {
+    ""
+  }
+  dotnet publish "SFP_UI/SFP_UI.csproj" $bundleFlag --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
+  if ($TargetRuntime.StartsWith("osx"))
+  {
+    Copy-Item -Path "./SFP_UI/Assets/SFP-logo.icns" -Destination "$configuration/publish/SFP_UI.app/Contents/Resources/SFP-logo.icns" -Force
+  }
   if ($createzip)
   {
     $excludeFiles = "SFP*.config", "*.log", "FluentAvalonia.pdb", "FileWatcherEx.pdb"
@@ -50,7 +62,15 @@ function Build-SFP
       foreach ($file in $excludeFiles) {
         $excludeOptions += "--exclude=""$file"" "
       }
-      $tarCommand = "tar $excludeOptions -czvf ""./$configuration/$zipname"" -C ""$publishDir"" ."
+      $output = if ($TargetRuntime.StartsWith("osx"))
+      {
+        "SFP_UI.app"
+      }
+      else
+      {
+        "."
+      }
+      $tarCommand = "tar $excludeOptions -czvf ""./$configuration/$zipname"" -C ""$publishDir"" $output"
       Invoke-Expression $tarCOmmand
     }
   }
