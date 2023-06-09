@@ -22,11 +22,13 @@ public static class Steam
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
-    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(@"steamwebhelper")
-        .Where(p => p.ProcessName.Equals(@"steamwebhelper", StringComparison.OrdinalIgnoreCase)).ToArray();
+    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(SteamWebHelperProcName)
+        .Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase)).ToArray();
 
     private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
         .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
+
+    private static string SteamWebHelperProcName => OperatingSystem.IsMacOS() ? "Steam Helper" : @"steamwebhelper";
 
     private static string SteamProcName => OperatingSystem.IsMacOS() ? "steam_osx" : "steam";
 
