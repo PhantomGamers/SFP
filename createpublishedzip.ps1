@@ -34,14 +34,14 @@ function Build-SFP
   if ($TargetRuntime.StartsWith("osx"))
   {
     Copy-Item -Path "./SFP_UI/Assets/SFP-logo.icns" -Destination "$configuration/publish/SFP_UI.app/Contents/Resources/SFP-logo.icns" -Force
-     if ($IsMacOS)
-     {
-       xattr -c "$configuration/publish/SFP_UI.app"
-     }
+    if ($IsMacOS)
+    {
+     xattr -c "$configuration/publish/SFP_UI.app"
+    }
   }
   if ($createzip)
   {
-    $excludeFiles = "SFP*.config", "*.log", "FluentAvalonia.pdb", "FileWatcherEx.pdb"
+    $excludeFiles = "SFP.dll.config", "SFP.config", "*.log", "FluentAvalonia.pdb", "FileWatcherEx.pdb"
     $publishDir = Join-Path "." "$configuration" "publish"
     if ($TargetRuntime.StartsWith("win")) {
       $zipname = if ($selfContained)
