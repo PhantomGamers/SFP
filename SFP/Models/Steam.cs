@@ -332,6 +332,7 @@ public static class Steam
                     Log.Logger.Warn("Steam is not running, cannot inject");
                     return;
                 }
+                Log.Logger.Info(SteamWebHelperProcesses.Length);
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
