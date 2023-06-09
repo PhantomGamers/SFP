@@ -294,6 +294,7 @@ public static class Steam
 
     public static async void RunTryInject()
     {
+        Log.Logger.Info("Starting injection...");
         await Task.Run(TryInject);
     }
 
@@ -301,6 +302,7 @@ public static class Steam
     {
         if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
         {
+            Log.Logger.Warn("Injection already in progress");
             return;
         }
 
@@ -308,6 +310,7 @@ public static class Steam
         {
             if (!IsSteamRunning)
             {
+                Log.Logger.Warn("Steam is not running, cannot inject");
                 return;
             }
 
@@ -317,6 +320,7 @@ public static class Steam
                 if (argumentsMissing)
                 {
                     s_injectOnce = true;
+                    Log.Logger.Warn("Steam is missing arguments, restarting Steam to fix...");
                     return;
                 }
             }
@@ -325,6 +329,7 @@ public static class Steam
             {
                 if (!IsSteamRunning)
                 {
+                    Log.Logger.Warn("Steam is not running, cannot inject");
                     return;
                 }
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
