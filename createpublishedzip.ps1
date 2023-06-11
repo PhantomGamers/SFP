@@ -10,7 +10,8 @@ function Build-SFP
 {
   param (
     [string]$TargetRuntime,
-    [bool]$selfContained = $True
+    [bool]$selfContained = $True,
+    [bool]$bundle = $False
   )
 
   Remove-Item -Path "./$configuration/publish" -Recurse -Force -ErrorAction Ignore
@@ -22,18 +23,14 @@ function Build-SFP
   {
     "--no-self-contained -p:PublishTrimmed=false -p:TrimMode=""full""".Split(" ")
   }
-  [String]$bundleFlag = if ($TargetRuntime.StartsWith("osx"))
+  dotnet publish "SFP_UI/SFP_UI.csproj" --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
+  if ($TargetRuntime.StartsWith("osx") -and $bundle)
   {
-    "-t:BundleApp"
-  }
-  else
-  {
-    ""
-  }
-  dotnet publish "SFP_UI/SFP_UI.csproj" $bundleFlag --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
-  if ($TargetRuntime.StartsWith("osx"))
-  {
-    Copy-Item -Path "./SFP_UI/Assets/SFP-logo.icns" -Destination "$configuration/publish/SFP_UI.app/Contents/Resources/SFP-logo.icns" -Force
+    New-Item -Path "$configuration/publish/SFP_UI.app/Contents/Resources" -ItemType Directory -Force
+    New-Item -Path "$configuration/publish/SFP_UI.app/Contents/MacOS" -ItemType Directory -Force
+    Copy-Item -Path "./SFP_UI/RawAssets/SFP-logo.icns" -Destination "$configuration/publish/SFP_UI.app/Contents/Resources/SFP-logo.icns" -Force
+    Copy-Item -Path "./SFP_UI/RawAssets/Info.plist" -Destination "$configuration/publish/SFP_UI.app/Contents/Info.plist" -Force
+    Get-ChildItem "$configuration/publish/*" -Exclude "SFP_UI.app" | Move-Item -Destination "$configuration/publish/SFP_UI.app/Contents/MacOS" -Force
     if ($IsMacOS)
     {
      xattr -c "$configuration/publish/SFP_UI.app"
@@ -98,6 +95,6 @@ foreach ($currentOS in $os.Split(";"))
 
   foreach ($value in $selfcontainedValues)
   {
-    Build-SFP -TargetRuntime $targetRuntime -selfContained $value
+    Build-SFP -TargetRuntime $targetRuntime -selfContained $value -bundle $True
   }
 }

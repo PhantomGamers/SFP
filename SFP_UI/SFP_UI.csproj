@@ -14,19 +14,6 @@
     <!--Default TrimMode value breaks app, partial results in larger sizes than avalonia 10 builds so further investigation is needed-->
     <TrimMode>partial</TrimMode>
     <UseAppHost>true</UseAppHost>
-
-    <!-- Mac OS bundling with -t:BundleApp !-->
-    <CFBundleName>SFP_UI</CFBundleName> <!-- Also defines .app file name -->
-    <CFBundleDisplayName>SFP_UI</CFBundleDisplayName>
-    <CFBundleIdentifier>com.github.phantomgamers.sfp</CFBundleIdentifier>
-    <CFBundleVersion>0.0.1</CFBundleVersion>
-    <CFBundleShortVersionString>$(CFBundleVersion)</CFBundleShortVersionString>
-    <CFBundlePackageType>APPL</CFBundlePackageType>
-    <CFBundleSignature>????</CFBundleSignature>
-    <CFBundleExecutable>SFP_UI</CFBundleExecutable>
-    <CFBundleIconFile>SFP-logo.icns</CFBundleIconFile> <!-- Will be copied from output directory -->
-    <NSPrincipalClass>NSApplication</NSPrincipalClass>
-    <NSHighResolutionCapable>true</NSHighResolutionCapable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,7 +26,6 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
     <PackageReference Include="Avalonia.ReactiveUI" />
-    <PackageReference Include="DotNet.Bundle" />
     <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Semver" />
     <PackageReference Include="FluentAvaloniaUI" />
