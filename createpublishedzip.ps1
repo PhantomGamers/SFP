@@ -95,6 +95,6 @@ foreach ($currentOS in $os.Split(";"))
 
   foreach ($value in $selfcontainedValues)
   {
-    Build-SFP -TargetRuntime $targetRuntime -selfContained $value -bundle $True
+    Build-SFP -TargetRuntime $targetRuntime -selfContained $value
   }
 }
