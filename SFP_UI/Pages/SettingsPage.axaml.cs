@@ -83,6 +83,7 @@ public partial class SettingsPage : UserControl
         Log.Logger.Info("Switching to skin {Skin}", value);
         Settings.Default.SelectedSkin = value;
         Settings.Default.Save();
+        _ = Steam.GetRelativeSkinDir(force: true);
         _ = SfpConfig.GetConfig(true);
         Injector.Reload();
     }

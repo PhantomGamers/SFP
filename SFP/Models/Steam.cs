@@ -90,23 +90,39 @@ public static class Steam
             Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
     }
 
-    public static string GetRelativeSkinDir()
+    private static string s_relativeSkinDir = GetRelativeSkinDir();
+
+    public static string GetRelativeSkinDir(bool force = false)
     {
+        if (!string.IsNullOrWhiteSpace(s_relativeSkinDir) && !force)
+        {
+            return s_relativeSkinDir;
+        }
+
         string relativeSkinDir;
         var selectedSkin = Settings.Default.SelectedSkin;
-        if (string.IsNullOrWhiteSpace(selectedSkin) || selectedSkin == "steamui")
+        if (string.IsNullOrWhiteSpace(selectedSkin))
         {
+            Log.Logger.Debug("SelectedSkin is null or empty.");
             relativeSkinDir = string.Empty;
-        }
-        else if (selectedSkin == "skins\\steamui")
-        {
-            relativeSkinDir = "skins/steamui";
         }
         else
         {
-            relativeSkinDir = $"skins/{selectedSkin}";
+            switch (selectedSkin)
+            {
+                case "steamui":
+                    Log.Logger.Debug("SelectedSkin is steamui.");
+                    relativeSkinDir = string.Empty;
+                    break;
+                case "skins\\steamui":
+                    relativeSkinDir = "skins/steamui";
+                    break;
+                default:
+                    relativeSkinDir = $"skins/{selectedSkin}";
+                    break;
+            }
         }
-        return relativeSkinDir;
+        return s_relativeSkinDir = relativeSkinDir;
     }
 
     public static event EventHandler? SteamStarted;
