@@ -46,6 +46,7 @@ public static class Utils
     {
         if (process == null)
         {
+            Log.Logger.Warn("Could not get command line, process does not exist.");
             return new List<string>();
         }
 
