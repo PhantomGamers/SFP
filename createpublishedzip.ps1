@@ -63,7 +63,7 @@ function Build-SFP
       foreach ($file in $excludeFiles) {
         $excludeOptions += "--exclude=""$file"" "
       }
-      $output = if ($TargetRuntime.StartsWith("osx"))
+      $output = if ($TargetRuntime.StartsWith("osx") -and $bundle)
       {
         "SFP_UI.app"
       }
