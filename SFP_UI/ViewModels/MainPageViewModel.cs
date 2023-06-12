@@ -1,6 +1,7 @@
 #region
 
 using System.Reactive;
+using System.Text;
 using NLog;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -16,6 +17,8 @@ public class MainPageViewModel : ViewModelBase
 {
     public static MainPageViewModel? Instance { get; private set; }
 
+    private static readonly StringBuilder s_outputBuilder = new();
+
     [Reactive] public bool UpdateNotificationIsOpen { get; set; }
 
     [Reactive] public string UpdateNotificationContent { get; set; } = string.Empty;
@@ -26,18 +29,11 @@ public class MainPageViewModel : ViewModelBase
 
     [Reactive] public string StartSteamText { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
 
-    private static string s_output = string.Empty;
+    private string _output = s_outputBuilder.ToString();
     public string Output
     {
-        get => s_output;
-        private set => this.RaiseAndSetIfChanged(ref s_output, value);
-    }
-
-    private static int s_caretIndex;
-    public int CaretIndex
-    {
-        get => s_caretIndex;
-        private set => this.RaiseAndSetIfChanged(ref s_caretIndex, value);
+        get => _output;
+        private set => this.RaiseAndSetIfChanged(ref _output, value);
     }
 
     public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
@@ -66,16 +62,38 @@ public class MainPageViewModel : ViewModelBase
 
     private static void Print(LogLevel level, string message)
     {
-        if (Instance != null)
+        TrimOutput();
+        s_outputBuilder.Append($"[{DateTime.Now}][{level}] {message}");
+        if (Instance == null)
         {
-            Instance.Output = string.Concat(Instance.Output, $"[{DateTime.Now}][{level}] {message}");
-            Instance.CaretIndex = Instance.Output.Length;
+            return;
         }
-        else
+        Instance.Output = s_outputBuilder.ToString();
+    }
+
+    private static void TrimOutput()
+    {
+        const short MaxLength = short.MaxValue;
+        if (s_outputBuilder.Length <= MaxLength)
         {
-            s_output = string.Concat(s_output, $"[{DateTime.Now}][{level}] {message}");
-            s_caretIndex = s_output.Length;
+            return;
         }
+
+        var output = s_outputBuilder.ToString();
+        var firstNewlineIndex = output.IndexOf('\n');
+        if (firstNewlineIndex == -1)
+        {
+            return;
+        }
+        var firstLine = output[..firstNewlineIndex];
+        var lastNewlineIndex = output.IndexOf('\n', MaxLength / 2);
+        if (lastNewlineIndex == -1)
+        {
+            return;
+        }
+        s_outputBuilder.Clear();
+        s_outputBuilder.Append(firstLine);
+        s_outputBuilder.Append(output.AsSpan(lastNewlineIndex));
     }
 
     public void ShowUpdateNotification(SemVersion oldVersion, SemVersion newVersion)
