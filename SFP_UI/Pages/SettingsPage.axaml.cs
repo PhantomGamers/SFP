@@ -82,6 +82,7 @@ public partial class SettingsPage : UserControl
         var value = SteamSkinComboBox.SelectedValue?.ToString();
         Log.Logger.Info("Switching to skin {Skin}", value);
         Settings.Default.SelectedSkin = value;
+        Settings.Default.Save();
         _ = SfpConfig.GetConfig(true);
         Injector.Reload();
     }
