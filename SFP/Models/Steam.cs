@@ -211,7 +211,7 @@ public static class Steam
 
         if (File.Exists(MillenniumPath))
         {
-            Log.Logger.Warn("Millennium Patcher install detected, disabling millenium patcher...");
+            Log.Logger.Warn("Millennium Patcher install detected, disabling Millennium patcher...");
             try
             {
                 var newPath = Path.Join(MillenniumPath, ".bak");
