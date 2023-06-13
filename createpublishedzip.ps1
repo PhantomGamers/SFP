@@ -11,7 +11,7 @@ function Build-SFP
   param (
     [string]$TargetRuntime,
     [bool]$selfContained = $True,
-    [bool]$bundle = $False
+    [bool]$bundle = $True
   )
 
   Remove-Item -Path "./$configuration/publish" -Recurse -Force -ErrorAction Ignore
@@ -23,7 +23,15 @@ function Build-SFP
   {
     "--no-self-contained -p:PublishTrimmed=false -p:TrimMode=""full""".Split(" ")
   }
-  dotnet publish "SFP_UI/SFP_UI.csproj" --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag
+  [String[]]$bundleFlag = if ($TargetRuntime.StartsWith("osx") -and $bundle)
+  {
+    "-p:PublishSingleFile=false -p:IncludeNativeLibrariesForSelfExtract=false".Split(" ")
+  }
+  else
+  {
+    ""
+  }
+  dotnet publish "SFP_UI/SFP_UI.csproj" --configuration $configuration --output $configuration/publish --runtime $TargetRuntime @selfContainedFlag @bundleFlag
   if ($TargetRuntime.StartsWith("osx") -and $bundle)
   {
     New-Item -Path "$configuration/publish/SFP_UI.app/Contents/Resources" -ItemType Directory -Force
