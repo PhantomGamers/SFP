@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Flurl.Http" />
     <PackageReference Include="Gameloop.Vdf" />
     <PackageReference Include="PortableJsonSettingsProvider" />
