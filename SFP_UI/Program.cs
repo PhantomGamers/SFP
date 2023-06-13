@@ -34,17 +34,36 @@ internal static class Program
         {
             return;
         }
-        LogManager.AutoShutdown = true;
-        LogManager.Setup().SetupExtensions(ext =>
-        {
-            ext.RegisterTarget<OutputControlTarget>("OutputControl");
-        });
-        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+        SetupNLog();
         Log.Logger.Info(
             $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
         InitSettings();
         _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
         CloseFileStream();
+    }
+
+    private static void SetupNLog()
+    {
+        LogManager.AutoShutdown = true;
+        LogManager.Setup().SetupExtensions(ext => ext.RegisterTarget<OutputControlTarget>());
+        LogManager.Setup().LoadConfiguration(c =>
+        {
+            c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
+            var fileTarget = new FileTarget
+            {
+                FileName = "SFP.log",
+                ArchiveOldFileOnStartup = true,
+                OpenFileCacheTimeout = 30,
+                MaxArchiveFiles = 2,
+                ArchiveAboveSize = 1024 * 1024 * 10
+            };
+            c.ForLogger().FilterMinLevel(LogLevel.Debug).WriteTo(fileTarget).WithAsync();
+            c.ForLogger().FilterMinLevel(LogLevel.Info).WriteTo(new OutputControlTarget()).WithAsync();
+#if DEBUG
+            c.ForLogger().FilterMinLevel(LogLevel.Debug).WriteToDebug().WithAsync();
+#endif
+        });
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
     private static bool EnforceSingleInstance()
@@ -105,5 +124,6 @@ internal static class Program
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Log.Logger.Error(e.ExceptionObject);
+        LogManager.Shutdown();
     }
 }

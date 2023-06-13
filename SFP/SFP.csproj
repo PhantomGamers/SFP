@@ -30,9 +30,11 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="App.config" />
+    <AdditionalFiles Include="App.config" />
   </ItemGroup>
 
 </Project>

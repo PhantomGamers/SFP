@@ -38,7 +38,7 @@ function Build-SFP
   }
   if ($createzip)
   {
-    $excludeFiles = "SFP.dll.config", "SFP.config", "*.log", "FluentAvalonia.pdb", "FileWatcherEx.pdb"
+    $excludeFiles = "*.log", "*.pdb", "*.config"
     $publishDir = Join-Path "." "$configuration" "publish"
     if ($TargetRuntime.StartsWith("win")) {
       $zipname = if ($selfContained)
