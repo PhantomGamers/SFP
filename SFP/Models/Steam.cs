@@ -209,12 +209,12 @@ public static class Steam
             args = args.Trim();
         }
 
-        if (File.Exists(MillenniumPath))
+        if (OperatingSystem.IsWindows() && File.Exists(MillenniumPath))
         {
             Log.Logger.Warn("Millennium Patcher install detected, disabling Millennium patcher...");
             try
             {
-                var newPath = Path.Join(MillenniumPath, ".bak");
+                var newPath = $"{MillenniumPath}.disabled";
                 File.Move(MillenniumPath, newPath, true);
             }
             catch (Exception e)
