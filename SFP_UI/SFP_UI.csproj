@@ -37,5 +37,6 @@
     <ProjectReference Include="..\SFP\SFP.csproj" />
     <!--Unsure if this should be SFP or SFP_UI, or if it matters at all!-->
     <TrimmerRootAssembly Include="SFP_UI" />
+    <TrimmerRootAssembly Include="WmiLight" />
   </ItemGroup>
 </Project>
