@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
 using SFP_UI.Pages;
+using SFP_UI.ViewModels;
 
 #endregion
 
@@ -13,9 +14,6 @@ namespace SFP_UI.Views;
 
 public partial class MainView : UserControl
 {
-    private Frame? _frameView;
-    private NavigationView? _navView;
-
     public MainView()
     {
         InitializeComponent();
@@ -25,96 +23,72 @@ public partial class MainView : UserControl
     {
         base.OnAttachedToVisualTree(e);
 
-        _frameView = this.FindControl<Frame>("FrameView");
-        if (_frameView == null)
-        {
-            return;
-        }
+        var vm = new MainViewViewModel();
+        DataContext = vm;
+        FrameView.NavigationPageFactory = vm.NavigationFactory;
 
-        _frameView.Navigated += OnFrameViewNavigated;
+        FrameView.Navigated += OnFrameViewNavigated;
+        NavView.ItemInvoked += OnNavigationViewItemInvoked;
 
-        _navView = this.FindControl<NavigationView>("NavView");
-        if (_navView != null)
-        {
-            _navView.MenuItemsSource = GetNavigationViewItems();
-            _navView.FooterMenuItemsSource = GetFooterNavigationViewItems();
-            _navView.ItemInvoked += OnNavigationViewItemInvoked;
-            _navView.IsPaneOpen = false;
-        }
+        NavView.MenuItemsSource = GetNavigationViewItems();
+        NavView.FooterMenuItemsSource = GetFooterNavigationViewItems();
 
-        _ = _frameView.Navigate(typeof(MainPage));
+        NavView.IsPaneOpen = false;
+
+        FrameView.NavigateFromObject(NavView.MenuItemsSource.Cast<NavigationViewItem>().First().Tag!);
     }
 
-    private void SetNviIcon(NavigationViewItem item, bool selected, bool recurse = false)
+    private void SetNviIcon(NavigationViewItem? item, bool selected)
     {
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
 
-        if (item.Tag is not Type type)
-        {
+        if (item == null)
             return;
-        }
 
-        if (type == typeof(MainPage))
+        var t = item.Tag;
+
+        item.IconSource = t switch
         {
-            item.IconSource = this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
+            MainPage => this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
                 ? (IconSource)value!
-                : null;
-        }
-        else if (type == typeof(SettingsPage))
-        {
-            item.IconSource = this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
+                : null,
+            SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
                 ? (IconSource)value!
-                : null;
-        }
-
-        if (recurse)
-        {
-            return;
-        }
-
-        if (_navView is null)
-        {
-            return;
-        }
-
-        var allItems = _navView.MenuItemsSource.Cast<object>()
-            .Concat(_navView.FooterMenuItemsSource.Cast<object>())
-            .OfType<NavigationViewItem>();
-
-        foreach (var nvi in allItems.Where(nvi => !nvi.Equals(item)))
-        {
-            SetNviIcon(nvi, false, true);
-        }
+                : null,
+            _ => item.IconSource
+        };
     }
 
     private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
     {
-        if (_navView != null && !TryNavigateItem(e, _navView.MenuItemsSource))
+        var page = e.Content as Control;
+
+        foreach (NavigationViewItem nvi in NavView.MenuItemsSource)
         {
-            _ = TryNavigateItem(e, _navView.FooterMenuItemsSource);
-        }
-    }
-
-    private bool TryNavigateItem(NavigationEventArgs e, IEnumerable itemsSource)
-    {
-        foreach (NavigationViewItem nvi in itemsSource)
-        {
-            if (nvi.Tag is not Type tag || tag != e.SourcePageType)
+            if (nvi.Tag != null && nvi.Tag.Equals(page))
             {
-                continue;
+                NavView.SelectedItem = nvi;
+                SetNviIcon(nvi, true);
             }
-
-            if (_navView != null)
+            else
             {
-                _navView.SelectedItem = nvi;
+                SetNviIcon(nvi, false);
             }
-
-            SetNviIcon(nvi, true);
-            return true;
         }
 
-        return false;
+        foreach (NavigationViewItem nvi in NavView.FooterMenuItemsSource)
+        {
+            if (nvi.Tag != null && nvi.Tag.Equals(page))
+            {
+                NavView.SelectedItem = nvi;
+                SetNviIcon(nvi, true);
+            }
+            else
+            {
+                SetNviIcon(nvi, false);
+            }
+        }
     }
 
     private IEnumerable<NavigationViewItem> GetNavigationViewItems()
@@ -124,7 +98,7 @@ public partial class MainView : UserControl
             new()
             {
                 Content = "Home",
-                Tag = typeof(MainPage),
+                Tag = NavigationFactory.GetPages()[0],
                 IconSource = (IconSource)this.FindResource("HomeIcon")!,
                 Classes = { "SFPAppNav" }
             }
@@ -138,7 +112,7 @@ public partial class MainView : UserControl
             new()
             {
                 Content = "Settings",
-                Tag = typeof(SettingsPage),
+                Tag = NavigationFactory.GetPages()[1],
                 IconSource = (IconSource)this.FindResource("SettingsIcon")!,
                 Classes = { "SFPAppNav" }
             }
@@ -147,11 +121,9 @@ public partial class MainView : UserControl
 
     private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
     {
-        // Change the current selected item back to normal
-        SetNviIcon((_navView!.SelectedItem as NavigationViewItem)!, false);
-        if (e.InvokedItemContainer is NavigationViewItem { Tag: Type typ })
+        if (e.InvokedItemContainer is NavigationViewItem { Tag: Control c })
         {
-            _ = _frameView!.Navigate(typ, null, e.RecommendedNavigationTransitionInfo);
+            _ = FrameView.NavigateFromObject(c);
         }
     }
 }
