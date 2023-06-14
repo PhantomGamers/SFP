@@ -21,7 +21,7 @@ function Build-SFP
   }
   else
   {
-    "--no-self-contained"
+    "--no-self-contained -p:PublishTrimmed=false".Split(" ")
   }
   [String[]]$bundleFlag = if ($TargetRuntime.StartsWith("osx") -and $bundle)
   {
