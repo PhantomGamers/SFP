@@ -1,12 +1,22 @@
 <linker>
-  <assembly fullname="SFP">
-    <type fullname="SFP.Models.Injection.BrowserEndpoint">
-      <property name="WebSocketDebuggerUrl" />
-    </type>
-  </assembly>
-  <assembly fullname="SFP_UI">
-    <type fullname="SFP_UI.Models.Release">
-      <property name="TagName" />
-    </type>
-  </assembly>
+    <assembly fullname="SFP">
+        <type fullname="SFP.Models.Injection.Config.Patch">
+            <property name="Url"/>
+            <property name="Css"/>
+            <property name="PatchEveryInstance"/>
+            <property name="Remote"/>
+            <property name="Js"/>
+        </type>
+        <type fullname="SFP.Models.Injection.Config.MillenniumConfig">
+            <property name="Patch"/>
+        </type>
+        <type fullname="SFP.Models.Injection.BrowserEndpoint">
+            <property name="WebSocketDebuggerUrl"/>
+        </type>
+    </assembly>
+    <assembly fullname="SFP_UI">
+        <type fullname="SFP_UI.Models.Release">
+            <property name="TagName"/>
+        </type>
+    </assembly>
 </linker>
