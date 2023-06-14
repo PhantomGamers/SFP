@@ -25,15 +25,14 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
     <PackageReference Include="Avalonia.ReactiveUI" />
-    <PackageReference Include="ReactiveUI.Fody">
-    </PackageReference>
+    <PackageReference Include="ReactiveUI.Fody" />
     <PackageReference Include="Semver" />
     <PackageReference Include="FluentAvaloniaUI" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFP\SFP.csproj" />
-    <TrimmerRootAssembly Include="SFP" />
     <TrimmerRootAssembly Include="WmiLight" />
     <TrimmerRootAssembly Include="PuppeteerSharp" />
+    <TrimmerRootDescriptor Include="TrimmerRoot.xml" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,12 @@
+<linker>
+  <assembly fullname="SFP">
+    <type fullname="SFP.Models.Injection.BrowserEndpoint">
+      <property name="WebSocketDebuggerUrl" />
+    </type>
+  </assembly>
+  <assembly fullname="SFP_UI">
+    <type fullname="SFP_UI.Models.Release">
+      <property name="TagName" />
+    </type>
+  </assembly>
+</linker>
