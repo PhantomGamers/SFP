@@ -2,12 +2,6 @@
 
 This utility allows you to apply themes and scripts to the new Steam beta client.
 
-## Steam Stable Users Read
-
-The latest version of this readme and program is intended for use on the Steam Beta as of 2023-04-23.
-
-For the old version of SFP that works with Steam Stable, see [here](https://github.com/PhantomGamers/SFP/tree/0.0.14).
-
 ## Instructions
 
 1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
