@@ -1520,7 +1520,6 @@
       "sfp": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.AssemblyPublicizer.MSBuild": "[0.4.1, )",
           "FileWatcherEx": "[2.5.0, )",
           "Flurl.Http": "[4.0.0-pre3, )",
           "Gameloop.Vdf": "[0.6.2, )",
@@ -1530,12 +1529,6 @@
           "WindowsShortcutFactory": "[1.1.0, )",
           "WmiLight": "[3.1.0, )"
         }
-      },
-      "BepInEx.AssemblyPublicizer.MSBuild": {
-        "type": "CentralTransitive",
-        "requested": "[0.4.1, )",
-        "resolved": "0.4.1",
-        "contentHash": "bbTaXa0CKDuap0vDR+NkSz9crQIYhMvIbId9njUajYZAcr8OTuVcyiSlexzeGxfkYAbbn0z9YpgbIoeyHADXqA=="
       },
       "FileWatcherEx": {
         "type": "CentralTransitive",

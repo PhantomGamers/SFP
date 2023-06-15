@@ -57,13 +57,13 @@
                 <Border BorderThickness="5">
                     <ScrollViewer Margin="10">
                         <TextBox Name="Output"
-                                 CaretIndex="{Binding CaretIndex}"
                                  BorderThickness="0"
                                  Focusable="False"
                                  IsReadOnly="True"
                                  TextWrapping="Wrap"
                                  IsTabStop="False"
-                                 Text="{Binding Output, Mode=OneWay}" />
+                                 Text="{Binding Output, Mode=OneWay}"
+                                 CaretIndex="{Binding Output.Length, Mode=OneWay}"/>
                     </ScrollViewer>
                 </Border>
             </DockPanel>

@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Flurl.Http" />
     <PackageReference Include="Gameloop.Vdf" />
     <PackageReference Include="PortableJsonSettingsProvider" />
@@ -30,9 +32,11 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Update="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="App.config" />
+    <AdditionalFiles Include="App.config" />
   </ItemGroup>
 
 </Project>

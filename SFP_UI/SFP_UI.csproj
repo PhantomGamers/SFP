@@ -11,8 +11,8 @@
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
-    <!--Default TrimMode value breaks app, partial results in larger sizes than avalonia 10 builds so further investigation is needed-->
-    <TrimMode>partial</TrimMode>
+    <UseAppHost>true</UseAppHost>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +31,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFP\SFP.csproj" />
-    <!--Unsure if this should be SFP or SFP_UI, or if it matters at all!-->
-    <TrimmerRootAssembly Include="SFP_UI" />
+    <TrimmerRootAssembly Include="WmiLight" />
+    <TrimmerRootAssembly Include="PuppeteerSharp" />
+    <TrimmerRootDescriptor Include="TrimmerRoot.xml" />
   </ItemGroup>
 </Project>

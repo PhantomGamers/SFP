@@ -18,6 +18,11 @@ public struct BrowserEndpoint
 
     internal static async Task<BrowserEndpoint> GetBrowserEndpointAsync()
     {
+        if (!Steam.IsSteamRunning)
+        {
+            Log.Logger.Error("Could not fetch browser, Steam is not running");
+            throw new NullReferenceException();
+        }
         try
         {
             return await CefDebuggingUrl.AppendPathSegments("json", "version").GetJsonAsync<BrowserEndpoint>();
