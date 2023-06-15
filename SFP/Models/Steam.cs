@@ -381,7 +381,7 @@ public static class Steam
             return false;
         }
 
-        var argumentMissing = Settings.Default.SteamLaunchArgs.Split(' ')
+        var argumentMissing = Settings.Default.SteamLaunchArgs.Trim().ToLower().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Any(arg => !cmdLine.Contains(arg));
 
         if (!argumentMissing)

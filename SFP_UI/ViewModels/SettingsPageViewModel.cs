@@ -143,7 +143,7 @@ public class SettingsPageViewModel : ViewModelBase
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
-                Settings.Default.SteamLaunchArgs = value;
+                Settings.Default.SteamLaunchArgs = value.Trim();
                 Settings.Default.Save();
             });
 
