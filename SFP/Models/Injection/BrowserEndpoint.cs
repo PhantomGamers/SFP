@@ -40,7 +40,7 @@ public struct BrowserEndpoint
             }
             else
             {
-                Log.Logger.Error("Could not fetch browser, SFP possibly tried to inject too early");
+                Log.Logger.Error("Could not fetch browser, SFP either tried to inject too early or another service is running on port 8080");
             }
             Log.Logger.Debug(e);
             throw;

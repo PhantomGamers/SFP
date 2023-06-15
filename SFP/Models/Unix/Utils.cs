@@ -17,8 +17,8 @@ public static class Utils
         var processName = process.ProcessName;
         var command = $"pgrep -x {processName} | xargs sh -c 'if [ -n \"$1\" ]; then ps -o command= -p \"$1\"; fi' _";
         var output = RunCommand(command);
-        var lines = output.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        return lines.Select(line => line.Trim()).Where(arg => !string.IsNullOrWhiteSpace(arg)).ToList();
+        var lines = output.ToLower().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        return lines.ToList();
     }
 
     [SuppressMessage("CodeSmell", "ERP022:Unobserved exception in a generic exception handler")]

@@ -25,7 +25,7 @@ public class MainPageViewModel : ViewModelBase
 
     [Reactive] public bool ButtonsEnabled { get; set; } = true;
 
-    [Reactive] public bool IsInjected { get; set; }
+    [Reactive] public bool IsInjected { get; set; } = Injector.IsInjected;
 
     [Reactive] public string StartSteamText { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
 

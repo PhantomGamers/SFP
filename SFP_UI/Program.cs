@@ -49,7 +49,7 @@ internal static class Program
         LogManager.Setup().LoadConfiguration(c =>
         {
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
-            var fileTarget = new FileTarget
+            using var fileTarget = new FileTarget
             {
                 FileName = "SFP.log",
                 ArchiveOldFileOnStartup = true,
