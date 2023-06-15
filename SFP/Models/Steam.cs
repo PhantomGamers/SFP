@@ -198,15 +198,15 @@ public static class Steam
         const string DebuggingString = @"-cef-enable-debugging";
         if (!args.Contains(DebuggingString))
         {
-            args += $" {DebuggingString}";
             args = args.Trim();
+            args += $" {DebuggingString}";
         }
 
         const string BootstrapString = @"-skipinitialbootstrap";
         if (OperatingSystem.IsMacOS() && !args.Contains(BootstrapString))
         {
-            args += $" {BootstrapString}";
             args = args.Trim();
+            args += $" {BootstrapString}";
         }
 
         if (OperatingSystem.IsWindows() && File.Exists(MillenniumPath))
