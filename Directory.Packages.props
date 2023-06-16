@@ -32,6 +32,6 @@
     <PackageVersion Include="FileWatcherEx" Version="2.5.0" />
     <PackageVersion Include="FluentAvaloniaUI" Version="2.0.0-rc1" />
     <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0" />
-    <PackageVersion Include="WmiLight" Version="3.1.0" />
+    <PackageVersion Include="WmiLight" Version="4.0.0" />
   </ItemGroup>
 </Project>
