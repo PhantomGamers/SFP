@@ -89,9 +89,9 @@
       },
       "WmiLight": {
         "type": "Direct",
-        "requested": "[3.1.0, )",
-        "resolved": "3.1.0",
-        "contentHash": "VioqRImznVNEe1ye062++9kg/v/bBIXeh6Q7YXyhRtX2snGCqrL6YlKvSkfmJzuTKNmHIcUGPc8xK+p1ZxM1DA==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "tRYc62pG2ds4NXtEO+PAWSqnKejyFD8xLOCAO1kl2HzsnEvdZFQ1ZeTcCgx2BUJAW/SUWQADcftbPqaXpRxhEA==",
         "dependencies": {
           "Microsoft.Win32.Registry": "5.0.0"
         }
