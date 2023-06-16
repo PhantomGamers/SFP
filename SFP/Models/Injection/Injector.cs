@@ -218,7 +218,7 @@ public static partial class Injector
                 {
                     try
                     {
-                        if (await frame.QuerySelectorAsync(patch.MatchRegexString) == null)
+                        if (await frame.QuerySelectorAsync(regex) == null)
                         {
                             continue;
                         }
