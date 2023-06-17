@@ -36,36 +36,34 @@ public partial class MainWindow : AppWindow
             }
         };
 
-        Application.Current!.ActualThemeVariantChanged += OnActualThemeVariantChanged;
+        Application.Current!.ActualThemeVariantChanged += ApplicationActualThemeVariantChanged;
 
         App.SetApplicationTheme(Settings.Default.AppTheme);
     }
 
     public static MainWindow? Instance { get; private set; }
 
-    private void OnActualThemeVariantChanged(object? sender, EventArgs e)
+    private void ApplicationActualThemeVariantChanged(object? sender, EventArgs e)
     {
-        if (!IsWindows11)
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             return;
         }
 
-        if (ActualThemeVariant != FluentAvaloniaTheme.HighContrastTheme)
+        // TODO: add Windows version to CoreWindow
+        if (IsWindows11 && ActualThemeVariant != FluentAvaloniaTheme.HighContrastTheme)
         {
             TryEnableMicaEffect();
         }
-        else
+        else if (ActualThemeVariant != FluentAvaloniaTheme.HighContrastTheme)
         {
-            ClearValue(BackgroundProperty);
-            ClearValue(TransparencyBackgroundFallbackProperty);
+            // Clear the local value here, and let the normal styles take over for HighContrast theme
+            SetValue(BackgroundProperty, AvaloniaProperty.UnsetValue);
         }
     }
 
     private void TryEnableMicaEffect()
     {
-        TransparencyBackgroundFallback = Brushes.Transparent;
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
-
         // The background colors for the Mica brush are still based around SolidBackgroundFillColorBase resource
         // BUT since we can't control the actual Mica brush color, we have to use the window background to create
         // the same effect. However, we can't use SolidBackgroundFillColorBase directly since its opaque, and if
@@ -75,18 +73,22 @@ public partial class MainWindow : AppWindow
         // CompositionBrush to properly change the color but I don't know if we can do that or not
         if (ActualThemeVariant == ThemeVariant.Dark)
         {
-            var color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Dark, out var value) ? (Color2)(Color)value! : new Color2(32, 32, 32);
+            Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
+                ThemeVariant.Dark, out var value)
+                ? (Color)value!
+                : new Color2(32, 32, 32);
 
             color = color.LightenPercent(-0.8f);
 
-            Background = new ImmutableSolidColorBrush(color, 0.9);
+            Background = new ImmutableSolidColorBrush(color, 0.78);
         }
         else if (ActualThemeVariant == ThemeVariant.Light)
         {
             // Similar effect here
-            var color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Light, out var value) ? (Color2)(Color)value! : new Color2(243, 243, 243);
+            Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
+                ThemeVariant.Light, out var value)
+                ? (Color)value!
+                : new Color2(243, 243, 243);
 
             color = color.LightenPercent(0.5f);
 
@@ -98,11 +100,22 @@ public partial class MainWindow : AppWindow
     {
         base.OnOpened(e);
 
-        var thm = ActualThemeVariant;
-        if (IsWindows11 && thm != FluentAvaloniaTheme.HighContrastTheme)
+        // Enable Mica on Windows 11
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            TryEnableMicaEffect();
+            return;
         }
+
+        // TODO: add Windows version to CoreWindow
+        if (!IsWindows11 || ActualThemeVariant == FluentAvaloniaTheme.HighContrastTheme)
+        {
+            return;
+        }
+
+        TransparencyBackgroundFallback = Brushes.Transparent;
+        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
+
+        TryEnableMicaEffect();
     }
 
     protected override async void OnClosing(WindowClosingEventArgs e)
