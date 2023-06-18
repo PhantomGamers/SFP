@@ -194,19 +194,19 @@ public static class Steam
             return Task.CompletedTask;
         }
 
-        args ??= Settings.Default.SteamLaunchArgs;
+        args ??= Settings.Default.SteamLaunchArgs.Trim();
         const string DebuggingString = @"-cef-enable-debugging";
         if (!args.Contains(DebuggingString))
         {
-            args = args.Trim();
             args += $" {DebuggingString}";
+            args = args.Trim();
         }
 
         const string BootstrapString = @"-skipinitialbootstrap";
         if (OperatingSystem.IsMacOS() && !args.Contains(BootstrapString))
         {
-            args = args.Trim();
             args += $" {BootstrapString}";
+            args = args.Trim();
         }
 
         if (OperatingSystem.IsWindows() && File.Exists(MillenniumPath))
@@ -381,7 +381,15 @@ public static class Steam
             return false;
         }
 
-        var argumentMissing = Settings.Default.SteamLaunchArgs.Trim().ToLower().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+        var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
+        const string DebuggingString = @"-cef-enable-debugging";
+        if (!args.Contains(DebuggingString))
+        {
+            args += $" {DebuggingString}";
+            args = args.Trim();
+        }
+
+        var argumentMissing = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Any(arg => !cmdLine.Contains(arg));
 
         if (!argumentMissing)

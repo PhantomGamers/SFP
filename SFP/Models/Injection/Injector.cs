@@ -218,7 +218,7 @@ public static partial class Injector
                 {
                     try
                     {
-                        if (await frame.QuerySelectorAsync(patch.MatchRegexString) == null)
+                        if (await frame.QuerySelectorAsync(regex) == null)
                         {
                             continue;
                         }
@@ -345,20 +345,20 @@ public static partial class Injector
 
         var injectString =
             $@"function inject() {{
-    if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
-    const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
-    element.id = '{frame.Id}{resourceType}';
-    {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
-    element.type = '{(resourceType == "css" ? "text/css" : "module")}';
-    element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
-    document.head.append(element);
-}}
-if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') {{
-    addEventListener('DOMContentLoaded', inject);
-}} else {{
-    inject();
-}}
-";
+                if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
+                const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
+                element.id = '{frame.Id}{resourceType}';
+                {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
+                element.type = '{(resourceType == "css" ? "text/css" : "module")}';
+                element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
+                document.head.append(element);
+            }}
+            if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') {{
+                addEventListener('DOMContentLoaded', inject);
+            }} else {{
+                inject();
+            }}
+            ";
         try
         {
             if (!IsFrameWebkit(frame) && resourceType == "js")
