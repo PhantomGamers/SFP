@@ -50,6 +50,11 @@ public class SfpConfig
             MatchRegexString = "https://store.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
         },
         new PatchEntry { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
+        // Friends List and Chat
+        new PatchEntry
+        {
+            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
+        },
         new PatchEntry
         {
             MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
@@ -100,11 +105,6 @@ public class SfpConfig
         new PatchEntry
         {
             MatchRegexString = "^MainMenu_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
-        },
-        // Friends List and Chat
-        new PatchEntry
-        {
-            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
         },
         new PatchEntry
         {
