@@ -53,6 +53,8 @@ public class SettingsPageViewModel : ViewModelBase
     [Reactive] public bool InjectCss { get; set; }
 
     [Reactive] public bool InjectJs { get; set; }
+
+    [Reactive] public bool DumpPages { get; set; }
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
@@ -183,6 +185,13 @@ public class SettingsPageViewModel : ViewModelBase
                     Settings.Default.Save();
                 }
             });
+
+        this.WhenAnyValue(x => x.DumpPages)
+            .Subscribe(value =>
+            {
+                Settings.Default.DumpPages = value;
+                Settings.Default.Save();
+            });
         #endregion
 
         BrowseSteam = ReactiveCommand.Create(BrowseSteamImpl);
@@ -221,6 +230,7 @@ public class SettingsPageViewModel : ViewModelBase
         ForceSteamArgs = Settings.Default.ForceSteamArgs;
         InjectCss = Settings.Default.InjectCSS;
         InjectJs = Settings.Default.InjectJS;
+        DumpPages = Settings.Default.DumpPages;
         #endregion
 
     }
