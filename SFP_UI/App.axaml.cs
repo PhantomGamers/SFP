@@ -13,6 +13,7 @@ using ReactiveUI;
 using SFP.Models;
 using SFP.Properties;
 using SFP_UI.Models;
+using SFP_UI.ViewModels;
 using SFP_UI.Views;
 
 #endregion
@@ -21,10 +22,10 @@ namespace SFP_UI;
 
 public class App : Application
 {
-    public static ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } =
-        ReactiveCommand.Create(MainWindow.ShowWindow);
-
-    public static ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(QuitApplication);
+    public App()
+    {
+        DataContext = new AppViewModel();
+    }
 
     public override void Initialize()
     {
