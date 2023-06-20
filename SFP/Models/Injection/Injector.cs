@@ -93,6 +93,7 @@ public static partial class Injector
         var pages = await s_browser.PagesAsync();
         Log.Logger.Info("Found " + pages.Length + " pages");
 
+        _ = SfpConfig.GetConfig();
         var processTasks = pages.Select(ProcessPage);
 
         await Task.WhenAll(processTasks);
