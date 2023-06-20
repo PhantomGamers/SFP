@@ -25,6 +25,11 @@
             <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP" Clicked="TrayIcon_OnClicked" IsVisible="False">
                 <TrayIcon.Menu>
                     <NativeMenu>
+                        <NativeMenuItem Header="{Binding InjectHeader}"
+                                        Command="{Binding RunInject}"/>
+                        <NativeMenuItem Header="{Binding SteamHeader}"
+                                        Command="{Binding RunSteam}"/>
+                        <NativeMenuItemSeparator/>
                         <NativeMenuItem Header="Show Window"
                                         Command="{Binding ShowWindow}" />
                         <NativeMenuItem Header="Quit" Command="{Binding Quit}" />
