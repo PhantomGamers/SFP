@@ -1,7 +1,6 @@
 #region
 
 using System.Diagnostics.CodeAnalysis;
-using System.Reactive;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -9,8 +8,8 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using FluentAvalonia.Styling;
-using ReactiveUI;
 using SFP.Models;
+using SFP.Models.Injection;
 using SFP.Properties;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -42,6 +41,13 @@ public class App : Application
         base.OnFrameworkInitializationCompleted();
 
         SetIconsState(Settings.Default.ShowTrayIcon);
+
+        Injector.SetColorScheme(ActualThemeVariant.ToString());
+        ActualThemeVariantChanged += (_, _) =>
+        {
+            Injector.SetColorScheme(ActualThemeVariant.ToString());
+            Injector.UpdateColorScheme();
+        };
 
         await HandleStartupTasks();
 
