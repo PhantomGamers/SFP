@@ -77,8 +77,8 @@ public class SfpConfig
         new PatchEntry
         {
             MatchRegexString = @"^notificationtoasts_",
-            TargetCss = "libraryroot.custom.css",
-            TargetJs = "libraryroot.custom.js"
+            TargetCss = "notifications.custom.css",
+            TargetJs = "notifications.custom.js"
         },
         new PatchEntry
         {

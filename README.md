@@ -100,8 +100,8 @@ Default `skin.json`:
     },
     {
       "MatchRegexString": "^notificationtoasts_",
-      "TargetCss": "libraryroot.custom.css",
-      "TargetJs": "libraryroot.custom.js"
+      "TargetCss": "notifications.custom.css",
+      "TargetJs": "notifications.custom.js"
     },
     {
       "MatchRegexString": "^SteamBrowser_Find$",
