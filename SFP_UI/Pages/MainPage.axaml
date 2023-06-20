@@ -11,7 +11,7 @@
                         CloseButtonContent="Dismiss"
                         PreferredPlacement="Center"
                         Name="UpdateNotification"
-                        ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
+                        ActionButtonCommand="{Binding UpdateNotificationView}"
                         ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases"
                         Content="{Binding UpdateNotificationContent}"
                         IsOpen="{Binding UpdateNotificationIsOpen}" />
@@ -21,7 +21,7 @@
                     <Button HorizontalAlignment="Left"
                             Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            Command="{Binding InjectCommand}"
+                            Command="{Binding Inject}"
                             IsVisible="{Binding !IsInjected}"
                             ToolTip.Tip="Attaches to Steam instance, enabling skin and scripting support based on your settings">
                         Start Injection
@@ -30,7 +30,7 @@
                     <Button HorizontalAlignment="Left"
                             Margin="0 0 10 0"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            Command="{Binding StopInjectCommand}"
+                            Command="{Binding StopInject}"
                             IsVisible="{Binding IsInjected}"
                             ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted">
                         Stop Injection
@@ -39,7 +39,7 @@
                     <Button Margin="0 0 15 0"
                             HorizontalAlignment="Right"
                             IsEnabled="{Binding ButtonsEnabled}"
-                            Command="{Binding StartSteamCommand}"
+                            Command="{Binding StartSteam}"
                             ToolTip.Tip="Starts or restarts Steam with the arguments given in settings"
                             Content="{Binding StartSteamText}" />
 

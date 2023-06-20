@@ -26,8 +26,8 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="Show Window"
-                                        Command="{Binding ShowWindowCommand}" />
-                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand}" />
+                                        Command="{Binding ShowWindow}" />
+                        <NativeMenuItem Header="Quit" Command="{Binding Quit}" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

@@ -6,9 +6,9 @@ namespace SFP_UI.ViewModels;
 
 public class AppViewModel : ViewModelBase
 {
-    public ReactiveCommand<Unit, Unit> ShowWindowCommand { get; } =
+    public ReactiveCommand<Unit, Unit> ShowWindow { get; } =
         ReactiveCommand.Create(MainWindow.ShowWindow);
 
-    public ReactiveCommand<Unit, Unit> QuitCommand { get; } = ReactiveCommand.Create(App.QuitApplication);
+    public ReactiveCommand<Unit, Unit> Quit { get; } = ReactiveCommand.Create(App.QuitApplication);
 
 }
