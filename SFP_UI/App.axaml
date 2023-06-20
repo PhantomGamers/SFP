@@ -1,11 +1,11 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SFP_UI.ViewModels"
+             x:DataType="vm:AppViewModel"
              x:Class="SFP_UI.App"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:sty="using:FluentAvalonia.Styling"
-             xmlns:sfpUi="clr-namespace:SFP_UI"
-             RequestedThemeVariant="Dark"
-             x:DataType="sfpUi:App">
+             RequestedThemeVariant="Dark">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -25,9 +25,16 @@
             <TrayIcon Icon="/Assets/SFP-logo.ico" ToolTipText="SFP" Clicked="TrayIcon_OnClicked" IsVisible="False">
                 <TrayIcon.Menu>
                     <NativeMenu>
+                        <NativeMenuItem Header="{Binding InjectHeader}"
+                                        Command="{Binding RunInject}"/>
+                        <NativeMenuItem Header="{Binding SteamHeader}"
+                                        Command="{Binding RunSteam}"/>
+                        <NativeMenuItemSeparator/>
+                        <NativeMenuItem Header="Settings"
+                                        Command="{Binding ShowSettings}"/>
                         <NativeMenuItem Header="Show Window"
-                                        Command="{Binding Source={x:Static sfpUi:App.ShowWindowCommand}}" />
-                        <NativeMenuItem Header="Quit" Command="{Binding Source={x:Static sfpUi:App.QuitCommand}}" />
+                                        Command="{Binding ShowWindow}"/>
+                        <NativeMenuItem Header="Quit" Command="{Binding Quit}"/>
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

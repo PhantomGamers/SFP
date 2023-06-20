@@ -36,23 +36,41 @@ public class MainPageViewModel : ViewModelBase
         private set => this.RaiseAndSetIfChanged(ref _output, value);
     }
 
-    public ReactiveCommand<string, Unit> UpdateNotificationViewCommand { get; } =
+    public ReactiveCommand<string, Unit> UpdateNotificationView { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);
 
-    public ReactiveCommand<Unit, Unit> InjectCommand { get; } =
+    public ReactiveCommand<Unit, Unit> Inject { get; } =
         ReactiveCommand.Create(Steam.RunTryInject);
 
-    public ReactiveCommand<Unit, Unit> StopInjectCommand { get; } = ReactiveCommand.Create(Injector.StopInjection);
+    public ReactiveCommand<Unit, Unit> StopInject { get; } = ReactiveCommand.Create(Injector.StopInjection);
 
-    public ReactiveCommand<Unit, Unit> StartSteamCommand { get; } =
+    public ReactiveCommand<Unit, Unit> StartSteam { get; } =
         ReactiveCommand.Create(Steam.RunRestartSteam);
 
     public MainPageViewModel()
     {
         Instance = this;
-        Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
-        Steam.SteamStarted += (_, _) => StartSteamText = "Restart Steam";
-        Steam.SteamStopped += (_, _) => StartSteamText = "Start Steam";
+        Injector.InjectionStateChanged -= OnInjectionStateChanged;
+        Injector.InjectionStateChanged += OnInjectionStateChanged;
+        Steam.SteamStarted -= OnSteamStarted;
+        Steam.SteamStarted += OnSteamStarted;
+        Steam.SteamStopped -= OnSteamStopped;
+        Steam.SteamStopped += OnSteamStopped;
+    }
+
+    private void OnSteamStopped(object? o, EventArgs eventArgs)
+    {
+        StartSteamText = "Start Steam";
+    }
+
+    private void OnSteamStarted(object? o, EventArgs eventArgs)
+    {
+        StartSteamText = "Restart Steam";
+    }
+
+    private void OnInjectionStateChanged(object? o, EventArgs eventArgs)
+    {
+        IsInjected = Injector.IsInjected;
     }
 
     public static void PrintLine(LogLevel level, string message)

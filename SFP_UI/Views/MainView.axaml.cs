@@ -1,6 +1,5 @@
 #region
 
-using System.Collections;
 using Avalonia;
 using Avalonia.Controls;
 using FluentAvalonia.UI.Controls;
@@ -14,8 +13,10 @@ namespace SFP_UI.Views;
 
 public partial class MainView : UserControl
 {
+    public static MainView? Instance { get; private set; }
     public MainView()
     {
+        Instance = this;
         InitializeComponent();
     }
 
@@ -35,7 +36,8 @@ public partial class MainView : UserControl
 
         NavView.IsPaneOpen = false;
 
-        FrameView.NavigateFromObject(NavView.MenuItemsSource.Cast<NavigationViewItem>().First().Tag!);
+        var navViewItems = NavView.MenuItemsSource.Cast<NavigationViewItem>();
+        FrameView.NavigateFromObject(navViewItems.ElementAt(0).Tag);
     }
 
     private void SetNviIcon(NavigationViewItem? item, bool selected)

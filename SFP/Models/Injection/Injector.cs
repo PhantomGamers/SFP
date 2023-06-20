@@ -211,6 +211,8 @@ public static partial class Injector
                 return;
             }
 
+            await DumpFrame(frame, title);
+
             foreach (var patch in patches)
             {
                 var regex = patch.MatchRegexString;
@@ -250,6 +252,7 @@ public static partial class Injector
             // only needed for css in certain instances, needs investigation
             await SetBypassCsp(frame);
             var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
+            await DumpFrame(frame, url);
             if (!config._isFromMillennium)
             {
                 var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
@@ -273,6 +276,35 @@ public static partial class Injector
                         return;
                     }
                 }
+            }
+        }
+    }
+
+    private static async Task DumpFrame(Frame frame, string? fileName)
+    {
+        if (Settings.Default.DumpPages)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                Log.Logger.Debug("Empty frame title, skipping dump");
+                return;
+            }
+            try
+            {
+                Directory.CreateDirectory("dumps");
+                var content = await frame.GetContentAsync();
+                await File.WriteAllTextAsync(Path.Join("dumps", fileName + ".html"), content);
+            }
+            catch (PuppeteerException e)
+            {
+                Log.Logger.Error("Unexpected error when trying to get frame content");
+                Log.Logger.Debug("url: " + frame.Url);
+                Log.Logger.Debug("title: " + fileName);
+                Log.Logger.Debug(e);
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e);
             }
         }
     }
