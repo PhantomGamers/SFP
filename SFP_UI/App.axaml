@@ -30,9 +30,11 @@
                         <NativeMenuItem Header="{Binding SteamHeader}"
                                         Command="{Binding RunSteam}"/>
                         <NativeMenuItemSeparator/>
+                        <NativeMenuItem Header="Settings"
+                                        Command="{Binding ShowSettings}"/>
                         <NativeMenuItem Header="Show Window"
-                                        Command="{Binding ShowWindow}" />
-                        <NativeMenuItem Header="Quit" Command="{Binding Quit}" />
+                                        Command="{Binding ShowWindow}"/>
+                        <NativeMenuItem Header="Quit" Command="{Binding Quit}"/>
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

@@ -1,14 +1,15 @@
 #region
 
-using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
 using FluentAvalonia.Styling;
+using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
 using FluentAvalonia.UI.Windowing;
+using SFP.Models;
 using SFP.Properties;
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
@@ -130,6 +131,20 @@ public partial class MainWindow : AppWindow
         {
             Close();
         }
+    }
+
+    public static void ShowSettings()
+    {
+        ShowWindow();
+        if (MainView.Instance == null)
+        {
+            Log.Logger.Error("Main view is null, cannot open settings");
+            return;
+        }
+        var frameView = MainView.Instance.FrameView;
+        var navView = MainView.Instance.NavView;
+        var menuItems = navView.FooterMenuItemsSource.Cast<NavigationViewItem>();
+        frameView.NavigateFromObject(menuItems.ElementAt(0).Tag);
     }
 
     public static void ShowWindow()
