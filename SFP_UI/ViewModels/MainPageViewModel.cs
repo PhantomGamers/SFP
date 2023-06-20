@@ -50,9 +50,27 @@ public class MainPageViewModel : ViewModelBase
     public MainPageViewModel()
     {
         Instance = this;
-        Injector.InjectionStateChanged += (_, _) => IsInjected = Injector.IsInjected;
-        Steam.SteamStarted += (_, _) => StartSteamText = "Restart Steam";
-        Steam.SteamStopped += (_, _) => StartSteamText = "Start Steam";
+        Injector.InjectionStateChanged -= OnInjectionStateChanged;
+        Injector.InjectionStateChanged += OnInjectionStateChanged;
+        Steam.SteamStarted -= OnSteamStarted;
+        Steam.SteamStarted += OnSteamStarted;
+        Steam.SteamStopped -= OnSteamStopped;
+        Steam.SteamStopped += OnSteamStopped;
+    }
+
+    private void OnSteamStopped(object? o, EventArgs eventArgs)
+    {
+        StartSteamText = "Start Steam";
+    }
+
+    private void OnSteamStarted(object? o, EventArgs eventArgs)
+    {
+        StartSteamText = "Restart Steam";
+    }
+
+    private void OnInjectionStateChanged(object? o, EventArgs eventArgs)
+    {
+        IsInjected = Injector.IsInjected;
     }
 
     public static void PrintLine(LogLevel level, string message)
