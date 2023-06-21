@@ -40,6 +40,11 @@ public class App : Application
 
         base.OnFrameworkInitializationCompleted();
 
+        if (Design.IsDesignMode)
+        {
+            return;
+        }
+
         SetIconsState(Settings.Default.ShowTrayIcon);
 
         Injector.SetColorScheme(ActualThemeVariant.ToString());
