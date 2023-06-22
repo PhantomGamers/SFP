@@ -194,7 +194,14 @@ visit <http://localhost:8080> in your web browser.
 
 ## Dependencies
 
+### All
+
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (Only if not using self contained version)
+
+### Linux
+
+- ttf-ms-fonts
+  -  run `fc-cache --force` after installing
 
 ## Credits
 
