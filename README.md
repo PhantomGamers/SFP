@@ -2,6 +2,25 @@
 
 This utility allows you to apply themes and scripts to the new Steam client.
 
+- [SFP (Formerly SteamFriendsPatcher)](#sfp--formerly-steamfriendspatcher-)
+    * [Instructions](#instructions)
+    * [Features](#features)
+        + [Steam Skinning](#steam-skinning)
+        + [Scripting](#scripting)
+        + [Skins and Scripts in Separate Folders](#skins-and-scripts-in-separate-folders)
+        + [Enable JavaScript Injection](#enable-javascript-injection)
+    * [Skin Authors](#skin-authors)
+        + [Matching against pages with variable titles](#matching-against-pages-with-variable-titles)
+        + [Finding Steam Page Titles](#finding-steam-page-titles)
+    * [Todo](#todo)
+    * [Known Issues](#known-issues)
+    * [Dependencies](#dependencies)
+        + [All](#all)
+        + [Linux](#linux)
+    * [Credits](#credits)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## Instructions
 
 1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
