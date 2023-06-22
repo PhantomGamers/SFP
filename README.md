@@ -69,11 +69,6 @@ Default `skin.json`:
       "TargetJs": "webkit.js"
     },
     {
-      "MatchRegexString": ".friendsui-container",
-      "TargetCss": "friends.custom.css",
-      "TargetJs": "friends.custom.js"
-    },
-    {
       "MatchRegexString": "^Steam$",
       "TargetCss": "libraryroot.custom.css",
       "TargetJs": "libraryroot.custom.js"
@@ -85,11 +80,6 @@ Default `skin.json`:
     },
     {
       "MatchRegexString": "^SP Overlay:",
-      "TargetCss": "libraryroot.custom.css",
-      "TargetJs": "libraryroot.custom.js"
-    },
-    {
-      "MatchRegexString": "Menu$",
       "TargetCss": "libraryroot.custom.css",
       "TargetJs": "libraryroot.custom.js"
     },
@@ -127,6 +117,16 @@ Default `skin.json`:
       "MatchRegexString": "^MainMenu_",
       "TargetCss": "bigpicture.custom.css",
       "TargetJs": "bigpicture.custom.js"
+    },
+    {
+      "MatchRegexString": ".friendsui-container",
+      "TargetCss": "friends.custom.css",
+      "TargetJs": "friends.custom.js"
+    },
+    {
+      "MatchRegexString": "Menu$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
     },
     {
       "MatchRegexString": ".ModalDialogPopup",
