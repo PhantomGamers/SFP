@@ -76,6 +76,7 @@ public class SettingsPageViewModel : ViewModelBase
         this.WhenAnyValue(x => x.ShowTrayIcon)
             .Subscribe(value =>
             {
+                App.SetIconsState(value);
                 Settings.Default.ShowTrayIcon = value;
                 Settings.Default.Save();
             });
