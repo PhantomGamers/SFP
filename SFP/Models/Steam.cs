@@ -337,8 +337,6 @@ public static class Steam
                 var argumentsMissing = await CheckForMissingArgumentsAsync();
                 if (argumentsMissing)
                 {
-                    s_injectOnce = true;
-                    Log.Logger.Warn("Steam is missing arguments, restarting Steam to fix...");
                     return;
                 }
             }
@@ -397,6 +395,7 @@ public static class Steam
             return false;
         }
 
+        s_injectOnce = true;
         Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
         await RestartSteam();
         return true;
