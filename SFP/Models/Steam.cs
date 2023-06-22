@@ -383,7 +383,7 @@ public static class Steam
 
         var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
         const string DebuggingString = @"-cef-enable-debugging";
-        if (!args.Contains(DebuggingString))
+        if (!args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Contains(DebuggingString))
         {
             args += $" {DebuggingString}";
             args = args.Trim();
