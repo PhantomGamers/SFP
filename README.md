@@ -35,6 +35,8 @@ This utility allows you to apply skins and scripts to the new Steam client.
     - This setting is enabled by default
 6. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
 
+For more information and links to existing skins see [Steam Skins Wiki](https://steamskins.pages.dev/)
+
 ## Features
 
 ### Steam Skinning
