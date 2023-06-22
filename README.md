@@ -1,6 +1,6 @@
 # SFP (Formerly SteamFriendsPatcher)
 
-This utility allows you to apply themes and scripts to the new Steam client.
+This utility allows you to apply skins and scripts to the new Steam client.
 
 - [SFP (Formerly SteamFriendsPatcher)](#sfp--formerly-steamfriendspatcher-)
     * [Instructions](#instructions)
@@ -205,7 +205,7 @@ visit <http://localhost:8080> in your web browser.
 
 ## Todo
 
-- Add ability to install and customize themes directly from SFP
+- Add ability to install and customize skins directly from SFP
 
 ## Known Issues
 
