@@ -1,6 +1,6 @@
 # SFP (Formerly SteamFriendsPatcher)
 
-This utility allows you to apply themes and scripts to the new Steam beta client.
+This utility allows you to apply themes and scripts to the new Steam client.
 
 ## Instructions
 
