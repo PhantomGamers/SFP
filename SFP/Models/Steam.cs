@@ -1,5 +1,6 @@
 #region
 
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using FileWatcherEx;
@@ -239,11 +240,20 @@ public static class Steam
     {
         if (IsSteamRunning)
         {
-            s_steamProcess = SteamProcess;
-            s_steamProcess!.EnableRaisingEvents = true;
-            s_steamProcess.Exited -= OnSteamExited;
-            s_steamProcess.Exited += OnSteamExited;
-            ShutDownSteam(s_steamProcess);
+            try
+            {
+                s_steamProcess = SteamProcess;
+                s_steamProcess!.EnableRaisingEvents = true;
+                s_steamProcess.Exited -= OnSteamExited;
+                s_steamProcess.Exited += OnSteamExited;
+                ShutDownSteam(s_steamProcess);
+            }
+            catch (Win32Exception e)
+            {
+                Log.Logger.Error("Could not shut down Steam, SFP does not have permission to interact with the Steam process.");
+                Log.Logger.Error("Make sure Steam is not running as admin");
+                Log.Logger.Debug(e);
+            }
         }
         else
         {
