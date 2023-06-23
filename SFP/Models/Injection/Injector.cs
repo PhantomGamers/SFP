@@ -219,6 +219,11 @@ public static partial class Injector
                 return;
             }
 
+            if (frame.Url.StartsWith("devtools://"))
+            {
+                title = frame.Url;
+            }
+
             await DumpFrame(frame, title);
 
             foreach (var patch in patches)
