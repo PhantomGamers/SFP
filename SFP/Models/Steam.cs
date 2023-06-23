@@ -337,8 +337,6 @@ public static class Steam
                 var argumentsMissing = await CheckForMissingArgumentsAsync();
                 if (argumentsMissing)
                 {
-                    s_injectOnce = true;
-                    Log.Logger.Warn("Steam is missing arguments, restarting Steam to fix...");
                     return;
                 }
             }
@@ -383,7 +381,7 @@ public static class Steam
 
         var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
         const string DebuggingString = @"-cef-enable-debugging";
-        if (!args.Contains(DebuggingString))
+        if (!args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Contains(DebuggingString))
         {
             args += $" {DebuggingString}";
             args = args.Trim();
@@ -397,6 +395,7 @@ public static class Steam
             return false;
         }
 
+        s_injectOnce = true;
         Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
         await RestartSteam();
         return true;

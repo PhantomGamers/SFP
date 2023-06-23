@@ -19,6 +19,8 @@ public static partial class Injector
 
     public static event EventHandler? InjectionStateChanged;
 
+    private static string PreferredColorScheme { get; set; } = "light";
+
     public static async Task StartInjectionAsync(bool noError = false)
     {
         if (s_browser is { IsConnected: true })
@@ -93,6 +95,7 @@ public static partial class Injector
         var pages = await s_browser.PagesAsync();
         Log.Logger.Info("Found " + pages.Length + " pages");
 
+        _ = SfpConfig.GetConfig();
         var processTasks = pages.Select(ProcessPage);
 
         await Task.WhenAll(processTasks);
@@ -183,6 +186,11 @@ public static partial class Injector
         if (page == null)
         {
             return;
+        }
+
+        if (Settings.Default.UseAppTheme)
+        {
+            await UpdateColorInPage(page);
         }
 
         page.FrameNavigated -= Frame_Navigate;
@@ -413,6 +421,45 @@ public static partial class Injector
     private static bool IsFrameWebkit(Frame frame)
     {
         return !frame.Url.StartsWith("https://steamloopback.host");
+    }
+
+    private static async Task UpdateColorInPage(Page page)
+    {
+        try
+        {
+            await page.EmulateMediaFeaturesAsync(new[]
+                { new MediaFeatureValue { MediaFeature = MediaFeature.PrefersColorScheme, Value = PreferredColorScheme } });
+        }
+        catch (PuppeteerException e)
+        {
+            Log.Logger.Error(e);
+        }
+    }
+
+    public static async void UpdateColorScheme(string? colorScheme = null)
+    {
+        if (s_browser == null || !Settings.Default.UseAppTheme && colorScheme == null)
+        {
+            return;
+        }
+
+        var tmpColorScheme = PreferredColorScheme;
+        PreferredColorScheme = colorScheme ?? PreferredColorScheme;
+
+        var pages = await s_browser.PagesAsync();
+        var processTasks = pages.Select(UpdateColorInPage);
+        await Task.WhenAll(processTasks);
+
+        PreferredColorScheme = tmpColorScheme;
+    }
+
+    public static void SetColorScheme(string themeVariant)
+    {
+        PreferredColorScheme = themeVariant.ToLower() switch
+        {
+            "dark" => "dark",
+            _ => "light"
+        };
     }
 
     [GeneratedRegex(@"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)")]

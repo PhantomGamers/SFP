@@ -7,6 +7,7 @@ using FluentAvalonia.UI.Controls;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using SFP.Models;
+using SFP.Models.Injection;
 using SFP.Properties;
 using SFP_UI.Views;
 using Utils = SFP.Models.Windows.Utils;
@@ -54,6 +55,8 @@ public class SettingsPageViewModel : ViewModelBase
 
     [Reactive] public bool InjectJs { get; set; }
 
+    [Reactive] public bool UseAppTheme { get; set; }
+
     [Reactive] public bool DumpPages { get; set; }
     #endregion
 
@@ -73,6 +76,7 @@ public class SettingsPageViewModel : ViewModelBase
         this.WhenAnyValue(x => x.ShowTrayIcon)
             .Subscribe(value =>
             {
+                App.SetIconsState(value);
                 Settings.Default.ShowTrayIcon = value;
                 Settings.Default.Save();
             });
@@ -186,6 +190,21 @@ public class SettingsPageViewModel : ViewModelBase
                 }
             });
 
+        this.WhenAnyValue(x => x.UseAppTheme)
+            .Subscribe(value =>
+            {
+                Settings.Default.UseAppTheme = value;
+                Settings.Default.Save();
+                if (!value)
+                {
+                    Injector.UpdateColorScheme("light");
+                }
+                else
+                {
+                    Injector.UpdateColorScheme();
+                }
+            });
+
         this.WhenAnyValue(x => x.DumpPages)
             .Subscribe(value =>
             {
@@ -230,6 +249,7 @@ public class SettingsPageViewModel : ViewModelBase
         ForceSteamArgs = Settings.Default.ForceSteamArgs;
         InjectCss = Settings.Default.InjectCSS;
         InjectJs = Settings.Default.InjectJS;
+        UseAppTheme = Settings.Default.UseAppTheme;
         DumpPages = Settings.Default.DumpPages;
         #endregion
 

@@ -53,6 +53,7 @@
                 <CheckBox IsChecked="{Binding ForceSteamArgs}">Force Steam arguments</CheckBox>
                 <CheckBox IsChecked="{Binding InjectCss}">Inject CSS</CheckBox>
                 <CheckBox IsChecked="{Binding InjectJs}">Inject JavaScript</CheckBox>
+                <CheckBox IsChecked="{Binding UseAppTheme}">Use App Theme</CheckBox>
                 <CheckBox IsChecked="{Binding DumpPages}">For Skin Authors: Dump Pages</CheckBox>
                 <Separator Margin="0,10" />
 

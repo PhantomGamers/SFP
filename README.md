@@ -1,6 +1,25 @@
 # SFP (Formerly SteamFriendsPatcher)
 
-This utility allows you to apply themes and scripts to the new Steam beta client.
+This utility allows you to apply skins and scripts to the new Steam client.
+
+- [SFP (Formerly SteamFriendsPatcher)](#sfp--formerly-steamfriendspatcher-)
+    * [Instructions](#instructions)
+    * [Features](#features)
+        + [Steam Skinning](#steam-skinning)
+        + [Scripting](#scripting)
+        + [Skins and Scripts in Separate Folders](#skins-and-scripts-in-separate-folders)
+        + [Enable JavaScript Injection](#enable-javascript-injection)
+    * [Skin Authors](#skin-authors)
+        + [Matching against pages with variable titles](#matching-against-pages-with-variable-titles)
+        + [Finding Steam Page Titles](#finding-steam-page-titles)
+    * [Todo](#todo)
+    * [Known Issues](#known-issues)
+    * [Dependencies](#dependencies)
+        + [All](#all)
+        + [Linux](#linux)
+    * [Credits](#credits)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 ## Instructions
 
@@ -15,6 +34,8 @@ This utility allows you to apply themes and scripts to the new Steam beta client
       arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
     - This setting is enabled by default
 6. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
+
+For more information and links to existing skins see [Steam Skins Wiki](https://steamskins.pages.dev/)
 
 ## Features
 
@@ -69,11 +90,6 @@ Default `skin.json`:
       "TargetJs": "webkit.js"
     },
     {
-      "MatchRegexString": ".friendsui-container",
-      "TargetCss": "friends.custom.css",
-      "TargetJs": "friends.custom.js"
-    },
-    {
       "MatchRegexString": "^Steam$",
       "TargetCss": "libraryroot.custom.css",
       "TargetJs": "libraryroot.custom.js"
@@ -85,11 +101,6 @@ Default `skin.json`:
     },
     {
       "MatchRegexString": "^SP Overlay:",
-      "TargetCss": "libraryroot.custom.css",
-      "TargetJs": "libraryroot.custom.js"
-    },
-    {
-      "MatchRegexString": "Menu$",
       "TargetCss": "libraryroot.custom.css",
       "TargetJs": "libraryroot.custom.js"
     },
@@ -127,6 +138,16 @@ Default `skin.json`:
       "MatchRegexString": "^MainMenu_",
       "TargetCss": "bigpicture.custom.css",
       "TargetJs": "bigpicture.custom.js"
+    },
+    {
+      "MatchRegexString": ".friendsui-container",
+      "TargetCss": "friends.custom.css",
+      "TargetJs": "friends.custom.js"
+    },
+    {
+      "MatchRegexString": "Menu$",
+      "TargetCss": "libraryroot.custom.css",
+      "TargetJs": "libraryroot.custom.js"
     },
     {
       "MatchRegexString": ".ModalDialogPopup",
@@ -186,7 +207,7 @@ visit <http://localhost:8080> in your web browser.
 
 ## Todo
 
-- Add ability to install and customize themes directly from SFP
+- Add ability to install and customize skins directly from SFP
 
 ## Known Issues
 
@@ -194,7 +215,14 @@ visit <http://localhost:8080> in your web browser.
 
 ## Dependencies
 
+### All
+
 - [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (Only if not using self contained version)
+
+### Linux
+
+- ttf-ms-fonts
+  -  run `fc-cache --force` after installing
 
 ## Credits
 
