@@ -117,12 +117,15 @@ internal static class Program
     // Avalonia configuration, don't remove; also used by visual designer.
     private static AppBuilder BuildAvaloniaApp()
     {
+        var fontName = !string.IsNullOrEmpty(SKTypeface.Default.FamilyName)
+            ? SKTypeface.Default.FamilyName
+            : "Century Schoolbook";
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
             .UseReactiveUI()
             .With(new Win32PlatformOptions { OverlayPopups = true })
-            .With(new FontManagerOptions { DefaultFamilyName = SKTypeface.Default.FamilyName ?? "Century Schoolbook" });
+            .With(new FontManagerOptions { DefaultFamilyName = fontName });
     }
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
