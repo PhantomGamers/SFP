@@ -425,7 +425,7 @@ public static partial class Injector
 
     private static bool IsFrameWebkit(Frame frame)
     {
-        return !frame.Url.StartsWith("https://steamloopback.host");
+        return !frame.Url.StartsWith("https://steamloopback.host") && !frame.Url.StartsWith("devtools://");
     }
 
     private static async Task UpdateColorInPage(Page page)
