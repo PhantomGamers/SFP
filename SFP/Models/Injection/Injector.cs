@@ -306,7 +306,8 @@ public static partial class Injector
             {
                 Directory.CreateDirectory("dumps");
                 var content = await frame.GetContentAsync();
-                await File.WriteAllTextAsync(Path.Join("dumps", fileName + ".html"), content);
+                var dumpsPath = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "dumps");
+                await File.WriteAllTextAsync(Path.Join(dumpsPath, fileName + ".html"), content);
             }
             catch (PuppeteerException e)
             {
