@@ -385,8 +385,13 @@ public static class Steam
         var cmdLine = GetCommandLine();
         if (!cmdLine.Any())
         {
-            Log.Logger.Error("Arguments are empty, cannot check arguments");
-            return false;
+            await Task.Delay(TimeSpan.FromMilliseconds(100));
+            cmdLine = GetCommandLine();
+            if (!cmdLine.Any())
+            {
+                Log.Logger.Error("Cannot check arguments. Steam process does not exist or is running with elevated permissions");
+                return false;
+            }
         }
 
         var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
