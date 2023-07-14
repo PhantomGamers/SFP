@@ -52,7 +52,9 @@ public static partial class Injector
             ConnectOptions options = new()
             {
                 BrowserWSEndpoint = browserEndpoint,
-                DefaultViewport = null
+                DefaultViewport = null,
+                EnqueueAsyncMessages = false,
+                EnqueueTransportMessages = false
             };
 
             Log.Logger.Info("Connecting to " + browserEndpoint);
