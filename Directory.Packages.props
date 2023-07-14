@@ -12,11 +12,11 @@
     <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" />
     <PackageVersion Include="Flurl.Http" Version="4.0.0-pre3" />
     <PackageVersion Include="PuppeteerSharp" Version="6.2.0" />
-    <PackageVersion Include="ReactiveUI.Fody" Version="19.2.1" />
+    <PackageVersion Include="ReactiveUI.Fody" Version="19.4.1" />
     <PackageVersion Include="Semver" Version="2.3.0" />
-    <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.1" />
+    <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
     <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageVersion Include="NLog" Version="5.2.0" />
+    <PackageVersion Include="NLog" Version="5.2.2" />
     <PackageVersion Include="MinVer" Version="4.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
