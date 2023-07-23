@@ -229,6 +229,11 @@ public static partial class Injector
             foreach (var patch in patches)
             {
                 var regex = patch.MatchRegexString;
+                if (title == "SharedJSContext" && !regex.Contains("SharedJSContext"))
+                {
+                    // only inject into SharedJSContext when it is explicitly desired
+                    continue;
+                }
                 if (regex.StartsWith('.') || regex.StartsWith('#') || regex.StartsWith('['))
                 {
                     try
