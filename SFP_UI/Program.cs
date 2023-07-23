@@ -39,8 +39,15 @@ internal static class Program
         SetupNLog();
         Log.Logger.Info(
             $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
-        InitSettings();
-        _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
+        try
+        {
+            InitSettings();
+            _ = BuildAvaloniaApp().StartWithClassicDesktopLifetime(args, ShutdownMode.OnExplicitShutdown);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error(e);
+        }
         CloseFileStream();
     }
 
@@ -132,5 +139,6 @@ internal static class Program
     {
         Log.Logger.Error(e.ExceptionObject);
         LogManager.Shutdown();
+        CloseFileStream();
     }
 }
