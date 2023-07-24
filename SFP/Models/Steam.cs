@@ -196,19 +196,7 @@ public static class Steam
         }
 
         args ??= Settings.Default.SteamLaunchArgs.Trim();
-        const string DebuggingString = @"-cef-enable-debugging";
-        if (!args.Contains(DebuggingString))
-        {
-            args += $" {DebuggingString}";
-            args = args.Trim();
-        }
-
-        const string BootstrapString = @"-skipinitialbootstrap";
-        if (OperatingSystem.IsMacOS() && !args.Contains(BootstrapString))
-        {
-            args += $" {BootstrapString}";
-            args = args.Trim();
-        }
+        AppendArgs(ref args);
 
         if (OperatingSystem.IsWindows() && File.Exists(MillenniumPath))
         {
@@ -395,12 +383,7 @@ public static class Steam
         }
 
         var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
-        const string DebuggingString = @"-cef-enable-debugging";
-        if (!args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Contains(DebuggingString))
-        {
-            args += $" {DebuggingString}";
-            args = args.Trim();
-        }
+        AppendArgs(ref args);
 
         var argumentMissing = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Any(arg => !cmdLine.Contains(arg));
@@ -414,5 +397,24 @@ public static class Steam
         Log.Logger.Info("Steam process detected with missing launch arguments, restarting...");
         await RestartSteam();
         return true;
+    }
+
+    private static void AppendArgs(ref string args)
+    {
+        const string DebuggingString = @"-cef-enable-debugging";
+        const string BootstrapString = @"-skipinitialbootstrap";
+        var argsList = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        if (!argsList.Contains(DebuggingString))
+        {
+            argsList.Add(DebuggingString);
+        }
+
+        if (OperatingSystem.IsMacOS() && !argsList.Contains(BootstrapString))
+        {
+            argsList.Add(BootstrapString);
+        }
+
+        args = string.Join(" ", argsList);
     }
 }
