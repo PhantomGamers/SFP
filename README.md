@@ -80,7 +80,7 @@ Default `skin.json`:
 {
   "Patches": [
     {
-      "MatchRegexString": "https://store.steampowered.com",
+      "MatchRegexString": "https://.*.steampowered.com",
       "TargetCss": "webkit.css",
       "TargetJs": "webkit.js"
     },

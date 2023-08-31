@@ -47,7 +47,7 @@ public class SfpConfig
     {
         new PatchEntry
         {
-            MatchRegexString = "https://store.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
+            MatchRegexString = "https://.*.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
         },
         new PatchEntry { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
         new PatchEntry
