@@ -54,9 +54,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.2.2, )",
-        "resolved": "5.2.2",
-        "contentHash": "r6Q9740g29gTwmTWlsgdIFm0mhNsfNZmbvWKX/Fxmi8X89ZrpUowHM2T2X1lP7RVpND+ef+XnfKL5g6Q1iNGXA=="
+        "requested": "[5.2.3, )",
+        "resolved": "5.2.3",
+        "contentHash": "rHTNRtQF5qYqLutSR9ldUWXglKym/KA1R6GKw4JtDvza8i5+kgfmeKH75Ccn1noeJIOjHLXorphMxKk3EiN2tg=="
       },
       "PortableJsonSettingsProvider": {
         "type": "Direct",
