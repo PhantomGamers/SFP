@@ -16,7 +16,7 @@
     <PackageVersion Include="Semver" Version="2.3.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
     <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageVersion Include="NLog" Version="5.2.2" />
+    <PackageVersion Include="NLog" Version="5.2.4" />
     <PackageVersion Include="MinVer" Version="4.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
