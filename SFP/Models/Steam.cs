@@ -215,7 +215,8 @@ public static class Steam
         }
 
         Log.Logger.Info("Starting Steam");
-        _ = Process.Start(SteamExe, args);
+        var startInfo = new ProcessStartInfo(SteamExe, args) { UseShellExecute = true };
+        _ = Process.Start(startInfo);
         return Task.CompletedTask;
     }
 

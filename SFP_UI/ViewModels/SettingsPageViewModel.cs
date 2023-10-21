@@ -198,10 +198,12 @@ public class SettingsPageViewModel : ViewModelBase
                 if (!value)
                 {
                     Injector.UpdateColorScheme("light");
+                    Injector.UpdateSystemAccentColors(false);
                 }
                 else
                 {
                     Injector.UpdateColorScheme();
+                    Injector.UpdateSystemAccentColors();
                 }
             });
 

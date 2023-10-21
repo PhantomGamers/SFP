@@ -48,11 +48,24 @@ public class App : Application
         SetIconsState(Settings.Default.ShowTrayIcon);
 
         Injector.SetColorScheme(ActualThemeVariant.ToString());
+        Injector.SetAccentColors(GetColorValues());
         ActualThemeVariantChanged += (_, _) =>
         {
             Injector.SetColorScheme(ActualThemeVariant.ToString());
             Injector.UpdateColorScheme();
         };
+        if (Current?.PlatformSettings != null)
+        {
+            Current.PlatformSettings.ColorValuesChanged += (_, _) =>
+            {
+                Injector.SetAccentColors(GetColorValues());
+                Injector.UpdateSystemAccentColors();
+            };
+        }
+        else
+        {
+            Log.Logger.Warn("PlatformSettings is null, can't update system accent colors");
+        }
 
         await HandleStartupTasks();
 
@@ -60,6 +73,25 @@ public class App : Application
         {
             Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
         }
+    }
+
+    private static IEnumerable<string> GetColorValues()
+    {
+        if (Current!.Styles[0] is not FluentAvaloniaTheme faTheme)
+        {
+            return Array.Empty<string>();
+        }
+        var colorValues = new string[7];
+        for (var i = 0; i < 7; i++)
+        {
+            if (!faTheme.Resources.TryGetResource(Injector.ColorNames[i], null, out var c))
+            {
+                continue;
+            }
+            colorValues[i] = c?.ToString() ?? colorValues[i];
+        }
+
+        return colorValues;
     }
 
     private static async Task HandleStartupTasks()

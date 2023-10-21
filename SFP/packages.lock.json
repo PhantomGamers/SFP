@@ -28,11 +28,11 @@
       },
       "Flurl.Http": {
         "type": "Direct",
-        "requested": "[4.0.0-pre3, )",
-        "resolved": "4.0.0-pre3",
-        "contentHash": "2N01ftKNnl5dhPvEYITn+DhrPrpxL+i/725aBOJkLHAT3LdKliwnybJKDqUDVR8CbLgBf6IcfhYnaLU7fTq0dw==",
+        "requested": "[4.0.0-pre4, )",
+        "resolved": "4.0.0-pre4",
+        "contentHash": "gK20RSLGp1QBG7FCgu6/pmUUmhP6FGIRU0LBWWHdhTDicdHq760jP9QdD6UPyaVMLlhJrvwrSZ4HHLkHT8ZrjQ==",
         "dependencies": {
-          "Flurl": "3.0.7"
+          "Flurl": "4.0.0-pre4"
         }
       },
       "Gameloop.Vdf": {
@@ -54,9 +54,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.2.2, )",
-        "resolved": "5.2.2",
-        "contentHash": "r6Q9740g29gTwmTWlsgdIFm0mhNsfNZmbvWKX/Fxmi8X89ZrpUowHM2T2X1lP7RVpND+ef+XnfKL5g6Q1iNGXA=="
+        "requested": "[5.2.5, )",
+        "resolved": "5.2.5",
+        "contentHash": "mMXtbAxfNzqkXcBjhJ3wN3rH7kwUZ0JL0GrUBI/lso7+tQ/HC4e5SnlmR3R5qQ9zWbqMbjxeH37rIf0yQGWTiA=="
       },
       "PortableJsonSettingsProvider": {
         "type": "Direct",
@@ -98,8 +98,8 @@
       },
       "Flurl": {
         "type": "Transitive",
-        "resolved": "3.0.7",
-        "contentHash": "W3zHc8m6/yqOAedHwpFQv5VT8t0W/jkS3AVlv1Tj520KDNjUa31at0zMc3XYJy8f9qdOmUcvSUarf6G2nK1ZIg=="
+        "resolved": "4.0.0-pre4",
+        "contentHash": "gm3Hl5+qrz4QsZTzF1xd6IjnbwIzrzS1ArS1XqHPYmK00bepXm9YYUazbt7HSRuj2eN21E5eErIJYIXvTckmhw=="
       },
       "Microsoft.AspNetCore.WebUtilities": {
         "type": "Transitive",
