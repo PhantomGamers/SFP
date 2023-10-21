@@ -1,5 +1,6 @@
 #region
 
+using System.Text;
 using System.Text.RegularExpressions;
 using PuppeteerSharp;
 using SFP.Models.Injection.Config;
@@ -484,13 +485,14 @@ public static partial class Injector
     public static void SetAccentColors(IEnumerable<string> colors)
     {
         var colorsArr = colors as string[] ?? colors.ToArray();
-        var colorsCss = ":root { ";
+        var colorsCss = new StringBuilder();
+        colorsCss.Append(":root { ");
         for (var i = 0; i < 7; i++)
         {
-            colorsCss += $"--{ColorNames[i]}: {colorsArr[i]}; ";
+            colorsCss.Append($"--{ColorNames[i]}: {colorsArr[i]}; ");
         }
-        colorsCss += "}";
-        ColorsCss = colorsCss;
+        colorsCss.Append('}');
+        ColorsCss = colorsCss.ToString();
     }
 
     public static async void UpdateSystemAccentColors(bool useAccentColors = true)
