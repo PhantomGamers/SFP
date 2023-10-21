@@ -222,6 +222,8 @@ The variables are as follows:
 - `--SystemAccentColorDark2`
 - `--SystemAccentColorDark3`
 
+These variables contain **hex colors**.
+
 When using these variables, make sure to fallback to sane defaults as these variables may not exist if the user does not enable UseAppTheme or uses a different patcher.
 
 ## Todo
