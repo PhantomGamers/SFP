@@ -205,6 +205,24 @@ For example:
 To find steam page titles to match against, make sure Steam is running with `cef-enable-debugging` and then
 visit <http://localhost:8080> in your web browser.
 
+### Using System Accent Color
+
+When the user has the UseAppTheme setting enabled, SFP passes the System Accent Color to Steam via CSS variables.
+
+You can use these variables in your skin to match the system accent color.
+
+The variables are as follows:
+
+- `--SystemAccentColor`
+- `--SystemAccentColorLight1`
+- `--SystemAccentColorLight2`
+- `--SystemAccentColorLight3`
+- `--SystemAccentColorDark1`
+- `--SystemAccentColorDark2`
+- `--SystemAccentColorDark3`
+
+When using these variables, make sure to fallback to sane defaults as these variables may not exist if the user does not enable UseAppTheme or uses a different patcher.
+
 ## Todo
 
 - Add ability to install and customize skins directly from SFP
