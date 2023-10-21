@@ -21,6 +21,19 @@ public static partial class Injector
 
     private static string PreferredColorScheme { get; set; } = "light";
 
+    public static string[] ColorNames { get; } = new[]
+    {
+        "SystemAccentColor",
+        "SystemAccentColorLight1",
+        "SystemAccentColorLight2",
+        "SystemAccentColorLight3",
+        "SystemAccentColorDark1",
+        "SystemAccentColorDark2",
+        "SystemAccentColorDark3"
+    };
+
+    public static string ColorsCss { get; private set; } = string.Empty;
+
     public static async Task StartInjectionAsync(bool noError = false)
     {
         if (s_browser is { IsConnected: true })
@@ -191,6 +204,7 @@ public static partial class Injector
         if (Settings.Default.UseAppTheme)
         {
             await UpdateColorInPage(page);
+            await UpdateSystemAccentColorsInPage(page);
         }
 
         page.FrameNavigated -= Frame_Navigate;
@@ -465,6 +479,76 @@ public static partial class Injector
             "dark" => "dark",
             _ => "light"
         };
+    }
+
+    public static void SetAccentColors(IEnumerable<string> colors)
+    {
+        var colorsArr = colors as string[] ?? colors.ToArray();
+        var colorsCss = ":root { ";
+        for (var i = 0; i < 7; i++)
+        {
+            colorsCss += $"--{ColorNames[i]}: {colorsArr[i]}; ";
+        }
+        colorsCss += "}";
+        ColorsCss = colorsCss;
+    }
+
+    public static async void UpdateSystemAccentColors(bool useAccentColors = true)
+    {
+        if (s_browser == null || !Settings.Default.UseAppTheme && useAccentColors)
+        {
+            return;
+        }
+
+        var pages = await s_browser.PagesAsync();
+        IEnumerable<Task> processTasks;
+        if (useAccentColors)
+        {
+            processTasks = pages.Select(UpdateSystemAccentColorsInPage);
+        }
+        else
+        {
+            processTasks = pages.Select(async page =>
+            {
+                var injectString =
+                    $@"function injectAcc() {{
+                        var element = document.getElementById('SystemAccentColorInjection');
+                        if (element) {{
+                            element.parentNode.removeChild(element);
+                        }}
+                    }}
+                    if ((document.readyState === 'loading') && '{IsFrameWebkit(page.MainFrame)}' === 'True') {{
+                        addEventListener('DOMContentLoaded', injectAcc);
+                    }} else {{
+                        injectAcc();
+                    }}
+                    ";
+                await page.EvaluateExpressionAsync(injectString);
+            });
+        }
+        await Task.WhenAll(processTasks);
+    }
+
+    private static async Task UpdateSystemAccentColorsInPage(Page page)
+    {
+        var injectString =
+            $@"function injectAcc() {{
+                var element = document.getElementById('SystemAccentColorInjection');
+                if (element) {{
+                    element.parentNode.removeChild(element);
+                }}
+                element = document.createElement('style');
+                element.id = 'SystemAccentColorInjection';
+                element.innerHTML = `{ColorsCss}`;
+                document.head.append(element);
+            }}
+            if ((document.readyState === 'loading') && '{IsFrameWebkit(page.MainFrame)}' === 'True') {{
+                addEventListener('DOMContentLoaded', injectAcc);
+            }} else {{
+                injectAcc();
+            }}
+            ";
+        await page.EvaluateExpressionAsync(injectString);
     }
 
     [GeneratedRegex(@"^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/?\n]+)")]
