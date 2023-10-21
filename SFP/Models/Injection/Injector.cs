@@ -503,17 +503,12 @@ public static partial class Injector
         }
 
         var pages = await s_browser.PagesAsync();
-        IEnumerable<Task> processTasks;
-        if (useAccentColors)
-        {
-            processTasks = pages.Select(UpdateSystemAccentColorsInPage);
-        }
-        else
-        {
-            processTasks = pages.Select(async page =>
-            {
-                var injectString =
-                    $@"function injectAcc() {{
+        var processTasks = useAccentColors
+           ? pages.Select(UpdateSystemAccentColorsInPage)
+           : pages.Select(async page =>
+           {
+               var injectString =
+                   $@"function injectAcc() {{
                         var element = document.getElementById('SystemAccentColorInjection');
                         if (element) {{
                             element.parentNode.removeChild(element);
@@ -525,9 +520,8 @@ public static partial class Injector
                         injectAcc();
                     }}
                     ";
-                await page.EvaluateExpressionAsync(injectString);
-            });
-        }
+               await page.EvaluateExpressionAsync(injectString);
+           });
         await Task.WhenAll(processTasks);
     }
 
