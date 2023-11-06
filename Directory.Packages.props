@@ -10,7 +10,7 @@
     <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" />
-    <PackageVersion Include="Flurl.Http" Version="4.0.0-pre4" />
+    <PackageVersion Include="Flurl.Http" Version="4.0.0-pre6" />
     <PackageVersion Include="PuppeteerSharp" Version="6.2.0" />
     <PackageVersion Include="ReactiveUI.Fody" Version="19.5.1" />
     <PackageVersion Include="Semver" Version="2.3.0" />
