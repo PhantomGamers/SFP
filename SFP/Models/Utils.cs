@@ -62,4 +62,16 @@ public static class Utils
 
         return new List<string>();
     }
+
+    public static string ConvertARGBtoRGBA(string argb)
+    {
+        if (argb.Length != 9 || !argb.StartsWith("#"))
+        {
+            throw new ArgumentException("Invalid ARGB format");
+        }
+        var alpha = argb.Substring(1, 2);
+        var rgb = argb[3..];
+        return "#" + rgb + alpha;
+    }
+
 }

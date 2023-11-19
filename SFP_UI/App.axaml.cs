@@ -79,6 +79,7 @@ public class App : Application
     {
         if (Current!.Styles[0] is not FluentAvaloniaTheme faTheme)
         {
+            Log.Logger.Warn("Could not get color values, FluentAvaloniaTheme is null");
             return Array.Empty<string>();
         }
         var colorValues = new string[7];
@@ -86,9 +87,12 @@ public class App : Application
         {
             if (!faTheme.Resources.TryGetResource(Injector.ColorNames[i], null, out var c))
             {
+                Log.Logger.Warn("Could not get color value for {ColorName}", Injector.ColorNames[i]);
                 continue;
             }
-            colorValues[i] = c?.ToString() ?? colorValues[i];
+
+            var rgbaStr = Utils.ConvertARGBtoRGBA(c!.ToString()!);
+            colorValues[i] = rgbaStr;
         }
 
         return colorValues;
