@@ -87,9 +87,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.2.5, )",
-        "resolved": "5.2.5",
-        "contentHash": "mMXtbAxfNzqkXcBjhJ3wN3rH7kwUZ0JL0GrUBI/lso7+tQ/HC4e5SnlmR3R5qQ9zWbqMbjxeH37rIf0yQGWTiA=="
+        "requested": "[5.2.6, )",
+        "resolved": "5.2.6",
+        "contentHash": "7/RQ4VBu6HT6kieczhwfI52ugcxrsrMNWIGy43Q36SdfN5dApZW7otsgXuIXx2rKspIGkPhD99JVWIs6FtIilA=="
       },
       "ReactiveUI.Fody": {
         "type": "Direct",
@@ -1525,10 +1525,10 @@
       "sfp": {
         "type": "Project",
         "dependencies": {
-          "FileWatcherEx": "[2.5.0, )",
-          "Flurl.Http": "[4.0.0-pre4, )",
+          "FileWatcherEx": "[2.6.0, )",
+          "Flurl.Http": "[4.0.0-pre6, )",
           "Gameloop.Vdf": "[0.6.2, )",
-          "NLog": "[5.2.5, )",
+          "NLog": "[5.2.6, )",
           "PortableJsonSettingsProvider": "[0.2.2, )",
           "PuppeteerSharp": "[6.2.0, )",
           "WindowsShortcutFactory": "[1.1.0, )",
@@ -1537,15 +1537,15 @@
       },
       "FileWatcherEx": {
         "type": "CentralTransitive",
-        "requested": "[2.5.0, )",
-        "resolved": "2.5.0",
-        "contentHash": "XmNJt94gt/xlr0RY5w6gKcZhwQ2wNSA7j+VqakpEHY3kk8dXVnYShNZMBVyEPUcDdCzFrI+4d7BvGnmDHB/m/w=="
+        "requested": "[2.6.0, )",
+        "resolved": "2.6.0",
+        "contentHash": "zHDfVCmqguDYzcRhUmsAzUVBMm5G3nvkD5+p3/f5TjqPHcxFvDoEfSKvxZ4/Mid6fVDZJOU+7xxittk+AIE2Bw=="
       },
       "Flurl.Http": {
         "type": "CentralTransitive",
-        "requested": "[4.0.0-pre4, )",
-        "resolved": "4.0.0-pre4",
-        "contentHash": "gK20RSLGp1QBG7FCgu6/pmUUmhP6FGIRU0LBWWHdhTDicdHq760jP9QdD6UPyaVMLlhJrvwrSZ4HHLkHT8ZrjQ==",
+        "requested": "[4.0.0-pre6, )",
+        "resolved": "4.0.0-pre6",
+        "contentHash": "YwWbb/egekWqLmoYZLY2PTzwmN4l6/C4iQKuUsWuNrjxYQ84Oa+OBfQzPYx+04lpOAhhjoBeXFB8y7C+F0CpJA==",
         "dependencies": {
           "Flurl": "4.0.0-pre4"
         }
