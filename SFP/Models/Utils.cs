@@ -72,10 +72,10 @@ public static class Utils
             var color = Color.FromName(argb);
             if (color is { A: 0, R: 0, G: 0, B: 0 })
             {
-                Log.Logger.Warn("Could not convert {ColorName} to hex string", argb);
+                Log.Logger.Warn("Could not get color from {ColorName}", argb);
                 return argb;
             }
-            argb = $"{color.ToArgb():x8}";
+            argb = $"#{color.ToArgb():x8}";
         }
 
         if (argb.Length is not 9)
