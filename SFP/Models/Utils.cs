@@ -1,6 +1,7 @@
 #region
 
 using System.Diagnostics;
+using System.Drawing;
 
 #endregion
 
@@ -63,12 +64,26 @@ public static class Utils
         return new List<string>();
     }
 
+    // ReSharper disable once InconsistentNaming
     public static string ConvertARGBtoRGBA(string argb)
     {
-        if (argb.Length != 9 || !argb.StartsWith("#"))
+        if (!argb.StartsWith("#"))
         {
-            throw new ArgumentException("Invalid ARGB format");
+            var color = Color.FromName(argb);
+            if (color is { A: 0, R: 0, G: 0, B: 0 })
+            {
+                Log.Logger.Warn("Could not convert {ColorName} to hex string", argb);
+                return argb;
+            }
+            argb = $"{color.ToArgb():x8}";
         }
+
+        if (argb.Length is not 9)
+        {
+            Log.Logger.Warn("Could not convert {ColorName} to RGBA, unexpected format", argb);
+            return argb;
+        }
+
         var alpha = argb.Substring(1, 2);
         var rgb = argb[3..];
         return "#" + rgb + alpha;
