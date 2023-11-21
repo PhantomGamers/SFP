@@ -53,6 +53,7 @@ jobs:
           dotnet-version: 7.x
           cache: true
           cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore --locked-mode
       - name: Set OS_ARG environment variable
         run: |
           if ("${{ runner.os }}" -eq "Windows") {
