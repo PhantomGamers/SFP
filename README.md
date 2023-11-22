@@ -26,7 +26,7 @@ This utility allows you to apply skins and scripts to the new Steam client.
 
 1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
    operating system.
-   - If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip release.
+   - If you have .NET 8 installed, download the \_net8.zip release; otherwise, download the \_SelfContained.zip release.
 2. Run the SFP_UI application.
 3. By default, SFP_UI will automatically wait for Steam to start and inject, or inject if Steam is already running.
 4. For full functionality, **SFP must be running with its injector started as long as Steam is running**.
@@ -238,7 +238,7 @@ When using these variables, make sure to fallback to sane defaults as these vari
 
 ### All
 
-- [.NET 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) (Only if not using self contained version)
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (Only if not using self contained version)
 
 ### Linux
 
