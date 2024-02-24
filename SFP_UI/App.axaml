@@ -11,6 +11,8 @@
         <ResourceDictionary>
             <ui:SymbolIconSource Symbol="Home" x:Key="HomeIcon" />
             <ui:SymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
+            <ui:SymbolIconSource Symbol="Image" x:Key="SkinBrowserIcon" />
+            <ui:SymbolIconSource Symbol="ImageFilled" x:Key="SkinBrowserIconFilled" />
             <ui:SymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
             <ui:SymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
         </ResourceDictionary>

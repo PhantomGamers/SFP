@@ -5,6 +5,7 @@
     <AvaloniaVersion>11.0.5</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="AsyncImageLoader.Avalonia" Version="3.2.1" />
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />

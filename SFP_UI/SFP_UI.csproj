@@ -12,6 +12,8 @@
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <LangVersion>preview</LangVersion>
+    <AssemblyVersion>0.0.6</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AsyncImageLoader.Avalonia" />
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Desktop" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -33,5 +36,11 @@
     <TrimmerRootAssembly Include="WmiLight" />
     <TrimmerRootAssembly Include="PuppeteerSharp" />
     <TrimmerRootDescriptor Include="TrimmerRoot.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Pages\SkinBrowser.axaml.cs">
+      <DependentUpon>Skin Browser.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
