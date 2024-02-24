@@ -22,7 +22,8 @@ internal static class UpdateChecker
 {
     public static readonly SemVersion Version = SemVersion.Parse(Assembly.GetEntryAssembly()!
         .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
-        .InformationalVersion, SemVersionStyles.Strict);
+        .InformationalVersion
+        .Split('+')[0], SemVersionStyles.Strict);
 
     public static async Task CheckForUpdates()
     {

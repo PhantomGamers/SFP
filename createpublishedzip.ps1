@@ -1,5 +1,5 @@
 param(
-  [String]$os = "win10;linux;osx",
+  [String]$os = "win;linux;osx",
   [String]$arch = "x64",
   [String]$configuration = "Release",
   [bool]$createzip = $True,
@@ -55,7 +55,7 @@ function Build-SFP
       }
       else
       {
-        "SFP_UI-$TargetRuntime-net7.zip"
+        "SFP_UI-$TargetRuntime-net8.zip"
       }
       Get-ChildItem "$publishDir/*" -Recurse -Exclude $excludeFiles | Compress-Archive -DestinationPath "./$configuration/$zipname" -Force
     } else {
@@ -65,7 +65,7 @@ function Build-SFP
       }
       else
       {
-        "SFP_UI-$TargetRuntime-net7.tar.gz"
+        "SFP_UI-$TargetRuntime-net8.tar.gz"
       }
       $excludeOptions = ""
       foreach ($file in $excludeFiles) {
