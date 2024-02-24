@@ -20,7 +20,7 @@ public class AppViewModel : ViewModelBase
 
     public ReactiveCommand<Unit, Unit> ShowSettings { get; } =
         ReactiveCommand.Create(MainWindow.ShowSettings);
-    
+
     public ReactiveCommand<Unit, Unit> ShowWindow { get; } =
         ReactiveCommand.Create(MainWindow.ShowWindow);
     public ReactiveCommand<Unit, Unit> Quit { get; } = ReactiveCommand.Create(App.QuitApplication);
