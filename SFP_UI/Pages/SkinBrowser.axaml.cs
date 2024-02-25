@@ -223,31 +223,30 @@ public class Card : UserControl
 
     private static void Cleanup(SkinBrowserPage.SkinInfo skinInfo)
     {
-        try
+        var deletionPaths = new List<string>
         {
-            Directory.Delete(Path.Combine(Steam.SkinsDir, skinInfo.Name!), true);
-        }
-        catch
+            Path.Combine(Steam.SkinsDir, skinInfo.Name!),
+            Path.Combine(Steam.SkinsDir, $"{skinInfo.Name!}-temp-extraction"),
+            Path.Combine(Steam.SkinsDir, skinInfo.Name!) + ".zip"
+        };
+        foreach (var path in deletionPaths)
         {
-            // ignored
-        }
-
-        try
-        {
-            Directory.Delete(Path.Combine(Steam.SkinsDir, $"{skinInfo.Name!}-temp-extraction"), true);
-        }
-        catch
-        {
-            // ignored
-        }
-
-        try
-        {
-            File.Delete(Path.Combine(Steam.SkinsDir, skinInfo.Name!) + ".zip");
-        }
-        catch
-        {
-            // ignored
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                else if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error($"Failed to delete file or directory {path} during cleanup");
+                Log.Logger.Debug(ex);
+            }
         }
     }
 
