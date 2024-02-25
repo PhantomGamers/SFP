@@ -4,6 +4,7 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyVersion>0.0.6</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/Release/frameworkdependent" />
         <option value="$PROJECT_DIR$/Release/selfcontained" />
+        <option value="$PROJECT_DIR$/SFP_UI/bin/Release/net7.0/osx-x64/publish" />
+        <option value="$PROJECT_DIR$/SFP_UI/bin/Release/net7.0/linux-x64/publish" />
       </list>
     </option>
   </component>

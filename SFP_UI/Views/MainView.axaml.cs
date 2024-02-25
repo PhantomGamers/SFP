@@ -20,6 +20,7 @@ public partial class MainView : UserControl
         InitializeComponent();
     }
 
+    [Obsolete("Obsolete")]
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
@@ -58,6 +59,9 @@ public partial class MainView : UserControl
             SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
                 ? (IconSource)value!
                 : null,
+            SkinBrowserPage => this.TryFindResource(selected ? "SkinBrowserIconFilled" : "SkinBrowserIcon", out var value)
+                ? (IconSource)value!
+                : null,
             _ => item.IconSource
         };
     }
@@ -93,6 +97,7 @@ public partial class MainView : UserControl
         }
     }
 
+    [Obsolete("Obsolete")]
     private IEnumerable<NavigationViewItem> GetNavigationViewItems()
     {
         return new List<NavigationViewItem>
@@ -103,10 +108,18 @@ public partial class MainView : UserControl
                 Tag = NavigationFactory.GetPages()[0],
                 IconSource = (IconSource)this.FindResource("HomeIcon")!,
                 Classes = { "SFPAppNav" }
+            },
+            new()
+            {
+                Content = "Skin Browser",
+                Tag = NavigationFactory.GetPages()[2],
+                IconSource = (IconSource)this.FindResource("SkinBrowserIcon")!,
+                Classes = { "SFPAppNav" }
             }
         };
     }
 
+    [Obsolete("Obsolete")]
     private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems()
     {
         return new List<NavigationViewItem>
