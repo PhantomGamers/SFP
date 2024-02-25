@@ -47,11 +47,12 @@ public partial class SkinBrowserPage : UserControl
 
     private static async Task<List<SkinInfo>?> GetSkins()
     {
-        const string ApiUrl = "insert api url here";
+        //const string ApiUrl = "insert api url here";
         var client = new HttpClient();
         try
         {
-            var data = await client.GetStringAsync(ApiUrl);
+            //var data = await client.GetStringAsync(ApiUrl);
+            var data = await File.ReadAllTextAsync("skins.json");
             var json = JsonConvert.DeserializeObject<List<dynamic>>(data);
 
             return json!.Select(skin => new SkinInfo
