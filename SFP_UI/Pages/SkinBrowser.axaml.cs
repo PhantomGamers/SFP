@@ -28,9 +28,8 @@ public partial class SkinBrowserPage : UserControl
     private async void InitializeAsync()
     {
         var skins = await GetSkins();
-        foreach (var skin in skins!)
+        foreach (var card in skins!.Select(skin => new Card(skin)))
         {
-            var card = new Card(skin);
             CardsContainer.Items.Add(card);
         }
     }
@@ -48,30 +47,24 @@ public partial class SkinBrowserPage : UserControl
 
     private static async Task<List<SkinInfo>?> GetSkins()
     {
-        var apiUrl = "insert api url here";
+        const string ApiUrl = "insert api url here";
         var client = new HttpClient();
         try
         {
-            var data = await client.GetStringAsync(apiUrl);
+            var data = await client.GetStringAsync(ApiUrl);
             var json = JsonConvert.DeserializeObject<List<dynamic>>(data);
-            var skins = new List<SkinInfo>();
-            foreach (var skin in json!)
-            {
-                var skinInfo = new SkinInfo
-                {
-                    Download = skin["download"],
-                    Author = skin["data"]["github"]["owner"],
-                    GithubPage =
-                        $"https://github.com/{skin["data"]["github"]["owner"]}/{skin["data"]["github"]["repo"]}/",
-                    LatestCommitDate = skin["commit_data"]["committedDate"],
-                    HeaderImage = skin["header_image"],
-                    Name = skin["name"],
-                    Description = skin["description"]
-                };
-                skins.Add(skinInfo);
-            }
 
-            return skins;
+            return json!.Select(skin => new SkinInfo
+            {
+                Download = skin["download"],
+                Author = skin["data"]["github"]["owner"],
+                GithubPage = $"https://github.com/{skin["data"]["github"]["owner"]}/{skin["data"]["github"]["repo"]}/",
+                LatestCommitDate = skin["commit_data"]["committedDate"],
+                HeaderImage = skin["header_image"],
+                Name = skin["name"],
+                Description = skin["description"]
+            })
+                .ToList();
         }
         catch (HttpRequestException e)
         {
@@ -128,10 +121,10 @@ public class Card : UserControl
         }
     }
 
-    private bool IsInstalled(SkinBrowserPage.SkinInfo skinInfo) =>
+    private static bool IsInstalled(SkinBrowserPage.SkinInfo skinInfo) =>
         Path.Exists(Path.Combine(Steam.SkinsDir, skinInfo.Name!, "skin_info.json"));
 
-    private bool IsUpToDate(SkinBrowserPage.SkinInfo skinInfo) =>
+    private static bool IsUpToDate(SkinBrowserPage.SkinInfo skinInfo) =>
         JsonConvert.DeserializeObject<SkinBrowserPage.SkinInfo>(
             File.ReadAllText(Path.Combine(Steam.SkinsDir, skinInfo.Name!, "skin_info.json")))?.LatestCommitDate ==
         skinInfo.LatestCommitDate;
@@ -227,7 +220,7 @@ public class Card : UserControl
         Process.Start(new ProcessStartInfo { FileName = _githubUrl, UseShellExecute = true });
     }
 
-    private void Cleanup(SkinBrowserPage.SkinInfo skinInfo)
+    private static void Cleanup(SkinBrowserPage.SkinInfo skinInfo)
     {
         try
         {
@@ -286,28 +279,27 @@ public class Card : UserControl
             ZipFile.ExtractToDirectory(targetPath + ".zip", extractedFolderPath);
             File.Delete(targetPath + ".zip");
             var directories = Directory.GetDirectories(extractedFolderPath);
-            if (directories.Length == 1)
+            if (directories.Length != 1)
             {
-                var extractedFolder = directories[0];
-                var newFolderName = Path.Combine(Path.GetDirectoryName(extractedFolder)!, skinInfo.Name!);
-                Directory.Move(extractedFolder, newFolderName);
-                Directory.Move(newFolderName, Path.Combine(Steam.SkinsDir, skinInfo.Name!));
-                Directory.Delete(extractedFolderPath, true);
-                var skinInfoFilePath = Path.Combine(Steam.SkinsDir, skinInfo.Name!, "skin_info.json");
-                var skinInfoData = JsonConvert.SerializeObject(skinInfo, Formatting.Indented);
-                await File.WriteAllTextAsync(skinInfoFilePath, skinInfoData);
-                Log.Logger.Info($"Skin: {skinInfo.Name} downloaded and extracted successfully!");
-                DownloadButton.Content = IsInstalled(skinInfo)
-                    ? IsUpToDate(skinInfo) ? "Up To Date" : "Update Available"
-                    : "Download";
-                DownloadButton.Background = IsInstalled(skinInfo)
-                    ? IsUpToDate(skinInfo) ? Brushes.Violet : Brushes.BlueViolet
-                    : Brushes.DarkViolet;
-                RemoveButton.IsVisible = true;
-                return;
+                throw new Exception("Unexpected folder structure in the zip file.");
             }
+            var extractedFolder = directories[0];
+            var newFolderName = Path.Combine(Path.GetDirectoryName(extractedFolder)!, skinInfo.Name!);
+            Directory.Move(extractedFolder, newFolderName);
+            Directory.Move(newFolderName, Path.Combine(Steam.SkinsDir, skinInfo.Name!));
+            Directory.Delete(extractedFolderPath, true);
+            var skinInfoFilePath = Path.Combine(Steam.SkinsDir, skinInfo.Name!, "skin_info.json");
+            var skinInfoData = JsonConvert.SerializeObject(skinInfo, Formatting.Indented);
+            await File.WriteAllTextAsync(skinInfoFilePath, skinInfoData);
+            Log.Logger.Info($"Skin: {skinInfo.Name} downloaded and extracted successfully!");
+            DownloadButton.Content = IsInstalled(skinInfo)
+                ? IsUpToDate(skinInfo) ? "Up To Date" : "Update Available"
+                : "Download";
+            DownloadButton.Background = IsInstalled(skinInfo)
+                ? IsUpToDate(skinInfo) ? Brushes.Violet : Brushes.BlueViolet
+                : Brushes.DarkViolet;
+            RemoveButton.IsVisible = true;
 
-            throw new Exception("Unexpected folder structure in the zip file.");
         }
         catch (Exception ex)
         {

@@ -37,10 +37,4 @@
     <TrimmerRootAssembly Include="PuppeteerSharp" />
     <TrimmerRootDescriptor Include="TrimmerRoot.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Pages\SkinBrowser.axaml.cs">
-      <DependentUpon>Skin Browser.axaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
 </Project>
