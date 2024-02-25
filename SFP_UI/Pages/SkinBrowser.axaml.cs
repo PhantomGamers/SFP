@@ -48,7 +48,7 @@ public partial class SkinBrowserPage : UserControl
 
     private static async Task<List<SkinInfo>?> GetSkins()
     {
-        var apiUrl = "https://us-central1-bettersteam-87b59.cloudfunctions.net/api_v2/api_v2";
+        var apiUrl = "insert api url here";
         var client = new HttpClient();
         try
         {
