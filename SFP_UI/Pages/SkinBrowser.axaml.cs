@@ -8,6 +8,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Flurl.Http;
 using Newtonsoft.Json;
 using SFP.Models;
 
@@ -48,10 +49,9 @@ public partial class SkinBrowserPage : UserControl
     private static async Task<List<SkinInfo>?> GetSkins()
     {
         //const string ApiUrl = "insert api url here";
-        var client = new HttpClient();
         try
         {
-            //var data = await client.GetStringAsync(ApiUrl);
+            //var data = await ApiUrl.GetStringAsync();
             var data = await File.ReadAllTextAsync("skins.json");
             var json = JsonConvert.DeserializeObject<List<dynamic>>(data);
 
@@ -70,10 +70,6 @@ public partial class SkinBrowserPage : UserControl
         catch (HttpRequestException e)
         {
             Log.Logger.Error($"Error: {e.Message}");
-        }
-        finally
-        {
-            client.Dispose();
         }
 
         return null;
