@@ -6,12 +6,7 @@ namespace SFP_UI.ViewModels;
 
 public class MainViewViewModel : ViewModelBase
 {
-    public MainViewViewModel()
-    {
-        NavigationFactory = new NavigationFactory();
-    }
-
-    public NavigationFactory NavigationFactory { get; }
+    public NavigationFactory NavigationFactory { get; } = new();
 }
 
 public class NavigationFactory : INavigationPageFactory
@@ -31,8 +26,7 @@ public class NavigationFactory : INavigationPageFactory
     }
 
     // Create a page based on an object, such as a view model
-    [Obsolete("Obsolete")]
-    public Control? GetPageFromObject(object target)
+    public Control GetPageFromObject(object target)
     {
         return target switch
         {
@@ -45,14 +39,13 @@ public class NavigationFactory : INavigationPageFactory
 
     // Do this to avoid needing Activator.CreateInstance to create from type info
     // and to avoid a ridiculous amount of 'ifs'
-    [Obsolete("Obsolete")] private readonly Control[] _pages =
-    {
+    private readonly Control[] _pages =
+    [
         new MainPage(),
         new SettingsPage(),
         new SkinBrowserPage()
-    };
+    ];
 
-    [Obsolete("Obsolete")]
     public static Control[] GetPages()
     {
         return Instance!._pages;
