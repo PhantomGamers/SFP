@@ -1,6 +1,5 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -125,7 +124,6 @@ public class SfpConfig
     public IEnumerable<PatchEntry> Patches { get; init; } = GetDefaultPatches();
     [JsonIgnore] public static SfpConfig DefaultConfig { get; } = new();
 
-    [ExcludeFromCodeCoverage]
     private static IEnumerable<PatchEntry> GetDefaultPatches()
     {
         return s_defaultPatches;
@@ -148,7 +146,7 @@ public class SfpConfig
             if (File.Exists(sfpConfigPath))
             {
                 var jsonBytes = File.ReadAllBytes(sfpConfigPath);
-                json = JsonSerializer.Deserialize<SfpConfig>(jsonBytes);
+                json = JsonSerializer.Deserialize(jsonBytes, SFPJsonContext.Default.SfpConfig);
                 if (json?.UseDefaultPatches ?? true)
                 {
                     var patches = json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
@@ -165,7 +163,7 @@ public class SfpConfig
             else if (File.Exists(millenniumConfigPath))
             {
                 var jsonBytes = File.ReadAllBytes(millenniumConfigPath);
-                var millenniumConfig = JsonSerializer.Deserialize<MillenniumConfig>(jsonBytes);
+                var millenniumConfig = JsonSerializer.Deserialize(jsonBytes, SFPJsonContext.Default.MillenniumConfig);
                 if (millenniumConfig == null)
                 {
                     Log.Logger.Warn("Failed to parse config.json, result was null, using default config");

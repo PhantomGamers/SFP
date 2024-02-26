@@ -60,7 +60,7 @@ internal static class UpdateChecker
 #if DEBUG
         var responseBody = $"{{\"tag_name\":\"{Version.WithMinor(Version.Minor + 1)}\"}}";
 #pragma warning disable IL2026
-        var release = JsonSerializer.Deserialize<Release>(responseBody);
+        var release = JsonSerializer.Deserialize(responseBody, SFPUIJsonContext.Default.Release);
 #pragma warning restore IL2026
 #else
         Release release;

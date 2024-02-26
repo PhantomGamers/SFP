@@ -11,4 +11,5 @@ namespace SFP_UI.Models;
 [JsonSerializable(typeof(SkinBrowserPage.SkinInfo[]))]
 [JsonSerializable(typeof(SkinBrowserPage.GithubInfo))]
 [JsonSerializable(typeof(SkinBrowserPage.DataInfo))]
+[JsonSerializable(typeof(Release))]
 internal partial class SFPUIJsonContext : JsonSerializerContext;

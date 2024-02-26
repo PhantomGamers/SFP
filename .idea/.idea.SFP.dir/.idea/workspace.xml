@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a59c7f8f-033e-4bb8-977c-0aef209d401e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SFP_UI/Models/MyJsonContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SFP_UI/Pages/Skin Browser.axaml" beforeDir="false" afterPath="$PROJECT_DIR$/SFP_UI/Pages/SkinBrowserPage.axaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SFP_UI/Pages/SkinBrowser.axaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SFP_UI/Pages/SkinBrowser.axaml.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SFP/Models/SFPJsonContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SFP/Models/Injection/Config/SfpConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SFP/Models/Injection/Config/SfpConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SFP_UI/Models/SFPUIJsonContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SFP_UI/Models/SFPUIJsonContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SFP_UI/Models/UpdateChecker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SFP_UI/Models/UpdateChecker.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SFP_UI/packages.lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/SFP_UI/packages.lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +56,7 @@
       <updated>1708887768125</updated>
       <workItem from="1708887770738" duration="59000" />
       <workItem from="1708893304578" duration="3000" />
+      <workItem from="1708928777485" duration="5000" />
     </task>
     <servers />
   </component>
