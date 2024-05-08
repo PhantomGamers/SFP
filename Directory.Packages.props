@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NoWarn>NU1507</NoWarn>
-    <AvaloniaVersion>11.0.5</AvaloniaVersion>
+    <AvaloniaVersion>11.1.0-beta2</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
@@ -30,7 +30,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.6.0" />
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.4" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.1.0-preview4" />
     <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0" />
     <PackageVersion Include="WmiLight" Version="5.0.0-pre" />
   </ItemGroup>
