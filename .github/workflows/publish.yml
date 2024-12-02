@@ -64,7 +64,7 @@ jobs:
             echo "OS_ARG=osx" | Out-File -FilePath $env:GITHUB_ENV -Append
           }
       - run: ./createpublishedzip.ps1 -os ${{ env.OS_ARG }}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: SFP_UI-${{ env.OS_ARG }}-x64-${{ github.sha }}
           path: Release/SFP_UI-*
