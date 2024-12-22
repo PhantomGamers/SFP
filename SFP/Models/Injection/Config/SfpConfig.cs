@@ -43,8 +43,8 @@ public class PatchEntry : IEquatable<PatchEntry>
 public class SfpConfig
 {
     [JsonIgnore]
-    private static readonly IReadOnlyCollection<PatchEntry> s_defaultPatches = new[]
-    {
+    private static readonly IReadOnlyCollection<PatchEntry> s_defaultPatches =
+    [
         new PatchEntry
         {
             MatchRegexString = "https://.*.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
@@ -116,7 +116,7 @@ public class SfpConfig
             // Sign In Page
             MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         }
-    };
+    ];
 
     [JsonIgnore] private static SfpConfig? s_sfpConfig;
 

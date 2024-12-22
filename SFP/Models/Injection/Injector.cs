@@ -447,8 +447,7 @@ public static partial class Injector
     {
         try
         {
-            await page.EmulateMediaFeaturesAsync(new[]
-                { new MediaFeatureValue { MediaFeature = MediaFeature.PrefersColorScheme, Value = PreferredColorScheme } });
+            await page.EmulateMediaFeaturesAsync([new MediaFeatureValue { MediaFeature = MediaFeature.PrefersColorScheme, Value = PreferredColorScheme }]);
         }
         catch (PuppeteerException e)
         {
