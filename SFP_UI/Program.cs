@@ -23,6 +23,7 @@ namespace SFP_UI;
 
 internal static class Program
 {
+    private static readonly string s_appDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhantomGamers", "SFP");
     private static FileStream? s_fs;
     private static FileSystemWatcherEx? s_fw;
 
@@ -58,14 +59,12 @@ internal static class Program
         LogManager.Setup().LoadConfiguration(c =>
         {
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
-            using var fileTarget = new FileTarget
-            {
-                FileName = "SFP.log",
-                ArchiveOldFileOnStartup = true,
-                OpenFileCacheTimeout = 30,
-                MaxArchiveFiles = 2,
-                ArchiveAboveSize = 1024 * 1024 * 10
-            };
+            using var fileTarget = new FileTarget();
+            fileTarget.FileName = Path.Join(s_appDataPath, "SFP.log");
+            fileTarget.ArchiveOldFileOnStartup = true;
+            fileTarget.OpenFileCacheTimeout = 30;
+            fileTarget.MaxArchiveFiles = 2;
+            fileTarget.ArchiveAboveSize = 1024 * 1024 * 10;
             c.ForLogger().FilterMinLevel(LogLevel.Debug).WriteTo(fileTarget).WithAsync();
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteTo(new OutputControlTarget()).WithAsync();
 #if DEBUG
@@ -114,7 +113,16 @@ internal static class Program
 
     private static void InitSettings()
     {
-        PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
+        if (File.Exists("SFP.config"))
+        {
+            PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
+        }
+        else
+        {
+            _ = Directory.CreateDirectory(s_appDataPath);
+            PortableSettingsProviderBase.SettingsDirectory = s_appDataPath;
+            PortableJsonSettingsProvider.SettingsFileName = "settings.json";
+        }
         PortableJsonSettingsProvider.ApplyProvider(Settings.Default);
         Settings.Default.Reload();
         Settings.Default.DummySetting = true;
