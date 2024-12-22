@@ -44,10 +44,10 @@ public class NavigationFactory : INavigationPageFactory
     // Do this to avoid needing Activator.CreateInstance to create from type info
     // and to avoid a ridiculous amount of 'ifs'
     private readonly Control[] _pages =
-    {
+    [
         new MainPage(),
         new SettingsPage(),
-    };
+    ];
 
     public static Control[] GetPages()
     {

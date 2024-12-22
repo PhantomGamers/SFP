@@ -48,7 +48,7 @@ public static class Utils
         if (process == null)
         {
             Log.Logger.Warn("Could not get command line, process does not exist.");
-            return new List<string>();
+            return [];
         }
 
         if (OperatingSystem.IsWindows())
@@ -61,7 +61,7 @@ public static class Utils
             return Unix.Utils.GetCommandLine(process);
         }
 
-        return new List<string>();
+        return [];
     }
 
     // ReSharper disable once InconsistentNaming

@@ -65,7 +65,7 @@ public partial class MainWindow : AppWindow
     private void TryEnableMicaEffect()
     {
         TransparencyBackgroundFallback = Brushes.Transparent;
-        TransparencyLevelHint = new[] { WindowTransparencyLevel.Mica, WindowTransparencyLevel.None };
+        TransparencyLevelHint = [WindowTransparencyLevel.Mica, WindowTransparencyLevel.None];
 
         // The background colors for the Mica brush are still based around SolidBackgroundFillColorBase resource
         // BUT since we can't control the actual Mica brush color, we have to use the window background to create

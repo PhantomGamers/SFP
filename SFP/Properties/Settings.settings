@@ -62,5 +62,11 @@
     <Setting Name="UseAppTheme" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="InitialInjectionDelay" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="SteamCefPort" Roaming="true" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">8080</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

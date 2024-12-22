@@ -37,8 +37,10 @@ public class SettingsPageViewModel : ViewModelBase
 
     [Reactive] public bool RunOnBoot { get; set; }
 
-    public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
+    public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
     [Reactive] public string SelectedTheme { get; set; } = null!;
+
+    [Reactive] public int InitialInjectionDelay { get; set; }
 
     #endregion
 
@@ -46,6 +48,8 @@ public class SettingsPageViewModel : ViewModelBase
     [Reactive] public string SteamDirectory { get; set; } = null!;
 
     [Reactive] public string SteamLaunchArgs { get; set; } = null!;
+
+    [Reactive] public short SteamCefPort { get; set; }
 
     [Reactive] public bool InjectOnSteamStart { get; set; }
 
@@ -135,6 +139,13 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
                 App.SetApplicationTheme(value);
             });
+
+        this.WhenAnyValue(x => x.InitialInjectionDelay)
+            .Subscribe(value =>
+            {
+                Settings.Default.InitialInjectionDelay = value;
+                Settings.Default.Save();
+            });
         #endregion
 
         #region Steam
@@ -150,6 +161,14 @@ public class SettingsPageViewModel : ViewModelBase
             .Subscribe(value =>
             {
                 Settings.Default.SteamLaunchArgs = value.Trim();
+                Settings.Default.Save();
+            });
+
+        this.WhenAnyValue(x => x.SteamCefPort)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(value =>
+            {
+                Settings.Default.SteamCefPort = value;
                 Settings.Default.Save();
             });
 
@@ -242,11 +261,13 @@ public class SettingsPageViewModel : ViewModelBase
         RunSteamOnStart = Settings.Default.RunSteamOnStart;
         RunOnBoot = Settings.Default.RunOnBoot;
         SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
+        InitialInjectionDelay = Settings.Default.InitialInjectionDelay;
         #endregion
 
         #region Steam
         SteamDirectory = Steam.SteamDir ?? string.Empty;
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
+        SteamCefPort = Settings.Default.SteamCefPort;
         InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
         ForceSteamArgs = Settings.Default.ForceSteamArgs;
         InjectCss = Settings.Default.InjectCSS;

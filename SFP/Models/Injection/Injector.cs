@@ -12,7 +12,7 @@ namespace SFP.Models.Injection;
 
 public static partial class Injector
 {
-    private static Browser? s_browser;
+    private static IBrowser? s_browser;
     private static bool s_isInjected;
     private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
@@ -22,8 +22,8 @@ public static partial class Injector
 
     private static string PreferredColorScheme { get; set; } = "light";
 
-    public static string[] ColorNames { get; } = new[]
-    {
+    public static string[] ColorNames { get; } =
+    [
         "SystemAccentColor",
         "SystemAccentColorLight1",
         "SystemAccentColorLight2",
@@ -31,7 +31,7 @@ public static partial class Injector
         "SystemAccentColorDark1",
         "SystemAccentColorDark2",
         "SystemAccentColorDark3"
-    };
+    ];
 
     public static string ColorsCss { get; private set; } = string.Empty;
 
@@ -67,8 +67,8 @@ public static partial class Injector
             {
                 BrowserWSEndpoint = browserEndpoint,
                 DefaultViewport = null,
-                EnqueueAsyncMessages = false,
-                EnqueueTransportMessages = false
+                EnqueueAsyncMessages = true,
+                EnqueueTransportMessages = true,
             };
 
             Log.Logger.Info("Connecting to " + browserEndpoint);
@@ -195,7 +195,7 @@ public static partial class Injector
         }
     }
 
-    private static async Task ProcessPage(Page? page)
+    private static async Task ProcessPage(IPage? page)
     {
         if (page == null)
         {
@@ -214,7 +214,7 @@ public static partial class Injector
         await ProcessFrame(page.MainFrame);
     }
 
-    private static async Task ProcessFrame(Frame frame)
+    private static async Task ProcessFrame(IFrame frame)
     {
         var config = SfpConfig.GetConfig();
         var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray();
@@ -288,7 +288,7 @@ public static partial class Injector
             await DumpFrame(frame, url);
             if (!config._isFromMillennium)
             {
-                var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
+                var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.CurrentCultureIgnoreCase));
                 var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
@@ -307,7 +307,7 @@ public static partial class Injector
         }
     }
 
-    private static async Task DumpFrame(Frame frame, string? fileName)
+    private static async Task DumpFrame(IFrame frame, string? fileName)
     {
         if (Settings.Default.DumpPages)
         {
@@ -337,7 +337,7 @@ public static partial class Injector
         }
     }
 
-    private static async Task SetBypassCsp(Frame frame)
+    private static async Task SetBypassCsp(IFrame frame)
     {
         var pageTask = s_browser?.Targets().FirstOrDefault(t => t.TargetId == frame.Id)?.PageAsync();
         if (pageTask == null)
@@ -360,12 +360,12 @@ public static partial class Injector
         }
     }
 
-    private static async void Frame_Navigate(object? sender, FrameEventArgs e)
+    private static async void Frame_Navigate(object? sender, FrameNavigatedEventArgs e)
     {
         await ProcessFrame(e.Frame);
     }
 
-    private static async Task InjectAsync(Frame frame, PatchEntry patch, string tabFriendlyName)
+    private static async Task InjectAsync(IFrame frame, PatchEntry patch, string tabFriendlyName)
     {
         if (Settings.Default.InjectCSS && !string.IsNullOrWhiteSpace(patch.TargetCss))
         {
@@ -392,7 +392,7 @@ public static partial class Injector
         }
     }
 
-    private static async Task InjectResourceAsync(Frame frame, string fileRelativePath, string tabFriendlyName,
+    private static async Task InjectResourceAsync(IFrame frame, string fileRelativePath, string tabFriendlyName,
         string patchName)
     {
         var relativeSkinDir = Steam.GetRelativeSkinDir().Replace('\\', '/');
@@ -438,17 +438,16 @@ public static partial class Injector
         }
     }
 
-    private static bool IsFrameWebkit(Frame frame)
+    private static bool IsFrameWebkit(IFrame frame)
     {
         return !frame.Url.StartsWith("https://steamloopback.host") && !frame.Url.StartsWith("devtools://");
     }
 
-    private static async Task UpdateColorInPage(Page page)
+    private static async Task UpdateColorInPage(IPage page)
     {
         try
         {
-            await page.EmulateMediaFeaturesAsync(new[]
-                { new MediaFeatureValue { MediaFeature = MediaFeature.PrefersColorScheme, Value = PreferredColorScheme } });
+            await page.EmulateMediaFeaturesAsync([new MediaFeatureValue { MediaFeature = MediaFeature.PrefersColorScheme, Value = PreferredColorScheme }]);
         }
         catch (PuppeteerException e)
         {
@@ -525,7 +524,7 @@ public static partial class Injector
         await Task.WhenAll(processTasks);
     }
 
-    private static async Task UpdateSystemAccentColorsInPage(Page page)
+    private static async Task UpdateSystemAccentColorsInPage(IPage page)
     {
         var injectString =
             $@"function injectAcc() {{

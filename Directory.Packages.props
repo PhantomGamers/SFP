@@ -2,36 +2,35 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <NoWarn>NU1507</NoWarn>
-    <AvaloniaVersion>11.0.5</AvaloniaVersion>
+    <AvaloniaVersion>11.2.3</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
-    <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" />
-    <PackageVersion Include="Flurl.Http" Version="4.0.0-pre6" />
-    <PackageVersion Include="PuppeteerSharp" Version="6.2.0" />
-    <PackageVersion Include="ReactiveUI.Fody" Version="19.5.1" />
-    <PackageVersion Include="Semver" Version="2.3.0" />
+    <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2" />
+    <PackageVersion Include="Flurl.Http" Version="4.0.2" />
+    <PackageVersion Include="PuppeteerSharp" Version="20.0.5" />
+    <PackageVersion Include="ReactiveUI.Fody" Version="19.5.41" />
+    <PackageVersion Include="Semver" Version="3.0.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
-    <PackageVersion Include="Gameloop.Vdf" Version="0.6.2" />
-    <PackageVersion Include="NLog" Version="5.2.6" />
-    <PackageVersion Include="MinVer" Version="4.3.0">
+    <PackageVersion Include="NLog" Version="5.3.4" />
+    <PackageVersion Include="MinVer" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.4.0-beta.1">
+    <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.7.0-beta.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.4.0-beta.1">
+    <PackageVersion Include="ErrorProne.NET.Structs" Version="0.6.1-beta.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.6.0" />
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.0.4" />
-    <PackageVersion Include="WindowsShortcutFactory" Version="1.1.0" />
-    <PackageVersion Include="WmiLight" Version="4.0.0" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.2.0" />
+    <PackageVersion Include="WindowsShortcutFactory" Version="1.2.0" />
+    <PackageVersion Include="WmiLight" Version="6.9.0" />
   </ItemGroup>
 </Project>

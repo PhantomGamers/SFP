@@ -281,5 +281,31 @@ namespace SFP.Properties {
                 this["UseAppTheme"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int InitialInjectionDelay {
+            get {
+                return ((int)(this["InitialInjectionDelay"]));
+            }
+            set {
+                this["InitialInjectionDelay"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8080")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public short SteamCefPort {
+            get {
+                return ((short)(this["SteamCefPort"]));
+            }
+            set {
+                this["SteamCefPort"] = value;
+            }
+        }
     }
 }

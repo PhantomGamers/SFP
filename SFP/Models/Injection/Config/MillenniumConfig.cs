@@ -25,5 +25,5 @@ public class Patch
 
 public class MillenniumConfig
 {
-    [JsonPropertyName("patch")] public IEnumerable<Patch> Patch { get; init; } = Array.Empty<Patch>();
+    [JsonPropertyName("patch")] public IEnumerable<Patch> Patch { get; init; } = [];
 }

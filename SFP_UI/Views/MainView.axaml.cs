@@ -95,8 +95,8 @@ public partial class MainView : UserControl
 
     private IEnumerable<NavigationViewItem> GetNavigationViewItems()
     {
-        return new List<NavigationViewItem>
-        {
+        return
+        [
             new()
             {
                 Content = "Home",
@@ -104,13 +104,13 @@ public partial class MainView : UserControl
                 IconSource = (IconSource)this.FindResource("HomeIcon")!,
                 Classes = { "SFPAppNav" }
             }
-        };
+        ];
     }
 
     private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems()
     {
-        return new List<NavigationViewItem>
-        {
+        return
+        [
             new()
             {
                 Content = "Settings",
@@ -118,7 +118,7 @@ public partial class MainView : UserControl
                 IconSource = (IconSource)this.FindResource("SettingsIcon")!,
                 Classes = { "SFPAppNav" }
             }
-        };
+        ];
     }
 
     private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)

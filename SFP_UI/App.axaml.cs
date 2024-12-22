@@ -80,7 +80,7 @@ public class App : Application
         if (Current!.Styles[0] is not FluentAvaloniaTheme faTheme)
         {
             Log.Logger.Warn("Could not get color values, FluentAvaloniaTheme is null");
-            return Array.Empty<string>();
+            return [];
         }
         var colorValues = new string[7];
         for (var i = 0; i < 7; i++)

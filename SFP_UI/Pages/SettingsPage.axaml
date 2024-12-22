@@ -1,6 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:vm="using:SFP_UI.ViewModels"
              x:Class="SFP_UI.Pages.SettingsPage"
              x:DataType="vm:SettingsPageViewModel">
@@ -26,28 +25,36 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <ui:HyperlinkButton Content="Windows color settings"
+                <HyperlinkButton Content="Windows color settings"
                                     NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
                 <Separator Margin="0,10" />
 
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="Steam" />
                 <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
                     <Label>Steam directory</Label>
-                    <TextBox Watermark="Steam directory" Margin="20,0,0,0" Width="240" Text="{Binding SteamDirectory}"
+                    <TextBox Watermark="Steam directory" Margin="64,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                              IsReadOnly="True"
                              Focusable="False"
                              VerticalContentAlignment="Center" />
                     <Button Margin="5,0,0,0" Command="{Binding BrowseSteam}">Browse</Button>
                     <Button Margin="5,0,0,0" Command="{Binding ResetSteam}">Reset</Button>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
+                <StackPanel Orientation="Horizontal" Spacing="50" Margin="0,10">
                     <Label>Steam launch args</Label>
                     <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
                              Text="{Binding SteamLaunchArgs}" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
+                <StackPanel Orientation="Horizontal" Spacing="110" Margin="0,10">
+                    <Label>CEF Port</Label>
+                    <NumericUpDown Value="{Binding SteamCefPort}" Minimum="1000" Maximum="9999" ShowButtonSpinner="False" FormatString="0000"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="50" Margin="0,10">
                     <Label>Steam skin</Label>
                     <ComboBox x:Name="SteamSkinComboBox" Margin="45, 0, 0, 0" Width="240" Focusable="False" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,10">
+                    <Label>Injection Delay (seconds)</Label>
+                    <NumericUpDown Value="{Binding InitialInjectionDelay}" Minimum="0" Maximum="60" ShowButtonSpinner="False" FormatString="0"/>
                 </StackPanel>
                 <CheckBox IsChecked="{Binding InjectOnSteamStart}">Inject on Steam start</CheckBox>
                 <CheckBox IsChecked="{Binding ForceSteamArgs}">Force Steam arguments</CheckBox>
@@ -58,8 +65,8 @@
                 <Separator Margin="0,10" />
 
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
-                <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
-                <ui:HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
+                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
+                <HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
                 <Button Margin="0, 10" Command="{Binding ResetSettings}">Reset Settings</Button>
             </StackPanel>
         </ScrollViewer>
