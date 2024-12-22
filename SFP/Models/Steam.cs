@@ -358,11 +358,11 @@ public static class Steam
         }
 
         var cmdLine = GetCommandLine();
-        if (!cmdLine.Any())
+        if (cmdLine.Count == 0)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(100));
             cmdLine = GetCommandLine();
-            if (!cmdLine.Any())
+            if (cmdLine.Count == 0)
             {
                 Log.Logger.Error("Cannot check arguments. Steam process does not exist or is running with elevated permissions");
                 return false;
