@@ -390,6 +390,7 @@ public static class Steam
     {
         const string DebuggingString = @"-cef-enable-debugging";
         const string BootstrapString = @"-skipinitialbootstrap";
+        const string PortString = @"-devtools-port";
         var argsList = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
 
         if (!argsList.Contains(DebuggingString))
@@ -400,6 +401,11 @@ public static class Steam
         if (OperatingSystem.IsMacOS() && !argsList.Contains(BootstrapString))
         {
             argsList.Add(BootstrapString);
+        }
+
+        if (!argsList.Contains(PortString))
+        {
+            argsList.Add(PortString + " " + Settings.Default.SteamCefPort);
         }
 
         args = string.Join(" ", argsList);

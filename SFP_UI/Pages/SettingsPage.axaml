@@ -44,6 +44,10 @@
                     <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
                              Text="{Binding SteamLaunchArgs}" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="110" Margin="0,10">
+                    <Label>CEF Port</Label>
+                    <NumericUpDown Value="{Binding SteamCefPort}" Minimum="1000" Maximum="9999" ShowButtonSpinner="False" FormatString="0000"/>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="50" Margin="0,10">
                     <Label>Steam skin</Label>
                     <ComboBox x:Name="SteamSkinComboBox" Margin="45, 0, 0, 0" Width="240" Focusable="False" />

@@ -294,5 +294,18 @@ namespace SFP.Properties {
                 this["InitialInjectionDelay"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8080")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public short SteamCefPort {
+            get {
+                return ((short)(this["SteamCefPort"]));
+            }
+            set {
+                this["SteamCefPort"] = value;
+            }
+        }
     }
 }

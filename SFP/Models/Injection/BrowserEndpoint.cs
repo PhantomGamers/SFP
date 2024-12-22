@@ -3,6 +3,7 @@
 using System.Text.Json.Serialization;
 using Flurl;
 using Flurl.Http;
+using SFP.Properties;
 
 #endregion
 
@@ -14,7 +15,7 @@ public struct BrowserEndpoint
     // ReSharper disable once UnusedAutoPropertyAccessor.Global
     public string? WebSocketDebuggerUrl { get; set; }
 
-    private const string CefDebuggingUrl = "http://localhost:8080";
+    private const string CefDebuggingUrl = "http://localhost";
 
     internal static async Task<BrowserEndpoint> GetBrowserEndpointAsync()
     {
@@ -25,7 +26,7 @@ public struct BrowserEndpoint
         }
         try
         {
-            return await CefDebuggingUrl.AppendPathSegments("json", "version").GetJsonAsync<BrowserEndpoint>();
+            return await $"{CefDebuggingUrl}:{Settings.Default.SteamCefPort}".AppendPathSegments("json", "version").GetJsonAsync<BrowserEndpoint>();
         }
         catch (FlurlHttpException e)
         {

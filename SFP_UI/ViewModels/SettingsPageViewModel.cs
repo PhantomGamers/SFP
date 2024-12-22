@@ -48,6 +48,8 @@ public class SettingsPageViewModel : ViewModelBase
     [Reactive] public string SteamDirectory { get; set; } = null!;
 
     [Reactive] public string SteamLaunchArgs { get; set; } = null!;
+    
+    [Reactive] public short SteamCefPort { get; set; }
 
     [Reactive] public bool InjectOnSteamStart { get; set; }
 
@@ -161,6 +163,14 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.SteamLaunchArgs = value.Trim();
                 Settings.Default.Save();
             });
+        
+        this.WhenAnyValue(x => x.SteamCefPort)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(value =>
+            {
+                Settings.Default.SteamCefPort = value;
+                Settings.Default.Save();
+            });
 
         this.WhenAnyValue(x => x.InjectOnSteamStart)
             .Subscribe(value =>
@@ -257,6 +267,7 @@ public class SettingsPageViewModel : ViewModelBase
         #region Steam
         SteamDirectory = Steam.SteamDir ?? string.Empty;
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
+        SteamCefPort = Settings.Default.SteamCefPort;
         InjectOnSteamStart = Settings.Default.InjectOnSteamStart;
         ForceSteamArgs = Settings.Default.ForceSteamArgs;
         InjectCss = Settings.Default.InjectCSS;
