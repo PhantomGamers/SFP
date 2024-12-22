@@ -26,7 +26,7 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <ui:HyperlinkButton Content="Windows color settings"
+                <HyperlinkButton Content="Windows color settings"
                                     NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
                 <Separator Margin="0,10" />
 
@@ -58,8 +58,8 @@
                 <Separator Margin="0,10" />
 
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
-                <ui:HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
-                <ui:HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
+                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
+                <HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
                 <Button Margin="0, 10" Command="{Binding ResetSettings}">Reset Settings</Button>
             </StackPanel>
         </ScrollViewer>

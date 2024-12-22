@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using FileWatcherEx;
-using Gameloop.Vdf;
 using SFP.Models.Injection;
 using SFP.Properties;
 
@@ -138,23 +137,8 @@ public static class Steam
             return Windows.Utils.GetRegistryData(key, valueName);
         }
 
-        try
-        {
-            dynamic reg = VdfConvert.Deserialize(File.ReadAllText(Path.Join(SteamRootDir, "registry.vdf")));
-            var kn = @$"HKCU/{key.Replace('\\', '/')}/{valueName}";
-            var currentVal = reg.Value;
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var keyPart in kn.Split('/'))
-            {
-                currentVal = currentVal[keyPart];
-            }
-
-            return int.TryParse(currentVal.Value, out int val) ? val : -1;
-        }
-        catch
-        {
-            return -1;
-        }
+        // unimplemented for other operating systems
+        return -1;
     }
 
     private static void ShutDownSteam(Process steamProcess)
