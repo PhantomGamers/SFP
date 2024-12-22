@@ -40,6 +40,8 @@ public class SettingsPageViewModel : ViewModelBase
     public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
     [Reactive] public string SelectedTheme { get; set; } = null!;
 
+    [Reactive] public int InitialInjectionDelay { get; set; }
+
     #endregion
 
     #region Steam
@@ -134,6 +136,13 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.AppTheme = value.ToString();
                 Settings.Default.Save();
                 App.SetApplicationTheme(value);
+            });
+        
+        this.WhenAnyValue(x => x.InitialInjectionDelay)
+            .Subscribe(value =>
+            {
+                Settings.Default.InitialInjectionDelay = value;
+                Settings.Default.Save();
             });
         #endregion
 
@@ -242,6 +251,7 @@ public class SettingsPageViewModel : ViewModelBase
         RunSteamOnStart = Settings.Default.RunSteamOnStart;
         RunOnBoot = Settings.Default.RunOnBoot;
         SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
+        InitialInjectionDelay = Settings.Default.InitialInjectionDelay;
         #endregion
 
         #region Steam

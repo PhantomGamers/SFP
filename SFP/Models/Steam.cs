@@ -334,6 +334,8 @@ public static class Steam
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
+            // wait a user specified amount of time to prevent injecting too early
+            await Task.Delay(TimeSpan.FromSeconds(Settings.Default.InitialInjectionDelay));
             await Injector.StartInjectionAsync(true);
         }
         catch (Exception ex)
