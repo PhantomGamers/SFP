@@ -360,7 +360,7 @@ public static partial class Injector
         }
     }
 
-    private static async void Frame_Navigate(object? sender, FrameNavigatedEventArgs e)
+    private static async void Frame_Navigate(object? sender, FrameEventArgs e)
     {
         await ProcessFrame(e.Frame);
     }
