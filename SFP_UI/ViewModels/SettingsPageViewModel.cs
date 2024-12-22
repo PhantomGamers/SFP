@@ -37,7 +37,7 @@ public class SettingsPageViewModel : ViewModelBase
 
     [Reactive] public bool RunOnBoot { get; set; }
 
-    public IEnumerable<string> AppThemes { get; } = new[] { "Dark", "Light", "System Default" };
+    public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
     [Reactive] public string SelectedTheme { get; set; } = null!;
 
     [Reactive] public int InitialInjectionDelay { get; set; }
@@ -48,7 +48,7 @@ public class SettingsPageViewModel : ViewModelBase
     [Reactive] public string SteamDirectory { get; set; } = null!;
 
     [Reactive] public string SteamLaunchArgs { get; set; } = null!;
-    
+
     [Reactive] public short SteamCefPort { get; set; }
 
     [Reactive] public bool InjectOnSteamStart { get; set; }
@@ -139,7 +139,7 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
                 App.SetApplicationTheme(value);
             });
-        
+
         this.WhenAnyValue(x => x.InitialInjectionDelay)
             .Subscribe(value =>
             {
@@ -163,7 +163,7 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.SteamLaunchArgs = value.Trim();
                 Settings.Default.Save();
             });
-        
+
         this.WhenAnyValue(x => x.SteamCefPort)
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>

@@ -22,8 +22,8 @@ public static partial class Injector
 
     private static string PreferredColorScheme { get; set; } = "light";
 
-    public static string[] ColorNames { get; } = new[]
-    {
+    public static string[] ColorNames { get; } =
+    [
         "SystemAccentColor",
         "SystemAccentColorLight1",
         "SystemAccentColorLight2",
@@ -31,7 +31,7 @@ public static partial class Injector
         "SystemAccentColorDark1",
         "SystemAccentColorDark2",
         "SystemAccentColorDark3"
-    };
+    ];
 
     public static string ColorsCss { get; private set; } = string.Empty;
 
@@ -288,7 +288,7 @@ public static partial class Injector
             await DumpFrame(frame, url);
             if (!config._isFromMillennium)
             {
-                var httpPatches = patches.Where(p => p.MatchRegexString.ToLower().StartsWith("http"));
+                var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.CurrentCultureIgnoreCase));
                 var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)

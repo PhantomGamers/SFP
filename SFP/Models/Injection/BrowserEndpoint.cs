@@ -31,7 +31,7 @@ public struct BrowserEndpoint
         catch (FlurlHttpException e)
         {
             var cmdLine = Steam.GetCommandLine();
-            if (!cmdLine.Any())
+            if (cmdLine.Count == 0)
             {
                 Log.Logger.Error("Could not fetch browser, is Steam running with -cef-enable-debugging ?");
             }

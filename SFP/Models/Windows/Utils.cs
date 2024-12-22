@@ -46,8 +46,8 @@ public static class Utils
         var query = con.CreateQuery("SELECT CommandLine FROM Win32_Process WHERE ProcessId = " + process.Id);
         var commandLine = query.SingleOrDefault()?["CommandLine"]?.ToString();
         return commandLine != null
-            ? commandLine.ToLower().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList()
-            : new List<string>();
+            ? [.. commandLine.ToLower().Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)]
+            : [];
     }
 
     public static object? GetRegistryData(string aKey, string aValueName)
