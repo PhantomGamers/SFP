@@ -79,9 +79,9 @@
       },
       "WmiLight": {
         "type": "Direct",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       },
       "Flurl": {
         "type": "Transitive",
@@ -235,9 +235,9 @@
     "net8.0/linux-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
@@ -282,9 +282,9 @@
     "net8.0/osx-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
@@ -329,9 +329,9 @@
     "net8.0/win-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
