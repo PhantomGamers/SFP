@@ -88,9 +88,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.3.4, )",
-        "resolved": "5.3.4",
-        "contentHash": "gLy7+O1hEYJXIlcTr1/VWjGXrZTQFZzYNO18IWasD64pNwz0BreV+nHLxWKXWZzERRzoKnsk2XYtwLkTVk7J1A=="
+        "requested": "[5.4.0, )",
+        "resolved": "5.4.0",
+        "contentHash": "LwMcGSW3soF3/SL68rlJN3Eh3ktrAPycC3zZR/07OYBPraZUu0bygEC7kIN10lUQgMXT4s84Fi1chglGdGrQEg=="
       },
       "ReactiveUI.Fody": {
         "type": "Direct",
@@ -466,11 +466,11 @@
         "dependencies": {
           "FileWatcherEx": "[2.6.0, )",
           "Flurl.Http": "[4.0.2, )",
-          "NLog": "[5.3.4, )",
+          "NLog": "[5.4.0, )",
           "PortableJsonSettingsProvider": "[0.2.2, )",
           "PuppeteerSharp": "[8.0.0, )",
           "WindowsShortcutFactory": "[1.2.0, )",
-          "WmiLight": "[6.9.0, )"
+          "WmiLight": "[6.9.1, )"
         }
       },
       "FileWatcherEx": {
@@ -520,9 +520,9 @@
       },
       "WmiLight": {
         "type": "CentralTransitive",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       }
     },
     "net8.0/linux-x64": {
@@ -616,9 +616,9 @@
       },
       "WmiLight": {
         "type": "CentralTransitive",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       }
     },
     "net8.0/osx-x64": {
@@ -712,9 +712,9 @@
       },
       "WmiLight": {
         "type": "CentralTransitive",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       }
     },
     "net8.0/win-x64": {
@@ -808,9 +808,9 @@
       },
       "WmiLight": {
         "type": "CentralTransitive",
-        "requested": "[6.9.0, )",
-        "resolved": "6.9.0",
-        "contentHash": "XbfkP6stpmqPqP7kgPGzu8a4ahrjgqmPiiDNYQX/rH/ZX7neTaxTifxHOXqj3S1MKJLMg2VKEBcI2gFzPzKPjQ=="
+        "requested": "[6.9.1, )",
+        "resolved": "6.9.1",
+        "contentHash": "TDQm/8wtenGNZw4NzSdOZuo+ox32Ix6/f1mxIaYEBaTJ+h8RjRhCQeAXpM0dXCOPTYKnlPpbuDZ5VeCL/hxiDA=="
       }
     }
   }
