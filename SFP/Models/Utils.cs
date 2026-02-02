@@ -51,17 +51,9 @@ public static class Utils
             return [];
         }
 
-        if (OperatingSystem.IsWindows())
-        {
-            return Windows.Utils.GetCommandLine(process);
-        }
-
-        if (OperatingSystem.IsLinux() || OperatingSystem.IsMacOS())
-        {
-            return Unix.Utils.GetCommandLine(process);
-        }
-
-        return [];
+        return OperatingSystem.IsWindows()
+            ? Windows.Utils.GetCommandLine(process)
+            : OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ? Unix.Utils.GetCommandLine(process) : [];
     }
 
     // ReSharper disable once InconsistentNaming

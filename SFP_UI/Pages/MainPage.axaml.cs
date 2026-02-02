@@ -1,11 +1,15 @@
 #region
 
 using System.Reactive;
+
 using Avalonia.Controls;
+
 using ReactiveUI;
+
 using SFP.Models;
 using SFP.Models.Injection.Config;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 

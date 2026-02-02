@@ -3,7 +3,9 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+
 using FileWatcherEx;
+
 using SFP.Models.Injection;
 using SFP.Properties;
 
@@ -22,8 +24,7 @@ public static class Steam
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
-    private static Process[] SteamWebHelperProcesses => Process.GetProcessesByName(SteamWebHelperProcName)
-        .Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase)).ToArray();
+    private static Process[] SteamWebHelperProcesses => [.. Process.GetProcessesByName(SteamWebHelperProcName).Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase))];
 
     private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
         .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
@@ -54,17 +55,11 @@ public static class Steam
 
     private static string? GetSteamRootDir()
     {
-        if (OperatingSystem.IsWindows())
-        {
-            return SteamDir;
-        }
-
-        if (OperatingSystem.IsLinux())
-        {
-            return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam");
-        }
-
-        return OperatingSystem.IsMacOS()
+        return OperatingSystem.IsWindows()
+            ? SteamDir
+            : OperatingSystem.IsLinux()
+            ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam")
+            : OperatingSystem.IsMacOS()
             ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
                 "Application Support", "Steam")
             : null;
@@ -73,17 +68,11 @@ public static class Steam
     private static string? GetSteamDir()
     {
         var dir = Settings.Default.SteamDirectory;
-        if (!string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir))
-        {
-            return dir;
-        }
-
-        if (OperatingSystem.IsWindows())
-        {
-            return GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\");
-        }
-
-        return OperatingSystem.IsLinux()
+        return !string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir)
+            ? dir
+            : OperatingSystem.IsWindows()
+            ? (GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\"))
+            : OperatingSystem.IsLinux()
             ? Path.Join(SteamRootDir, "steam")
             :
             // OSX

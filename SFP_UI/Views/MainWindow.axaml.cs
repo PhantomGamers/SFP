@@ -5,12 +5,15 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
+
 using FluentAvalonia.Styling;
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Media;
 using FluentAvalonia.UI.Windowing;
+
 using SFP.Models;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 

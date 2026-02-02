@@ -2,7 +2,9 @@
 
 using System.Text;
 using System.Text.RegularExpressions;
+
 using PuppeteerSharp;
+
 using SFP.Models.Injection.Config;
 using SFP.Properties;
 
@@ -13,10 +15,9 @@ namespace SFP.Models.Injection;
 public static partial class Injector
 {
     private static IBrowser? s_browser;
-    private static bool s_isInjected;
     private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim s_semaphore = new(1, 1);
-    public static bool IsInjected => s_isInjected && s_browser != null;
+    public static bool IsInjected { get => field && s_browser != null; private set; }
 
     public static event EventHandler? InjectionStateChanged;
 
@@ -78,7 +79,7 @@ public static partial class Injector
             s_browser.TargetCreated += Browser_TargetUpdate;
             s_browser.TargetChanged += Browser_TargetUpdate;
             await InjectAsync();
-            s_isInjected = true;
+            IsInjected = true;
             InjectionStateChanged?.Invoke(null, EventArgs.Empty);
             Log.Logger.Info("Initial injection finished");
         }
@@ -121,7 +122,7 @@ public static partial class Injector
         {
             Log.Logger.Info("Disconnecting from Steam instance");
         }
-        s_isInjected = false;
+        IsInjected = false;
         s_manualDisconnect = true;
         s_browser?.Disconnect();
         s_browser = null;
@@ -217,7 +218,7 @@ public static partial class Injector
     private static async Task ProcessFrame(IFrame frame)
     {
         var config = SfpConfig.GetConfig();
-        var patches = config.Patches as PatchEntry[] ?? config.Patches.ToArray();
+        var patches = config.Patches as PatchEntry[] ?? [.. config.Patches];
 
         if (!IsFrameWebkit(frame))
         {
@@ -289,7 +290,7 @@ public static partial class Injector
             if (!config._isFromMillennium)
             {
                 var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.CurrentCultureIgnoreCase));
-                var patchEntries = httpPatches as PatchEntry[] ?? httpPatches.ToArray();
+                var patchEntries = httpPatches as PatchEntry[] ?? [.. httpPatches];
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
                 {
@@ -483,7 +484,7 @@ public static partial class Injector
 
     public static void SetAccentColors(IEnumerable<string> colors)
     {
-        var colorsArr = colors as string[] ?? colors.ToArray();
+        var colorsArr = colors as string[] ?? [.. colors];
         var colorsCss = new StringBuilder();
         colorsCss.Append(":root { ");
         for (var i = 0; i < 7; i++)

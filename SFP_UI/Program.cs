@@ -1,20 +1,28 @@
 #region
 
 using System.Runtime.InteropServices;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+
 using Bluegrams.Application;
+
 using FileWatcherEx;
+
 using NLog;
 using NLog.Targets;
+
+using ReactiveUI.Avalonia;
+
 using SFP.Models;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.Targets;
 using SFP_UI.Views;
+
 using SkiaSharp;
 
 #endregion

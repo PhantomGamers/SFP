@@ -1,5 +1,7 @@
 using Avalonia.Controls;
+
 using FluentAvalonia.UI.Controls;
+
 using SFP_UI.Pages;
 
 namespace SFP_UI.ViewModels;

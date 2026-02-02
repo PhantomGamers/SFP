@@ -1,16 +1,20 @@
 #region
 
 using System.Diagnostics.CodeAnalysis;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
+
 using FluentAvalonia.Styling;
+
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;
@@ -129,10 +133,7 @@ public class App : Application
     public static void SetApplicationTheme(string themeVariantString)
     {
         var faTheme = Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
-        if (faTheme != null)
-        {
-            faTheme.PreferSystemTheme = themeVariantString == "System Default";
-        }
+        faTheme?.PreferSystemTheme = themeVariantString == "System Default";
 
         Current!.RequestedThemeVariant = themeVariantString switch
         {

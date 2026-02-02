@@ -1,15 +1,22 @@
 #region
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Reactive.Linq;
+
 using Avalonia.Platform.Storage;
+
 using FluentAvalonia.UI.Controls;
+
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
+
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Properties;
+
 using SFP_UI.Views;
+
 using Utils = SFP.Models.Windows.Utils;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -18,50 +25,50 @@ using Utils = SFP.Models.Windows.Utils;
 
 namespace SFP_UI.ViewModels;
 
-public class SettingsPageViewModel : ViewModelBase
+public partial class SettingsPageViewModel : ViewModelBase
 {
     #region App
-    [Reactive] public bool CheckForUpdates { get; set; }
+    [Reactive] public partial bool CheckForUpdates { get; set; }
 
-    [Reactive] public bool ShowTrayIcon { get; set; }
+    [Reactive] public partial bool ShowTrayIcon { get; set; }
 
-    [Reactive] public bool MinimizeToTray { get; set; }
+    [Reactive] public partial bool MinimizeToTray { get; set; }
 
-    [Reactive] public bool CloseToTray { get; set; }
+    [Reactive] public partial bool CloseToTray { get; set; }
 
-    [Reactive] public bool StartMinimized { get; set; }
+    [Reactive] public partial bool StartMinimized { get; set; }
 
-    [Reactive] public bool InjectOnAppStart { get; set; }
+    [Reactive] public partial bool InjectOnAppStart { get; set; }
 
-    [Reactive] public bool RunSteamOnStart { get; set; }
+    [Reactive] public partial bool RunSteamOnStart { get; set; }
 
-    [Reactive] public bool RunOnBoot { get; set; }
+    [Reactive] public partial bool RunOnBoot { get; set; }
 
     public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
-    [Reactive] public string SelectedTheme { get; set; } = null!;
+    [Reactive] public partial string SelectedTheme { get; set; } = null!;
 
-    [Reactive] public int InitialInjectionDelay { get; set; }
+    [Reactive] public partial int InitialInjectionDelay { get; set; }
 
     #endregion
 
     #region Steam
-    [Reactive] public string SteamDirectory { get; set; } = null!;
+    [Reactive] public partial string SteamDirectory { get; set; } = null!;
 
-    [Reactive] public string SteamLaunchArgs { get; set; } = null!;
+    [Reactive] public partial string SteamLaunchArgs { get; set; } = null!;
 
-    [Reactive] public short SteamCefPort { get; set; }
+    [Reactive] public partial short SteamCefPort { get; set; }
 
-    [Reactive] public bool InjectOnSteamStart { get; set; }
+    [Reactive] public partial bool InjectOnSteamStart { get; set; }
 
-    [Reactive] public bool ForceSteamArgs { get; set; }
+    [Reactive] public partial bool ForceSteamArgs { get; set; }
 
-    [Reactive] public bool InjectCss { get; set; }
+    [Reactive] public partial bool InjectCss { get; set; }
 
-    [Reactive] public bool InjectJs { get; set; }
+    [Reactive] public partial bool InjectJs { get; set; }
 
-    [Reactive] public bool UseAppTheme { get; set; }
+    [Reactive] public partial bool UseAppTheme { get; set; }
 
-    [Reactive] public bool DumpPages { get; set; }
+    [Reactive] public partial bool DumpPages { get; set; }
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
@@ -200,7 +207,7 @@ public class SettingsPageViewModel : ViewModelBase
                 {
                     Settings.Default.InjectJS = false;
                     Settings.Default.Save();
-                    ShowWarningDialog();
+                    _ = ShowWarningDialog();
                 }
                 else
                 {
@@ -234,7 +241,7 @@ public class SettingsPageViewModel : ViewModelBase
             });
         #endregion
 
-        BrowseSteam = ReactiveCommand.Create(BrowseSteamImpl);
+        BrowseSteam = ReactiveCommand.CreateFromTask(BrowseSteamImpl);
         ResetSteam = ReactiveCommand.Create(() =>
         {
             Settings.Default.SteamDirectory = string.Empty;
@@ -278,7 +285,8 @@ public class SettingsPageViewModel : ViewModelBase
 
     }
 
-    private async void ShowWarningDialog()
+    [RequiresUnreferencedCode("Calls ReactiveUI.ReactiveCommand.Create(Action, IObservable<Boolean>, IScheduler)")]
+    private async Task ShowWarningDialog()
     {
         var dialog = new ContentDialog
         {
@@ -309,7 +317,7 @@ public class SettingsPageViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> ResetSettings { get; }
     public ReactiveCommand<Unit, Unit> BrowseSteam { get; }
 
-    private async void BrowseSteamImpl()
+    private async Task BrowseSteamImpl()
     {
         if (MainWindow.Instance == null)
         {

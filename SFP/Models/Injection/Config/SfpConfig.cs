@@ -11,21 +11,15 @@ namespace SFP.Models.Injection.Config;
 
 public class PatchEntry : IEquatable<PatchEntry>
 {
-    [JsonIgnore] private Regex? _matchRegex;
-
     public string MatchRegexString { get; init; } = string.Empty;
     public string TargetCss { get; init; } = string.Empty;
     public string TargetJs { get; init; } = string.Empty;
 
-    [JsonIgnore] public Regex MatchRegex => _matchRegex ??= new Regex(MatchRegexString, RegexOptions.Compiled);
+    [field: JsonIgnore][JsonIgnore] public Regex MatchRegex => field ??= new Regex(MatchRegexString, RegexOptions.Compiled);
 
     public bool Equals(PatchEntry? entry)
     {
-        if (entry == null)
-        {
-            return false;
-        }
-        return MatchRegexString == entry.MatchRegexString && TargetCss == entry.TargetCss &&
+        return entry != null && MatchRegexString == entry.MatchRegexString && TargetCss == entry.TargetCss &&
                TargetJs == entry.TargetJs;
     }
 
@@ -200,10 +194,10 @@ public class SfpConfig
         return new SfpConfig
         {
             UseDefaultPatches = false,
-            Patches = millenniumConfig.Patch
+            Patches = [.. millenniumConfig.Patch
                 .Where(p => !string.IsNullOrWhiteSpace(p.Url) &&
                             (!string.IsNullOrWhiteSpace(p.Css) || !string.IsNullOrWhiteSpace(p.Js)))
-                .Select(p => new PatchEntry { MatchRegexString = p.Url, TargetCss = p.Css, TargetJs = p.Js }).ToArray()
+                .Select(p => new PatchEntry { MatchRegexString = p.Url, TargetCss = p.Css, TargetJs = p.Js })]
         };
     }
 }

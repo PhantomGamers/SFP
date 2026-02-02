@@ -2,9 +2,13 @@
 
 using System.Reflection;
 using System.Text.Json.Serialization;
+
 using Semver;
+
 using SFP_UI.ViewModels;
+
 using SFP.Models;
+
 #if RELEASE
 using System.Net.Http.Headers;
 using Flurl.Http;

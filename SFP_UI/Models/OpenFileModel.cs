@@ -1,6 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
+
 using Avalonia.Controls;
+
 using ReactiveUI;
+
 using SFP.Models;
 using SFP.Models.Injection.Config;
 using SFP.Properties;

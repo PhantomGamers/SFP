@@ -2,8 +2,11 @@
 
 using System.Diagnostics;
 using System.Runtime.Versioning;
+
 using Microsoft.Win32;
+
 using WindowsShortcutFactory;
+
 using WmiLight;
 
 #endregion

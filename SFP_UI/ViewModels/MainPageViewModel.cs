@@ -1,11 +1,16 @@
 #region
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Text;
+
 using NLog;
+
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
+
 using Semver;
+
 using SFP.Models;
 using SFP.Models.Injection;
 
@@ -13,28 +18,26 @@ using SFP.Models.Injection;
 
 namespace SFP_UI.ViewModels;
 
-public class MainPageViewModel : ViewModelBase
+public partial class MainPageViewModel : ViewModelBase
 {
     public static MainPageViewModel? Instance { get; private set; }
 
     private static readonly StringBuilder s_outputBuilder = new();
 
-    [Reactive] public bool UpdateNotificationIsOpen { get; set; }
+    [Reactive] public partial bool UpdateNotificationIsOpen { get; set; }
 
-    [Reactive] public string UpdateNotificationContent { get; set; } = string.Empty;
+    [Reactive] public partial string UpdateNotificationContent { get; set; } = string.Empty;
 
-    [Reactive] public bool ButtonsEnabled { get; set; } = true;
+    [Reactive] public partial bool ButtonsEnabled { get; set; } = true;
 
-    [Reactive] public bool IsInjected { get; set; } = Injector.IsInjected;
+    [Reactive] public partial bool IsInjected { get; set; } = Injector.IsInjected;
 
-    [Reactive] public string StartSteamText { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
-
-    private string _output = s_outputBuilder.ToString();
+    [Reactive] public partial string StartSteamText { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
     public string Output
     {
-        get => _output;
-        private set => this.RaiseAndSetIfChanged(ref _output, value);
-    }
+        get;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
+    } = s_outputBuilder.ToString();
 
     public ReactiveCommand<string, Unit> UpdateNotificationView { get; } =
         ReactiveCommand.Create<string>(Utils.OpenUrl);

@@ -1,20 +1,24 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
+
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+using ReactiveUI.SourceGenerators;
+
 using SFP.Models;
 using SFP.Models.Injection;
+
 using SFP_UI.Views;
 
 namespace SFP_UI.ViewModels;
 
-public class AppViewModel : ViewModelBase
+public partial class AppViewModel : ViewModelBase
 {
-    [Reactive] public string InjectHeader { get; set; } = "Start Injection";
+    [Reactive] public partial string InjectHeader { get; set; } = "Start Injection";
     [Reactive]
-    public ReactiveCommand<Unit, Unit> RunInject { get; set; } =
+    public partial ReactiveCommand<Unit, Unit> RunInject { get; set; } =
         ReactiveCommand.Create(Steam.RunTryInject);
 
-    [Reactive] public string SteamHeader { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
+    [Reactive] public partial string SteamHeader { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
     public ReactiveCommand<Unit, Unit> RunSteam { get; set; } =
         ReactiveCommand.Create(Steam.RunRestartSteam);
 

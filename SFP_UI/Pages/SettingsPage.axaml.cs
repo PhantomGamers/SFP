@@ -1,11 +1,14 @@
 #region
 
 using System.Text;
+
 using Avalonia.Controls;
+
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Models.Injection.Config;
 using SFP.Properties;
+
 using SFP_UI.ViewModels;
 
 #endregion

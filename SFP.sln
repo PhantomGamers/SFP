@@ -25,7 +25,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{DED8434F-5A66-487D-A851-DC06DF32242D}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\publish.yml = .github\workflows\publish.yml
-		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
 		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject

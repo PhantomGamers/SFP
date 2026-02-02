@@ -2,8 +2,10 @@
 
 using Avalonia;
 using Avalonia.Controls;
+
 using FluentAvalonia.UI.Controls;
 using FluentAvalonia.UI.Navigation;
+
 using SFP_UI.Pages;
 using SFP_UI.ViewModels;
 
