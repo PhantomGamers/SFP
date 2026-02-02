@@ -1,3 +1,5 @@
+exclude: '(?i)(?:^|[\/])external(?:[\/]|$)'
+
 ci:
   skip: [ dotnet-format ]
 
@@ -22,5 +24,5 @@ repos:
       - id: dotnet-format
         name: dotnet-format
         language: system
-        entry: dotnet format --severity info --exclude 'external/' --include
+        entry: dotnet format --severity info --include
         types_or: [ "c#", "vb" ]
