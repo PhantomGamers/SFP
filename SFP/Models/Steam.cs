@@ -18,10 +18,10 @@ public static class Steam
     private static FileSystemWatcherEx? s_watcher;
     private static Process? s_steamProcess;
     private static bool s_injectOnce;
-    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
+    private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
-    private static readonly int s_processAmount = OperatingSystem.IsWindows() ? 3 : OperatingSystem.IsMacOS() ? 4 : 6;
-    public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > s_processAmount;
+    private static readonly int ProcessAmount = OperatingSystem.IsWindows() ? 3 : OperatingSystem.IsMacOS() ? 4 : 6;
+    public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > ProcessAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
     private static Process[] SteamWebHelperProcesses => [.. Process.GetProcessesByName(SteamWebHelperProcName).Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase))];
@@ -29,7 +29,7 @@ public static class Steam
     private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
         .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
 
-    private static string SteamWebHelperProcName => OperatingSystem.IsMacOS() ? "Steam Helper" : @"steamwebhelper";
+    private static string SteamWebHelperProcName => OperatingSystem.IsMacOS() ? "Steam Helper" : "steamwebhelper";
 
     private static string SteamProcName => OperatingSystem.IsMacOS() ? "steam_osx" : "steam";
 
@@ -71,7 +71,7 @@ public static class Steam
         return !string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir)
             ? dir
             : OperatingSystem.IsWindows()
-            ? (GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace(@"/", @"\"))
+            ? (GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace("/", @"\"))
             : OperatingSystem.IsLinux()
             ? Path.Join(SteamRootDir, "steam")
             :
@@ -193,7 +193,7 @@ public static class Steam
         return Task.CompletedTask;
     }
 
-    public static async void RunRestartSteam()
+    public static async Task RunRestartSteam()
     {
         await Task.Run(() => RestartSteam());
     }
@@ -223,11 +223,21 @@ public static class Steam
         }
     }
 
+#pragma warning disable EPC27
     private static async void OnSteamExited(object? sender, EventArgs e)
+#pragma warning restore EPC27
     {
-        s_steamProcess?.Dispose();
-        s_steamProcess = null;
-        await StartSteam();
+        try
+        {
+            s_steamProcess?.Dispose();
+            s_steamProcess = null;
+            await StartSteam();
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in OnSteamExited event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 
     public static void StartMonitorSteam()
@@ -261,15 +271,25 @@ public static class Steam
         }
     }
 
+#pragma warning disable EPC27
     private static async void OnCrashFileCreated(object? sender, FileChangedEvent e)
+#pragma warning restore EPC27
     {
-        SteamStarted?.Invoke(null, EventArgs.Empty);
-        if (!Settings.Default.InjectOnSteamStart && !s_injectOnce)
+        try
         {
-            return;
+            SteamStarted?.Invoke(null, EventArgs.Empty);
+            if (!Settings.Default.InjectOnSteamStart && !s_injectOnce)
+            {
+                return;
+            }
+            s_injectOnce = false;
+            await TryInject();
         }
-        s_injectOnce = false;
-        await TryInject();
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in OnCrashFileCreated event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 
     private static void OnCrashFileDeleted(object? sender, FileChangedEvent e)
@@ -282,7 +302,7 @@ public static class Steam
         return Utils.GetCommandLine(SteamProcess);
     }
 
-    public static async void RunTryInject()
+    public static async Task RunTryInject()
     {
         Log.Logger.Info("Starting injection...");
         await Task.Run(TryInject);
@@ -290,7 +310,7 @@ public static class Steam
 
     public static async Task TryInject()
     {
-        if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
+        if (!await Semaphore.WaitAsync(TimeSpan.Zero))
         {
             Log.Logger.Warn("Injection already in progress");
             return;
@@ -334,7 +354,7 @@ public static class Steam
         }
         finally
         {
-            s_semaphore.Release();
+            Semaphore.Release();
         }
     }
 
@@ -377,24 +397,24 @@ public static class Steam
 
     private static void AppendArgs(ref string args)
     {
-        const string DebuggingString = @"-cef-enable-debugging";
-        const string BootstrapString = @"-skipinitialbootstrap";
-        const string PortString = @"-devtools-port";
+        const string debuggingString = "-cef-enable-debugging";
+        const string bootstrapString = "-skipinitialbootstrap";
+        const string portString = "-devtools-port";
         var argsList = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
 
-        if (!argsList.Contains(DebuggingString))
+        if (!argsList.Contains(debuggingString))
         {
-            argsList.Add(DebuggingString);
+            argsList.Add(debuggingString);
         }
 
-        if (OperatingSystem.IsMacOS() && !argsList.Contains(BootstrapString))
+        if (OperatingSystem.IsMacOS() && !argsList.Contains(bootstrapString))
         {
-            argsList.Add(BootstrapString);
+            argsList.Add(bootstrapString);
         }
 
-        if (!argsList.Contains(PortString))
+        if (!argsList.Contains(portString))
         {
-            argsList.Add(PortString + " " + Settings.Default.SteamCefPort);
+            argsList.Add(portString + " " + Settings.Default.SteamCefPort);
         }
 
         args = string.Join(" ", argsList);

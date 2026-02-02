@@ -80,14 +80,24 @@ public partial class SettingsPage : UserControl
         SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;
     }
 
-    private void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+#pragma warning disable EPC27
+    private async void SteamSkinComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+#pragma warning restore EPC27
     {
-        var value = SteamSkinComboBox.SelectedValue?.ToString();
-        Log.Logger.Info("Switching to skin {Skin}", value);
-        Settings.Default.SelectedSkin = value;
-        Settings.Default.Save();
-        _ = Steam.GetRelativeSkinDir(force: true);
-        _ = SfpConfig.GetConfig(true);
-        Injector.Reload();
+        try
+        {
+            var value = SteamSkinComboBox.SelectedValue?.ToString();
+            Log.Logger.Info("Switching to skin {Skin}", value);
+            Settings.Default.SelectedSkin = value;
+            Settings.Default.Save();
+            _ = Steam.GetRelativeSkinDir(force: true);
+            _ = SfpConfig.GetConfig(true);
+            await Injector.Reload();
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in SteamSkinComboBox_SelectionChanged event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 }

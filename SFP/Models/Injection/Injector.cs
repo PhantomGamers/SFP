@@ -16,7 +16,7 @@ public static partial class Injector
 {
     private static IBrowser? s_browser;
     private static bool s_manualDisconnect;
-    private static readonly SemaphoreSlim s_semaphore = new(1, 1);
+    private static readonly SemaphoreSlim Semaphore = new(1, 1);
     public static bool IsInjected { get => field && s_browser != null; private set; }
 
     public static event EventHandler? InjectionStateChanged;
@@ -34,7 +34,7 @@ public static partial class Injector
         "SystemAccentColorDark3"
     ];
 
-    public static string ColorsCss { get; private set; } = string.Empty;
+    private static string ColorsCss { get; set; } = string.Empty;
 
     public static async Task StartInjectionAsync(bool noError = false)
     {
@@ -44,7 +44,7 @@ public static partial class Injector
             return;
         }
 
-        if (!await s_semaphore.WaitAsync(TimeSpan.Zero))
+        if (!await Semaphore.WaitAsync(TimeSpan.Zero))
         {
             Log.Logger.Warn("Injection already in progress, skipping injection");
             return;
@@ -69,7 +69,7 @@ public static partial class Injector
                 BrowserWSEndpoint = browserEndpoint,
                 DefaultViewport = null,
                 EnqueueAsyncMessages = true,
-                EnqueueTransportMessages = true,
+                EnqueueTransportMessages = true
             };
 
             Log.Logger.Info("Connecting to " + browserEndpoint);
@@ -95,7 +95,7 @@ public static partial class Injector
         }
         finally
         {
-            s_semaphore.Release();
+            Semaphore.Release();
         }
     }
 
@@ -130,7 +130,7 @@ public static partial class Injector
     }
 
     // injection after reload occurs before content is fully loaded, needs investigation
-    public static async void Reload()
+    public static async Task Reload()
     {
         if (s_browser == null)
         {
@@ -157,27 +157,39 @@ public static partial class Injector
         }
     }
 
+#pragma warning disable EPC27
     private static async void OnDisconnected(object? sender, EventArgs e)
+#pragma warning restore EPC27
     {
-        Log.Logger.Info("Disconnected from Steam instance");
-        var manualDisconnect = s_manualDisconnect;
-        StopInjection();
-        if (manualDisconnect)
+        try
         {
-            s_manualDisconnect = false;
-            return;
-        }
+            Log.Logger.Info("Disconnected from Steam instance");
+            var manualDisconnect = s_manualDisconnect;
+            StopInjection();
+            if (manualDisconnect)
+            {
+                s_manualDisconnect = false;
+                return;
+            }
 
-        await Task.Delay(500);
-        if (!Steam.IsSteamWebHelperRunning)
-        {
-            return;
+            await Task.Delay(500);
+            if (!Steam.IsSteamWebHelperRunning)
+            {
+                return;
+            }
+            Log.Logger.Warn("Unexpected disconnect, trying to reconnect to Steam instance");
+            await Steam.TryInject();
         }
-        Log.Logger.Warn("Unexpected disconnect, trying to reconnect to Steam instance");
-        await Steam.TryInject();
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in OnDisconnected event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 
+#pragma warning disable EPC27
     private static async void Browser_TargetUpdate(object? sender, TargetChangedArgs e)
+#pragma warning restore EPC27
     {
         try
         {
@@ -192,6 +204,11 @@ public static partial class Injector
         catch (PuppeteerException err)
         {
             Log.Logger.Warn("Puppeteer exception when trying to get page");
+            Log.Logger.Debug(err);
+        }
+        catch (Exception err)
+        {
+            Log.Logger.Error("Unexpected error in Browser_TargetUpdate event handler");
             Log.Logger.Debug(err);
         }
     }
@@ -270,7 +287,7 @@ public static partial class Injector
                 }
                 else
                 {
-                    switch (config._isFromMillennium)
+                    switch (config.IsFromMillennium)
                     {
                         case false when patch.MatchRegex.IsMatch(title):
                         case true when regex == title:
@@ -287,7 +304,7 @@ public static partial class Injector
             await SetBypassCsp(frame);
             var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
             await DumpFrame(frame, url);
-            if (!config._isFromMillennium)
+            if (!config.IsFromMillennium)
             {
                 var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.CurrentCultureIgnoreCase));
                 var patchEntries = httpPatches as PatchEntry[] ?? [.. httpPatches];
@@ -361,9 +378,19 @@ public static partial class Injector
         }
     }
 
+#pragma warning disable EPC27
     private static async void Frame_Navigate(object? sender, FrameEventArgs e)
+#pragma warning restore EPC27
     {
-        await ProcessFrame(e.Frame);
+        try
+        {
+            await ProcessFrame(e.Frame);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in Frame_Navigate event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 
     private static async Task InjectAsync(IFrame frame, PatchEntry patch, string tabFriendlyName)
@@ -405,21 +432,23 @@ public static partial class Injector
         fileRelativePath = $"{relativeSkinDir}{fileRelativePath}";
 
         var injectString =
-            $@"function inject() {{
-                if (document.getElementById('{frame.Id}{resourceType}') !== null) return;
-                const element = document.createElement('{(resourceType == "css" ? "link" : "script")}');
-                element.id = '{frame.Id}{resourceType}';
-                {(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}
-                element.type = '{(resourceType == "css" ? "text/css" : "module")}';
-                element.{(resourceType == "css" ? "href" : "src")} = 'https://steamloopback.host/{fileRelativePath}';
-                document.head.append(element);
-            }}
-            if ((document.readyState === 'loading') && '{IsFrameWebkit(frame)}' === 'True') {{
-                addEventListener('DOMContentLoaded', inject);
-            }} else {{
-                inject();
-            }}
-            ";
+            $$"""
+              function inject() {
+                              if (document.getElementById('{{frame.Id}}{{resourceType}}') !== null) return;
+                              const element = document.createElement('{{(resourceType == "css" ? "link" : "script")}}');
+                              element.id = '{{frame.Id}}{{resourceType}}';
+                              {{(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}}
+                              element.type = '{{(resourceType == "css" ? "text/css" : "module")}}';
+                              element.{{(resourceType == "css" ? "href" : "src")}} = 'https://steamloopback.host/{{fileRelativePath}}';
+                              document.head.append(element);
+                          }
+                          if ((document.readyState === 'loading') && '{{IsFrameWebkit(frame)}}' === 'True') {
+                              addEventListener('DOMContentLoaded', inject);
+                          } else {
+                              inject();
+                          }
+
+              """;
         try
         {
             if (!IsFrameWebkit(frame) && resourceType == "js")
@@ -456,7 +485,7 @@ public static partial class Injector
         }
     }
 
-    public static async void UpdateColorScheme(string? colorScheme = null)
+    public static async Task UpdateColorScheme(string? colorScheme = null)
     {
         if (s_browser == null || !Settings.Default.UseAppTheme && colorScheme == null)
         {
@@ -495,7 +524,7 @@ public static partial class Injector
         ColorsCss = colorsCss.ToString();
     }
 
-    public static async void UpdateSystemAccentColors(bool useAccentColors = true)
+    public static async Task UpdateSystemAccentColors(bool useAccentColors = true)
     {
         if (s_browser == null || !Settings.Default.UseAppTheme && useAccentColors)
         {
@@ -508,18 +537,20 @@ public static partial class Injector
            : pages.Select(async page =>
            {
                var injectString =
-                   $@"function injectAcc() {{
-                        var element = document.getElementById('SystemAccentColorInjection');
-                        if (element) {{
-                            element.parentNode.removeChild(element);
-                        }}
-                    }}
-                    if ((document.readyState === 'loading') && '{IsFrameWebkit(page.MainFrame)}' === 'True') {{
-                        addEventListener('DOMContentLoaded', injectAcc);
-                    }} else {{
-                        injectAcc();
-                    }}
-                    ";
+                   $$"""
+                     function injectAcc() {
+                                             var element = document.getElementById('SystemAccentColorInjection');
+                                             if (element) {
+                                                 element.parentNode.removeChild(element);
+                                             }
+                                         }
+                                         if ((document.readyState === 'loading') && '{{IsFrameWebkit(page.MainFrame)}}' === 'True') {
+                                             addEventListener('DOMContentLoaded', injectAcc);
+                                         } else {
+                                             injectAcc();
+                                         }
+
+                     """;
                await page.EvaluateExpressionAsync(injectString);
            });
         await Task.WhenAll(processTasks);
@@ -528,22 +559,24 @@ public static partial class Injector
     private static async Task UpdateSystemAccentColorsInPage(IPage page)
     {
         var injectString =
-            $@"function injectAcc() {{
-                var element = document.getElementById('SystemAccentColorInjection');
-                if (element) {{
-                    element.parentNode.removeChild(element);
-                }}
-                element = document.createElement('style');
-                element.id = 'SystemAccentColorInjection';
-                element.innerHTML = `{ColorsCss}`;
-                document.head.append(element);
-            }}
-            if ((document.readyState === 'loading') && '{IsFrameWebkit(page.MainFrame)}' === 'True') {{
-                addEventListener('DOMContentLoaded', injectAcc);
-            }} else {{
-                injectAcc();
-            }}
-            ";
+            $$"""
+              function injectAcc() {
+                              var element = document.getElementById('SystemAccentColorInjection');
+                              if (element) {
+                                  element.parentNode.removeChild(element);
+                              }
+                              element = document.createElement('style');
+                              element.id = 'SystemAccentColorInjection';
+                              element.innerHTML = `{{ColorsCss}}`;
+                              document.head.append(element);
+                          }
+                          if ((document.readyState === 'loading') && '{{IsFrameWebkit(page.MainFrame)}}' === 'True') {
+                              addEventListener('DOMContentLoaded', injectAcc);
+                          } else {
+                              injectAcc();
+                          }
+
+              """;
         await page.EvaluateExpressionAsync(injectString);
     }
 

@@ -109,23 +109,33 @@ public partial class MainWindow : AppWindow
         }
     }
 
+#pragma warning disable EPC27
     protected override async void OnClosing(WindowClosingEventArgs e)
+#pragma warning restore EPC27
     {
-        base.OnClosing(e);
-        if (Instance is null)
+        try
         {
-            return;
+            base.OnClosing(e);
+            if (Instance is null)
+            {
+                return;
+            }
+            Instance = null;
+            if (Settings.Default.CloseToTray)
+            {
+                return;
+            }
+            if (WindowState == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
+            {
+                return;
+            }
+            await Task.Run(App.QuitApplication);
         }
-        Instance = null;
-        if (Settings.Default.CloseToTray)
+        catch (Exception ex)
         {
-            return;
+            Log.Logger.Error("Error in OnClosing event handler");
+            Log.Logger.Debug(ex);
         }
-        if (WindowState == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
-        {
-            return;
-        }
-        await Task.Run(App.QuitApplication);
     }
 
     private void HandleWindowStateChanged(WindowState state)

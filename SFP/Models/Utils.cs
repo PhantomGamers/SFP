@@ -25,7 +25,9 @@ public static class Utils
                 return;
             }
 
-            url = $@"""{url}""";
+            url = $"""
+                   "{url}"
+                   """;
 
             if (OperatingSystem.IsLinux())
             {
@@ -45,21 +47,24 @@ public static class Utils
 
     public static List<string> GetCommandLine(Process? process)
     {
-        if (process == null)
+        if (process != null)
         {
-            Log.Logger.Warn("Could not get command line, process does not exist.");
-            return [];
+            return OperatingSystem.IsWindows()
+                ? Windows.Utils.GetCommandLine(process)
+                : OperatingSystem.IsLinux() || OperatingSystem.IsMacOS()
+                    ? Unix.Utils.GetCommandLine(process)
+                    : [];
         }
 
-        return OperatingSystem.IsWindows()
-            ? Windows.Utils.GetCommandLine(process)
-            : OperatingSystem.IsLinux() || OperatingSystem.IsMacOS() ? Unix.Utils.GetCommandLine(process) : [];
+        Log.Logger.Warn("Could not get command line, process does not exist.");
+        return [];
+
     }
 
     // ReSharper disable once InconsistentNaming
     public static string ConvertARGBtoRGBA(string argb)
     {
-        if (!argb.StartsWith("#"))
+        if (!argb.StartsWith('#'))
         {
             var color = Color.FromName(argb);
             if (color is { A: 0, R: 0, G: 0, B: 0 })

@@ -9,6 +9,7 @@
     <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageVersion Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" />
     <PackageVersion Include="Flurl.Http" Version="4.0.2" />
+    <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="PuppeteerSharp" Version="8.0.0" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.1" />
     <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8" />

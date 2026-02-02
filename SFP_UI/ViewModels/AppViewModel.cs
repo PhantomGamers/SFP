@@ -1,7 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Reactive;
-
-using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 using SFP.Models;
@@ -14,20 +10,33 @@ namespace SFP_UI.ViewModels;
 public partial class AppViewModel : ViewModelBase
 {
     [Reactive] public partial string InjectHeader { get; set; } = "Start Injection";
-    [Reactive]
-    public partial ReactiveCommand<Unit, Unit> RunInject { get; set; } =
-        ReactiveCommand.Create(Steam.RunTryInject);
+
+    [ReactiveCommand]
+    private static void RunInject()
+    {
+        if (Injector.IsInjected)
+        {
+            Injector.StopInjection();
+        }
+        else
+        {
+            _ = Steam.RunTryInject();
+        }
+    }
 
     [Reactive] public partial string SteamHeader { get; set; } = Steam.IsSteamRunning ? "Restart Steam" : "Start Steam";
-    public ReactiveCommand<Unit, Unit> RunSteam { get; set; } =
-        ReactiveCommand.Create(Steam.RunRestartSteam);
 
-    public ReactiveCommand<Unit, Unit> ShowSettings { get; } =
-        ReactiveCommand.Create(MainWindow.ShowSettings);
+    [ReactiveCommand]
+    private static void RunSteam() => _ = Steam.RunRestartSteam();
 
-    public ReactiveCommand<Unit, Unit> ShowWindow { get; } =
-        ReactiveCommand.Create(MainWindow.ShowWindow);
-    public ReactiveCommand<Unit, Unit> Quit { get; } = ReactiveCommand.Create(App.QuitApplication);
+    [ReactiveCommand]
+    private static void ShowSettings() => MainWindow.ShowSettings();
+
+    [ReactiveCommand]
+    private static void ShowWindow() => MainWindow.ShowWindow();
+
+    [ReactiveCommand]
+    private static void Quit() => App.QuitApplication();
 
     public AppViewModel()
     {
@@ -52,15 +61,6 @@ public partial class AppViewModel : ViewModelBase
 
     private void OnInjectionStateChanged(object? o, EventArgs eventArgs)
     {
-        if (Injector.IsInjected)
-        {
-            InjectHeader = "Stop Injection";
-            RunInject = ReactiveCommand.Create(Injector.StopInjection);
-        }
-        else
-        {
-            InjectHeader = "Start Injection";
-            RunInject = ReactiveCommand.Create(Steam.RunTryInject);
-        }
+        InjectHeader = Injector.IsInjected ? "Stop Injection" : "Start Injection";
     }
 }

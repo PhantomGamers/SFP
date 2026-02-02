@@ -1,6 +1,5 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -37,75 +36,75 @@ public class PatchEntry : IEquatable<PatchEntry>
 public class SfpConfig
 {
     [JsonIgnore]
-    private static readonly IReadOnlyCollection<PatchEntry> s_defaultPatches =
+    private static readonly IReadOnlyCollection<PatchEntry> DefaultPatches =
     [
-        new PatchEntry
+        new()
         {
             MatchRegexString = "https://.*.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
         },
-        new PatchEntry { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
-        new PatchEntry
+        new() { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
+        new()
         {
             MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = "^OverlayBrowser_Browser$",
             TargetCss = "libraryroot.custom.css",
             TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = "^SP Overlay:", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
-            MatchRegexString = @"Supernav$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            MatchRegexString = "Supernav$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
-            MatchRegexString = @"^notificationtoasts_",
+            MatchRegexString = "^notificationtoasts_",
             TargetCss = "notifications.custom.css",
             TargetJs = "notifications.custom.js"
         },
-        new PatchEntry
+        new()
         {
-            MatchRegexString = @"^SteamBrowser_Find$",
+            MatchRegexString = "^SteamBrowser_Find$",
             TargetCss = "libraryroot.custom.css",
             TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = @"^OverlayTab\d+_Find$",
             TargetCss = "libraryroot.custom.css",
             TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = "^Steam Big Picture Mode$",
             TargetCss = "bigpicture.custom.css",
             TargetJs = "bigpicture.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = "^QuickAccess_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
         },
-        new PatchEntry
+        new()
         {
             MatchRegexString = "^MainMenu_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
         },
         // Friends List and Chat
-        new PatchEntry
+        new()
         {
-            MatchRegexString = @".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
+            MatchRegexString = ".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
         },
-        new PatchEntry { MatchRegexString = "Menu$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
-        new PatchEntry
+        new() { MatchRegexString = "Menu$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
+        new()
         {
             // Steam Dialog popups (Settings, Game Properties, etc)
             MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
         },
-        new PatchEntry
+        new()
         {
             // Sign In Page
             MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
@@ -114,15 +113,14 @@ public class SfpConfig
 
     [JsonIgnore] private static SfpConfig? s_sfpConfig;
 
-    [JsonIgnore] public bool _isFromMillennium;
+    [JsonIgnore] public bool IsFromMillennium;
     public bool UseDefaultPatches { get; init; }
     public IEnumerable<PatchEntry> Patches { get; init; } = GetDefaultPatches();
     [JsonIgnore] public static SfpConfig DefaultConfig { get; } = new();
 
-    [ExcludeFromCodeCoverage]
     private static IEnumerable<PatchEntry> GetDefaultPatches()
     {
-        return s_defaultPatches;
+        return DefaultPatches;
     }
 
     public static SfpConfig GetConfig(bool overWrite = false)
@@ -169,7 +167,7 @@ public class SfpConfig
                 {
                     json = FromMillenniumConfig(millenniumConfig);
                     s_sfpConfig = json;
-                    s_sfpConfig._isFromMillennium = true;
+                    s_sfpConfig.IsFromMillennium = true;
                     Log.Logger.Info("Using config.json from Millennium skin");
                 }
             }

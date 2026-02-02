@@ -26,15 +26,15 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="{Binding InjectHeader}"
-                                        Command="{Binding RunInject}"/>
+                                        Command="{Binding RunInjectCommand}"/>
                         <NativeMenuItem Header="{Binding SteamHeader}"
-                                        Command="{Binding RunSteam}"/>
+                                        Command="{Binding RunSteamCommand}"/>
                         <NativeMenuItemSeparator/>
                         <NativeMenuItem Header="Settings"
-                                        Command="{Binding ShowSettings}"/>
+                                        Command="{Binding ShowSettingsCommand}"/>
                         <NativeMenuItem Header="Show Window"
-                                        Command="{Binding ShowWindow}"/>
-                        <NativeMenuItem Header="Quit" Command="{Binding Quit}"/>
+                                        Command="{Binding ShowWindowCommand}"/>
+                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand}"/>
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

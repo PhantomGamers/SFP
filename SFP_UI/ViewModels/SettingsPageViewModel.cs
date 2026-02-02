@@ -1,14 +1,11 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
-using System.Reactive;
 using System.Reactive.Linq;
 
 using Avalonia.Platform.Storage;
 
 using FluentAvalonia.UI.Controls;
 
-using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 using SFP.Models;
@@ -18,8 +15,6 @@ using SFP.Properties;
 using SFP_UI.Views;
 
 using Utils = SFP.Models.Windows.Utils;
-
-// ReSharper disable MemberCanBePrivate.Global
 
 #endregion
 
@@ -77,14 +72,20 @@ public partial class SettingsPageViewModel : ViewModelBase
     {
         InitProperties();
         #region App
-        this.WhenAnyValue(x => x.CheckForUpdates)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(CheckForUpdates))
+            .Select(_ => CheckForUpdates)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.CheckForUpdates = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.ShowTrayIcon)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(ShowTrayIcon))
+            .Select(_ => ShowTrayIcon)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 App.SetIconsState(value);
@@ -92,42 +93,60 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.MinimizeToTray)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(MinimizeToTray))
+            .Select(_ => MinimizeToTray)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.MinimizeToTray = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.CloseToTray)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(CloseToTray))
+            .Select(_ => CloseToTray)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.CloseToTray = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.StartMinimized)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(StartMinimized))
+            .Select(_ => StartMinimized)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.StartMinimized = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectOnAppStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectOnAppStart))
+            .Select(_ => InjectOnAppStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectOnAppStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.RunSteamOnStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(RunSteamOnStart))
+            .Select(_ => RunSteamOnStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.RunSteamOnStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.RunOnBoot)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(RunOnBoot))
+            .Select(_ => RunOnBoot)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -139,7 +158,10 @@ public partial class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.WhenAnyValue(x => x.SelectedTheme)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SelectedTheme))
+            .Select(_ => SelectedTheme)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.AppTheme = value.ToString();
@@ -147,7 +169,10 @@ public partial class SettingsPageViewModel : ViewModelBase
                 App.SetApplicationTheme(value);
             });
 
-        this.WhenAnyValue(x => x.InitialInjectionDelay)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InitialInjectionDelay))
+            .Select(_ => InitialInjectionDelay)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InitialInjectionDelay = value;
@@ -156,14 +181,20 @@ public partial class SettingsPageViewModel : ViewModelBase
         #endregion
 
         #region Steam
-        this.WhenAnyValue(x => x.SteamDirectory)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamDirectory))
+            .Select(_ => SteamDirectory)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.SteamDirectory = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.SteamLaunchArgs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamLaunchArgs))
+            .Select(_ => SteamLaunchArgs)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -171,7 +202,10 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.SteamCefPort)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamCefPort))
+            .Select(_ => SteamCefPort)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -179,28 +213,40 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectOnSteamStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectOnSteamStart))
+            .Select(_ => InjectOnSteamStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectOnSteamStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.ForceSteamArgs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(ForceSteamArgs))
+            .Select(_ => ForceSteamArgs)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.ForceSteamArgs = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectCss)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectCss))
+            .Select(_ => InjectCss)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectCSS = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectJs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectJs))
+            .Select(_ => InjectJs)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 if (value && !Settings.Default.InjectJSWarningAccepted)
@@ -216,44 +262,27 @@ public partial class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.WhenAnyValue(x => x.UseAppTheme)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(UseAppTheme))
+            .Select(_ => UseAppTheme)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.UseAppTheme = value;
                 Settings.Default.Save();
-                if (!value)
-                {
-                    Injector.UpdateColorScheme("light");
-                    Injector.UpdateSystemAccentColors(false);
-                }
-                else
-                {
-                    Injector.UpdateColorScheme();
-                    Injector.UpdateSystemAccentColors();
-                }
+                _ = OnUseAppThemeChangedAsync(value);
             });
 
-        this.WhenAnyValue(x => x.DumpPages)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(DumpPages))
+            .Select(_ => DumpPages)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.DumpPages = value;
                 Settings.Default.Save();
             });
         #endregion
-
-        BrowseSteam = ReactiveCommand.CreateFromTask(BrowseSteamImpl);
-        ResetSteam = ReactiveCommand.Create(() =>
-        {
-            Settings.Default.SteamDirectory = string.Empty;
-            SteamDirectory = Steam.SteamDir ?? string.Empty;
-            Settings.Default.Save();
-        });
-        ResetSettings = ReactiveCommand.Create(() =>
-        {
-            Settings.Default.Reset();
-            InitProperties();
-            Settings.Default.Save();
-        });
     }
 
     private void InitProperties()
@@ -284,8 +313,6 @@ public partial class SettingsPageViewModel : ViewModelBase
         #endregion
 
     }
-
-    [RequiresUnreferencedCode("Calls ReactiveUI.ReactiveCommand.Create(Action, IObservable<Boolean>, IScheduler)")]
     private async Task ShowWarningDialog()
     {
         var dialog = new ContentDialog
@@ -296,26 +323,47 @@ public partial class SettingsPageViewModel : ViewModelBase
                 "JavaScript can potentially contain malicious code and you should only use scripts from people you trust.\n" +
                 "Continue?",
             PrimaryButtonText = "Yes",
-            PrimaryButtonCommand = ReactiveCommand.Create(() =>
-            {
-                Settings.Default.InjectJS = true;
-                Settings.Default.InjectJSWarningAccepted = true;
-                Settings.Default.Save();
-                InjectJs = true;
-            }),
+            PrimaryButtonCommand = ConfirmInjectJsCommand,
             SecondaryButtonText = "No",
-            SecondaryButtonCommand = ReactiveCommand.Create(() =>
-            {
-                InjectJs = false;
-                Settings.Default.Save();
-            })
+            SecondaryButtonCommand = CancelInjectJsCommand
         };
         await dialog.ShowAsync();
     }
 
-    public ReactiveCommand<Unit, Unit> ResetSteam { get; }
-    public ReactiveCommand<Unit, Unit> ResetSettings { get; }
-    public ReactiveCommand<Unit, Unit> BrowseSteam { get; }
+    [ReactiveCommand]
+    private async Task BrowseSteam() => await BrowseSteamImpl().ConfigureAwait(false);
+
+    [ReactiveCommand]
+    private void ResetSteam()
+    {
+        Settings.Default.SteamDirectory = string.Empty;
+        SteamDirectory = Steam.SteamDir ?? string.Empty;
+        Settings.Default.Save();
+    }
+
+    [ReactiveCommand]
+    private void ResetSettings()
+    {
+        Settings.Default.Reset();
+        InitProperties();
+        Settings.Default.Save();
+    }
+
+    [ReactiveCommand]
+    private void ConfirmInjectJs()
+    {
+        Settings.Default.InjectJS = true;
+        Settings.Default.InjectJSWarningAccepted = true;
+        Settings.Default.Save();
+        InjectJs = true;
+    }
+
+    [ReactiveCommand]
+    private void CancelInjectJs()
+    {
+        InjectJs = false;
+        Settings.Default.Save();
+    }
 
     private async Task BrowseSteamImpl()
     {
@@ -328,6 +376,28 @@ public partial class SettingsPageViewModel : ViewModelBase
         if (result.Count > 0)
         {
             SteamDirectory = result[0].Path.LocalPath;
+        }
+    }
+
+    private static async Task OnUseAppThemeChangedAsync(bool useAppTheme)
+    {
+        try
+        {
+            if (!useAppTheme)
+            {
+                await Injector.UpdateColorScheme("light");
+                await Injector.UpdateSystemAccentColors(false);
+            }
+            else
+            {
+                await Injector.UpdateColorScheme();
+                await Injector.UpdateSystemAccentColors();
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error updating colors on UseAppTheme changed");
+            Log.Logger.Debug(ex);
         }
     }
 }

@@ -3,6 +3,8 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 
+using JetBrains.Annotations;
+
 using Semver;
 
 using SFP_UI.ViewModels;
@@ -16,6 +18,8 @@ using Flurl.Http;
 #if DEBUG
 using System.Text.Json;
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+// ReSharper disable HeuristicUnreachableCode
+// ReSharper disable UnusedParameter.Local
 #endif
 
 #endregion
@@ -89,8 +93,7 @@ internal static class UpdateChecker
     }
 }
 
-internal struct Release
+internal readonly struct Release
 {
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    [JsonPropertyName("tag_name")] public string TagName { get; set; }
+    [JsonPropertyName("tag_name")] public string TagName { get; [UsedImplicitly] init; }
 }
