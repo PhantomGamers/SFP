@@ -1,16 +1,20 @@
 #region
 
-using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
 using Avalonia.Threading;
+
 using FluentAvalonia.Styling;
+
+using JetBrains.Annotations;
+
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.ViewModels;
 using SFP_UI.Views;
@@ -31,51 +35,53 @@ public class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+#pragma warning disable EPC27
     public override async void OnFrameworkInitializationCompleted()
+#pragma warning restore EPC27
     {
-        if (!Settings.Default.StartMinimized || !Settings.Default.MinimizeToTray)
+        try
         {
-            StartMainWindow();
-        }
-
-        base.OnFrameworkInitializationCompleted();
-
-        if (Design.IsDesignMode)
-        {
-            return;
-        }
-
-        SetIconsState(Settings.Default.ShowTrayIcon);
-
-        Injector.SetColorScheme(ActualThemeVariant.ToString());
-        Injector.SetAccentColors(GetColorValues());
-        ActualThemeVariantChanged += (_, _) =>
-        {
-            Injector.SetColorScheme(ActualThemeVariant.ToString());
-            Injector.UpdateColorScheme();
-        };
-        if (Current?.PlatformSettings != null)
-        {
-            Current.PlatformSettings.ColorValuesChanged += (_, _) =>
+            if (!Settings.Default.StartMinimized || !Settings.Default.MinimizeToTray)
             {
-                Injector.SetAccentColors(GetColorValues());
-                Injector.UpdateSystemAccentColors();
-            };
-        }
-        else
-        {
-            Log.Logger.Warn("PlatformSettings is null, can't update system accent colors");
-        }
+                StartMainWindow();
+            }
 
-        await HandleStartupTasks();
+            base.OnFrameworkInitializationCompleted();
 
-        if (Settings.Default.CheckForUpdates)
+            if (Design.IsDesignMode)
+            {
+                return;
+            }
+
+            SetIconsState(Settings.Default.ShowTrayIcon);
+
+            Injector.SetColorScheme(ActualThemeVariant.ToString());
+            Injector.SetAccentColors(GetColorValues());
+            ActualThemeVariantChanged += (_, _) => _ = OnActualThemeVariantChangedAsync();
+            if (Current?.PlatformSettings != null)
+            {
+                Current.PlatformSettings.ColorValuesChanged += (_, _) => _ = OnColorValuesChangedAsync();
+            }
+            else
+            {
+                Log.Logger.Warn("PlatformSettings is null, can't update system accent colors");
+            }
+
+            await HandleStartupTasks();
+
+            if (Settings.Default.CheckForUpdates)
+            {
+                Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
+            }
+        }
+        catch (Exception ex)
         {
-            Dispatcher.UIThread.Post(() => _ = UpdateChecker.CheckForUpdates());
+            Log.Logger.Error("Error in OnFrameworkInitializationCompleted event handler");
+            Log.Logger.Debug(ex);
         }
     }
 
-    private static IEnumerable<string> GetColorValues()
+    private static string[] GetColorValues()
     {
         if (Current!.Styles[0] is not FluentAvaloniaTheme faTheme)
         {
@@ -129,10 +135,7 @@ public class App : Application
     public static void SetApplicationTheme(string themeVariantString)
     {
         var faTheme = Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
-        if (faTheme != null)
-        {
-            faTheme.PreferSystemTheme = themeVariantString == "System Default";
-        }
+        faTheme?.PreferSystemTheme = themeVariantString == "System Default";
 
         Current!.RequestedThemeVariant = themeVariantString switch
         {
@@ -166,9 +169,41 @@ public class App : Application
         }
     }
 
-    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    [UsedImplicitly]
     private void TrayIcon_OnClicked(object? sender, EventArgs e)
     {
         MainWindow.ShowWindow();
+    }
+
+    private static async Task OnActualThemeVariantChangedAsync()
+    {
+        try
+        {
+            Injector.SetColorScheme(Current!.ActualThemeVariant.ToString());
+            await Injector.UpdateColorScheme();
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error updating color scheme on theme variant changed");
+            Log.Logger.Debug(ex);
+        }
+    }
+
+    private static async Task OnColorValuesChangedAsync()
+    {
+        try
+        {
+            if (Current == null)
+            {
+                return;
+            }
+            Injector.SetAccentColors(GetColorValues());
+            await Injector.UpdateSystemAccentColors();
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error updating system accent colors");
+            Log.Logger.Debug(ex);
+        }
     }
 }

@@ -1,17 +1,14 @@
 using Avalonia.Controls;
+
 using FluentAvalonia.UI.Controls;
+
 using SFP_UI.Pages;
 
 namespace SFP_UI.ViewModels;
 
 public class MainViewViewModel : ViewModelBase
 {
-    public MainViewViewModel()
-    {
-        NavigationFactory = new NavigationFactory();
-    }
-
-    public NavigationFactory NavigationFactory { get; }
+    public NavigationFactory NavigationFactory { get; } = new();
 }
 
 public class NavigationFactory : INavigationPageFactory
@@ -31,7 +28,7 @@ public class NavigationFactory : INavigationPageFactory
     }
 
     // Create a page based on an object, such as a view model
-    public Control? GetPageFromObject(object target)
+    public Control GetPageFromObject(object target)
     {
         return target switch
         {
@@ -46,7 +43,7 @@ public class NavigationFactory : INavigationPageFactory
     private readonly Control[] _pages =
     [
         new MainPage(),
-        new SettingsPage(),
+        new SettingsPage()
     ];
 
     public static Control[] GetPages()

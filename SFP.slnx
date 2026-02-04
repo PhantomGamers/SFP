@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".pre-commit-config.yaml" />
+    <File Path="createpublishedzip.ps1" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+    <File Path="SFPCommon.props" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/">
+    <File Path=".github/dependabot.yml" />
+    <File Path=".github/FUNDING.yml" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/publish.yml" />
+  </Folder>
+  <Project Path="SFP/SFP.csproj" />
+  <Project Path="SFP_UI/SFP_UI.csproj" />
+</Solution>

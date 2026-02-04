@@ -1,67 +1,69 @@
 #region
 
-using System.Reactive;
 using System.Reactive.Linq;
+
 using Avalonia.Platform.Storage;
+
 using FluentAvalonia.UI.Controls;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+
+using ReactiveUI.SourceGenerators;
+
 using SFP.Models;
 using SFP.Models.Injection;
 using SFP.Properties;
-using SFP_UI.Views;
-using Utils = SFP.Models.Windows.Utils;
 
-// ReSharper disable MemberCanBePrivate.Global
+using SFP_UI.Views;
+
+using Utils = SFP.Models.Windows.Utils;
 
 #endregion
 
 namespace SFP_UI.ViewModels;
 
-public class SettingsPageViewModel : ViewModelBase
+public partial class SettingsPageViewModel : ViewModelBase
 {
     #region App
-    [Reactive] public bool CheckForUpdates { get; set; }
+    [Reactive] public partial bool CheckForUpdates { get; set; }
 
-    [Reactive] public bool ShowTrayIcon { get; set; }
+    [Reactive] public partial bool ShowTrayIcon { get; set; }
 
-    [Reactive] public bool MinimizeToTray { get; set; }
+    [Reactive] public partial bool MinimizeToTray { get; set; }
 
-    [Reactive] public bool CloseToTray { get; set; }
+    [Reactive] public partial bool CloseToTray { get; set; }
 
-    [Reactive] public bool StartMinimized { get; set; }
+    [Reactive] public partial bool StartMinimized { get; set; }
 
-    [Reactive] public bool InjectOnAppStart { get; set; }
+    [Reactive] public partial bool InjectOnAppStart { get; set; }
 
-    [Reactive] public bool RunSteamOnStart { get; set; }
+    [Reactive] public partial bool RunSteamOnStart { get; set; }
 
-    [Reactive] public bool RunOnBoot { get; set; }
+    [Reactive] public partial bool RunOnBoot { get; set; }
 
     public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
-    [Reactive] public string SelectedTheme { get; set; } = null!;
+    [Reactive] public partial string SelectedTheme { get; set; } = null!;
 
-    [Reactive] public int InitialInjectionDelay { get; set; }
+    [Reactive] public partial int InitialInjectionDelay { get; set; }
 
     #endregion
 
     #region Steam
-    [Reactive] public string SteamDirectory { get; set; } = null!;
+    [Reactive] public partial string SteamDirectory { get; set; } = null!;
 
-    [Reactive] public string SteamLaunchArgs { get; set; } = null!;
+    [Reactive] public partial string SteamLaunchArgs { get; set; } = null!;
 
-    [Reactive] public short SteamCefPort { get; set; }
+    [Reactive] public partial short SteamCefPort { get; set; }
 
-    [Reactive] public bool InjectOnSteamStart { get; set; }
+    [Reactive] public partial bool InjectOnSteamStart { get; set; }
 
-    [Reactive] public bool ForceSteamArgs { get; set; }
+    [Reactive] public partial bool ForceSteamArgs { get; set; }
 
-    [Reactive] public bool InjectCss { get; set; }
+    [Reactive] public partial bool InjectCss { get; set; }
 
-    [Reactive] public bool InjectJs { get; set; }
+    [Reactive] public partial bool InjectJs { get; set; }
 
-    [Reactive] public bool UseAppTheme { get; set; }
+    [Reactive] public partial bool UseAppTheme { get; set; }
 
-    [Reactive] public bool DumpPages { get; set; }
+    [Reactive] public partial bool DumpPages { get; set; }
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
@@ -70,14 +72,20 @@ public class SettingsPageViewModel : ViewModelBase
     {
         InitProperties();
         #region App
-        this.WhenAnyValue(x => x.CheckForUpdates)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(CheckForUpdates))
+            .Select(_ => CheckForUpdates)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.CheckForUpdates = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.ShowTrayIcon)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(ShowTrayIcon))
+            .Select(_ => ShowTrayIcon)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 App.SetIconsState(value);
@@ -85,42 +93,60 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.MinimizeToTray)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(MinimizeToTray))
+            .Select(_ => MinimizeToTray)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.MinimizeToTray = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.CloseToTray)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(CloseToTray))
+            .Select(_ => CloseToTray)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.CloseToTray = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.StartMinimized)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(StartMinimized))
+            .Select(_ => StartMinimized)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.StartMinimized = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectOnAppStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectOnAppStart))
+            .Select(_ => InjectOnAppStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectOnAppStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.RunSteamOnStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(RunSteamOnStart))
+            .Select(_ => RunSteamOnStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.RunSteamOnStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.RunOnBoot)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(RunOnBoot))
+            .Select(_ => RunOnBoot)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -132,7 +158,10 @@ public class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.WhenAnyValue(x => x.SelectedTheme)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SelectedTheme))
+            .Select(_ => SelectedTheme)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.AppTheme = value.ToString();
@@ -140,7 +169,10 @@ public class SettingsPageViewModel : ViewModelBase
                 App.SetApplicationTheme(value);
             });
 
-        this.WhenAnyValue(x => x.InitialInjectionDelay)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InitialInjectionDelay))
+            .Select(_ => InitialInjectionDelay)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InitialInjectionDelay = value;
@@ -149,14 +181,20 @@ public class SettingsPageViewModel : ViewModelBase
         #endregion
 
         #region Steam
-        this.WhenAnyValue(x => x.SteamDirectory)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamDirectory))
+            .Select(_ => SteamDirectory)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.SteamDirectory = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.SteamLaunchArgs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamLaunchArgs))
+            .Select(_ => SteamLaunchArgs)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -164,7 +202,10 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.SteamCefPort)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(SteamCefPort))
+            .Select(_ => SteamCefPort)
+            .DistinctUntilChanged()
             .Throttle(TimeSpan.FromSeconds(1))
             .Subscribe(value =>
             {
@@ -172,35 +213,47 @@ public class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectOnSteamStart)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectOnSteamStart))
+            .Select(_ => InjectOnSteamStart)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectOnSteamStart = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.ForceSteamArgs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(ForceSteamArgs))
+            .Select(_ => ForceSteamArgs)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.ForceSteamArgs = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectCss)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectCss))
+            .Select(_ => InjectCss)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.InjectCSS = value;
                 Settings.Default.Save();
             });
 
-        this.WhenAnyValue(x => x.InjectJs)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(InjectJs))
+            .Select(_ => InjectJs)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 if (value && !Settings.Default.InjectJSWarningAccepted)
                 {
                     Settings.Default.InjectJS = false;
                     Settings.Default.Save();
-                    ShowWarningDialog();
+                    _ = ShowWarningDialog();
                 }
                 else
                 {
@@ -209,44 +262,27 @@ public class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.WhenAnyValue(x => x.UseAppTheme)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(UseAppTheme))
+            .Select(_ => UseAppTheme)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.UseAppTheme = value;
                 Settings.Default.Save();
-                if (!value)
-                {
-                    Injector.UpdateColorScheme("light");
-                    Injector.UpdateSystemAccentColors(false);
-                }
-                else
-                {
-                    Injector.UpdateColorScheme();
-                    Injector.UpdateSystemAccentColors();
-                }
+                _ = OnUseAppThemeChangedAsync(value);
             });
 
-        this.WhenAnyValue(x => x.DumpPages)
+        this.Changed
+            .Where(e => e.PropertyName == nameof(DumpPages))
+            .Select(_ => DumpPages)
+            .DistinctUntilChanged()
             .Subscribe(value =>
             {
                 Settings.Default.DumpPages = value;
                 Settings.Default.Save();
             });
         #endregion
-
-        BrowseSteam = ReactiveCommand.Create(BrowseSteamImpl);
-        ResetSteam = ReactiveCommand.Create(() =>
-        {
-            Settings.Default.SteamDirectory = string.Empty;
-            SteamDirectory = Steam.SteamDir ?? string.Empty;
-            Settings.Default.Save();
-        });
-        ResetSettings = ReactiveCommand.Create(() =>
-        {
-            Settings.Default.Reset();
-            InitProperties();
-            Settings.Default.Save();
-        });
     }
 
     private void InitProperties()
@@ -277,8 +313,7 @@ public class SettingsPageViewModel : ViewModelBase
         #endregion
 
     }
-
-    private async void ShowWarningDialog()
+    private async Task ShowWarningDialog()
     {
         var dialog = new ContentDialog
         {
@@ -288,28 +323,49 @@ public class SettingsPageViewModel : ViewModelBase
                 "JavaScript can potentially contain malicious code and you should only use scripts from people you trust.\n" +
                 "Continue?",
             PrimaryButtonText = "Yes",
-            PrimaryButtonCommand = ReactiveCommand.Create(() =>
-            {
-                Settings.Default.InjectJS = true;
-                Settings.Default.InjectJSWarningAccepted = true;
-                Settings.Default.Save();
-                InjectJs = true;
-            }),
+            PrimaryButtonCommand = ConfirmInjectJsCommand,
             SecondaryButtonText = "No",
-            SecondaryButtonCommand = ReactiveCommand.Create(() =>
-            {
-                InjectJs = false;
-                Settings.Default.Save();
-            })
+            SecondaryButtonCommand = CancelInjectJsCommand
         };
         await dialog.ShowAsync();
     }
 
-    public ReactiveCommand<Unit, Unit> ResetSteam { get; }
-    public ReactiveCommand<Unit, Unit> ResetSettings { get; }
-    public ReactiveCommand<Unit, Unit> BrowseSteam { get; }
+    [ReactiveCommand]
+    private async Task BrowseSteam() => await BrowseSteamImpl().ConfigureAwait(false);
 
-    private async void BrowseSteamImpl()
+    [ReactiveCommand]
+    private void ResetSteam()
+    {
+        Settings.Default.SteamDirectory = string.Empty;
+        SteamDirectory = Steam.SteamDir ?? string.Empty;
+        Settings.Default.Save();
+    }
+
+    [ReactiveCommand]
+    private void ResetSettings()
+    {
+        Settings.Default.Reset();
+        InitProperties();
+        Settings.Default.Save();
+    }
+
+    [ReactiveCommand]
+    private void ConfirmInjectJs()
+    {
+        Settings.Default.InjectJS = true;
+        Settings.Default.InjectJSWarningAccepted = true;
+        Settings.Default.Save();
+        InjectJs = true;
+    }
+
+    [ReactiveCommand]
+    private void CancelInjectJs()
+    {
+        InjectJs = false;
+        Settings.Default.Save();
+    }
+
+    private async Task BrowseSteamImpl()
     {
         if (MainWindow.Instance == null)
         {
@@ -320,6 +376,28 @@ public class SettingsPageViewModel : ViewModelBase
         if (result.Count > 0)
         {
             SteamDirectory = result[0].Path.LocalPath;
+        }
+    }
+
+    private static async Task OnUseAppThemeChangedAsync(bool useAppTheme)
+    {
+        try
+        {
+            if (!useAppTheme)
+            {
+                await Injector.UpdateColorScheme("light");
+                await Injector.UpdateSystemAccentColors(false);
+            }
+            else
+            {
+                await Injector.UpdateColorScheme();
+                await Injector.UpdateSystemAccentColors();
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error updating colors on UseAppTheme changed");
+            Log.Logger.Debug(ex);
         }
     }
 }

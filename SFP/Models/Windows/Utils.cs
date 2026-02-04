@@ -2,8 +2,11 @@
 
 using System.Diagnostics;
 using System.Runtime.Versioning;
+
 using Microsoft.Win32;
+
 using WindowsShortcutFactory;
+
 using WmiLight;
 
 #endregion
@@ -36,7 +39,8 @@ public static class Utils
             return;
         }
 
-        using WindowsShortcut shortcut = new() { Path = processPath };
+        using WindowsShortcut shortcut = new();
+        shortcut.Path = processPath;
         shortcut.Save(shortcutAddress);
     }
 

@@ -1,20 +1,28 @@
 #region
 
 using System.Runtime.InteropServices;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.ReactiveUI;
 using Avalonia.Threading;
+
 using Bluegrams.Application;
+
 using FileWatcherEx;
+
 using NLog;
 using NLog.Targets;
+
+using ReactiveUI.Avalonia;
+
 using SFP.Models;
 using SFP.Properties;
+
 using SFP_UI.Models;
 using SFP_UI.Targets;
 using SFP_UI.Views;
+
 using SkiaSharp;
 
 #endregion
@@ -23,7 +31,7 @@ namespace SFP_UI;
 
 internal static class Program
 {
-    private static readonly string s_appDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhantomGamers", "SFP");
+    private static readonly string AppDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhantomGamers", "SFP");
     private static FileStream? s_fs;
     private static FileSystemWatcherEx? s_fw;
 
@@ -60,7 +68,7 @@ internal static class Program
         {
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
             using var fileTarget = new FileTarget();
-            fileTarget.FileName = Path.Join(s_appDataPath, "SFP.log");
+            fileTarget.FileName = Path.Join(AppDataPath, "SFP.log");
             fileTarget.ArchiveOldFileOnStartup = true;
             fileTarget.OpenFileCacheTimeout = 30;
             fileTarget.MaxArchiveFiles = 2;
@@ -106,9 +114,19 @@ internal static class Program
         s_fw.Start();
     }
 
+#pragma warning disable EPC27
     private static async void OnInstanceFileChanged(object? sender, FileChangedEvent e)
+#pragma warning restore EPC27
     {
-        await Dispatcher.UIThread.InvokeAsync(MainWindow.ShowWindow);
+        try
+        {
+            await Dispatcher.UIThread.InvokeAsync(MainWindow.ShowWindow);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error("Error in OnInstanceFileChanged event handler");
+            Log.Logger.Debug(ex);
+        }
     }
 
     private static void InitSettings()
@@ -119,8 +137,8 @@ internal static class Program
         }
         else
         {
-            _ = Directory.CreateDirectory(s_appDataPath);
-            PortableSettingsProviderBase.SettingsDirectory = s_appDataPath;
+            _ = Directory.CreateDirectory(AppDataPath);
+            PortableSettingsProviderBase.SettingsDirectory = AppDataPath;
             PortableJsonSettingsProvider.SettingsFileName = "settings.json";
         }
         PortableJsonSettingsProvider.ApplyProvider(Settings.Default);

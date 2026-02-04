@@ -2,6 +2,7 @@
 
 using NLog;
 using NLog.Targets;
+
 using SFP_UI.ViewModels;
 
 #endregion
