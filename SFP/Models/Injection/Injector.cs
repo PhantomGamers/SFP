@@ -17,6 +17,7 @@ public static partial class Injector
     private static IBrowser? s_browser;
     private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim Semaphore = new(1, 1);
+    private static bool s_webkitReloaded;
     public static bool IsInjected { get => field && s_browser != null; private set; }
 
     public static event EventHandler? InjectionStateChanged;
@@ -73,6 +74,7 @@ public static partial class Injector
             };
 
             Log.Logger.Info("Connecting to " + browserEndpoint);
+            s_webkitReloaded = false;
             s_browser = await Puppeteer.ConnectAsync(options);
             s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
@@ -126,6 +128,7 @@ public static partial class Injector
         s_manualDisconnect = true;
         s_browser?.Disconnect();
         s_browser = null;
+        s_webkitReloaded = false;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
     }
 
@@ -434,6 +437,9 @@ public static partial class Injector
         var injectString =
             $$"""
               function inject() {
+                              if ('{{IsFrameWebkit(frame)}}' === 'True' && '{{s_webkitReloaded}}' === 'False') {
+                                location.reload();
+                              }
                               if (document.getElementById('{{frame.Id}}{{resourceType}}') !== null) return;
                               const element = document.createElement('{{(resourceType == "css" ? "link" : "script")}}');
                               element.id = '{{frame.Id}}{{resourceType}}';
@@ -447,13 +453,17 @@ public static partial class Injector
                           } else {
                               inject();
                           }
-
               """;
         try
         {
             if (!IsFrameWebkit(frame) && resourceType == "js")
             {
                 await Task.Delay(500);
+            }
+
+            if (!s_webkitReloaded && IsFrameWebkit(frame))
+            {
+                s_webkitReloaded = true;
             }
             await frame.EvaluateExpressionAsync(injectString);
             Log.Logger.Info($"Injected {Path.GetFileName(fileRelativePath)} into {tabFriendlyName} from patch {patchName}");
