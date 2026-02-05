@@ -17,7 +17,6 @@ public static partial class Injector
     private static IBrowser? s_browser;
     private static bool s_manualDisconnect;
     private static readonly SemaphoreSlim Semaphore = new(1, 1);
-    private static bool s_webkitReloaded;
     public static bool IsInjected { get => field && s_browser != null; private set; }
 
     public static event EventHandler? InjectionStateChanged;
@@ -74,7 +73,6 @@ public static partial class Injector
             };
 
             Log.Logger.Info("Connecting to " + browserEndpoint);
-            s_webkitReloaded = false;
             s_browser = await Puppeteer.ConnectAsync(options);
             s_browser.Disconnected += OnDisconnected;
             Log.Logger.Info("Connected");
@@ -128,7 +126,6 @@ public static partial class Injector
         s_manualDisconnect = true;
         s_browser?.Disconnect();
         s_browser = null;
-        s_webkitReloaded = false;
         InjectionStateChanged?.Invoke(null, EventArgs.Empty);
     }
 
@@ -433,38 +430,38 @@ public static partial class Injector
         }
         var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
         fileRelativePath = $"{relativeSkinDir}{fileRelativePath}";
+        var isFrameWebkit = IsFrameWebkit(frame);
 
         var injectString =
             $$"""
-              function inject() {
-                              if ('{{IsFrameWebkit(frame)}}' === 'True' && '{{s_webkitReloaded}}' === 'False') {
-                                location.reload();
-                              }
-                              if (document.getElementById('{{frame.Id}}{{resourceType}}') !== null) return;
-                              const element = document.createElement('{{(resourceType == "css" ? "link" : "script")}}');
-                              element.id = '{{frame.Id}}{{resourceType}}';
-                              {{(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}}
-                              element.type = '{{(resourceType == "css" ? "text/css" : "module")}}';
-                              element.{{(resourceType == "css" ? "href" : "src")}} = 'https://steamloopback.host/{{fileRelativePath}}';
-                              document.head.append(element);
-                          }
-                          if ((document.readyState === 'loading') && '{{IsFrameWebkit(frame)}}' === 'True') {
-                              addEventListener('DOMContentLoaded', inject);
-                          } else {
-                              inject();
-                          }
+                  function inject() {
+                      if (document.getElementById('{{frame.Id}}{{resourceType}}') !== null) return;
+                      const element = document.createElement('{{(resourceType == "css" ? "link" : "script")}}');
+                      element.id = '{{frame.Id}}{{resourceType}}';
+                      {{(resourceType == "css" ? "element.rel = 'stylesheet';" : "")}}
+                      element.type = '{{(resourceType == "css" ? "text/css" : "module")}}';
+                      element.{{(resourceType == "css" ? "href" : "src")}} = 'https://steamloopback.host/{{fileRelativePath}}';
+                      document.head.append(element);
+                      if ('{{isFrameWebkit}}' === 'True') {
+                          fetch('https://steamloopback.host', {signal: AbortSignal.timeout(100),mode: 'no-cors'})
+                          .catch(e=>{
+                              location.reload();
+                          })
+                      }
+                  }
+                  if ((document.readyState === 'loading') && '{{isFrameWebkit}}' === 'True') {
+                      addEventListener('DOMContentLoaded', inject);
+                  } else {
+                      inject();
+                  }
               """;
         try
         {
-            if (!IsFrameWebkit(frame) && resourceType == "js")
+            if (!isFrameWebkit && resourceType == "js")
             {
                 await Task.Delay(500);
             }
 
-            if (!s_webkitReloaded && IsFrameWebkit(frame))
-            {
-                s_webkitReloaded = true;
-            }
             await frame.EvaluateExpressionAsync(injectString);
             Log.Logger.Info($"Injected {Path.GetFileName(fileRelativePath)} into {tabFriendlyName} from patch {patchName}");
         }
