@@ -22,7 +22,7 @@ jobs:
           regex: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
       - name: Fail if invalid
         if: steps.check-tag.outputs.match == ''
-        uses: Actions/github-script@v7
+        uses: Actions/github-script@v8
         with:
           script: |
             core.setFailed('Invalid tag')
