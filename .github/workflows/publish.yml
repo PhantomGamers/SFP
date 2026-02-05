@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Check Tag
         id: check-tag
-        uses: KyoriPowered/action-regex-match@v4
+        uses: KyoriPowered/action-regex-match@v5
         with:
           text: ${{ github.event.inputs.version }}
           regex: '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
