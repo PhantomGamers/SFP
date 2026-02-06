@@ -131,8 +131,9 @@ internal static class Program
 
     private static void InitSettings()
     {
-        if (File.Exists("SFP.config"))
+        if (File.Exists(Path.Join(AppDomain.CurrentDomain.BaseDirectory, "SFP.config")))
         {
+            PortableSettingsProviderBase.SettingsDirectory = AppDomain.CurrentDomain.BaseDirectory;
             PortableJsonSettingsProvider.SettingsFileName = "SFP.config";
         }
         else
