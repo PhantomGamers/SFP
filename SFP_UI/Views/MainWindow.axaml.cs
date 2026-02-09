@@ -121,6 +121,10 @@ public partial class MainWindow : AppWindow
                 return;
             }
             Instance = null;
+            if (OperatingSystem.IsMacOS())
+            {
+                return;
+            }
             if (Settings.Default.CloseToTray)
             {
                 return;
