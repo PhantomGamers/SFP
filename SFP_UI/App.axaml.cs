@@ -4,7 +4,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using System.Runtime.InteropServices;
 using Avalonia.Styling;
 using Avalonia.Threading;
 
@@ -54,7 +53,7 @@ public class App : Application
                 return;
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            if (OperatingSystem.IsMacOS())
             {
                 SetIconsState(true);
             }
