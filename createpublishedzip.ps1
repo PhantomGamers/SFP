@@ -11,7 +11,7 @@ function Build-SFP
   param (
     [string]$TargetRuntime,
     [bool]$selfContained = $True,
-    [bool]$bundle = $False
+    [bool]$bundle = $True
   )
 
   Remove-Item -Path "./$configuration/publish" -Recurse -Force -ErrorAction Ignore
