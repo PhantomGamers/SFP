@@ -53,7 +53,14 @@ public class App : Application
                 return;
             }
 
-            SetIconsState(Settings.Default.ShowTrayIcon);
+            if (OperatingSystem.IsMacOS())
+            {
+                SetIconsState(true);
+            }
+            else
+            {
+                SetIconsState(Settings.Default.ShowTrayIcon);
+            }
 
             Injector.SetColorScheme(ActualThemeVariant.ToString());
             Injector.SetAccentColors(GetColorValues());

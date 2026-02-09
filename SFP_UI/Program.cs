@@ -159,7 +159,8 @@ internal static class Program
             .LogToTrace()
             .UseReactiveUI()
             .With(new Win32PlatformOptions { OverlayPopups = true })
-            .With(new FontManagerOptions { DefaultFamilyName = fontName });
+            .With(new FontManagerOptions { DefaultFamilyName = fontName })
+            .With(new MacOSPlatformOptions() { ShowInDock = false });
     }
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
