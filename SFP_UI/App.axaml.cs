@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.Runtime.InteropServices;
 using Avalonia.Styling;
 using Avalonia.Threading;
 
@@ -53,7 +54,14 @@ public class App : Application
                 return;
             }
 
-            SetIconsState(Settings.Default.ShowTrayIcon);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                SetIconsState(true);
+            }
+            else
+            {
+                SetIconsState(Settings.Default.ShowTrayIcon);
+            }
 
             Injector.SetColorScheme(ActualThemeVariant.ToString());
             Injector.SetAccentColors(GetColorValues());
