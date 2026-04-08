@@ -12,7 +12,7 @@
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="PuppeteerSharp" Version="8.0.0" />
     <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.1" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.12" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8" />
     <PackageVersion Include="Semver" Version="3.0.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
     <PackageVersion Include="NLog" Version="6.1.2" />
@@ -29,8 +29,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="FileWatcherEx" Version="2.7.0" />
-    <PackageVersion Include="FluentAvaloniaUI" Version="2.5.1" />
+    <PackageVersion Include="FluentAvaloniaUI" Version="2.5.0" />
     <PackageVersion Include="WindowsShortcutFactory" Version="1.2.0" />
     <PackageVersion Include="WmiLight" Version="7.2.0" />
+    <PackageVersion Include="Tmds.DBus.Protocol" Version="0.21.3" />
   </ItemGroup>
 </Project>

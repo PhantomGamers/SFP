@@ -51,14 +51,14 @@
       },
       "FluentAvaloniaUI": {
         "type": "Direct",
-        "requested": "[2.5.1, )",
-        "resolved": "2.5.1",
-        "contentHash": "0QO1iPAPM1RElhQGxFo4Dv5xDeRMMFP/HjA9rVWtKvXAcLDz+6Y60sADBX1Q7YUYUr+PMfZVEYLJKqg7B2zhUA==",
+        "requested": "[2.5.0, )",
+        "resolved": "2.5.0",
+        "contentHash": "DayZu5Mqn5nXwji1/Ya9Y4BSS638D5NrjsFsdcTUyqXkoHSv+VQFWQtg6QzkINjKqSDSnzXfFFZXIVT7k9jt5g==",
         "dependencies": {
-          "Avalonia": "11.3.12",
-          "Avalonia.Controls.ColorPicker": "11.3.12",
-          "Avalonia.Controls.DataGrid": "11.3.12",
-          "Avalonia.Skia": "11.3.12",
+          "Avalonia": "11.3.10",
+          "Avalonia.Controls.ColorPicker": "11.3.10",
+          "Avalonia.Controls.DataGrid": "11.3.10",
+          "Avalonia.Skia": "11.3.10",
           "MicroCom.Runtime": "0.11.0"
         }
       },
@@ -88,13 +88,13 @@
       },
       "ReactiveUI.Avalonia": {
         "type": "Direct",
-        "requested": "[11.4.12, )",
-        "resolved": "11.4.12",
-        "contentHash": "Tn0wWsmvB7sweVuN0X57u73MZ+lIapbGMgRFl+8dYNaCDEMWfgOkR2MyUqkUE4AXtHZR+hbnEe0LFIQKGvzkzA==",
+        "requested": "[11.3.8, )",
+        "resolved": "11.3.8",
+        "contentHash": "8GtFnYCyjcuTlGuUhvMMrY/sUmjuzSQbbtNQ3LYZEW7tkzXixDYnHZzqZU73W+NOnq2sBxds7gSUO52igFWVUw==",
         "dependencies": {
-          "Avalonia": "11.3.12",
-          "ReactiveUI": "23.1.8",
-          "Splat": "19.3.1"
+          "Avalonia": "11.3.8",
+          "ReactiveUI": "22.2.1",
+          "Splat": "17.1.1"
         }
       },
       "ReactiveUI.SourceGenerators": {
@@ -136,10 +136,10 @@
       },
       "Avalonia.Controls.DataGrid": {
         "type": "Transitive",
-        "resolved": "11.3.12",
-        "contentHash": "9zlVkd23gaFtJwi4n7JaKnGdCSkD1fuiRdflzfkLoVXxHKQ2pTOcsUB26rAs7uMTCRvvte8OPwbsK8otA1wNPg==",
+        "resolved": "11.3.10",
+        "contentHash": "KSwme0XOL8594fFvoQ37s5rnSo9vCKutCpufCEmd0R7x/fRWOjK3g3su1Z3nukgbobryPVjQvZxi/E92DPPYpw==",
         "dependencies": {
-          "Avalonia": "11.3.12"
+          "Avalonia": "11.3.10"
         }
       },
       "Avalonia.FreeDesktop": {
@@ -319,11 +319,11 @@
       },
       "ReactiveUI": {
         "type": "Transitive",
-        "resolved": "23.1.8",
-        "contentHash": "Z8vtRa76RJ4efznElUzoOCYmguuKEndsV4VdPPVyobsYDLdVsoJV/njpCW4OXVnB+Mw/xTTrP6+gxYPU+TF8zw==",
+        "resolved": "22.2.1",
+        "contentHash": "P0ZaWZdRVoycwfcEpkC8C/b9mbEJmueTPkBA4PON9NiopGjUY2YhIP5Dm8lki/FLH9aiKt18NXsDwv/mgO/1Dw==",
         "dependencies": {
           "DynamicData": "9.4.1",
-          "Splat": "19.3.1",
+          "Splat": "17.1.1",
           "System.Reactive": "6.1.0"
         }
       },
@@ -371,38 +371,38 @@
       },
       "Splat": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "at6uM1+KfkjyjfYRIiiUjTBUTEwxBysoLOE4zuxGCy6kqNAG9mpSGliTkZtsPe8WqJuU6+Jup7oOoNdjz5R8FQ==",
+        "resolved": "17.1.1",
+        "contentHash": "WwSoJ6aPHlXwWS2jfUtKQIgzQQDSuE/iGbqEFRcM1DKVQelf+XSfnaur6oAqzECobuJLC9nqUMeDH19gU6JDag==",
         "dependencies": {
-          "Splat.Builder": "19.3.1",
-          "Splat.Logging": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Builder": "17.1.1",
+          "Splat.Logging": "17.1.1",
+          "System.Reactive": "6.0.2"
         }
       },
       "Splat.Builder": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "FR9ISOBiEV/wXTq0oU+VrGZmsWVEE/yWkI79oeXF7luvr9P6GKRzZD+acjl+5T8oAJdXPWnBhFTJ/XDpAEW35Q==",
+        "resolved": "17.1.1",
+        "contentHash": "xlA5ErMwa/mg//uC5Ajv4ns3HbWXE0VJiyfupdsLfC+1HPf2MIUUk9ViYxwearB9nkZ+mAmteVD0keBhg/LYsQ==",
         "dependencies": {
-          "Splat.Core": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Core": "17.1.1",
+          "System.Reactive": "6.0.2"
         }
       },
       "Splat.Core": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "MrRbpO/wdWtAfH5c2Nys8Bm7EQ5yi+IAJD3AJsCUMyaRssImIhqmbC7QwfXRnpC2EXOdGENRi0NCTf6y5ODWxQ==",
+        "resolved": "17.1.1",
+        "contentHash": "sRNcO9EcnrCMr2OF4IxD8gcHtIAfCi98GwVZEK9X294RQEBIsy7sHwy8fndlxLguIHvjDJMz85v+qd226pwdNw==",
         "dependencies": {
-          "System.Reactive": "6.1.0"
+          "System.Reactive": "6.0.2"
         }
       },
       "Splat.Logging": {
         "type": "Transitive",
-        "resolved": "19.3.1",
-        "contentHash": "u4MCO7dFKCX9+dnxNhbAWB9GmtY70fvVGexqr3YoesevExijpYoMiPpsCSYk36bJyKpq9XVgyJBxdg4ChrPS3A==",
+        "resolved": "17.1.1",
+        "contentHash": "OSkQVj6/hYVHa0taPasaknuOLw4l8CH9oTFRNuFayDowhHtGg6+UQb2LeSJXV+EXRmUL2E/TFz2ucitnQyTXJQ==",
         "dependencies": {
-          "Splat.Core": "19.3.1",
-          "System.Reactive": "6.1.0"
+          "Splat.Core": "17.1.1",
+          "System.Reactive": "6.0.2"
         }
       },
       "System.Configuration.ConfigurationManager": {
@@ -454,11 +454,6 @@
           "System.Drawing.Common": "7.0.0"
         }
       },
-      "Tmds.DBus.Protocol": {
-        "type": "Transitive",
-        "resolved": "0.21.2",
-        "contentHash": "ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA=="
-      },
       "sfp": {
         "type": "Project",
         "dependencies": {
@@ -508,6 +503,12 @@
           "Newtonsoft.Json": "13.0.1",
           "SharpZipLib": "1.3.3"
         }
+      },
+      "Tmds.DBus.Protocol": {
+        "type": "CentralTransitive",
+        "requested": "[0.21.3, )",
+        "resolved": "0.21.2",
+        "contentHash": "ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA=="
       },
       "WindowsShortcutFactory": {
         "type": "CentralTransitive",
