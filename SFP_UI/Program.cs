@@ -158,6 +158,7 @@ internal static class Program
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
+            .UseReactiveUI(rxAppBuilder => rxAppBuilder.BuildApp())
             .RegisterReactiveUIViewsFromEntryAssembly()
             .With(new Win32PlatformOptions { OverlayPopups = true })
             .With(new FontManagerOptions { DefaultFamilyName = fontName });
