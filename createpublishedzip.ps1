@@ -55,7 +55,7 @@ function Build-SFP
       }
       else
       {
-        "SFP_UI-$TargetRuntime-net7.zip"
+        "SFP_UI-$TargetRuntime-net10.zip"
       }
       Get-ChildItem "$publishDir/*" -Recurse -Exclude $excludeFiles | Compress-Archive -DestinationPath "./$configuration/$zipname" -Force
     } else {
@@ -65,7 +65,7 @@ function Build-SFP
       }
       else
       {
-        "SFP_UI-$TargetRuntime-net7.tar.gz"
+        "SFP_UI-$TargetRuntime-net10.tar.gz"
       }
       $excludeOptions = ""
       foreach ($file in $excludeFiles) {
