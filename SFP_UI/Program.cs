@@ -1,5 +1,6 @@
 #region
 
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Avalonia;
@@ -157,7 +158,7 @@ internal static class Program
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
-            .UseReactiveUI()
+            .RegisterReactiveUIViewsFromEntryAssembly()
             .With(new Win32PlatformOptions { OverlayPopups = true })
             .With(new FontManagerOptions { DefaultFamilyName = fontName });
     }

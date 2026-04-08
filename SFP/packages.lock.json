@@ -4,9 +4,9 @@
     "net10.0": {
       "BepInEx.AssemblyPublicizer.MSBuild": {
         "type": "Direct",
-        "requested": "[0.4.3, )",
-        "resolved": "0.4.3",
-        "contentHash": "Z8Qs3JTTHZG1q0DCqY+HFJ8xp92tkEXWyQ7roeWgUvn20tjv0ZNfAdyy13XrRS1jeEoN/weJc81747TbvvwaDg=="
+        "requested": "[0.5.0-beta.2, )",
+        "resolved": "0.5.0-beta.2",
+        "contentHash": "iq7JY2fiJRX7YExsadvMdog9vPSGdbPm3SLRi4/6jzN09d6nIfAm0VpCK2At80OiofYzn2IhbV9ETrQ36EGWNQ=="
       },
       "ErrorProne.NET.CoreAnalyzers": {
         "type": "Direct",
@@ -37,15 +37,15 @@
       },
       "MinVer": {
         "type": "Direct",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "2lMTCQl5bGP4iv0JNkockPnyllC6eHLz+CoK2ICvalvHod+exXSxueu9hq+zNkU7bZBJf8wMfeRC/Edn8AGmEg=="
+        "requested": "[8.0.0-alpha.1, )",
+        "resolved": "8.0.0-alpha.1",
+        "contentHash": "vBZRXrNmHbDRl/rAwkn22c6L26qQjZoG0WEPFoKPLDXBuB4hLyXnb1aFHJLHfcKrGZygOHpxDTTpGi0DL5cMaQ=="
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[6.1.0, )",
-        "resolved": "6.1.0",
-        "contentHash": "K4UdxS4fuJeCM0sm+JTXWoJgOtcXX7X5kvE94bR07UB8JOB6A2+ski7q1tf2qdv+N0H3gsoWtteScJCHa3+zpw=="
+        "requested": "[6.1.2, )",
+        "resolved": "6.1.2",
+        "contentHash": "y/3o6RVhHHeAMDaUdETeEtisYyypZApxeKd3k8HIH4IdqFzJNF5sXuJ07hNtAq6hLMup+yh3zuTckpFJqucOrw=="
       },
       "PortableJsonSettingsProvider": {
         "type": "Direct",
@@ -78,9 +78,9 @@
       },
       "WmiLight": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "kWwFsCm9Xu68hhmpI+2BXGPvMoXqNMok0d74GE1td4AEzas+J3k9dFOhtksZ4J5egVZeebXbp5zYMujzPslW6A=="
+        "requested": "[7.2.0, )",
+        "resolved": "7.2.0",
+        "contentHash": "bsy8DhXxdZeWtC9RazLTA2tQRrumReL86gm0ouYPJfS9dZgpmvPyhi/1VqxoouzzIuiVa6hxANG4OFq28eCG4g=="
       },
       "Flurl": {
         "type": "Transitive",
@@ -205,9 +205,9 @@
     "net10.0/linux-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "kWwFsCm9Xu68hhmpI+2BXGPvMoXqNMok0d74GE1td4AEzas+J3k9dFOhtksZ4J5egVZeebXbp5zYMujzPslW6A=="
+        "requested": "[7.2.0, )",
+        "resolved": "7.2.0",
+        "contentHash": "bsy8DhXxdZeWtC9RazLTA2tQRrumReL86gm0ouYPJfS9dZgpmvPyhi/1VqxoouzzIuiVa6hxANG4OFq28eCG4g=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
@@ -244,9 +244,9 @@
     "net10.0/osx-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "kWwFsCm9Xu68hhmpI+2BXGPvMoXqNMok0d74GE1td4AEzas+J3k9dFOhtksZ4J5egVZeebXbp5zYMujzPslW6A=="
+        "requested": "[7.2.0, )",
+        "resolved": "7.2.0",
+        "contentHash": "bsy8DhXxdZeWtC9RazLTA2tQRrumReL86gm0ouYPJfS9dZgpmvPyhi/1VqxoouzzIuiVa6hxANG4OFq28eCG4g=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
@@ -283,9 +283,9 @@
     "net10.0/win-x64": {
       "WmiLight": {
         "type": "Direct",
-        "requested": "[7.1.0, )",
-        "resolved": "7.1.0",
-        "contentHash": "kWwFsCm9Xu68hhmpI+2BXGPvMoXqNMok0d74GE1td4AEzas+J3k9dFOhtksZ4J5egVZeebXbp5zYMujzPslW6A=="
+        "requested": "[7.2.0, )",
+        "resolved": "7.2.0",
+        "contentHash": "bsy8DhXxdZeWtC9RazLTA2tQRrumReL86gm0ouYPJfS9dZgpmvPyhi/1VqxoouzzIuiVa6hxANG4OFq28eCG4g=="
       },
       "Microsoft.Win32.SystemEvents": {
         "type": "Transitive",
