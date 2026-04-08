@@ -31,6 +31,7 @@
     <PackageReference Include="FluentAvaloniaUI" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Tmds.DBus.Protocol" />
     <ProjectReference Include="..\SFP\SFP.csproj" />
     <TrimmerRootAssembly Include="WmiLight" />
     <TrimmerRootAssembly Include="PuppeteerSharp" />
