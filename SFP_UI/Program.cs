@@ -161,7 +161,8 @@ internal static class Program
             .UseReactiveUI(rxAppBuilder => rxAppBuilder.BuildApp())
             .RegisterReactiveUIViewsFromEntryAssembly()
             .With(new Win32PlatformOptions { OverlayPopups = true })
-            .With(new FontManagerOptions { DefaultFamilyName = fontName });
+            .With(new FontManagerOptions { DefaultFamilyName = fontName })
+            .With(new MacOSPlatformOptions() { ShowInDock = false });
     }
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
