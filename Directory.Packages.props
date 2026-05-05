@@ -15,7 +15,7 @@
     <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8" />
     <PackageVersion Include="Semver" Version="3.0.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
-    <PackageVersion Include="NLog" Version="6.1.2" />
+    <PackageVersion Include="NLog" Version="6.1.3" />
     <PackageVersion Include="MinVer" Version="8.0.0-alpha.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
