@@ -51,14 +51,14 @@
       },
       "FluentAvaloniaUI": {
         "type": "Direct",
-        "requested": "[2.5.0, )",
-        "resolved": "2.5.0",
-        "contentHash": "DayZu5Mqn5nXwji1/Ya9Y4BSS638D5NrjsFsdcTUyqXkoHSv+VQFWQtg6QzkINjKqSDSnzXfFFZXIVT7k9jt5g==",
+        "requested": "[2.5.1, )",
+        "resolved": "2.5.1",
+        "contentHash": "0QO1iPAPM1RElhQGxFo4Dv5xDeRMMFP/HjA9rVWtKvXAcLDz+6Y60sADBX1Q7YUYUr+PMfZVEYLJKqg7B2zhUA==",
         "dependencies": {
-          "Avalonia": "11.3.10",
-          "Avalonia.Controls.ColorPicker": "11.3.10",
-          "Avalonia.Controls.DataGrid": "11.3.10",
-          "Avalonia.Skia": "11.3.10",
+          "Avalonia": "11.3.12",
+          "Avalonia.Controls.ColorPicker": "11.3.12",
+          "Avalonia.Controls.DataGrid": "11.3.12",
+          "Avalonia.Skia": "11.3.12",
           "MicroCom.Runtime": "0.11.0"
         }
       },
@@ -70,9 +70,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.5, )",
-        "resolved": "10.0.5",
-        "contentHash": "A+5ZuQ0f449tM+MQrhf6R9ZX7lYpjk/ODEwLYKrnF6111rtARx8fVsm4YznUnQiKnnXfaXNBqgxmil6RW3L3SA=="
+        "requested": "[10.0.3, )",
+        "resolved": "10.0.3",
+        "contentHash": "0B6nZyCHWXnvmlB559oduOspVdNOnpNXPjhpWVMovLPAsDVG7A4jJR9rzECf67JUzxP8/ee/wA8clwIzJcWNFA=="
       },
       "MinVer": {
         "type": "Direct",
@@ -142,10 +142,10 @@
       },
       "Avalonia.Controls.DataGrid": {
         "type": "Transitive",
-        "resolved": "11.3.10",
-        "contentHash": "KSwme0XOL8594fFvoQ37s5rnSo9vCKutCpufCEmd0R7x/fRWOjK3g3su1Z3nukgbobryPVjQvZxi/E92DPPYpw==",
+        "resolved": "11.3.12",
+        "contentHash": "9zlVkd23gaFtJwi4n7JaKnGdCSkD1fuiRdflzfkLoVXxHKQ2pTOcsUB26rAs7uMTCRvvte8OPwbsK8otA1wNPg==",
         "dependencies": {
-          "Avalonia": "11.3.10"
+          "Avalonia": "11.3.12"
         }
       },
       "Avalonia.FreeDesktop": {
