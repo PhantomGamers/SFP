@@ -252,7 +252,7 @@ public static partial class Injector
                 return;
             }
 
-            if (frame.Url.StartsWith("devtools://"))
+            if (frame.Url.StartsWith("devtools://", StringComparison.InvariantCultureIgnoreCase))
             {
                 title = frame.Url;
             }
@@ -262,7 +262,7 @@ public static partial class Injector
             foreach (var patch in patches)
             {
                 var regex = patch.MatchRegexString;
-                if (title == "SharedJSContext" && !regex.Contains("SharedJSContext"))
+                if (title.Equals("SharedJSContext", StringComparison.InvariantCultureIgnoreCase) && !regex.Contains("SharedJSContext", StringComparison.InvariantCultureIgnoreCase))
                 {
                     // only inject into SharedJSContext when it is explicitly desired
                     continue;
@@ -306,7 +306,7 @@ public static partial class Injector
             await DumpFrame(frame, url);
             if (!config.IsFromMillennium)
             {
-                var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.CurrentCultureIgnoreCase));
+                var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.InvariantCultureIgnoreCase));
                 var patchEntries = httpPatches as PatchEntry[] ?? [.. httpPatches];
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
@@ -428,7 +428,7 @@ public static partial class Injector
         {
             relativeSkinDir += '/';
         }
-        var resourceType = fileRelativePath.EndsWith(".css") ? "css" : "js";
+        var resourceType = fileRelativePath.EndsWith(".css", StringComparison.InvariantCultureIgnoreCase) ? "css" : "js";
         fileRelativePath = $"{relativeSkinDir}{fileRelativePath}";
         var isFrameWebkit = IsFrameWebkit(frame);
 
@@ -457,7 +457,7 @@ public static partial class Injector
               """;
         try
         {
-            if (!isFrameWebkit && resourceType == "js")
+            if (!isFrameWebkit && resourceType.Equals("js", StringComparison.InvariantCultureIgnoreCase))
             {
                 await Task.Delay(500);
             }
@@ -467,7 +467,7 @@ public static partial class Injector
         }
         catch (PuppeteerException e)
         {
-            if (!tabFriendlyName.StartsWith("http"))
+            if (!tabFriendlyName.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
             {
                 Log.Logger.Error($"Failed to inject {resourceType} into {tabFriendlyName}");
                 Log.Logger.Debug(e);
@@ -477,7 +477,7 @@ public static partial class Injector
 
     private static bool IsFrameWebkit(IFrame frame)
     {
-        return !frame.Url.StartsWith("https://steamloopback.host") && !frame.Url.StartsWith("devtools://");
+        return !frame.Url.StartsWith("https://steamloopback.host", StringComparison.InvariantCultureIgnoreCase) && !frame.Url.StartsWith("devtools://", StringComparison.InvariantCultureIgnoreCase);
     }
 
     private static async Task UpdateColorInPage(IPage page)
