@@ -303,7 +303,7 @@ public static partial class Injector
             await DumpFrame(frame, url);
             if (!config.IsFromMillennium)
             {
-                var httpPatches = patches.Where(p => p.MatchRegexString.StartsWith("http", StringComparison.InvariantCultureIgnoreCase));
+                var httpPatches = patches.Where(p => p.MatchRegexString.TrimStart('^').StartsWith("http", StringComparison.InvariantCultureIgnoreCase));
                 var patchEntries = httpPatches as PatchEntry[] ?? [.. httpPatches];
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
