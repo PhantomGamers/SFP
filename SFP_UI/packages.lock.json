@@ -82,9 +82,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[6.1.2, )",
-        "resolved": "6.1.2",
-        "contentHash": "y/3o6RVhHHeAMDaUdETeEtisYyypZApxeKd3k8HIH4IdqFzJNF5sXuJ07hNtAq6hLMup+yh3zuTckpFJqucOrw=="
+        "requested": "[6.1.3, )",
+        "resolved": "6.1.3",
+        "contentHash": "w4JFIUN3cjQobFOc6wuXtHTyMNaWfdAxOhMvCR0vHBNpl2kKSjNYYxzx1KsTtePufQeokFMEx9UbWTAqlICKjA=="
       },
       "ReactiveUI.Avalonia": {
         "type": "Direct",
@@ -465,7 +465,7 @@
         "dependencies": {
           "FileWatcherEx": "[2.7.0, )",
           "Flurl.Http": "[4.0.2, )",
-          "NLog": "[6.1.2, )",
+          "NLog": "[6.1.3, )",
           "PortableJsonSettingsProvider": "[0.2.2, )",
           "PuppeteerSharp": "[8.0.0, )",
           "WindowsShortcutFactory": "[1.2.0, )",
