@@ -299,9 +299,6 @@ public static partial class Injector
         }
         else
         {
-            // needed to accept including css and js from steamloopback.host
-            // only needed for css in certain instances, needs investigation
-            await SetBypassCsp(frame);
             var url = GetDomainRegex().Match(frame.Url).Groups[1].Value;
             await DumpFrame(frame, url);
             if (!config.IsFromMillennium)
@@ -311,6 +308,9 @@ public static partial class Injector
                 var patch = patchEntries.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
                 {
+                    // needed to accept including css and js from steamloopback.host
+                    // only needed for css in certain instances, needs investigation
+                    await SetBypassCsp(frame);
                     await InjectAsync(frame, patch, url);
                 }
             }
@@ -319,6 +319,7 @@ public static partial class Injector
                 var patch = patches.FirstOrDefault(p => p.MatchRegex.IsMatch(frame.Url));
                 if (patch != null)
                 {
+                    await SetBypassCsp(frame);
                     await InjectAsync(frame, patch, url);
                 }
             }
