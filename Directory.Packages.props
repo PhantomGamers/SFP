@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <AvaloniaVersion>11.3.13</AvaloniaVersion>
+    <AvaloniaVersion>11.3.17</AvaloniaVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Avalonia" Version="$(AvaloniaVersion)" />
@@ -11,16 +11,16 @@
     <PackageVersion Include="Flurl.Http" Version="4.0.2" />
     <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4" />
     <PackageVersion Include="PuppeteerSharp" Version="8.0.0" />
-    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="2.6.1" />
-    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.3.8" />
+    <PackageVersion Include="ReactiveUI.SourceGenerators" Version="3.1.0" />
+    <PackageVersion Include="ReactiveUI.Avalonia" Version="11.4.13" />
     <PackageVersion Include="Semver" Version="3.0.0" />
     <PackageVersion Include="PortableJsonSettingsProvider" Version="0.2.2" />
     <PackageVersion Include="NLog" Version="6.1.3" />
-    <PackageVersion Include="MinVer" Version="8.0.0-alpha.1">
+    <PackageVersion Include="MinVer" Version="8.0.0-rc.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.8.2-beta.1">
+    <PackageVersion Include="ErrorProne.NET.CoreAnalyzers" Version="0.9.0-beta.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageVersion>
@@ -32,6 +32,6 @@
     <PackageVersion Include="FluentAvaloniaUI" Version="2.5.1" />
     <PackageVersion Include="WindowsShortcutFactory" Version="1.2.0" />
     <PackageVersion Include="WmiLight" Version="7.2.0" />
-    <PackageVersion Include="Tmds.DBus.Protocol" Version="0.21.3" />
+    <PackageVersion Include="Tmds.DBus.Protocol" Version="0.94.1" />
   </ItemGroup>
 </Project>

@@ -40,9 +40,9 @@ public class SfpConfig
     [
         new()
         {
-            MatchRegexString = "https://.*.steampowered.com", TargetCss = "webkit.css", TargetJs = "webkit.js"
+            MatchRegexString = """^https://([A-Za-z0-9-]+\.)*steampowered\.com(?=/|$)""", TargetCss = "webkit.css", TargetJs = "webkit.js"
         },
-        new() { MatchRegexString = "https://steamcommunity.com", TargetCss = "webkit.css", TargetJs = "webkit.js" },
+        new() { MatchRegexString = """^https://steamcommunity\.com(?=/|$)""", TargetCss = "webkit.css", TargetJs = "webkit.js" },
         new()
         {
             MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"

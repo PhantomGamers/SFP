@@ -81,12 +81,12 @@ Default `skin.json`:
 {
   "Patches": [
     {
-      "MatchRegexString": "https://.*.steampowered.com",
+      "MatchRegexString": "^https://([A-Za-z0-9-]+\.)*steampowered\.com(?=/|$)",
       "TargetCss": "webkit.css",
       "TargetJs": "webkit.js"
     },
     {
-      "MatchRegexString": "https://steamcommunity.com",
+      "MatchRegexString": "^https://steamcommunity\.com(?=/|$)",
       "TargetCss": "webkit.css",
       "TargetJs": "webkit.js"
     },

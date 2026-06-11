@@ -26,7 +26,10 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" />
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="ReactiveUI.Avalonia" />
-    <PackageReference Include="ReactiveUI.SourceGenerators" />
+    <PackageReference Include="ReactiveUI.SourceGenerators">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Semver" />
     <PackageReference Include="FluentAvaloniaUI" />
   </ItemGroup>
