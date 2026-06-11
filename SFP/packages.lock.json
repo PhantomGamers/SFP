@@ -10,9 +10,9 @@
       },
       "ErrorProne.NET.CoreAnalyzers": {
         "type": "Direct",
-        "requested": "[0.8.2-beta.1, )",
-        "resolved": "0.8.2-beta.1",
-        "contentHash": "8zTBD0fGHSZzwUCqm7b9DykXDBWA8swQ71mB9Jli2n8MYThLrqnJL9xK3rNol21oGFn0q/JfaGYJbSheTXqeYA=="
+        "requested": "[0.9.0-beta.4, )",
+        "resolved": "0.9.0-beta.4",
+        "contentHash": "YTYfAB8r5VuAJLuQF/sgTy+iRVM5AW0vXyVWp+BRNqNBjddLZdxc1rBFa2E4EM92uSxa8FraDw6pRw4tf5/qwA=="
       },
       "ErrorProne.NET.Structs": {
         "type": "Direct",
@@ -37,9 +37,9 @@
       },
       "MinVer": {
         "type": "Direct",
-        "requested": "[8.0.0-alpha.1, )",
-        "resolved": "8.0.0-alpha.1",
-        "contentHash": "vBZRXrNmHbDRl/rAwkn22c6L26qQjZoG0WEPFoKPLDXBuB4hLyXnb1aFHJLHfcKrGZygOHpxDTTpGi0DL5cMaQ=="
+        "requested": "[8.0.0-rc.1, )",
+        "resolved": "8.0.0-rc.1",
+        "contentHash": "y456B4BFtebtKsxXVYXRdoKn5B3BE3mJCj+KeqeFKaNKkFGmS8oKWhGjU/KUMOS9bV5BsuhqQw7YpuHjsX5XxA=="
       },
       "NLog": {
         "type": "Direct",
