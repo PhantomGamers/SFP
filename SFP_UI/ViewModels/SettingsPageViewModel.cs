@@ -67,6 +67,7 @@ public partial class SettingsPageViewModel : ViewModelBase
     #endregion
 
     public bool IsWindows { get; } = OperatingSystem.IsWindows();
+    public bool IsMacOs { get; } = OperatingSystem.IsMacOS();
 
     public SettingsPageViewModel()
     {
