@@ -26,13 +26,15 @@ public struct BrowserEndpoint
             Log.Logger.Error("Could not fetch browser, Steam is not running");
             throw new NullReferenceException();
         }
+
         try
         {
-            return await $"{CefDebuggingUrl}:{Settings.Default.SteamCefPort}".AppendPathSegments("json", "version").GetJsonAsync<BrowserEndpoint>();
+            return await $"{CefDebuggingUrl}:{Settings.Default.SteamCefPort}".AppendPathSegments("json", "version")
+                .GetJsonAsync<BrowserEndpoint>();
         }
         catch (FlurlHttpException e)
         {
-            var cmdLine = Steam.GetCommandLine();
+            List<string> cmdLine = Steam.GetCommandLine();
             if (cmdLine.Count == 0)
             {
                 Log.Logger.Error("Could not fetch browser, is Steam running with -cef-enable-debugging ?");
@@ -43,8 +45,10 @@ public struct BrowserEndpoint
             }
             else
             {
-                Log.Logger.Error("Could not fetch browser, SFP either tried to inject too early or another service is running on port 8080");
+                Log.Logger.Error(
+                    "Could not fetch browser, SFP either tried to inject too early or another service is running on port 8080");
             }
+
             Log.Logger.Debug(e);
             throw;
         }

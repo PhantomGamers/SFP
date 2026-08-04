@@ -15,7 +15,7 @@ public partial class MainPage : UserControl
     {
         InitializeComponent();
         DataContext = new MainPageViewModel();
-        var flyout = (OpenFileDropDownButton.Flyout as MenuFlyout)!;
+        MenuFlyout flyout = (OpenFileDropDownButton.Flyout as MenuFlyout)!;
         flyout.Opened += (_, _) => OpenFileModel.PopulateOpenFileDropDownButton(flyout.Items);
     }
 }

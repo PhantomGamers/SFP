@@ -21,10 +21,16 @@ public static class Steam
     private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
     private static readonly int ProcessAmount = OperatingSystem.IsWindows() ? 3 : OperatingSystem.IsMacOS() ? 4 : 6;
+
+    private static string s_relativeSkinDir = GetRelativeSkinDir();
     public static bool IsSteamWebHelperRunning => SteamWebHelperProcesses.Length > ProcessAmount;
     public static bool IsSteamRunning => SteamProcess is not null;
 
-    private static Process[] SteamWebHelperProcesses => [.. Process.GetProcessesByName(SteamWebHelperProcName).Where(p => p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase))];
+    private static Process[] SteamWebHelperProcesses =>
+    [
+        .. Process.GetProcessesByName(SteamWebHelperProcName).Where(p =>
+            p.ProcessName.Equals(SteamWebHelperProcName, StringComparison.OrdinalIgnoreCase))
+    ];
 
     private static Process? SteamProcess => Process.GetProcessesByName(SteamProcName)
         .FirstOrDefault(p => p.ProcessName.Equals(SteamProcName, StringComparison.OrdinalIgnoreCase));
@@ -58,28 +64,26 @@ public static class Steam
         return OperatingSystem.IsWindows()
             ? SteamDir
             : OperatingSystem.IsLinux()
-            ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam")
-            : OperatingSystem.IsMacOS()
-            ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
-                "Application Support", "Steam")
-            : null;
+                ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".steam")
+                : OperatingSystem.IsMacOS()
+                    ? Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
+                        "Application Support", "Steam")
+                    : null;
     }
 
     private static string? GetSteamDir()
     {
-        var dir = Settings.Default.SteamDirectory;
+        string dir = Settings.Default.SteamDirectory;
         return !string.IsNullOrWhiteSpace(dir) && Directory.Exists(dir)
             ? dir
             : OperatingSystem.IsWindows()
-            ? (GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace("/", @"\"))
-            : OperatingSystem.IsLinux()
-            ? Path.Join(SteamRootDir, "steam")
-            :
-            // OSX
-            Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
+                ? GetRegistryData(@"SOFTWARE\Valve\Steam", "SteamPath")?.ToString()?.Replace("/", @"\")
+                : OperatingSystem.IsLinux()
+                    ? Path.Join(SteamRootDir, "steam")
+                    :
+                    // OSX
+                    Path.Join(SteamRootDir, "Steam.AppBundle", "Steam", "Contents", "MacOS");
     }
-
-    private static string s_relativeSkinDir = GetRelativeSkinDir();
 
     public static string GetRelativeSkinDir(bool force = false)
     {
@@ -89,7 +93,7 @@ public static class Steam
         }
 
         string relativeSkinDir;
-        var selectedSkin = Settings.Default.SelectedSkin;
+        string selectedSkin = Settings.Default.SelectedSkin;
         if (string.IsNullOrWhiteSpace(selectedSkin))
         {
             Log.Logger.Debug("SelectedSkin is null or empty.");
@@ -111,6 +115,7 @@ public static class Steam
                     break;
             }
         }
+
         return s_relativeSkinDir = relativeSkinDir;
     }
 
@@ -176,7 +181,7 @@ public static class Steam
             Log.Logger.Warn("Millennium Patcher install detected, disabling Millennium patcher...");
             try
             {
-                var newPath = $"{MillenniumPath}.disabled";
+                string newPath = $"{MillenniumPath}.disabled";
                 File.Move(MillenniumPath, newPath, true);
             }
             catch (Exception e)
@@ -188,7 +193,7 @@ public static class Steam
         }
 
         Log.Logger.Info("Starting Steam");
-        var startInfo = new ProcessStartInfo(SteamExe, args) { UseShellExecute = true };
+        ProcessStartInfo startInfo = new(SteamExe, args) { UseShellExecute = true };
         _ = Process.Start(startInfo);
         return Task.CompletedTask;
     }
@@ -212,7 +217,8 @@ public static class Steam
             }
             catch (Win32Exception e)
             {
-                Log.Logger.Error("Could not shut down Steam, SFP does not have permission to interact with the Steam process.");
+                Log.Logger.Error(
+                    "Could not shut down Steam, SFP does not have permission to interact with the Steam process.");
                 Log.Logger.Error("Make sure Steam is not running as admin");
                 Log.Logger.Debug(e);
             }
@@ -247,7 +253,7 @@ public static class Steam
             return;
         }
 
-        var dir = OperatingSystem.IsMacOS() ? SteamRootDir : SteamDir;
+        string? dir = OperatingSystem.IsMacOS() ? SteamRootDir : SteamDir;
 
         if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir))
         {
@@ -282,6 +288,7 @@ public static class Steam
             {
                 return;
             }
+
             s_injectOnce = false;
             await TryInject();
         }
@@ -326,7 +333,7 @@ public static class Steam
 
             if (Settings.Default.ForceSteamArgs)
             {
-                var argumentsMissing = await CheckForMissingArgumentsAsync();
+                bool argumentsMissing = await CheckForMissingArgumentsAsync();
                 if (argumentsMissing)
                 {
                     return;
@@ -340,6 +347,7 @@ public static class Steam
                     Log.Logger.Warn("Steam is not running, cannot inject");
                     return;
                 }
+
                 await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
@@ -366,22 +374,23 @@ public static class Steam
             return false;
         }
 
-        var cmdLine = GetCommandLine();
+        List<string> cmdLine = GetCommandLine();
         if (cmdLine.Count == 0)
         {
             await Task.Delay(TimeSpan.FromMilliseconds(100));
             cmdLine = GetCommandLine();
             if (cmdLine.Count == 0)
             {
-                Log.Logger.Error("Cannot check arguments. Steam process does not exist or is running with elevated permissions");
+                Log.Logger.Error(
+                    "Cannot check arguments. Steam process does not exist or is running with elevated permissions");
                 return false;
             }
         }
 
-        var args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
+        string args = Settings.Default.SteamLaunchArgs.Trim().ToLower();
         AppendArgs(ref args);
 
-        var argumentMissing = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+        bool argumentMissing = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Any(arg => !cmdLine.Contains(arg));
 
         if (!argumentMissing)
@@ -400,7 +409,7 @@ public static class Steam
         const string debuggingString = "-cef-enable-debugging";
         const string bootstrapString = "-skipinitialbootstrap";
         const string portString = "-devtools-port";
-        var argsList = args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).ToList();
+        List<string> argsList = [.. args.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)];
 
         if (!argsList.Contains(debuggingString))
         {

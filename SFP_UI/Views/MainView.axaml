@@ -21,11 +21,11 @@
 
     <Grid RowDefinitions="Auto, *">
         <ui:FANavigationView Classes="SFPAppNav"
-                           AlwaysShowHeader="False"
-                           PaneDisplayMode="Left"
-                           Grid.Row="0" Grid.RowSpan="2"
-                           Name="NavView"
-                           IsSettingsVisible="False">
+                             AlwaysShowHeader="False"
+                             PaneDisplayMode="Left"
+                             Grid.Row="0" Grid.RowSpan="2"
+                             Name="NavView"
+                             IsSettingsVisible="False">
             <Panel>
                 <ui:FAFrame Name="FrameView" />
             </Panel>

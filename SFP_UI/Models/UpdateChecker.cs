@@ -10,11 +10,12 @@ using Semver;
 using SFP_UI.ViewModels;
 
 using SFP.Models;
-
 #if RELEASE
 using System.Net.Http.Headers;
+
 using Flurl.Http;
 #endif
+
 #if DEBUG
 using System.Text.Json;
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
@@ -42,7 +43,7 @@ internal static class UpdateChecker
         Log.Logger.Info("Checking for updates...");
         try
         {
-            var semver = await GetLatestVersionAsync(Version.IsPrerelease);
+            SemVersion semver = await GetLatestVersionAsync(Version.IsPrerelease);
             if (SemVersion.ComparePrecedence(Version, semver) < 0)
             {
                 MainPageViewModel.Instance?.ShowUpdateNotification(Version, semver);
@@ -81,7 +82,7 @@ internal static class UpdateChecker
         }
         else
         {
-            var releases = await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases")
+            Release[] releases = await new Uri("https://api.github.com/repos/phantomgamers/sfp/releases")
                 .WithHeader("User-Agent", new ProductInfoHeaderValue("SFP", Version.ToString()))
                 .GetJsonAsync<Release[]>()
                 .ConfigureAwait(false);

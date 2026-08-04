@@ -15,18 +15,19 @@ namespace SFP_UI.Views;
 
 public partial class MainView : UserControl
 {
-    public static MainView? Instance { get; private set; }
     public MainView()
     {
         Instance = this;
         InitializeComponent();
     }
 
+    public static MainView? Instance { get; private set; }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
 
-        var vm = new MainViewViewModel();
+        MainViewViewModel vm = new();
         DataContext = vm;
         FrameView.NavigationPageFactory = vm.NavigationFactory;
 
@@ -38,7 +39,7 @@ public partial class MainView : UserControl
 
         NavView.IsPaneOpen = false;
 
-        var navViewItems = NavView.MenuItemsSource.Cast<FANavigationViewItem>();
+        IEnumerable<FANavigationViewItem> navViewItems = NavView.MenuItemsSource.Cast<FANavigationViewItem>();
         FrameView.NavigateFromObject(navViewItems.ElementAt(0).Tag);
     }
 
@@ -48,16 +49,18 @@ public partial class MainView : UserControl
         // between filled and unfilled based on selection, but this is so much simpler
 
         if (item == null)
+        {
             return;
+        }
 
-        var t = item.Tag;
+        object? t = item.Tag;
 
         item.IconSource = t switch
         {
-            MainPage => this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
+            MainPage => this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value)
                 ? (FAIconSource)value!
                 : null,
-            SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
+            SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value)
                 ? (FAIconSource)value!
                 : null,
             _ => item.IconSource
@@ -66,7 +69,7 @@ public partial class MainView : UserControl
 
     private void OnFrameViewNavigated(object sender, FANavigationEventArgs e)
     {
-        var page = e.Content as Control;
+        Control? page = e.Content as Control;
 
         foreach (FANavigationViewItem nvi in NavView.MenuItemsSource)
         {

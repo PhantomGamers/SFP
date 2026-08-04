@@ -14,7 +14,9 @@ public class PatchEntry : IEquatable<PatchEntry>
     public string TargetCss { get; init; } = string.Empty;
     public string TargetJs { get; init; } = string.Empty;
 
-    [field: JsonIgnore][JsonIgnore] public Regex MatchRegex => field ??= new Regex(MatchRegexString, RegexOptions.Compiled);
+    [field: JsonIgnore]
+    [JsonIgnore]
+    public Regex MatchRegex => field ??= new Regex(MatchRegexString, RegexOptions.Compiled);
 
     public bool Equals(PatchEntry? entry)
     {
@@ -24,7 +26,7 @@ public class PatchEntry : IEquatable<PatchEntry>
 
     public override bool Equals(object? obj)
     {
-        return this.GetType() == obj?.GetType() && Equals(obj as PatchEntry);
+        return GetType() == obj?.GetType() && Equals(obj as PatchEntry);
     }
 
     public override int GetHashCode()
@@ -40,9 +42,16 @@ public class SfpConfig
     [
         new()
         {
-            MatchRegexString = """^https://([A-Za-z0-9-]+\.)*steampowered\.com(?=/|$)""", TargetCss = "webkit.css", TargetJs = "webkit.js"
+            MatchRegexString = """^https://([A-Za-z0-9-]+\.)*steampowered\.com(?=/|$)""",
+            TargetCss = "webkit.css",
+            TargetJs = "webkit.js"
         },
-        new() { MatchRegexString = """^https://steamcommunity\.com(?=/|$)""", TargetCss = "webkit.css", TargetJs = "webkit.js" },
+        new()
+        {
+            MatchRegexString = """^https://steamcommunity\.com(?=/|$)""",
+            TargetCss = "webkit.css",
+            TargetJs = "webkit.js"
+        },
         new()
         {
             MatchRegexString = "^Steam$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
@@ -55,7 +64,9 @@ public class SfpConfig
         },
         new()
         {
-            MatchRegexString = "^SP Overlay:", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            MatchRegexString = "^SP Overlay:",
+            TargetCss = "libraryroot.custom.css",
+            TargetJs = "libraryroot.custom.js"
         },
         new()
         {
@@ -87,7 +98,9 @@ public class SfpConfig
         },
         new()
         {
-            MatchRegexString = "^QuickAccess_", TargetCss = "bigpicture.custom.css", TargetJs = "bigpicture.custom.js"
+            MatchRegexString = "^QuickAccess_",
+            TargetCss = "bigpicture.custom.css",
+            TargetJs = "bigpicture.custom.js"
         },
         new()
         {
@@ -96,18 +109,24 @@ public class SfpConfig
         // Friends List and Chat
         new()
         {
-            MatchRegexString = ".friendsui-container", TargetCss = "friends.custom.css", TargetJs = "friends.custom.js"
+            MatchRegexString = ".friendsui-container",
+            TargetCss = "friends.custom.css",
+            TargetJs = "friends.custom.js"
         },
         new() { MatchRegexString = "Menu$", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js" },
         new()
         {
             // Steam Dialog popups (Settings, Game Properties, etc)
-            MatchRegexString = ".ModalDialogPopup", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            MatchRegexString = ".ModalDialogPopup",
+            TargetCss = "libraryroot.custom.css",
+            TargetJs = "libraryroot.custom.js"
         },
         new()
         {
             // Sign In Page
-            MatchRegexString = ".FullModalOverlay", TargetCss = "libraryroot.custom.css", TargetJs = "libraryroot.custom.js"
+            MatchRegexString = ".FullModalOverlay",
+            TargetCss = "libraryroot.custom.css",
+            TargetJs = "libraryroot.custom.js"
         }
     ];
 
@@ -130,20 +149,21 @@ public class SfpConfig
             return s_sfpConfig;
         }
 
-        var skinDir = Steam.SkinDir;
-        var sfpConfigPath = Path.Combine(skinDir, "skin.json");
-        var millenniumConfigPath = Path.Combine(skinDir, "config.json");
+        string skinDir = Steam.SkinDir;
+        string sfpConfigPath = Path.Combine(skinDir, "skin.json");
+        string millenniumConfigPath = Path.Combine(skinDir, "config.json");
 
         try
         {
             SfpConfig? json;
             if (File.Exists(sfpConfigPath))
             {
-                var jsonBytes = File.ReadAllBytes(sfpConfigPath);
+                byte[] jsonBytes = File.ReadAllBytes(sfpConfigPath);
                 json = JsonSerializer.Deserialize<SfpConfig>(jsonBytes);
                 if (json?.UseDefaultPatches ?? true)
                 {
-                    var patches = json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
+                    IEnumerable<PatchEntry> patches =
+                        json?.Patches.Concat(DefaultConfig.Patches).Distinct() ?? DefaultConfig.Patches;
                     s_sfpConfig = new SfpConfig { Patches = patches };
                     Log.Logger.Info("Using default SFP skin config as base");
                 }
@@ -156,8 +176,8 @@ public class SfpConfig
             }
             else if (File.Exists(millenniumConfigPath))
             {
-                var jsonBytes = File.ReadAllBytes(millenniumConfigPath);
-                var millenniumConfig = JsonSerializer.Deserialize<MillenniumConfig>(jsonBytes);
+                byte[] jsonBytes = File.ReadAllBytes(millenniumConfigPath);
+                MillenniumConfig? millenniumConfig = JsonSerializer.Deserialize<MillenniumConfig>(jsonBytes);
                 if (millenniumConfig == null)
                 {
                     Log.Logger.Warn("Failed to parse config.json, result was null, using default config");
@@ -183,6 +203,7 @@ public class SfpConfig
             Log.Logger.Error(e);
             s_sfpConfig = DefaultConfig;
         }
+
         return s_sfpConfig;
     }
 
@@ -192,10 +213,13 @@ public class SfpConfig
         return new SfpConfig
         {
             UseDefaultPatches = false,
-            Patches = [.. millenniumConfig.Patch
-                .Where(p => !string.IsNullOrWhiteSpace(p.Url) &&
-                            (!string.IsNullOrWhiteSpace(p.Css) || !string.IsNullOrWhiteSpace(p.Js)))
-                .Select(p => new PatchEntry { MatchRegexString = p.Url, TargetCss = p.Css, TargetJs = p.Js })]
+            Patches =
+            [
+                .. millenniumConfig.Patch
+                    .Where(p => !string.IsNullOrWhiteSpace(p.Url) &&
+                                (!string.IsNullOrWhiteSpace(p.Css) || !string.IsNullOrWhiteSpace(p.Js)))
+                    .Select(p => new PatchEntry { MatchRegexString = p.Url, TargetCss = p.Css, TargetJs = p.Js })
+            ]
         };
     }
 }

@@ -1,7 +1,6 @@
 #region
 
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Avalonia;
@@ -33,7 +32,9 @@ namespace SFP_UI;
 
 internal static class Program
 {
-    private static readonly string AppDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhantomGamers", "SFP");
+    private static readonly string AppDataPath =
+        Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhantomGamers", "SFP");
+
     private static FileStream? s_fs;
     private static FileSystemWatcherEx? s_fw;
 
@@ -48,6 +49,7 @@ internal static class Program
         {
             return;
         }
+
         SetupNLog();
         Log.Logger.Info(
             $"Initializing SFP version {UpdateChecker.Version} on platform {RuntimeInformation.RuntimeIdentifier}");
@@ -60,6 +62,7 @@ internal static class Program
         {
             Log.Logger.Error(e);
         }
+
         CloseFileStream();
     }
 
@@ -70,7 +73,7 @@ internal static class Program
         LogManager.Setup().LoadConfiguration(c =>
         {
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
-            using var fileTarget = new FileTarget();
+            using FileTarget fileTarget = new();
             fileTarget.FileName = Path.Join(AppDataPath, "SFP.log");
             fileTarget.ArchiveOldFileOnStartup = true;
             fileTarget.OpenFileCacheTimeout = 30;
@@ -87,7 +90,7 @@ internal static class Program
 
     private static bool EnforceSingleInstance()
     {
-        var tempPath = Path.GetTempPath();
+        string tempPath = Path.GetTempPath();
         try
         {
             s_fs = new FileStream(Path.Combine(tempPath, "sfp_ui"), FileMode.OpenOrCreate, FileAccess.ReadWrite,
@@ -98,6 +101,7 @@ internal static class Program
             File.Create(Path.Combine(tempPath, "sfp_ui_open"));
             return false;
         }
+
         _ = Task.Run(WatchInstanceFile);
         return true;
     }
@@ -110,7 +114,7 @@ internal static class Program
 
     private static void WatchInstanceFile()
     {
-        var tempPath = Path.GetTempPath();
+        string tempPath = Path.GetTempPath();
         s_fw = new FileSystemWatcherEx(tempPath) { Filter = "sfp_ui_open" };
         s_fw.OnCreated += OnInstanceFileChanged;
         s_fw.OnChanged += OnInstanceFileChanged;
@@ -145,6 +149,7 @@ internal static class Program
             PortableSettingsProviderBase.SettingsDirectory = AppDataPath;
             PortableJsonSettingsProvider.SettingsFileName = "settings.json";
         }
+
         PortableJsonSettingsProvider.ApplyProvider(Settings.Default);
         Settings.Default.Reload();
         Settings.Default.DummySetting = true;
@@ -152,10 +157,11 @@ internal static class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
-    [RequiresUnreferencedCode("Calls ReactiveUI.Avalonia.AppBuilderExtensions.extension(Avalonia.AppBuilder).RegisterReactiveUIViewsFromEntryAssembly()")]
+    [RequiresUnreferencedCode(
+        "Calls ReactiveUI.Avalonia.AppBuilderExtensions.extension(Avalonia.AppBuilder).RegisterReactiveUIViewsFromEntryAssembly()")]
     private static AppBuilder BuildAvaloniaApp()
     {
-        var fontName = !string.IsNullOrEmpty(SKTypeface.Default.FamilyName)
+        string fontName = !string.IsNullOrEmpty(SKTypeface.Default.FamilyName)
             ? SKTypeface.Default.FamilyName
             : "Century Schoolbook";
         return AppBuilder.Configure<App>()

@@ -13,6 +13,14 @@ public class MainViewViewModel : ViewModelBase
 
 public class NavigationFactory : IFANavigationPageFactory
 {
+    // Do this to avoid needing Activator.CreateInstance to create from type info
+    // and to avoid a ridiculous amount of 'ifs'
+    private readonly Control[] _pages =
+    [
+        new MainPage(),
+        new SettingsPage()
+    ];
+
     public NavigationFactory()
     {
         Instance = this;
@@ -37,14 +45,6 @@ public class NavigationFactory : IFANavigationPageFactory
             _ => throw new Exception()
         };
     }
-
-    // Do this to avoid needing Activator.CreateInstance to create from type info
-    // and to avoid a ridiculous amount of 'ifs'
-    private readonly Control[] _pages =
-    [
-        new MainPage(),
-        new SettingsPage()
-    ];
 
     public static Control[] GetPages()
     {

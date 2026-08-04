@@ -3,36 +3,38 @@
 This utility allows you to apply skins and scripts to the new Steam client.
 
 - [SFP (Formerly SteamFriendsPatcher)](#sfp--formerly-steamfriendspatcher-)
-  * [Instructions](#instructions)
-  * [Features](#features)
-    + [Steam Skinning](#steam-skinning)
-    + [Scripting](#scripting)
-    + [Skins and Scripts in Separate Folders](#skins-and-scripts-in-separate-folders)
-    + [Enable JavaScript Injection](#enable-javascript-injection)
-  * [Skin Authors](#skin-authors)
-    + [Matching against pages with variable titles](#matching-against-pages-with-variable-titles)
-    + [Finding Steam Page Titles](#finding-steam-page-titles)
-    + [Using System Accent Color](#using-system-accent-color)
-  * [Todo](#todo)
-  * [Known Issues](#known-issues)
-  * [Dependencies](#dependencies)
-    + [All](#all)
-    + [Linux](#linux)
-  * [Credits](#credits)
+    * [Instructions](#instructions)
+    * [Features](#features)
+        + [Steam Skinning](#steam-skinning)
+        + [Scripting](#scripting)
+        + [Skins and Scripts in Separate Folders](#skins-and-scripts-in-separate-folders)
+        + [Enable JavaScript Injection](#enable-javascript-injection)
+    * [Skin Authors](#skin-authors)
+        + [Matching against pages with variable titles](#matching-against-pages-with-variable-titles)
+        + [Finding Steam Page Titles](#finding-steam-page-titles)
+        + [Using System Accent Color](#using-system-accent-color)
+    * [Todo](#todo)
+    * [Known Issues](#known-issues)
+    * [Dependencies](#dependencies)
+        + [All](#all)
+        + [Linux](#linux)
+    * [Credits](#credits)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with
+markdown-toc</a></i></small>
 
 ## Instructions
 
 1. Download and extract the [latest zip file under Releases](https://github.com/PhantomGamers/SFP/releases/) for your
    operating system.
-   - If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip release.
+    - If you have .NET 7 installed, download the \_net7.zip release; otherwise, download the \_SelfContained.zip
+      release.
 2. Run the SFP_UI application.
 3. By default, SFP_UI will automatically wait for Steam to start and inject, or inject if Steam is already running.
 4. For full functionality, **SFP must be running with its injector started as long as Steam is running**.
 5. Steam must be running with the `-cef-enable-debugging` argument for SFP to work.
-    - If Steam is started with SFP, it will do this automatically. Otherwise, you can use the "Force Steam
-      arguments" setting to automatically restart Steam with the chosen arguments if it does not already have them.
+    - If Steam is started with SFP, it will do this automatically. Otherwise, you can use the "Force Steam arguments"
+      setting to automatically restart Steam with the chosen arguments if it does not already have them.
     - This setting is enabled by default
 6. Use the "Open File" button in SFP to access the files where your custom skins and scripts are applied from.
 
@@ -183,7 +185,8 @@ If you would like to use SFP's default config you can simply omit the skin.json 
 }
 ```
 
-If that key is included along with custom patches, the custom patches will be applied first, followed by the default patches.
+If that key is included along with custom patches, the custom patches will be applied first, followed by the default
+patches.
 
 ### Matching against pages with variable titles
 
@@ -196,8 +199,8 @@ For example:
 
 - The Friends List and Chat windows can be matched against with `.friendsui-container`
 
-- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against
-  with `.ModalDialogPopup`
+- The library game properties dialog and most of the dialogs that pop up in the overlay menu can be matched against with
+  `.ModalDialogPopup`
 
 - The sign in page can be matched against with `.FullModalOverlay`
 
@@ -224,7 +227,8 @@ The variables are as follows:
 
 These variables contain **hex colors**.
 
-When using these variables, make sure to fallback to sane defaults as these variables may not exist if the user does not enable UseAppTheme or uses a different patcher.
+When using these variables, make sure to fallback to sane defaults as these variables may not exist if the user does not
+enable UseAppTheme or uses a different patcher.
 
 ## Todo
 
@@ -243,7 +247,7 @@ When using these variables, make sure to fallback to sane defaults as these vari
 ### Linux
 
 - ttf-ms-fonts
-  -  run `fc-cache --force` after installing
+    - run `fc-cache --force` after installing
 
 ## Credits
 

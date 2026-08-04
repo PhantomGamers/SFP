@@ -14,7 +14,7 @@ jobs:
         shell: pwsh
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: true
     env:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages

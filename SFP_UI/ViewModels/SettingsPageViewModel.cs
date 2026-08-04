@@ -21,57 +21,13 @@ namespace SFP_UI.ViewModels;
 
 public partial class SettingsPageViewModel : ViewModelBase
 {
-    #region App
-    [Reactive] public partial bool CheckForUpdates { get; set; }
-
-    [Reactive] public partial bool ShowTrayIcon { get; set; }
-
-    [Reactive] public partial bool MinimizeToTray { get; set; }
-
-    [Reactive] public partial bool CloseToTray { get; set; }
-
-    [Reactive] public partial bool StartMinimized { get; set; }
-
-    [Reactive] public partial bool InjectOnAppStart { get; set; }
-
-    [Reactive] public partial bool RunSteamOnStart { get; set; }
-
-    [Reactive] public partial bool RunOnBoot { get; set; }
-
-    public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
-    [Reactive] public partial string SelectedTheme { get; set; } = null!;
-
-    [Reactive] public partial int InitialInjectionDelay { get; set; }
-
-    #endregion
-
-    #region Steam
-    [Reactive] public partial string SteamDirectory { get; set; } = null!;
-
-    [Reactive] public partial string SteamLaunchArgs { get; set; } = null!;
-
-    [Reactive] public partial short SteamCefPort { get; set; }
-
-    [Reactive] public partial bool InjectOnSteamStart { get; set; }
-
-    [Reactive] public partial bool ForceSteamArgs { get; set; }
-
-    [Reactive] public partial bool InjectCss { get; set; }
-
-    [Reactive] public partial bool InjectJs { get; set; }
-
-    [Reactive] public partial bool UseAppTheme { get; set; }
-
-    [Reactive] public partial bool DumpPages { get; set; }
-    #endregion
-
-    public bool IsWindows { get; } = OperatingSystem.IsWindows();
-
     public SettingsPageViewModel()
     {
         InitProperties();
+
         #region App
-        this.Changed
+
+        Changed
             .Where(e => e.PropertyName == nameof(CheckForUpdates))
             .Select(_ => CheckForUpdates)
             .DistinctUntilChanged()
@@ -81,7 +37,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(ShowTrayIcon))
             .Select(_ => ShowTrayIcon)
             .DistinctUntilChanged()
@@ -92,7 +48,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(MinimizeToTray))
             .Select(_ => MinimizeToTray)
             .DistinctUntilChanged()
@@ -102,7 +58,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(CloseToTray))
             .Select(_ => CloseToTray)
             .DistinctUntilChanged()
@@ -112,7 +68,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(StartMinimized))
             .Select(_ => StartMinimized)
             .DistinctUntilChanged()
@@ -122,7 +78,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(InjectOnAppStart))
             .Select(_ => InjectOnAppStart)
             .DistinctUntilChanged()
@@ -132,7 +88,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(RunSteamOnStart))
             .Select(_ => RunSteamOnStart)
             .DistinctUntilChanged()
@@ -142,7 +98,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(RunOnBoot))
             .Select(_ => RunOnBoot)
             .DistinctUntilChanged()
@@ -157,7 +113,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(SelectedTheme))
             .Select(_ => SelectedTheme)
             .DistinctUntilChanged()
@@ -168,7 +124,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 App.SetApplicationTheme(value);
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(InitialInjectionDelay))
             .Select(_ => InitialInjectionDelay)
             .DistinctUntilChanged()
@@ -177,10 +133,12 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.InitialInjectionDelay = value;
                 Settings.Default.Save();
             });
+
         #endregion
 
         #region Steam
-        this.Changed
+
+        Changed
             .Where(e => e.PropertyName == nameof(SteamDirectory))
             .Select(_ => SteamDirectory)
             .DistinctUntilChanged()
@@ -190,7 +148,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(SteamLaunchArgs))
             .Select(_ => SteamLaunchArgs)
             .DistinctUntilChanged()
@@ -201,7 +159,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(SteamCefPort))
             .Select(_ => SteamCefPort)
             .DistinctUntilChanged()
@@ -212,7 +170,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(InjectOnSteamStart))
             .Select(_ => InjectOnSteamStart)
             .DistinctUntilChanged()
@@ -222,7 +180,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(ForceSteamArgs))
             .Select(_ => ForceSteamArgs)
             .DistinctUntilChanged()
@@ -232,7 +190,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(InjectCss))
             .Select(_ => InjectCss)
             .DistinctUntilChanged()
@@ -242,7 +200,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.Save();
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(InjectJs))
             .Select(_ => InjectJs)
             .DistinctUntilChanged()
@@ -261,7 +219,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 }
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(UseAppTheme))
             .Select(_ => UseAppTheme)
             .DistinctUntilChanged()
@@ -272,7 +230,7 @@ public partial class SettingsPageViewModel : ViewModelBase
                 _ = OnUseAppThemeChangedAsync(value);
             });
 
-        this.Changed
+        Changed
             .Where(e => e.PropertyName == nameof(DumpPages))
             .Select(_ => DumpPages)
             .DistinctUntilChanged()
@@ -281,12 +239,16 @@ public partial class SettingsPageViewModel : ViewModelBase
                 Settings.Default.DumpPages = value;
                 Settings.Default.Save();
             });
+
         #endregion
     }
+
+    public bool IsWindows { get; } = OperatingSystem.IsWindows();
 
     private void InitProperties()
     {
         #region App
+
         CheckForUpdates = Settings.Default.CheckForUpdates;
         ShowTrayIcon = Settings.Default.ShowTrayIcon;
         MinimizeToTray = Settings.Default.MinimizeToTray;
@@ -297,9 +259,11 @@ public partial class SettingsPageViewModel : ViewModelBase
         RunOnBoot = Settings.Default.RunOnBoot;
         SelectedTheme = AppThemes.Contains(Settings.Default.AppTheme) ? Settings.Default.AppTheme : "System Default";
         InitialInjectionDelay = Settings.Default.InitialInjectionDelay;
+
         #endregion
 
         #region Steam
+
         SteamDirectory = Steam.SteamDir ?? string.Empty;
         SteamLaunchArgs = Settings.Default.SteamLaunchArgs;
         SteamCefPort = Settings.Default.SteamCefPort;
@@ -309,12 +273,13 @@ public partial class SettingsPageViewModel : ViewModelBase
         InjectJs = Settings.Default.InjectJS;
         UseAppTheme = Settings.Default.UseAppTheme;
         DumpPages = Settings.Default.DumpPages;
-        #endregion
 
+        #endregion
     }
+
     private async Task ShowWarningDialog()
     {
-        var dialog = new FAContentDialog
+        FAContentDialog dialog = new()
         {
             Title = "Warning",
             Content =
@@ -330,7 +295,10 @@ public partial class SettingsPageViewModel : ViewModelBase
     }
 
     [ReactiveCommand]
-    private async Task BrowseSteam() => await BrowseSteamImpl().ConfigureAwait(false);
+    private async Task BrowseSteam()
+    {
+        await BrowseSteamImpl().ConfigureAwait(false);
+    }
 
     [ReactiveCommand]
     private void ResetSteam()
@@ -370,7 +338,8 @@ public partial class SettingsPageViewModel : ViewModelBase
         {
             return;
         }
-        var result =
+
+        IReadOnlyList<IStorageFolder> result =
             await MainWindow.Instance.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions());
         if (result.Count > 0)
         {
@@ -399,4 +368,51 @@ public partial class SettingsPageViewModel : ViewModelBase
             Log.Logger.Debug(ex);
         }
     }
+
+    #region App
+
+    [Reactive] public partial bool CheckForUpdates { get; set; }
+
+    [Reactive] public partial bool ShowTrayIcon { get; set; }
+
+    [Reactive] public partial bool MinimizeToTray { get; set; }
+
+    [Reactive] public partial bool CloseToTray { get; set; }
+
+    [Reactive] public partial bool StartMinimized { get; set; }
+
+    [Reactive] public partial bool InjectOnAppStart { get; set; }
+
+    [Reactive] public partial bool RunSteamOnStart { get; set; }
+
+    [Reactive] public partial bool RunOnBoot { get; set; }
+
+    public IEnumerable<string> AppThemes { get; } = ["Dark", "Light", "System Default"];
+    [Reactive] public partial string SelectedTheme { get; set; } = null!;
+
+    [Reactive] public partial int InitialInjectionDelay { get; set; }
+
+    #endregion
+
+    #region Steam
+
+    [Reactive] public partial string SteamDirectory { get; set; } = null!;
+
+    [Reactive] public partial string SteamLaunchArgs { get; set; } = null!;
+
+    [Reactive] public partial short SteamCefPort { get; set; }
+
+    [Reactive] public partial bool InjectOnSteamStart { get; set; }
+
+    [Reactive] public partial bool ForceSteamArgs { get; set; }
+
+    [Reactive] public partial bool InjectCss { get; set; }
+
+    [Reactive] public partial bool InjectJs { get; set; }
+
+    [Reactive] public partial bool UseAppTheme { get; set; }
+
+    [Reactive] public partial bool DumpPages { get; set; }
+
+    #endregion
 }

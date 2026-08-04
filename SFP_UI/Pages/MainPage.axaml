@@ -6,15 +6,15 @@
              x:DataType="vm:MainPageViewModel">
     <Panel>
         <ui:FATeachingTip IsLightDismissEnabled="False"
-                        Title="An update is available!"
-                        ActionButtonContent="View Update"
-                        CloseButtonContent="Dismiss"
-                        PreferredPlacement="Center"
-                        Name="UpdateNotification"
-                        ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
-                        ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases"
-                        Content="{Binding UpdateNotificationContent}"
-                        IsOpen="{Binding UpdateNotificationIsOpen}" />
+                          Title="An update is available!"
+                          ActionButtonContent="View Update"
+                          CloseButtonContent="Dismiss"
+                          PreferredPlacement="Center"
+                          Name="UpdateNotification"
+                          ActionButtonCommand="{Binding UpdateNotificationViewCommand}"
+                          ActionButtonCommandParameter="https://github.com/PhantomGamers/SFP/releases"
+                          Content="{Binding UpdateNotificationContent}"
+                          IsOpen="{Binding UpdateNotificationIsOpen}" />
         <Grid>
             <DockPanel Margin="16">
                 <DockPanel DockPanel.Dock="Bottom" Margin="15 0 0 0">
@@ -63,7 +63,7 @@
                                  TextWrapping="Wrap"
                                  IsTabStop="False"
                                  Text="{Binding Output, Mode=OneWay}"
-                                 CaretIndex="{Binding Output.Length, Mode=OneWay}"/>
+                                 CaretIndex="{Binding Output.Length, Mode=OneWay}" />
                     </ScrollViewer>
                 </Border>
             </DockPanel>
