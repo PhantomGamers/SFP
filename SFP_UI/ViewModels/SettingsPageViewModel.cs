@@ -1,11 +1,10 @@
 #region
 
-using System.Reactive.Linq;
-
 using Avalonia.Platform.Storage;
 
 using FluentAvalonia.UI.Controls;
 
+using ReactiveUI.Primitives;
 using ReactiveUI.SourceGenerators;
 
 using SFP.Models;
@@ -315,7 +314,7 @@ public partial class SettingsPageViewModel : ViewModelBase
     }
     private async Task ShowWarningDialog()
     {
-        var dialog = new ContentDialog
+        var dialog = new FAContentDialog
         {
             Title = "Warning",
             Content =

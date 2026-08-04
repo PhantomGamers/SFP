@@ -9,10 +9,10 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <ui:SymbolIconSource Symbol="Home" x:Key="HomeIcon" />
-            <ui:SymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
-            <ui:SymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
-            <ui:SymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
+            <ui:FASymbolIconSource Symbol="Home" x:Key="HomeIcon" />
+            <ui:FASymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
+            <ui:FASymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
+            <ui:FASymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
         </ResourceDictionary>
     </Application.Resources>
 

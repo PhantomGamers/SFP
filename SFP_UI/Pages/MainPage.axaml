@@ -5,7 +5,7 @@
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              x:DataType="vm:MainPageViewModel">
     <Panel>
-        <ui:TeachingTip IsLightDismissEnabled="False"
+        <ui:FATeachingTip IsLightDismissEnabled="False"
                         Title="An update is available!"
                         ActionButtonContent="View Update"
                         CloseButtonContent="Dismiss"

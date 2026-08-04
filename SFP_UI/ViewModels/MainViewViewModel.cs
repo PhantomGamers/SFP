@@ -11,7 +11,7 @@ public class MainViewViewModel : ViewModelBase
     public NavigationFactory NavigationFactory { get; } = new();
 }
 
-public class NavigationFactory : INavigationPageFactory
+public class NavigationFactory : IFANavigationPageFactory
 {
     public NavigationFactory()
     {

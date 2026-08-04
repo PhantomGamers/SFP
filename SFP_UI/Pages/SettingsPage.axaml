@@ -32,7 +32,7 @@
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="Steam" />
                 <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
                     <Label>Steam directory</Label>
-                    <TextBox Watermark="Steam directory" Margin="64,0,0,0" Width="240" Text="{Binding SteamDirectory}"
+                    <TextBox PlaceholderText="Steam directory" Margin="64,0,0,0" Width="240" Text="{Binding SteamDirectory}"
                              IsReadOnly="True"
                              Focusable="False"
                              VerticalContentAlignment="Center" />
@@ -41,7 +41,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="50" Margin="0,10">
                     <Label>Steam launch args</Label>
-                    <TextBox Watermark="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
+                    <TextBox PlaceholderText="Steam launch args (e.g. -dev)" VerticalContentAlignment="Center" Width="240"
                              Text="{Binding SteamLaunchArgs}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="110" Margin="0,10">

@@ -1,5 +1,6 @@
 #region
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -40,6 +41,7 @@ internal static class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
+    [RequiresUnreferencedCode("Calls SFP_UI.Program.BuildAvaloniaApp()")]
     public static void Main(string[] args)
     {
         if (!EnforceSingleInstance())
@@ -150,6 +152,7 @@ internal static class Program
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
+    [RequiresUnreferencedCode("Calls ReactiveUI.Avalonia.AppBuilderExtensions.extension(Avalonia.AppBuilder).RegisterReactiveUIViewsFromEntryAssembly()")]
     private static AppBuilder BuildAvaloniaApp()
     {
         var fontName = !string.IsNullOrEmpty(SKTypeface.Default.FamilyName)

@@ -21,7 +21,7 @@ using SFP_UI.ViewModels;
 
 namespace SFP_UI.Views;
 
-public partial class MainWindow : AppWindow
+public partial class MainWindow : FAAppWindow
 {
     public MainWindow()
     {
@@ -156,7 +156,7 @@ public partial class MainWindow : AppWindow
         }
         var frameView = MainView.Instance.FrameView;
         var navView = MainView.Instance.NavView;
-        var menuItems = navView.FooterMenuItemsSource.Cast<NavigationViewItem>();
+        var menuItems = navView.FooterMenuItemsSource.Cast<FANavigationViewItem>();
         frameView.NavigateFromObject(menuItems.ElementAt(0).Tag);
     }
 
