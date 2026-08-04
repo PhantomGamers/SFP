@@ -457,7 +457,7 @@ public static partial class Injector
                       element.type = '{{(resourceType == "css" ? "text/css" : "module")}}';
                       element.{{(resourceType == "css" ? "href" : "src")}} = 'https://steamloopback.host/{{fileRelativePath}}';
                       document.head.append(element);
-                      if ('{{isFrameWebkit}}' === 'True') {
+                      if ('{{isFrameWebkit}}' === 'True' && typeof SteamClient.BrowserView.RegisterForMessageFromParent !== 'undefined') {
                           fetch('https://steamloopback.host', {signal: AbortSignal.timeout(100),mode: 'no-cors'})
                           .catch(e=>{
                               location.reload();
