@@ -7,7 +7,10 @@
     <DockPanel Margin="16" Focusable="True">
         <ScrollViewer>
             <StackPanel Orientation="Vertical">
-                <TextBlock FontSize="16" FontWeight="DemiBold" Text="App" Margin="0 10 0 10" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource SlidersIcon}" />
+                    <TextBlock FontSize="16" FontWeight="DemiBold" Text="App" Margin="0 10 0 10" />
+                </StackPanel>
                 <CheckBox IsChecked="{Binding CheckForUpdates}">Check for updates on startup</CheckBox>
                 <CheckBox IsChecked="{Binding ShowTrayIcon}">Show tray icon</CheckBox>
                 <CheckBox IsChecked="{Binding MinimizeToTray}">Minimize to tray</CheckBox>
@@ -29,7 +32,10 @@
                                  NavigateUri="ms-settings:colors" IsVisible="{Binding IsWindows}" />
                 <Separator Margin="0,10" />
 
-                <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="Steam" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource SteamIcon}" />
+                    <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="Steam" />
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,10" Spacing="4">
                     <Label>Steam directory</Label>
                     <TextBox PlaceholderText="Steam directory" Margin="64,0,0,0" Width="240"
@@ -68,7 +74,10 @@
                 <CheckBox IsChecked="{Binding DumpPages}">For Skin Authors: Dump Pages</CheckBox>
                 <Separator Margin="0,10" />
 
-                <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <PathIcon Data="{StaticResource CircleInfo}" />
+                    <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
+                </StackPanel>
                 <HyperlinkButton NavigateUri="https://github.com/PhantomGamers/SFP">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <PathIcon Data="{StaticResource GitHubIcon}" />
