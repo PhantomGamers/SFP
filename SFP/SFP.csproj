@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\SFPCommon.props" />
+  <Import Project="..\SFPCommon.props"/>
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -10,12 +10,12 @@
     <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Flurl.Http" />
-    <PackageReference Include="PortableJsonSettingsProvider" />
-    <PackageReference Include="PuppeteerSharp" Publicize="true" />
-    <PackageReference Include="FileWatcherEx" />
-    <PackageReference Include="WindowsShortcutFactory" />
-    <PackageReference Include="WmiLight" />
+    <PackageReference Include="Flurl.Http"/>
+    <PackageReference Include="PortableJsonSettingsProvider"/>
+    <PackageReference Include="PuppeteerSharp" Publicize="true"/>
+    <PackageReference Include="FileWatcherEx"/>
+    <PackageReference Include="WindowsShortcutFactory"/>
+    <PackageReference Include="WmiLight"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -34,8 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="App.config" />
-    <AdditionalFiles Include="App.config" />
+    <None Remove="App.config"/>
+    <AdditionalFiles Include="App.config"/>
   </ItemGroup>
 
 </Project>

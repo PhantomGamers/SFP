@@ -10,25 +10,25 @@
     </UserControl.Resources>
 
     <UserControl.Styles>
-        <Style Selector="ui|NavigationView.SFPAppNav">
+        <Style Selector="ui|FANavigationView.SFPAppNav">
             <Setter Property="OpenPaneLength" Value="240" />
         </Style>
         <Style
-            Selector="ui|NavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
+            Selector="ui|FANavigationView.SFPAppNav[IsBackButtonVisible=False] SplitView /template/ ContentPresenter#PART_PanePresenter">
             <Setter Property="Margin" Value="0 10 0 0" />
         </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto, *">
-        <ui:NavigationView Classes="SFPAppNav"
-                           AlwaysShowHeader="False"
-                           PaneDisplayMode="Left"
-                           Grid.Row="0" Grid.RowSpan="2"
-                           Name="NavView"
-                           IsSettingsVisible="False">
+        <ui:FANavigationView Classes="SFPAppNav"
+                             AlwaysShowHeader="False"
+                             PaneDisplayMode="Left"
+                             Grid.Row="0" Grid.RowSpan="2"
+                             Name="NavView"
+                             IsSettingsVisible="False">
             <Panel>
-                <ui:Frame Name="FrameView" />
+                <ui:FAFrame Name="FrameView" />
             </Panel>
-        </ui:NavigationView>
+        </ui:FANavigationView>
     </Grid>
 </UserControl>

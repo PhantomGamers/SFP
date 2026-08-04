@@ -88,16 +88,17 @@ public class App : Application
             Log.Logger.Warn("Could not get color values, FluentAvaloniaTheme is null");
             return [];
         }
-        var colorValues = new string[7];
-        for (var i = 0; i < 7; i++)
+
+        string[] colorValues = new string[7];
+        for (int i = 0; i < 7; i++)
         {
-            if (!faTheme.Resources.TryGetResource(Injector.ColorNames[i], null, out var c))
+            if (!faTheme.Resources.TryGetResource(Injector.ColorNames[i], null, out object? c))
             {
                 Log.Logger.Warn("Could not get color value for {ColorName}", Injector.ColorNames[i]);
                 continue;
             }
 
-            var rgbaStr = Utils.ConvertARGBtoRGBA(c!.ToString()!);
+            string rgbaStr = Utils.ConvertARGBtoRGBA(c!.ToString()!);
             colorValues[i] = rgbaStr;
         }
 
@@ -121,12 +122,13 @@ public class App : Application
 
     public static void SetIconsState(bool state)
     {
-        var icons = TrayIcon.GetIcons(Current!);
+        TrayIcons? icons = TrayIcon.GetIcons(Current!);
         if (icons == null)
         {
             return;
         }
-        foreach (var icon in icons)
+
+        foreach (TrayIcon icon in icons)
         {
             icon.IsVisible = state;
         }
@@ -134,7 +136,7 @@ public class App : Application
 
     public static void SetApplicationTheme(string themeVariantString)
     {
-        var faTheme = Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
+        FluentAvaloniaTheme? faTheme = Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
         faTheme?.PreferSystemTheme = themeVariantString == "System Default";
 
         Current!.RequestedThemeVariant = themeVariantString switch
@@ -197,6 +199,7 @@ public class App : Application
             {
                 return;
             }
+
             Injector.SetAccentColors(GetColorValues());
             await Injector.UpdateSystemAccentColors();
         }

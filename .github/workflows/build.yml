@@ -6,6 +6,9 @@ on:
     paths-ignore:
       - '**/*.md'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -14,7 +17,7 @@ jobs:
         shell: pwsh
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: true
     env:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
@@ -31,7 +34,7 @@ jobs:
       - name: Set OS_ARG environment variable
         run: |
           if ("${{ runner.os }}" -eq "Windows") {
-            echo "OS_ARG=win10" | Out-File -FilePath $env:GITHUB_ENV -Append
+            echo "OS_ARG=win" | Out-File -FilePath $env:GITHUB_ENV -Append
           } elseif ("${{ runner.os }}" -eq "Linux") {
             echo "OS_ARG=linux" | Out-File -FilePath $env:GITHUB_ENV -Append
           } elseif ("${{ runner.os }}" -eq "macOS") {

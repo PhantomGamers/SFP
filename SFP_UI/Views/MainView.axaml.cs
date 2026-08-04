@@ -15,18 +15,19 @@ namespace SFP_UI.Views;
 
 public partial class MainView : UserControl
 {
-    public static MainView? Instance { get; private set; }
     public MainView()
     {
         Instance = this;
         InitializeComponent();
     }
 
+    public static MainView? Instance { get; private set; }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
 
-        var vm = new MainViewViewModel();
+        MainViewViewModel vm = new();
         DataContext = vm;
         FrameView.NavigationPageFactory = vm.NavigationFactory;
 
@@ -38,37 +39,39 @@ public partial class MainView : UserControl
 
         NavView.IsPaneOpen = false;
 
-        var navViewItems = NavView.MenuItemsSource.Cast<NavigationViewItem>();
+        IEnumerable<FANavigationViewItem> navViewItems = NavView.MenuItemsSource.Cast<FANavigationViewItem>();
         FrameView.NavigateFromObject(navViewItems.ElementAt(0).Tag);
     }
 
-    private void SetNviIcon(NavigationViewItem? item, bool selected)
+    private void SetNviIcon(FANavigationViewItem? item, bool selected)
     {
         // Technically, yes you could set up binding and converters and whatnot to let the icon change
         // between filled and unfilled based on selection, but this is so much simpler
 
         if (item == null)
+        {
             return;
+        }
 
-        var t = item.Tag;
+        object? t = item.Tag;
 
         item.IconSource = t switch
         {
-            MainPage => this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out var value)
-                ? (IconSource)value!
+            MainPage => this.TryFindResource(selected ? "HomeIconFilled" : "HomeIcon", out object? value)
+                ? (FAIconSource)value!
                 : null,
-            SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out var value)
-                ? (IconSource)value!
+            SettingsPage => this.TryFindResource(selected ? "SettingsIconFilled" : "SettingsIcon", out object? value)
+                ? (FAIconSource)value!
                 : null,
             _ => item.IconSource
         };
     }
 
-    private void OnFrameViewNavigated(object sender, NavigationEventArgs e)
+    private void OnFrameViewNavigated(object sender, FANavigationEventArgs e)
     {
-        var page = e.Content as Control;
+        Control? page = e.Content as Control;
 
-        foreach (NavigationViewItem nvi in NavView.MenuItemsSource)
+        foreach (FANavigationViewItem nvi in NavView.MenuItemsSource)
         {
             if (nvi.Tag != null && nvi.Tag.Equals(page))
             {
@@ -81,7 +84,7 @@ public partial class MainView : UserControl
             }
         }
 
-        foreach (NavigationViewItem nvi in NavView.FooterMenuItemsSource)
+        foreach (FANavigationViewItem nvi in NavView.FooterMenuItemsSource)
         {
             if (nvi.Tag != null && nvi.Tag.Equals(page))
             {
@@ -95,37 +98,37 @@ public partial class MainView : UserControl
         }
     }
 
-    private IEnumerable<NavigationViewItem> GetNavigationViewItems()
+    private IEnumerable<FANavigationViewItem> GetNavigationViewItems()
     {
         return
         [
-            new NavigationViewItem
+            new FANavigationViewItem
             {
                 Content = "Home",
                 Tag = NavigationFactory.GetPages()[0],
-                IconSource = (IconSource)this.FindResource("HomeIcon")!,
+                IconSource = (FAIconSource)this.FindResource("HomeIcon")!,
                 Classes = { "SFPAppNav" }
             }
         ];
     }
 
-    private IEnumerable<NavigationViewItem> GetFooterNavigationViewItems()
+    private IEnumerable<FANavigationViewItem> GetFooterNavigationViewItems()
     {
         return
         [
-            new NavigationViewItem
+            new FANavigationViewItem
             {
                 Content = "Settings",
                 Tag = NavigationFactory.GetPages()[1],
-                IconSource = (IconSource)this.FindResource("SettingsIcon")!,
+                IconSource = (FAIconSource)this.FindResource("SettingsIcon")!,
                 Classes = { "SFPAppNav" }
             }
         ];
     }
 
-    private void OnNavigationViewItemInvoked(object? sender, NavigationViewItemInvokedEventArgs e)
+    private void OnNavigationViewItemInvoked(object? sender, FANavigationViewItemInvokedEventArgs e)
     {
-        if (e.InvokedItemContainer is NavigationViewItem { Tag: Control c })
+        if (e.InvokedItemContainer is FANavigationViewItem { Tag: Control c })
         {
             _ = FrameView.NavigateFromObject(c);
         }

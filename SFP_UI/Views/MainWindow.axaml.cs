@@ -21,7 +21,7 @@ using SFP_UI.ViewModels;
 
 namespace SFP_UI.Views;
 
-public partial class MainWindow : AppWindow
+public partial class MainWindow : FAAppWindow
 {
     public MainWindow()
     {
@@ -79,8 +79,10 @@ public partial class MainWindow : AppWindow
         // CompositionBrush to properly change the color but I don't know if we can do that or not
         if (ActualThemeVariant == ThemeVariant.Dark)
         {
-            var color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Dark, out var value) ? (Color2)(Color)value! : new Color2(32, 32, 32);
+            Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
+                ThemeVariant.Dark, out object? value)
+                ? (Color)value!
+                : new Color2(32, 32, 32);
 
             color = color.LightenPercent(-0.8f);
 
@@ -89,8 +91,10 @@ public partial class MainWindow : AppWindow
         else if (ActualThemeVariant == ThemeVariant.Light)
         {
             // Similar effect here
-            var color = this.TryFindResource("SolidBackgroundFillColorBase",
-                ThemeVariant.Light, out var value) ? (Color2)(Color)value! : new Color2(243, 243, 243);
+            Color2 color = this.TryFindResource("SolidBackgroundFillColorBase",
+                ThemeVariant.Light, out object? value)
+                ? (Color)value!
+                : new Color2(243, 243, 243);
 
             color = color.LightenPercent(0.5f);
 
@@ -102,7 +106,7 @@ public partial class MainWindow : AppWindow
     {
         base.OnOpened(e);
 
-        var thm = ActualThemeVariant;
+        ThemeVariant thm = ActualThemeVariant;
         if (IsWindows11 && thm != FluentAvaloniaTheme.HighContrastTheme)
         {
             TryEnableMicaEffect();
@@ -120,15 +124,18 @@ public partial class MainWindow : AppWindow
             {
                 return;
             }
+
             Instance = null;
             if (Settings.Default.CloseToTray)
             {
                 return;
             }
+
             if (WindowState == WindowState.Minimized && Settings.Default is { MinimizeToTray: true })
             {
                 return;
             }
+
             await Task.Run(App.QuitApplication);
         }
         catch (Exception ex)
@@ -154,9 +161,10 @@ public partial class MainWindow : AppWindow
             Log.Logger.Error("Main view is null, cannot open settings");
             return;
         }
-        var frameView = MainView.Instance.FrameView;
-        var navView = MainView.Instance.NavView;
-        var menuItems = navView.FooterMenuItemsSource.Cast<NavigationViewItem>();
+
+        FAFrame frameView = MainView.Instance.FrameView;
+        FANavigationView navView = MainView.Instance.NavView;
+        IEnumerable<FANavigationViewItem> menuItems = navView.FooterMenuItemsSource.Cast<FANavigationViewItem>();
         frameView.NavigateFromObject(menuItems.ElementAt(0).Tag);
     }
 

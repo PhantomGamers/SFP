@@ -8,9 +8,14 @@ on:
         description: Version number
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   create-tag:
-    runs-on:  ubuntu-latest
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
     steps:
@@ -40,7 +45,7 @@ jobs:
         shell: pwsh
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
       fail-fast: true
     env:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
@@ -71,6 +76,8 @@ jobs:
 
   publish:
     needs: build
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

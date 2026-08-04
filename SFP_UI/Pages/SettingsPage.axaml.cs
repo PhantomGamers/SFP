@@ -28,17 +28,17 @@ public partial class SettingsPage : UserControl
 
     private void PopulateSteamSkinComboBox()
     {
-        var selectedItem = SteamSkinComboBox.SelectedItem;
+        object? selectedItem = SteamSkinComboBox.SelectedItem;
         SteamSkinComboBox.SelectionChanged -= SteamSkinComboBox_SelectionChanged;
         SteamSkinComboBox.Items.Clear();
         SteamSkinComboBox.Items.Add("steamui");
-        var skinDir = Steam.SkinsDir;
+        string skinDir = Steam.SkinsDir;
         if (!string.IsNullOrWhiteSpace(skinDir))
         {
             try
             {
-                var sb = new StringBuilder();
-                foreach (var subDirectory in Directory.EnumerateDirectories(skinDir))
+                StringBuilder sb = new();
+                foreach (string subDirectory in Directory.EnumerateDirectories(skinDir))
                 {
                     if (subDirectory.EndsWith("steamui", StringComparison.OrdinalIgnoreCase))
                     {
@@ -63,8 +63,9 @@ public partial class SettingsPage : UserControl
                 }
             }
         }
-        var selectedSkin = Settings.Default.SelectedSkin;
-        var skinSet = new HashSet<object>(SteamSkinComboBox.Items.Cast<object>());
+
+        string selectedSkin = Settings.Default.SelectedSkin;
+        HashSet<object> skinSet = [.. SteamSkinComboBox.Items.Cast<object>()];
         if (skinSet.Contains(selectedSkin))
         {
             SteamSkinComboBox.SelectedItem = selectedSkin;
@@ -77,6 +78,7 @@ public partial class SettingsPage : UserControl
         {
             SteamSkinComboBox.SelectedIndex = 0;
         }
+
         SteamSkinComboBox.SelectionChanged += SteamSkinComboBox_SelectionChanged;
     }
 
@@ -86,11 +88,11 @@ public partial class SettingsPage : UserControl
     {
         try
         {
-            var value = SteamSkinComboBox.SelectedValue?.ToString();
+            string? value = SteamSkinComboBox.SelectedValue?.ToString();
             Log.Logger.Info("Switching to skin {Skin}", value);
             Settings.Default.SelectedSkin = value;
             Settings.Default.Save();
-            _ = Steam.GetRelativeSkinDir(force: true);
+            _ = Steam.GetRelativeSkinDir(true);
             _ = SfpConfig.GetConfig(true);
             await Injector.Reload();
         }

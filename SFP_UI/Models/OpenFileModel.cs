@@ -11,10 +11,16 @@ namespace SFP_UI.Models;
 public partial class FileCommands
 {
     [ReactiveCommand]
-    private static async Task OpenFile(string relativeFilePath) => await OpenPath(relativeFilePath, false);
+    private static async Task OpenFile(string relativeFilePath)
+    {
+        await OpenPath(relativeFilePath, false);
+    }
 
     [ReactiveCommand]
-    private static void OpenDir(string relativeDirPath) => OpenPath(relativeDirPath, true).Wait();
+    private static void OpenDir(string relativeDirPath)
+    {
+        OpenPath(relativeDirPath, true).Wait();
+    }
 
     private static async Task OpenPath(string path, bool isDirectory)
     {
@@ -51,13 +57,12 @@ public abstract class OpenFileModel
 
     public static void PopulateOpenFileDropDownButton(object itemsCollection)
     {
+        SfpConfig sfpConfig = SfpConfig.GetConfig();
+        HashSet<string> targetCssFiles = [];
+        HashSet<string> targetJsFiles = [];
+        string skinDir = Steam.SkinDir;
 
-        var sfpConfig = SfpConfig.GetConfig();
-        var targetCssFiles = new HashSet<string>();
-        var targetJsFiles = new HashSet<string>();
-        var skinDir = Steam.SkinDir;
-
-        foreach (var patch in sfpConfig.Patches)
+        foreach (PatchEntry patch in sfpConfig.Patches)
         {
             // only add if not empty
             if (!string.IsNullOrWhiteSpace(patch.TargetCss))
@@ -76,41 +81,83 @@ public abstract class OpenFileModel
             case IList<NativeMenuItemBase> nativeMenuItems:
                 {
                     nativeMenuItems.Clear();
-                    nativeMenuItems.Add(new NativeMenuItem { Header = "steamui/skins/", Command = FileCommands.OpenDirCommand, CommandParameter = Steam.SkinsDir });
-                    nativeMenuItems.Add(new NativeMenuItem { Header = "Active Skin: " + Settings.Default.SelectedSkin + '/', Command = FileCommands.OpenDirCommand, CommandParameter = Steam.SkinDir });
+                    nativeMenuItems.Add(new NativeMenuItem
+                    {
+                        Header = "steamui/skins/",
+                        Command = FileCommands.OpenDirCommand,
+                        CommandParameter = Steam.SkinsDir
+                    });
+                    nativeMenuItems.Add(new NativeMenuItem
+                    {
+                        Header = "Active Skin: " + Settings.Default.SelectedSkin + '/',
+                        Command = FileCommands.OpenDirCommand,
+                        CommandParameter = Steam.SkinDir
+                    });
                     nativeMenuItems.Add(new NativeMenuItemSeparator());
 
-                    foreach (var cssFile in targetCssFiles)
+                    foreach (string cssFile in targetCssFiles)
                     {
-                        nativeMenuItems.Add(new NativeMenuItem { Header = Path.GetFileName(cssFile), Command = FileCommands.OpenFileCommand, CommandParameter = Path.Join(skinDir, cssFile) });
+                        nativeMenuItems.Add(new NativeMenuItem
+                        {
+                            Header = Path.GetFileName(cssFile),
+                            Command = FileCommands.OpenFileCommand,
+                            CommandParameter = Path.Join(skinDir, cssFile)
+                        });
                     }
 
                     nativeMenuItems.Add(new NativeMenuItemSeparator());
 
-                    foreach (var jsFile in targetJsFiles)
+                    foreach (string jsFile in targetJsFiles)
                     {
-                        nativeMenuItems.Add(new NativeMenuItem { Header = Path.GetFileName(jsFile), Command = FileCommands.OpenFileCommand, CommandParameter = Path.Join(skinDir, jsFile) });
+                        nativeMenuItems.Add(new NativeMenuItem
+                        {
+                            Header = Path.GetFileName(jsFile),
+                            Command = FileCommands.OpenFileCommand,
+                            CommandParameter = Path.Join(skinDir, jsFile)
+                        });
                     }
+
                     break;
                 }
             case ItemCollection avaloniaItems:
                 {
                     avaloniaItems.Clear();
-                    avaloniaItems.Add(new MenuItem { Header = "steamui/skins/", Command = FileCommands.OpenDirCommand, CommandParameter = Steam.SkinsDir });
-                    avaloniaItems.Add(new MenuItem { Header = "Active Skin: " + Settings.Default.SelectedSkin + '/', Command = FileCommands.OpenDirCommand, CommandParameter = Steam.SkinDir });
+                    avaloniaItems.Add(new MenuItem
+                    {
+                        Header = "steamui/skins/",
+                        Command = FileCommands.OpenDirCommand,
+                        CommandParameter = Steam.SkinsDir
+                    });
+                    avaloniaItems.Add(new MenuItem
+                    {
+                        Header = "Active Skin: " + Settings.Default.SelectedSkin + '/',
+                        Command = FileCommands.OpenDirCommand,
+                        CommandParameter = Steam.SkinDir
+                    });
                     avaloniaItems.Add(new Separator());
 
-                    foreach (var cssFile in targetCssFiles)
+                    foreach (string cssFile in targetCssFiles)
                     {
-                        avaloniaItems.Add(new MenuItem { Header = Path.GetFileName(cssFile), Command = FileCommands.OpenFileCommand, CommandParameter = Path.Join(skinDir, cssFile) });
+                        avaloniaItems.Add(new MenuItem
+                        {
+                            Header = Path.GetFileName(cssFile),
+                            Command = FileCommands.OpenFileCommand,
+                            CommandParameter = Path.Join(skinDir, cssFile)
+                        });
                     }
 
                     avaloniaItems.Add(new Separator());
 
-                    foreach (var jsFile in targetJsFiles)
+                    foreach (string jsFile in targetJsFiles)
                     {
-                        avaloniaItems.Add(new MenuItem { Header = Path.GetFileName(jsFile), Command = FileCommands.OpenFileCommand, CommandParameter = Path.Join(skinDir, jsFile) });
+                        avaloniaItems.Add(new MenuItem
+                        {
+                            Header = Path.GetFileName(jsFile),
+                            Command = FileCommands.OpenFileCommand,
+                            CommandParameter = Path.Join(skinDir, jsFile)
+                        });
                     }
+
                     break;
                 }
         }

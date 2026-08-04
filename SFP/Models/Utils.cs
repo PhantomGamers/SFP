@@ -58,7 +58,6 @@ public static class Utils
 
         Log.Logger.Warn("Could not get command line, process does not exist.");
         return [];
-
     }
 
     // ReSharper disable once InconsistentNaming
@@ -66,12 +65,13 @@ public static class Utils
     {
         if (!argb.StartsWith('#'))
         {
-            var color = Color.FromName(argb);
+            Color color = Color.FromName(argb);
             if (color is { A: 0, R: 0, G: 0, B: 0 })
             {
                 Log.Logger.Warn("Could not get color from {ColorName}", argb);
                 return argb;
             }
+
             argb = $"#{color.ToArgb():x8}";
         }
 
@@ -81,9 +81,8 @@ public static class Utils
             return argb;
         }
 
-        var alpha = argb.Substring(1, 2);
-        var rgb = argb[3..];
+        string alpha = argb.Substring(1, 2);
+        string rgb = argb[3..];
         return "#" + rgb + alpha;
     }
-
 }

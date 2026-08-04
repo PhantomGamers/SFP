@@ -1,6 +1,7 @@
 #region
 
 using System.Text.Json.Serialization;
+
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 // ReSharper disable UnusedMember.Global

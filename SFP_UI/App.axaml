@@ -9,10 +9,10 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <ui:SymbolIconSource Symbol="Home" x:Key="HomeIcon" />
-            <ui:SymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
-            <ui:SymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
-            <ui:SymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
+            <ui:FASymbolIconSource Symbol="Home" x:Key="HomeIcon" />
+            <ui:FASymbolIconSource Symbol="HomeFilled" x:Key="HomeIconFilled" />
+            <ui:FASymbolIconSource Symbol="Settings" x:Key="SettingsIcon" />
+            <ui:FASymbolIconSource Symbol="SettingsFilled" x:Key="SettingsIconFilled" />
         </ResourceDictionary>
     </Application.Resources>
 
@@ -26,15 +26,15 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="{Binding InjectHeader}"
-                                        Command="{Binding RunInjectCommand}"/>
+                                        Command="{Binding RunInjectCommand}" />
                         <NativeMenuItem Header="{Binding SteamHeader}"
-                                        Command="{Binding RunSteamCommand}"/>
-                        <NativeMenuItemSeparator/>
+                                        Command="{Binding RunSteamCommand}" />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Settings"
-                                        Command="{Binding ShowSettingsCommand}"/>
+                                        Command="{Binding ShowSettingsCommand}" />
                         <NativeMenuItem Header="Show Window"
-                                        Command="{Binding ShowWindowCommand}"/>
-                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand}"/>
+                                        Command="{Binding ShowWindowCommand}" />
+                        <NativeMenuItem Header="Quit" Command="{Binding QuitCommand}" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>
