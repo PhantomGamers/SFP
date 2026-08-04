@@ -69,8 +69,18 @@
                 <Separator Margin="0,10" />
 
                 <TextBlock Margin="0,10" FontSize="16" FontWeight="DemiBold" Text="About" />
-                <HyperlinkButton Content="GitHub" NavigateUri="https://github.com/PhantomGamers/SFP" />
-                <HyperlinkButton Content="Donate" NavigateUri="https://ko-fi.com/phantomgamers" />
+                <HyperlinkButton NavigateUri="https://github.com/PhantomGamers/SFP">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{StaticResource GitHubIcon}" />
+                        <TextBlock Text="View on GitHub" />
+                    </StackPanel>
+                </HyperlinkButton>
+                <HyperlinkButton NavigateUri="https://ko-fi.com/phantomgamers">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{StaticResource KofiIcon}" />
+                        <TextBlock Text="Buy me a coffee" />
+                    </StackPanel>
+                </HyperlinkButton>
                 <Button Margin="0, 10" Command="{Binding ResetSettingsCommand}">Reset Settings</Button>
             </StackPanel>
         </ScrollViewer>
