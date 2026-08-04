@@ -8,8 +8,13 @@ on:
         description: Version number
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   create-tag:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -71,6 +76,8 @@ jobs:
 
   publish:
     needs: build
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
