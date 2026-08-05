@@ -25,11 +25,6 @@ namespace SFP_UI;
 
 public class App : Application
 {
-    public App()
-    {
-        DataContext = new AppViewModel();
-    }
-
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -46,6 +41,7 @@ public class App : Application
                 StartMainWindow();
             }
 
+            DataContext = new AppViewModel();
             base.OnFrameworkInitializationCompleted();
 
             if (Design.IsDesignMode)
@@ -83,7 +79,7 @@ public class App : Application
 
     private static string[] GetColorValues()
     {
-        if (Current!.Styles[0] is not FluentAvaloniaTheme faTheme)
+        if (Current?.Styles[0] is not FluentAvaloniaTheme faTheme)
         {
             Log.Logger.Warn("Could not get color values, FluentAvaloniaTheme is null");
             return [];
@@ -122,7 +118,13 @@ public class App : Application
 
     public static void SetIconsState(bool state)
     {
-        TrayIcons? icons = TrayIcon.GetIcons(Current!);
+        if (Current == null)
+        {
+            Log.Logger.Error("Application is improperly initialized.");
+            return;
+        }
+
+        TrayIcons? icons = TrayIcon.GetIcons(Current);
         if (icons == null)
         {
             return;
@@ -139,7 +141,7 @@ public class App : Application
         FluentAvaloniaTheme? faTheme = Current?.Styles.OfType<FluentAvaloniaTheme>().FirstOrDefault();
         faTheme?.PreferSystemTheme = themeVariantString == "System Default";
 
-        Current!.RequestedThemeVariant = themeVariantString switch
+        Current?.RequestedThemeVariant = themeVariantString switch
         {
             FluentAvaloniaTheme.DarkModeString => ThemeVariant.Dark,
             FluentAvaloniaTheme.LightModeString => ThemeVariant.Light,
@@ -151,7 +153,7 @@ public class App : Application
     public static void StartMainWindow()
     {
         if (MainWindow.Instance is not null ||
-            Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+            Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return;
         }
@@ -181,7 +183,7 @@ public class App : Application
     {
         try
         {
-            Injector.SetColorScheme(Current!.ActualThemeVariant.ToString());
+            Injector.SetColorScheme(Current?.ActualThemeVariant?.ToString() ?? string.Empty);
             await Injector.UpdateColorScheme();
         }
         catch (Exception ex)
