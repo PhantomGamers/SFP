@@ -183,7 +183,12 @@ public class App : Application
     {
         try
         {
-            Injector.SetColorScheme(Current?.ActualThemeVariant?.ToString() ?? string.Empty);
+            if (Current?.ActualThemeVariant == null)
+            {
+                Log.Logger.Debug("ActualThemeVariant is null");
+                return;
+            }
+            Injector.SetColorScheme(Current.ActualThemeVariant.ToString() ?? string.Empty);
             await Injector.UpdateColorScheme();
         }
         catch (Exception ex)

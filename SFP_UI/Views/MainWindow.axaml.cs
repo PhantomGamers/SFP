@@ -31,13 +31,7 @@ public partial class MainWindow : FAAppWindow
         Instance = this;
         Title += $" v{UpdateChecker.Version}";
 
-        PropertyChanged += (_, args) =>
-        {
-            if (args.Property == WindowStateProperty)
-            {
-                HandleWindowStateChanged(WindowState);
-            }
-        };
+        Deactivated += (_, _) => HandleWindowStateChanged(WindowState);
 
         Application.Current?.ActualThemeVariantChanged += OnActualThemeVariantChanged;
 
@@ -118,6 +112,7 @@ public partial class MainWindow : FAAppWindow
     {
         try
         {
+            base.OnClosing(e);
             if (Instance is null)
             {
                 return;
@@ -134,7 +129,6 @@ public partial class MainWindow : FAAppWindow
                 return;
             }
 
-            base.OnClosing(e);
             await Task.Run(App.QuitApplication);
         }
         catch (Exception ex)
