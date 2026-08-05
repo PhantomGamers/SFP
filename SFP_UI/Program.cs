@@ -44,7 +44,7 @@ internal static class Program
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
     [STAThread]
-    [RequiresUnreferencedCode("Calls SFP_UI.Program.BuildAvaloniaApp()")]
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "<Pending>")]
     public static void Main(string[] args)
     {
         if (!EnforceSingleInstance())
@@ -77,6 +77,7 @@ internal static class Program
             c.ForLogger().FilterMinLevel(LogLevel.Info).WriteToConsole().WithAsync();
             using FileTarget fileTarget = new();
             fileTarget.FileName = Path.Join(AppDataPath, "SFP.log");
+            fileTarget.ArchiveFileName = Path.Join(AppDataPath, "SFP.log");
             fileTarget.ArchiveOldFileOnStartup = true;
             fileTarget.OpenFileCacheTimeout = 30;
             fileTarget.MaxArchiveFiles = 2;
