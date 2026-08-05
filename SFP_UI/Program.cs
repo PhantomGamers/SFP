@@ -1,6 +1,7 @@
 #region
 
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Avalonia;
@@ -15,6 +16,7 @@ using FileWatcherEx;
 using NLog;
 using NLog.Targets;
 
+using ReactiveUI;
 using ReactiveUI.Avalonia;
 
 using SFP.Models;
@@ -167,8 +169,10 @@ internal static class Program
         return AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .LogToTrace()
-            .UseReactiveUI(rxAppBuilder => rxAppBuilder.BuildApp())
-            .RegisterReactiveUIViewsFromEntryAssembly()
+            .UseReactiveUI(rxAppBuilder =>
+                // Enable ReactiveUI
+                rxAppBuilder
+                    .WithViewsFromAssembly(Assembly.GetExecutingAssembly())).RegisterReactiveUIViewsFromEntryAssembly()
             .With(new Win32PlatformOptions { OverlayPopups = true })
             .With(new FontManagerOptions { DefaultFamilyName = fontName });
     }

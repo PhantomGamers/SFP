@@ -2,6 +2,7 @@
 
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Diagnostics;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Styling;
@@ -29,18 +30,10 @@ public partial class MainWindow : FAAppWindow
         DataContext = new MainWindowViewModel();
         Instance = this;
         Title += $" v{UpdateChecker.Version}";
-#if DEBUG
-        this.AttachDevTools();
-#endif
-        PropertyChanged += (_, args) =>
-        {
-            if (args.Property == WindowStateProperty)
-            {
-                HandleWindowStateChanged(WindowState);
-            }
-        };
 
-        Application.Current!.ActualThemeVariantChanged += OnActualThemeVariantChanged;
+        Deactivated += (_, _) => HandleWindowStateChanged(WindowState);
+
+        Application.Current?.ActualThemeVariantChanged += OnActualThemeVariantChanged;
 
         App.SetApplicationTheme(Settings.Default.AppTheme);
     }
@@ -175,8 +168,8 @@ public partial class MainWindow : FAAppWindow
             App.StartMainWindow();
         }
 
-        Instance!.Show();
-        Instance.WindowState = WindowState.Normal;
-        Instance.Activate();
+        Instance?.Show();
+        Instance?.WindowState = WindowState.Normal;
+        Instance?.Activate();
     }
 }
