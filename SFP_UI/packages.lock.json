@@ -27,16 +27,6 @@
           "Avalonia.X11": "12.1.1"
         }
       },
-      "AvaloniaUI.DiagnosticsSupport": {
-        "type": "Direct",
-        "requested": "[2.2.3, )",
-        "resolved": "2.2.3",
-        "contentHash": "kQCInYusi2c9tjd9hV05Lln6Csbo07kiC672M3G7dsalDBe2j+pOk3We2nzdyy5ptQYy/9gQiC8ZaHhb6u/5Kw==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
-          "Microsoft.IO.RecyclableMemoryStream": "3.0.1"
-        }
-      },
       "ErrorProne.NET.CoreAnalyzers": {
         "type": "Direct",
         "requested": "[0.9.0-beta.4, )",
@@ -51,15 +41,15 @@
       },
       "FluentAvaloniaUI": {
         "type": "Direct",
-        "requested": "[3.0.2, )",
-        "resolved": "3.0.2",
-        "contentHash": "0lJcLhqiHxc7e8wrlttOCqyNfqBtRsiIaBi91E5JY0+pvuIIP6jMFrY/cMyHk20RPK3lZbXaJy1cW7i2vSt3Fw==",
+        "requested": "[3.1.0, )",
+        "resolved": "3.1.0",
+        "contentHash": "3hDozO75M0OQXwuu8+qDRsNt0dg9jx26MB2Sqtn0jy3UKj19hVnmY8haPPCBWh3wQ8tYcnThU6kcbIaGbArFPw==",
         "dependencies": {
-          "Avalonia": "12.0.0",
-          "Avalonia.Controls.ColorPicker": "12.0.0",
-          "Avalonia.Controls.DataGrid": "12.0.0",
-          "Avalonia.Skia": "12.0.0",
-          "MicroCom.Runtime": "0.11.5"
+          "Avalonia": "12.1.0",
+          "Avalonia.Controls.ColorPicker": "12.1.0",
+          "Avalonia.Controls.DataGrid": "12.1.0",
+          "Avalonia.Skia": "12.1.0",
+          "MicroCom.Runtime": "0.11.6"
         }
       },
       "JetBrains.Annotations": {
@@ -70,9 +60,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "f5VCIE7AJpd5YvzNTeMGVzQIgyE9tX+AreTYwQF+REbu+DZo/2Ae+jNSwhPEYrVz6RRkd7y8ubXjk6Nn6Ka+Cg=="
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "IBf7lbovvjGWVWXZX5cJ/cO0WXbId0Zq4BuSeT94mGZuOAP66oMeH9PTBZ9Jpp3Jb6jtK0qm/NyUbPRo1gC/wQ=="
       },
       "MinVer": {
         "type": "Direct",
@@ -129,19 +119,19 @@
       },
       "Avalonia.Controls.ColorPicker": {
         "type": "Transitive",
-        "resolved": "12.0.0",
-        "contentHash": "WxY2FpFv8Dq9FhOJy+Pufc5D63RrAITZNZxazTw/sOhqg0eutCXkFs+D8LweYjDeYzdCSajSmkyTnkqExgtQrQ==",
+        "resolved": "12.1.0",
+        "contentHash": "5ye5pHOKNSPh/lqQlQ/Z4rKwTjzjCGqlWseycjAuJp4DjyDR2ZH1mt3GBgL7K/y1Th+Gxu+LfM9IqIe6UqlxFA==",
         "dependencies": {
-          "Avalonia": "12.0.0",
-          "Avalonia.Remote.Protocol": "12.0.0"
+          "Avalonia": "12.1.0",
+          "Avalonia.Remote.Protocol": "12.1.0"
         }
       },
       "Avalonia.Controls.DataGrid": {
         "type": "Transitive",
-        "resolved": "12.0.0",
-        "contentHash": "pQ9NiviIoxbZ7fiD/KTdoEHRgdKibKtx8Low3nTrU6ZbvULtesuB65aLL/umjibsGMhzPOveqs/om98QAA5FMg==",
+        "resolved": "12.1.0",
+        "contentHash": "I4nkzELLRUWAqTLA4nY6lJ4nQFmXdZcGvRF7ze+k1aVE38KMJc5C8lqqs77F2kQQpCHKOwqmRwbO/leFKDQ5GA==",
         "dependencies": {
-          "Avalonia": "12.0.0"
+          "Avalonia": "12.1.0"
         }
       },
       "Avalonia.FreeDesktop": {
@@ -273,8 +263,8 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg=="
+        "resolved": "2.0.0",
+        "contentHash": "eUdJ0Q/GfVyUJc0Jal5L1QZLceL78pvEM9wEKcHeI24KorqMDoVX+gWsMGLulQMfOwsUaPtkpQM2pFERTzSfSg=="
       },
       "Microsoft.Extensions.Logging": {
         "type": "Transitive",
@@ -288,11 +278,8 @@
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "arDBqTgFCyS0EvRV7O3MZturChstm50OJ0y9bDJvAcmEPJm0FFpFyjU/JLYyStNGGey081DvnQYlncNX5SJJGA==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
-        }
+        "resolved": "2.0.2",
+        "contentHash": "xH49DgYQWwxB4r18Yc3SyYCXXrFpcLnVfxJlp4WktMfYHtNRbqd2Phdf6XQ0G91whVlKb2XZsOAY6be2AMWE+g=="
       },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
@@ -307,11 +294,6 @@
         "type": "Transitive",
         "resolved": "5.0.1",
         "contentHash": "5WPSmL4YeP7eW+Vc8XZ4DwjYWBAiSwDV9Hm63JJWcz1Ie3Xjv4KuJXzgCstj48LkLfVCYa7mLcx7y+q6yqVvtw=="
-      },
-      "Microsoft.IO.RecyclableMemoryStream": {
-        "type": "Transitive",
-        "resolved": "3.0.1",
-        "contentHash": "s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g=="
       },
       "Microsoft.Net.Http.Headers": {
         "type": "Transitive",
