@@ -23,7 +23,9 @@
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding InjectCommand}"
                             IsVisible="{Binding !IsInjected}"
-                            ToolTip.Tip="Attaches to Steam instance, enabling skin and scripting support based on your settings">
+                            ToolTip.Tip="Attaches to Steam instance, enabling skin and scripting support based on your settings"
+                            ToolTip.VerticalOffset="-5"
+                            ToolTip.Placement="Top">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <PathIcon Foreground="{StaticResource SystemAccentColor}" Data="{StaticResource PlayIcon}" />
                                 <TextBlock Text="Start Injection" />
@@ -35,7 +37,9 @@
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding StopInjectCommand}"
                             IsVisible="{Binding IsInjected}"
-                            ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted">
+                            ToolTip.Tip="Detaches from Steam instance, some elements may persist until Steam is restarted"
+                            ToolTip.VerticalOffset="-5"
+                            ToolTip.Placement="Top">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <PathIcon Foreground="{StaticResource SystemAccentColor}" Data="{StaticResource StopIcon}" />
                                 <TextBlock Text="Stop Injection" />
@@ -47,6 +51,8 @@
                             IsEnabled="{Binding ButtonsEnabled}"
                             Command="{Binding StartSteamCommand}"
                             ToolTip.Tip="Starts or restarts Steam with the arguments given in settings"
+                            ToolTip.VerticalOffset="-5"
+                            ToolTip.Placement="Top"
                             Content="{Binding StartSteamText}" />
 
                     <DropDownButton Name="OpenFileDropDownButton"
